@@ -248,7 +248,14 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       const row = fighterById(id);
       sim.who = row.name;
       sim.bio = row.bio;
-      sim.cast = row.attires[0]?.file ?? "";
+      const sourceStyle = row.sourceStyle;
+      const selected = row.attires[0]?.file ?? "";
+      if (sourceStyle) {
+        sim.style = sourceStyle;
+        sim.cast = "";
+      } else {
+        sim.cast = selected;
+      }
       sim.martial = row.martial;
       const p = sim.bodies[0];
       if (p) p.name = row.name;
@@ -259,7 +266,16 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       push(snapshot(sim));
     },
     setAttire(file) {
-      sim.cast = file;
+      if (file.startsWith("@style:")) {
+        sim.style = file.slice("@style:".length);
+        sim.cast = "";
+        equipStyle(sim.style);
+        if (sim.martial) applyMartial(sim.martial);
+        applyStance(sim.stance);
+        saveFighter(sim.style, sim.martial, sim.stance);
+      } else {
+        sim.cast = file;
+      }
       push(snapshot(sim));
     },
     setStance(id) {
