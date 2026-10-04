@@ -1,0 +1,26 @@
+To pull environments from your Bannon and Brutal Fist repositories alongside open-source projects like Schwarzerblitz, you don't manually port files one by one. You deploy an ingestion script. The agent authenticates, scans the directories, rips the raw geometry, and formats it for AshLane's state machine.
+Schwarzerblitz and similar open-source/highly-moddable indie fighters are goldmines because their stages are already built for enclosed 3D arena combat. The geometry is already optimized for colliders, wall-splats, and ring-outs.
+Here is the exact pipeline your developer agent uses to ingest external maps and attach them to AshLane.
+1. The Repo Ingestion Pipeline (Bannon & Brutal Fist)
+Your agent connects to your GitHub via a Personal Access Token (PAT). It doesn't need to read the entire codebase; it only targets the spatial data.
+ * The Target: The agent scans your Bannon and Brutal Fist repos specifically for .glb, .fbx, or .obj files in your environment folders, plus the JSON files that dictate where the spawn points and walls are.
+ * The Extraction: It pulls the raw map pieces—the underground MMA octagon, the skyscraper roof, the steel cage.
+ * The Agent Directive Prompt:
+   > "Initialize a GitHub API fetch script. Authenticate and target the Bannon and Brutal Fist repositories. Traverse the /environments directories. Download all mesh files and associated collision JSONs into the local AshLane /models/maps/ directory. Normalize all scales to match the KayKit 41-joint skeleton baseline."
+   > 
+2. The Open-Source Integration (Schwarzerblitz & CC0 Arenas)
+When pulling from external open-source projects, you aren't just taking models; you are taking their collision logic.
+ * The Source: Schwarzerblitz uses low-poly, highly optimized stages. You can also target MIT-licensed repositories like Kenney's Urban/City kits for raw street geometry.
+ * The Conversion: Fighting game stages usually have a visual mesh (what you see) and a collision mesh (the invisible walls that keep you inside the arena). The agent extracts both.
+ * The Tagging: The agent runs a script over the imported meshes to apply AshLane tags. The flat geometry gets tagged env_ground. The arena boundaries get tagged env_hard. If there is a breakaway wall or a cage door, it gets tagged env_transition.
+3. Stitching the City Together (Level Streaming)
+You have the maps. Now you have to attach them to the current AshLane block without loading screens.
+ * The Grid: The agent writes the map logic as an array. The Plaza is [0,0]. The Scrap Street is [0,-1]. The Night Market is [0,-2].
+ * The Connection Nodes: The agent places an invisible trigger box at the edge of the Night Market. When your physics capsule hits that box, the engine seamlessly loads the Bannon underground Mafia HQ mesh at [0,-3].
+ * The Phase Line: The new maps inherit the AshLane combat loop. The enemies (Hoods, Brutes, or the named roster like Cain Elias and Stick-Up) spawn into the newly loaded block in the Walk phase. You step in, it shifts to Commit, and the fight locks down that specific chunk of the city.
+4. Ingesting Open-Source Animations
+Just like the maps, you can pull open-source animation libraries (like those attached to Ikemen GO, Castagne, or Schwarzerblitz mods).
+ * The Agent Directive Prompt:
+   > "Target the specified open-source animation repository. Download the .bvh or .fbx combat clips. Run a headless retargeting script to bake the external animation data onto the AshLane KayKit 41-joint skeleton. Export the cleaned clips into the /animations/ directory and append their file names to the FSM action list."
+   > 
+You feed the agent the repository links. It rips the cages, rings, and rooftops, strips the proprietary code, and outputs clean, textured geometry directly into AshLane's world space.

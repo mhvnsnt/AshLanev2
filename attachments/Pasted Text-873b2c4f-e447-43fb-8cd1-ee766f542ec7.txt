@@ -1,0 +1,24 @@
+The era of kitbashing mismatched Mixamo clips for complex combat is dead. For paired character interactions like grapples, suplexes, and tag-team slams, the 2026 open-source standard relies on neural motion synthesis and physics-assisted solving.
+Here are the exact pipelines and the AI directives required to execute them.
+Pipeline 1: Neural Paired Synthesis (SCAIL-2)
+You cannot generate a perfect suplex by prompting a text-to-video AI. You need an engine built for multi-character skeletal data. SCAIL-2 (released mid-2026) is an open-source AI model designed for end-to-end multi-character animation without relying on rigid skeleton intermediate maps.
+ * The Setup: Run the SCAIL-2 or motion-anything CLI locally. Feed it the base rig parameters (like your KayKit 41-joint skeleton).
+ * The Generation: You do not manually pose the rigs. You feed the engine a direct prompt defining the momentum and the interaction.
+ * The Output: The neural network outputs two perfectly synchronized FBX files (e.g., Attacker_Chokeslam.fbx and Defender_Choked.fbx) mapped to the exact same global timeline.
+Pipeline 2: The Physics-Assisted Clean-Up (Cascadeur)
+If the neural output hallucinates a hand placement or feels weightless, you route the FBX files through Cascadeur (free for indies).
+ * The Import: Drop both FBX files into the same scene.
+ * The Constraint: Lock the attacker's hand nodes directly to the defender's spine and neck nodes.
+ * The AutoPhysics Pass: Run Cascadeur's AI AutoPhysics solver. The AI calculates the shared center of mass for both bodies. It automatically adjusts the attacker's foot pivot and the defender's airborne trajectory so the slam mathematically obeys gravity, erasing the floaty look.
+Pipeline 3: Engine Integration (The Master/Slave FSM)
+Once you have the two paired FBX files, your game engine needs the architecture to play them without the collision capsules violently repelling each other. You handle this by writing a Master/Slave logic block.
+To get your AI developer agents to build this, you must stop asking them to write open-ended combat code. You feed them strict architectural prompts.
+Agent Directive Prompt for Grapple Integration:
+> "Build a Master/Slave FSM logic block for paired grapple animations in the native C++ backend. When state == grapple_execute, intercept the physics loop. Disable the collision capsule for the target (Slave) entity. Parent the Slave's root transform to the Attacker's (Master) root transform with a localized positional and rotational offset so they align perfectly. Execute anim_master and anim_slave simultaneously on their respective animation mixers. Expose a frame-counter variable. When the frame-counter hits the defined release frame, unparent the Slave, re-enable Continuous Collision Detection (CCD), and apply a downward physics impulse to the Slave's rigid body to hand control back to the active ragdoll system."
+> 
+Pipeline 4: Generating Stances and Dials (Motion-Anything)
+For single-character states like fighting stances, taunts, or idle variations, the workflow is much faster. Open-source chat-native motion engines like motion-anything allow you to bypass standard animation software entirely.
+Agent Directive Prompt for Stance Generation:
+> "Initialize the motion-anything CLI. Target the KayKit skeletal rig. Generate a looping 60-frame idle animation. The stance is a low-center-of-gravity Muay Thai guard. Hips square, lead leg lightly tapping the ground to keep rhythm, hands high protecting the head region. Export as FBX and map to the idle_combat FSM state."
+> 
+If you stick to this pipeline—SCAIL-2 for paired throws, Cascadeur for physics weighting, and strict FSM Master/Slave logic in the engine—you eliminate the glitching and phasing entirely.

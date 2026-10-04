@@ -1,0 +1,38 @@
+To get this right, you have to look at the actual roster. Namco didn't just invent generic brawler animations for Urban Reign. They ported the skeletons, frame data, and specific martial arts directly from the Tekken and SoulCalibur engines, mapping them to a 60-character roster.
+Here is the deep research into the actual fighters, their fighting styles, and exactly how their moves and grapples execute in the game's matrix.
+1. Brad Hawk (Kickboxing & Submission Wrestling)
+Brad is the baseline. His engine is built around breaking limbs and controlling the floor.
+ * Neutral Strike String (Circle, Circle, Circle): Left jab, right cross, finishing with a spinning back kick.
+ * The Launcher (Up + Circle): A high rising knee strike. Targets the Head (H) region.
+ * Neutral Grapple (Triangle): Grabs the opponent by the collar. From this lock, pressing Circle delivers close-range knees to the ribs. Pressing Triangle executes a snap suplex.
+ * Grounded Submission (Down + Triangle near feet): If the opponent is Face Up, Brad locks in a Kneebar. If the opponent is Face Down, he locks in a Boston Crab, destroying their Lower Body (L) stat.
+ * Diving Grapple (Run + Triangle): Brad executes a flying neckbreaker, using his running momentum to drag the opponent into the concrete.
+2. Shotaro Kadonashi (Kyokushin Karate)
+Kadonashi is essentially Kazuya Mishima and Jin Kazama ported into a brawler. He is a pure striker with brutal high-damage, low-hit-count combos.
+ * The Mishima Lineage: His standard Up + Circle strike is the classic Tekken Demon Scissors (a jumping double-kick).
+ * Green SPA (Arcanum): Kadonashi's charge-up SPA (Down + Triangle + Circle) glows Green. This is a "Moveset Expansion." While active, his standard 3-hit karate string extends into a 5-hit devastating chain, and unlocks a running launcher that mimics the Electric Wind God Fist.
+ * Weapon Specialization: While Brad struggles with swords, Kadonashi’s moveset changes entirely when holding a Bokken (Wooden Sword), unlocking multi-hit iaido draws.
+3. Grimm (Street Boxing)
+Grimm is the equivalent of Steve Fox. He has virtually no kicking attacks. His entire engine is built around head-movement and upper-body destruction.
+ * The Sway System: Pressing Square + Back as Grimm doesn't just pull him backward; he bobs and weaves like a heavyweight.
+ * Upper Body Focus: His Left/Right + Circle executes devastating body blows (hooks and liver shots). If he hits the C (Chest) region enough times to turn it red, the opponent's outgoing damage is permanently cut in half.
+ * Grapples: Grimm doesn't do suplexes. His grapples (Triangle) consist of clinches followed by dirty boxing—grabbing the back of the head and delivering repeated upper-cuts before throwing them away.
+4. Park (ITF Tae Kwon Do)
+Park operates on Hwoarang and Baek’s Tekken logic. He is a nightmare for spacing because his legs have massive reach and prioritize the opponent's Head and Legs.
+ * The Launch String: Park’s standard strings feature built-in High-Low mix-ups. He will execute a high crescent kick, instantly drop into a low sweep, and bounce back up for a launcher.
+ * Air Juggles: Park is designed for the air. If he launches an enemy with Up + Circle, pressing Circle rapidly allows him to connect 3 to 4 mid-air kicks before gravity pulls the enemy down, dealing massive damage scaling.
+ * Weakness: His grapples are incredibly weak. If he grabs someone, it is usually just a basic hip-toss to create space so he can start kicking again.
+5. Golem (Pro Wrestling)
+Golem is the heavy grappler (playing like Craig Marduk). He has permanent Super Armor on most of his startup frames.
+ * The Powerbomb: If Golem catches an opponent in a stunned state (groaning on their feet), pressing Triangle executes a devastating running powerbomb.
+ * The Multi-Swing: If the opponent is Face Up on the ground, pressing Triangle near their legs executes a Giant Swing. Golem picks them up by the ankles, spins them in a 360-degree circle, and throws them. The hitboxes of the swinging body become a weapon—anyone standing nearby will get knocked down by the spinning opponent.
+ * Yellow SPA (Super Armor): Golem’s specific SPA charge glows Yellow. While active, he cannot be staggered by standard strikes. You can punch him in the face, but his grab animation will not stop. You have to deflect him or run.
+6. Shun Ying Lee (Baguazhang / Kung Fu)
+Shun Ying plays like Ling Xiaoyu. She is low-damage but impossible to hit, built entirely around evasion and back-takes.
+ * The Low-Crush: Her Down + Circle sweep is so low to the ground that her collision capsule essentially flattens. She routinely slides directly under high kicks and punches.
+ * Back Grapples: If she side-steps (Square + Left/Right) a linear attack, she ends up behind the opponent. Pressing Triangle from the back executes acrobatic back-takes and neck-scissors throws, which deal 1.5x the damage of a frontal throw.
+The Synergy (Double Team Attacks)
+Because these characters have distinct styles, Urban Reign built specific animations for when they tag-team.
+ * The Execution: If you stun two enemies side-by-side, pressing Triangle executes a Double Throw. Brad will grab both their heads and smash them together.
+ * The Partner Command: If you are fighting alongside Kadonashi, you lock onto an enemy with R1. You press R2 + Triangle. Kadonashi's AI immediately stops what it is doing, runs over, and launches the enemy into the air. While the enemy is in the hurt_airborne state, you press Triangle to catch them mid-air and execute a synchronized tandem slam.
+That is the actual math and roster mapping of the game. It isn't just generic punches and kicks; it is 60 different Tekken skeletons forced to interact in a 3D street environment.

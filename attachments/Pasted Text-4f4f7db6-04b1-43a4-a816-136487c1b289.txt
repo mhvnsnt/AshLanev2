@@ -1,0 +1,34 @@
+An LLM does not natively compute 3D vertex data or UV maps. When a system outputs complete characters, textured environments, and models directly from a prompt, it is running an automated orchestration pipeline. The language model acts as the brain, writing the API payloads to trigger specialized 3D and image generation engines in the background, then returning the compiled assets to you.
+To build this exact pipeline so your agent can execute it autonomously without you leaving the workspace, you chain three specific open-source or API-driven engines together. The agent writes the prompt, passes it down the chain, and drops the final .fbx or .gltf into your directory.
+Here is the exact architecture.
+Phase 1: The Concept & Texture Generation (Image-to-2D)
+You describe the character or level. The agent translates your raw description into a strict prompt for a 2D diffusion model. You need orthographic projections (front, side, back) for characters, or seamless tiling for environmental textures.
+ * The Engine: Flux.1 or Stable Diffusion XL (run locally via ComfyUI or via API).
+ * The Agent Directive: The agent is instructed to append structural constraints to your prompt. If you ask for a "drunken master in rags," the agent automatically appends: orthographic turnaround, T-pose, white background, flat lighting, high resolution, Unreal Engine 5 asset pipeline.
+ * The Output: A perfectly clean 2D turnaround image of the character, or a flat seamless texture map for a wall/floor.
+Phase 2: The Mesh Generation (Image-to-3D)
+The agent takes the image it just generated and pushes it into a specialized 3D neural network. These models estimate depth, generate the geometry, and project the 2D image onto the 3D model as an albedo texture.
+ * The Engine: Tripo3D, CSM.ai (Common Sense Machines), or Meshy. (These offer API endpoints).
+ * The Pipeline: The agent fires a POST request containing the image from Phase 1. The 3D engine computes the voxel grid, extracts the mesh, unwraps the UVs, and applies the texture.
+ * The Output: A raw, textured 3D model (.glb or .obj).
+Phase 3: PBR Material Extraction (Environmental Assets)
+If the agent is building a brick wall or a wet asphalt street for AshLane, a flat image looks fake. It needs physical properties so light interacts with it correctly.
+ * The Engine: A localized ComfyUI node setup running depth estimation (like Marigold or standard ControlNet normal mappers).
+ * The Pipeline: The agent sends the base texture through the nodes to extract the Normal map (for bumps), Roughness map (for reflections), and Ambient Occlusion map (for shadows).
+ * The Output: A complete PBR texture folder ready to be applied to a primitive mesh in your engine.
+Phase 4: Auto-Rigging (Character Assets)
+A raw 3D mesh cannot fight. It needs a skeleton, and it specifically needs your 41-joint KayKit skeleton to work with your YokosukaJS state machine.
+ * The Engine: AccuRIG (via command line) or an automated Mixamo API wrapper.
+ * The Pipeline: The agent passes the .glb mesh to the rigger. The rigger calculates the center of mass, places the spine, shoulders, and joints, and binds the mesh to the skeleton with automatic weight painting.
+ * The Output: A fully rigged .fbx file ready for combat animations.
+The Agent Workflow (How to Code It)
+You do not build this inside the chat window. You write a Python or Node.js orchestration script that acts as the agent's tool.
+You give your agent this exact system prompt to enable the pipeline:
+> "You have access to the generate_3D_asset function. When the user requests a character, weapon, or environment, you must:
+>  * Write an orthographic image prompt and send it to the Flux API.
+>  * Pass the resulting image URL to the Tripo3D API for mesh generation.
+>  * For characters, route the output mesh to the auto-rigging endpoint.
+>  * For environments, route the texture to the PBR extraction endpoint.
+>  * Download the final zipped asset package into the /workspace/assets/ directory and notify the user."
+> 
+Once you wire the API keys into that Python script, you just type, "Generate a rusted lead pipe weapon," and the agent executes all four phases in the background, dropping the finished, textured mesh into your folder 60 seconds later.

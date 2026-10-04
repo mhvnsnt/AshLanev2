@@ -1,0 +1,28 @@
+Got it. Scrap the C++ desktop architecture. If AshLane is a mobile brawler running a Godot / TypeScript / Three.js hybrid stack, the rules of engagement change entirely. You are building for mobile GPUs, strict VRAM limits, and touch inputs.
+This actually makes YokosukaJS an even more perfect fit, because your FSM and combat logic run natively in TypeScript, while Godot and Three.js handle the mobile wrapper and scene rendering.
+Here is exactly how you adapt the open-source pipeline, asset ingestion, and level streaming for this specific mobile stack.
+1. Asset Ingestion for Mobile (KTX2 & Instancing)
+If you drop a raw 4K CC0 texture from PolyHaven into a Three.js mobile build, the phone's browser/wrapper will crash from out-of-memory errors. You have to process what you scrape before it hits the phone.
+ * Texture Compression (Basis Universal): When your agent rips an environment from Kenney or Schwarzerblitz, it cannot output standard .png or .jpg textures. You must instruct the agent to run the textures through the gltf-transform CLI (a Node.js tool). It converts all textures to KTX2 format. This allows the mobile GPU to read the texture directly without unzipping it in RAM.
+ * Instanced Meshes: You cannot have 15 Hoods and Brutes on screen as separate objects. In Three.js, your agent must compile the enemy Ward Packs using InstancedMesh. It draws the base KayKit skeleton once, and uses math to copy it 15 times on the GPU, saving massive mobile processing power.
+2. The Open-Source Logic Extraction (TypeScript / Godot)
+Since you aren't pulling C++ headers, your targets for open-source mechanics change. You are looking for Godot scripts (.gd) and JavaScript/TypeScript repositories.
+ * Godot Repositories: You can rip entire stage layouts, camera controllers, and mobile joystick touch-handlers from open-source Godot projects. Since Godot exports flawlessly to mobile, you use it as your shell and scene manager.
+ * Three.js / TS Physics: If you are handling collisions in Three.js on mobile, you do not use heavy physics engines like Ammo.js. You use Rapier.js (written in Rust, runs in WebAssembly via TypeScript). It is lightning-fast on mobile phones and handles the Continuous Collision Detection (CCD) you need for fast punches and wall-splats.
+ * The Agent Directive:
+   > "Scan the target open-source repository. Extract all .ts, .js, and Godot .tscn files related to spatial movement and FSM logic. Port the collision math to utilize Rapier.js syntax. Compress all scraped 3D models using gltf-transform with KTX2 texture compression. Output the optimized .glb files into the AshLane mobile asset directory."
+   > 
+3. Streaming the City Block on Mobile
+Mobile RAM cannot hold the Plaza, the Scrap Street, and the Scaffold Roofs all at once. Three.js handles this beautifully with scene graphs.
+ * The Grid Manager (TypeScript): You write a TS script that tracks the player's coordinate.
+ * Frustum Culling & Fog: You use street layout and fog to hide the loading. When the player walks past the parked red car toward the Night Market, the TS script makes an asynchronous fetch call to load the Night Market .glb.
+ * Garbage Collection: The absolute second the Plaza is out of view behind the camera, you call scene.remove(plaza) and geometry.dispose() to flush it from the mobile memory. If you don't dispose of the raw geometry, the phone will overheat and crash.
+4. Adapting the Inputs (The Mobile FSM)
+Urban Reign relies on the Square/Triangle/Circle/X face buttons. Mobile touchscreens ruin complex combinations if you just slap a virtual D-Pad on the glass.
+Since your state machine is in TypeScript, you map the FSM to gestures alongside basic virtual buttons to keep the screen clean:
+ * Taps: Neutral strikes (Circle).
+ * Swipes (Up/Down/Left/Right): Replaces the directional stick inputs for the combo branching. A tap followed by a forward swipe executes the Forward + Strike FSM branch.
+ * Two-Finger Tap: Grapple (Triangle).
+ * Double Tap & Hold: Run.
+ * Quick Swipe on Impact: Tech Roll (Ukemi).
+This stack allows you to build a AAA-feeling brawler that runs at 60fps on an iPhone. Your TS FSM dictates the logic, Rapier.js handles the math, and Three.js paints the compressed geometry.

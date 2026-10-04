@@ -1,0 +1,50 @@
+If you want your AI agent to build custom meshes like Tripo3D, but you refuse to pay for closed APIs and your local machine has no GPU, you have to bypass the hardware limit.
+The AI cannot run heavy neural networks locally in this sandbox. Instead, the AI uses open-source code and serverless architecture to pull the assets out of thin air.
+Here are the three exact open-source pipelines an AI can use to generate 3D models autonomously, ranked from zero-GPU code generation to full AI mesh generation.
+1. The Geometry-as-Code Pipeline (The Emergent Method)
+This is what Emergent actually did. The AI does not use a 3D neural network. It uses math to deform basic primitives, and 2D image models to skin them.
+ * The Open-Source Repo: Three.js (Specifically the BufferGeometry API).
+ * The Workflow:
+   * You ask for a "baseball bat with nails in it."
+   * The AI writes a Three.js script generating a CylinderGeometry. It mathematically tapers the top vertices and thickens the middle.
+   * It generates a dozen thin, rotated CylinderGeometry objects and merges them into the top of the bat to act as the nails.
+   * The AI calls a free 2D image API (like a Hugging Face Space running FLUX.1) with the prompt: seamless flat wood grain texture with blood stains.
+   * It wraps that 2D texture onto the mathematical bat and spawns it in AshLane.
+ * Why it works: It costs zero compute. The "model" is just a tiny text file of math.
+2. The Headless Blender Pipeline (Procedural Generation)
+If Three.js primitives are too blocky, the AI can use a real 3D modeling program in the background without opening a UI.
+ * The Open-Source Repo: Blender (Specifically the bpy Python API).
+ * The Workflow:
+   * You install Blender on your machine.
+   * You tell the AI you want a "chainlink fence barrier."
+   * The AI writes a Python script that imports bpy. The script instructs Blender to draw a 2D wireframe grid, apply a Wireframe Modifier to give it thickness, spawn metal cylinder posts, and unwrap the UVs.
+   * The script automatically exports the result as fence.glb directly into your AshLane assets folder.
+ * Why it works: Blender can run entirely off your CPU. The AI isn't guessing what a 3D model looks like; it is executing exact modeling commands like a technical artist.
+3. The Open-Weight Neural Pipeline (The Tripo Alternative)
+If you want actual AI-generated complex meshes (like a couch, a car, or a trash bag) but want to use open-source equivalents to Tripo3D, you use the newest open-weight models. Since you lack the 12GB+ of VRAM to run them locally, the AI agent makes API calls to free or cheap serverless hosts.
+ * The Open-Source Repos:
+   * TRELLIS (by Microsoft): Currently the highest-quality open-source Image-to-3D model.
+   * Hunyuan3D-2 (by Tencent): Extremely fast open-source 3D generation.
+ * The Workflow:
+   * The AI writes a prompt for a 2D image: A crushed green dumpster, white background, orthographic.
+   * The AI uses the gradio_client Python library to ping a public Hugging Face Space running TRELLIS or Hunyuan3D. (Hugging Face hosts these open-source models for developers to query via API).
+   * The HF Space GPUs do the heavy lifting, processing the image into a 3D mesh.
+   * The AI downloads the resulting .glb file and injects it into your Three.js loader.
+How to Set This Up for Your AI
+To make the AI capable of doing this on command, you write a single orchestration script in your repository. You create a "Tool" or "Function Call" for the AI named generate_game_asset.
+The Logic Block the AI Executes:
+async function generate_game_asset(description, type) {
+    if (type === "simple_geometry") {
+        // AI writes the Three.js BufferGeometry code and saves it to the scene file.
+        return execute_emergent_pipeline(description);
+    } 
+    if (type === "complex_mesh") {
+        // AI pings an open-source 2D model to get the base image.
+        const imageUrl = await fetch_hf_flux(description);
+        // AI pings an open-source 3D model (TRELLIS) on HuggingFace via API.
+        const glbFile = await fetch_hf_trellis(imageUrl);
+        return save_to_assets(glbFile);
+    }
+}
+
+You give the AI that tool. When you ask for a streetlamp, it decides if it can build it with code (Emergent style) or if it needs to ping TRELLIS for the GLB. It does the routing automatically.

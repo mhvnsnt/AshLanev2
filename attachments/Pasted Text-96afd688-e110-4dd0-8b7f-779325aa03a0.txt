@@ -1,0 +1,37 @@
+We haven't covered the entire roster's skeleton sharing. Namco stripped the animations from Tekken and SoulCalibur and built 60 characters with vastly different hitboxes, stances, and FSM logic.
+If you are building AshLane, you don't just need punches and kicks. You need to understand how Urban Reign handled these specific esoteric styles, because they break the standard rules of the game.
+Here is the exact breakdown of the Drunken, Capoeira, Wrestling, and Boxing architectures.
+1. Capoeira (Chris & Kelly Bowman)
+Tekken Base: Eddy Gordo / Christie Monteiro
+Capoeira characters break the standard static collision logic. Their idle animation is not standing still; it is the Ginga (the rhythmic rocking back and forth).
+ * The Ginga Hurtbox: Because the animation constantly sways their 3D model, their physics capsule is actually shifting on the Z-axis while they are technically in the idle state. They will passively dodge perfectly straight, linear punches simply by being in the back-swing of their idle animation.
+ * The Handstand State: Pressing specific strike combinations forces them into a Handstand. In this FSM state, their H (Head) region is near the floor, and their L (Leg) region is in the air. This reverses the standard targeting logic—a high punch will miss them entirely, and a low sweep will hit their head.
+ * The Windmill (Low-Crush): Their primary launcher is a spinning cartwheel kick. Because their entire body leaves the floor, it naturally low-crushes any sweeps while generating a massive 360-degree hitbox that hits multiple enemies.
+2. Drunken Fist / Zui Quan (Lin Fong Lee)
+Tekken Base: Lei Wulong
+Drunken Boxing is built entirely around messing with the opponent's deflection timing and intentional floor-states.
+ * Delayed Active Frames: Standard fighters have a predictable rhythm (e.g., jab connects on frame 10). Drunken fighters have animations where they stumble backward on frame 8, delaying the punch until frame 18. This causes the opponent to press the Deflect button too early, eating the hit during their recovery frames for Counter-Hit damage.
+ * Intentional Grounding (The Play-Dead State): Lin Fong can intentionally collapse to the floor. While the FSM registers him as hurt_grounded, he is actually in a unique offensive stance. If an enemy tries to stomp him, he can instantly fire a sweeping helicopter kick from his back that acts as an un-interruptible launcher.
+ * Taunt Buffs: His taunt animation is him drinking from a jug. This isn't just visual; every drink physically builds his SPA meter faster than taking damage does.
+3. Advanced Wrestling / Lucha Libre (Glen, Colin, Golem)
+Tekken Base: King, Armor King, Craig Marduk
+We talked about the Master/Slave grapple logic, but pro-wrestlers have an entirely different FSM branch called Chain Throws.
+ * The Chain Grapple: When Glen locks in an arm-wrench, he does not just throw and release. During the exact frames of the animation where a bone snaps or weight shifts, a 4-frame input buffer opens. If the player inputs a specific sequence (like Triangle + Circle) during that window, the Master FSM does not release the opponent. It instantly transitions into a second grapple animation (e.g., dropping them into a cross-armbreaker). High-level wrestlers can chain 3 or 4 grabs together, bypassing the global health pool to instantly destroy a specific body region.
+ * Lucha Libre (High-Flyers): Smaller wrestlers have access to the "Frankensteiner" (Hurricanrana). If they Dash + Grapple, they jump onto the opponent's shoulders. The IK logic locks the attacker's knees to the defender's neck, and the animation flips them over. This specifically uses the attacker's running velocity to multiply the physical damage of the throw.
+4. Technical Boxing (Grimm, Dwayne)
+Tekken Base: Steve Fox
+Boxers do not use kicks. To compensate for having zero attacks that target the L (Leg) region, their upper body evasion is mathematically superior to the rest of the roster.
+ * The Weave Stance: Instead of a standard side-step, pressing Dodge + Left/Right forces the boxer into a "Weave." This drops their hurtbox under high attacks while simultaneously sliding them to the flank.
+ * The Dempsey Roll: From the Weave state, they can immediately input a left or right hook. The FSM reads this as a momentum strike, adding extra damage and stagger. They can infinitely chain Left Weave -> Hook -> Right Weave -> Hook, trapping the opponent in a block-stun loop.
+ * Flicker Jabs: Boxers have the fastest startup frames in the game (often active by frame 8). Their strikes act as "interrupts." If a heavy brawler winds up a 20-frame swing, the boxer's jab connects first, immediately canceling the enemy's attack animation.
+5. Muay Thai (Tong Yoon)
+Tekken Base: Bruce Irvin / Bryan Fury
+Muay Thai is built around controlling the opponent's posture through the "Plum" (the double-collar tie clinch).
+ * The Clinch FSM: When Tong Yoon initiates a frontal grapple, he does not throw them. He locks his hands behind their neck. This pulls the opponent's H (Head) region forward and down.
+ * Knee Chains: From the clinch, the player can repeatedly tap Strike to fire knees directly into the opponent's C (Chest) or H (Head) regions. The opponent is locked in the Slave state until they successfully time the Dodge button to break the hold, or until the engine forces a release after 4 hits.
+ * The Teep (Push Kick): Tong Yoon's neutral mid-strike has the highest knockback multiplier in the game. It doesn't do massive damage, but it pushes the target's collision capsule back several meters, immediately clearing crowds and setting up wall-splats.
+6. Jeet Kune Do / Kung Fu (Marshall Law / Lee)
+Tekken Base: Marshall Law
+Built purely on overwhelming speed and frame-traps.
+ * The 1-Inch Punch: A specific directional SPA or combo ender. The animation has almost zero wind-up, but the collision physics apply a massive kinetic impulse to the target. The opponent flies backward on a perfectly straight vector, instantly shattering any breakable environment objects they hit.
+ * The Dragon Tail: A spinning low sweep that targets the ankles. It has massive horizontal reach, allowing it to hit 3 or 4 enemies simultaneously if they are clustered together.

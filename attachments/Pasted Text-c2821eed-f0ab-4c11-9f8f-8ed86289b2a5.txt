@@ -1,0 +1,30 @@
+The boundaries are locked. Pure Three.js and TypeScript on mobile. No Godot overhead. We are building strictly with CC0, your proprietary fighters, and the Emergent code-plus-texture method to keep the WebGL draw calls low so the phone doesn't throttle.
+With the Kenney buildings acting as the hard perimeter of the block, those six structures form your skybox and outer collision walls. The actual fight zones—the ring, cage, subway, crane roof, and back room—need to be built inside that shell using Three.js geometry.
+Here is how you construct those five specific arenas in code so they run at 60fps on a phone.
+1. Merged Geometry (The Mobile Law)
+If you build a steel cage out of 500 individual CylinderGeometry poles, Three.js sends 500 draw calls to the mobile GPU. The game will stutter and die.
+You must use BufferGeometryUtils.mergeGeometries.
+You calculate the math for the cage walls, push all the cylinders into an array, merge them into a single BufferGeometry, and apply one metallic texture. The phone renders the entire steel cage in exactly one draw call. You do the same for the scaffold pipes on the crane roof and the tile pillars in the subway.
+2. The Five Arenas (Three.js Architecture)
+The Back Room (The Underground Mafia HQ)
+ * The Build: A simple inverted BoxGeometry (so the texture renders on the inside faces).
+ * The Texture: You generate a seamless tile of scuffed hardwood, a dropped ceiling, and wood-paneled walls.
+ * The Details: You write a script to drop procedural tables (a flat cylinder on a tall cylinder) and chairs. Merge all the static furniture into one mesh. Tag the merged furniture mesh with env_hard for wall-splats.
+The Subway
+ * The Build: An extruded shape. You draw a 2D arch in TypeScript and use ExtrudeGeometry to push it down the Z-axis, creating a perfect tunnel.
+ * The Texture: Generated seamless grime, subway tile, and concrete.
+ * The Hazard: The train is a simple BoxGeometry with a metallic texture, kept completely outside the scene graph until a timer fires. When the timer hits, you tween its position down the Z-axis through the tunnel. If a fighter's FSM capsule intersects the train's bounding box during that tween, it applies the massive damage chunk.
+The Ring and The Cage
+ * The Build (Cage): Four plane geometries forming a box. You generate a seamless PNG texture of a chainlink fence with an alpha channel (transparency). Apply it to a MeshBasicMaterial with transparent: true and side: THREE.DoubleSide. The engine renders the holes in the fence perfectly without needing thousands of polygons.
+ * The Build (Ring): The ropes are TubeGeometry drawn along a Spline curve.
+ * The Collision: You map the rope splines to your physics engine. When a player capsule hits the rope bounds, the FSM triggers the rope_bounce state, multiplying their velocity vector by -1 to sling them back.
+The Crane Roof
+ * The Build: A massive flat plane for the concrete roof. The edges have no collision walls.
+ * The Mechanic: Instead of env_hard, the perimeter is a trigger zone. If a character enters the hurt_airborne or hurt_heavy state while their coordinates overlap the edge trigger, you disable their Y-axis collision floor. Gravity pulls them down instantly.
+3. The Transition Logic
+You do not use loading screens between the street and the back room. You use door triggers and the camera.
+When your character intersects the doorway of the Kenney building that houses the Back Room:
+ * The camera lerps (smoothly moves) from a wide exterior shot to a tight interior angle.
+ * The FSM disables the street lighting (DirectionalLight) and turns on the interior lighting (PointLights over the tables).
+ * Because the Kenney building is a low-poly shell, the Back Room geometry is physically sitting inside of it. You just walked through the front door.
+Check WHERE.md. If the priority is getting the environments built, pick one of the five arenas. You generate the flat seamless textures via the 2D API, and we write the exact Three.js BufferGeometry math to construct it in the scene.
