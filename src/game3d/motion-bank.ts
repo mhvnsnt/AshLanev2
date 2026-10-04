@@ -185,18 +185,24 @@ export function bakeMotion(root: THREE.Object3D) {
   return clips;
 }
 
+const ARM_SLOTS = new Set(["upperArmL", "lowerArmL", "handL", "upperArmR", "lowerArmR", "handR"]);
+const armTwist = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+const armTwistInv = armTwist.clone().invert();
+
 function bakeRole(name: string, times: number[], role: Role, map: Record<string, string>, rest: Map<string, THREE.Quaternion>) {
   const tracks: THREE.QuaternionKeyframeTrack[] = [];
+  const q = new THREE.Quaternion();
+  const out = new THREE.Quaternion();
   for (const [slot, keys] of Object.entries(role)) {
     const bone = map[slot];
     const q0 = bone ? rest.get(bone) : undefined;
     if (!bone || !q0 || keys.length !== times.length) continue;
+    const hinge = bone.startsWith("mixamorig") && ARM_SLOTS.has(slot);
     const values: number[] = [];
-    const q = new THREE.Quaternion();
-    const out = new THREE.Quaternion();
     for (const key of keys) {
       q.set(key[0], key[1], key[2], key[3]);
-      out.copy(q0).multiply(q);
+      if (hinge) out.copy(q0).multiply(armTwist).multiply(q).multiply(armTwistInv);
+      else out.copy(q0).multiply(q);
       values.push(out.x, out.y, out.z, out.w);
     }
     tracks.push(new THREE.QuaternionKeyframeTrack(`${bone}.quaternion`, times, values));
