@@ -201,10 +201,22 @@ export function createView(canvas: HTMLCanvasElement) {
         castLoading.delete(file);
         return;
       }
-      const fitted = wearMannequin(gltf.scene, rig.scene);
-      castRigs.set(file, adoptRig(fitted, [], castMoveset(file)));
-      castLoading.delete(file);
-      rigKey = "";
+      // Do not run the expensive vertex retargeter in the same task that
+      // starts a mission. Let the browser give the game a quiet frame first.
+      const hydrate = () => {
+        try {
+          const fitted = wearMannequin(gltf.scene, rig.scene);
+          castRigs.set(file, adoptRig(fitted, [], castMoveset(file)));
+          rigKey = "";
+        } finally {
+          castLoading.delete(file);
+        }
+      };
+      if ("requestIdleCallback" in window) {
+        (window as Window & { requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number }).requestIdleCallback?.(hydrate, { timeout: 1500 });
+      } else {
+        requestAnimationFrame(() => requestAnimationFrame(hydrate));
+      }
     }).catch(() => {
       castLoading.delete(file);
     });
