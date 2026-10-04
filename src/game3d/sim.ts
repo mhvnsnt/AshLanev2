@@ -9,7 +9,7 @@ import { resetYoko, tickYokosukaBelt } from "./yokosuka/belt";
 
 export type Phase = "free" | "atk" | "hit" | "launch" | "down" | "grab" | "throw" | "dash" | "spin" | "windup" | "out";
 export type Home = "plaza" | "street" | "scaffold" | "market" | "yard" | "dock" | "under" | "ring" | "cage" | "subway" | "crane" | "office";
-export type Arch = "brawler" | "runner" | "brute" | "hood" | "hex";
+export type Arch = "brawler" | "runner" | "brute" | "hood" | "hex" | "grappler" | "charger" | "counter";
 export type Weapon = "fist" | "pipe" | "bottle" | "board" | "blade" | "spear";
 
 export type Body = {
@@ -658,6 +658,15 @@ function addGrunt(sim: Sim, x: number, z: number, y: number, home: Home, arch: A
   } else if (arch === "hex") {
     g.hp = 72;
     g.maxHp = 72;
+  } else if (arch === "grappler") {
+    g.hp = 96;
+    g.maxHp = 96;
+  } else if (arch === "charger") {
+    g.hp = 78;
+    g.maxHp = 78;
+  } else if (arch === "counter") {
+    g.hp = 68;
+    g.maxHp = 68;
   }
   const p = sim.bodies[0];
   g.yaw = p ? yawFromDir(p.x - g.x, p.z - g.z) : 0;
@@ -733,6 +742,9 @@ function spawnBodies(sim: Sim) {
   addGrunt(sim, 22, -19, 0, "market", "hex");
   addGrunt(sim, 31, -18.2, 0, "market", "runner");
   addGrunt(sim, 39, -20, 0, "market", "hood");
+  addGrunt(sim, 34, -15, 0, "market", "grappler");
+  addGrunt(sim, -39, 5, 0, "yard", "charger");
+  addGrunt(sim, 5, 35, 0, "dock", "counter");
   addGrunt(sim, -36, 2, 0, "yard", "brute");
   addGrunt(sim, -42, -6, 0, "yard", "runner");
   addGrunt(sim, -30, 7, 0, "yard", "hood");
@@ -749,6 +761,7 @@ function spawnBodies(sim: Sim) {
   addGrunt(sim, -3, -64, 0, "subway", "hood");
   addGrunt(sim, 0, 72, 3.4, "crane", "hex");
   addGrunt(sim, 74, -26, 0, "office", "hex");
+  addGrunt(sim, 78, -29, 0, "office", "counter");
   addProp(sim, "spear", 66, 0.2, 30, 7, "");
   addProp(sim, "blade", -60, 0.2, 2, 6, "");
   addProp(sim, "crate", -15.4, 0, -8.2, 2, "");
@@ -2307,8 +2320,8 @@ function updateEnemies(sim: Sim, dt: number) {
         if (!e.swung && e.stateT < 0.14) {
         e.swung = true;
         const f = forward(e.yaw);
-        const bite = (e.arch === "brute" ? 14 : e.arch === "hex" ? 11 : e.arch === "hood" ? 8 : e.arch === "runner" ? 7 : 9) * (e.chest < 35 ? 0.65 : 1);
-        const tag = e.swing === 5 || e.arch === "runner" ? "low" : e.arch === "brute" ? "high" : "mid";
+        const bite = (e.arch === "brute" ? 14 : e.arch === "grappler" ? 13 : e.arch === "charger" ? 12 : e.arch === "hex" ? 11 : e.arch === "counter" ? 10 : e.arch === "hood" ? 8 : e.arch === "runner" ? 7 : 9) * (e.chest < 35 ? 0.65 : 1);
+        const tag = e.swing === 5 || e.arch === "runner" ? "low" : e.arch === "brute" || e.arch === "charger" ? "high" : "mid";
         for (const target of sim.bodies) {
           if (target.kind === "grunt" || !target.alive) continue;
           if (target.iframe > 0) continue;
@@ -2321,7 +2334,7 @@ function updateEnemies(sim: Sim, dt: number) {
         const f = forward(e.yaw);
         e.vx = -f.x * 2.2;
         e.vz = -f.z * 2.2;
-        e.cd = e.arch === "runner" || e.arch === "hood" ? 0.42 : e.arch === "brute" ? 1.15 : 0.7;
+        e.cd = e.arch === "runner" || e.arch === "hood" ? 0.42 : e.arch === "charger" ? 0.48 : e.arch === "counter" ? 0.9 : e.arch === "grappler" || e.arch === "brute" ? 1.15 : 0.7;
       }
       continue;
     }
@@ -2342,10 +2355,10 @@ function updateEnemies(sim: Sim, dt: number) {
     const d = Math.hypot(ax, az) || 1;
     const playerOpen = p && p.state === "atk" && p.swung && p.stateT < 0.16;
     const playerThreat = p && p.state === "atk" && !p.swung;
-    if (hot && p && pressing && !swinging && e.cd <= 0 && Math.abs(e.y - p.y) < 1.1 && d < (playerOpen ? 2.5 : e.arch === "hex" ? 2.3 : 1.35)) {
+    if (hot && p && pressing && !swinging && e.cd <= 0 && Math.abs(e.y - p.y) < 1.1 && d < (playerOpen ? 2.5 : e.arch === "counter" ? 2.0 : e.arch === "hex" ? 2.3 : e.arch === "charger" ? 1.65 : e.arch === "grappler" ? 1.5 : 1.35)) {
       e.swing = p.state === "down" || e.arch === "runner" ? 5 : 0;
       e.state = "windup";
-      e.stateT = (playerOpen ? 0.12 : SPEC.enemyWindup) * (e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "brute" || e.arch === "hex" ? 1.28 : 1);
+      e.stateT = (playerOpen ? 0.12 : SPEC.enemyWindup) * (e.arch === "charger" ? 0.55 : e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "grappler" || e.arch === "brute" || e.arch === "hex" ? 1.28 : e.arch === "counter" ? 1.05 : 1);
       e.yaw = yawFromDir(ax, az);
       e.vx = 0;
       e.vz = 0;
@@ -2360,7 +2373,7 @@ function updateEnemies(sim: Sim, dt: number) {
       const orbit = e.id * 0.9 + sim.time * 0.45;
       ax = p.x + Math.sin(orbit) * 2.55 - e.x;
       az = p.z + Math.cos(orbit) * 2.55 - e.z;
-    } else if (hot && p && playerThreat && e.arch !== "brute" && d < 2.1) {
+    } else if (hot && p && playerThreat && e.arch !== "brute" && e.arch !== "grappler" && e.arch !== "charger" && d < 2.1) {
       ax = e.x - p.x;
       az = e.z - p.z;
     }
@@ -2380,9 +2393,9 @@ function updateEnemies(sim: Sim, dt: number) {
       }
     }
     const m = Math.hypot(ax, az) || 1;
-    const archMul = e.arch === "runner" ? 1.38 : e.arch === "hood" ? 1.2 : e.arch === "brute" ? 0.72 : e.arch === "hex" ? 0.84 : 1;
+    const archMul = e.arch === "charger" ? 1.55 : e.arch === "runner" ? 1.38 : e.arch === "hood" ? 1.2 : e.arch === "brute" ? 0.72 : e.arch === "grappler" ? 0.76 : e.arch === "counter" ? 0.92 : e.arch === "hex" ? 0.84 : 1;
     const heat = sim.story ? 1 + sim.mission * 0.012 : 1;
-    const retreat = hot && p && playerThreat && e.arch !== "brute" && d < 2.1;
+    const retreat = hot && p && playerThreat && e.arch !== "brute" && e.arch !== "grappler" && e.arch !== "charger" && d < 2.1;
     const sp = (!hot ? sim.tune.enemySpeed * 0.65 : retreat ? sim.tune.enemySpeed * 0.8 : !pressing ? sim.tune.enemySpeed * 0.75 : d < 1.05 ? sim.tune.enemySpeed * 0.35 : sim.tune.enemySpeed) * archMul * heat * (e.legs < 35 ? 0.55 : 1);
     e.vx = (ax / m) * sp;
     e.vz = (az / m) * sp;
@@ -3444,7 +3457,7 @@ function focusPack(sim: Sim) {
       b.x = b.homeX + 3;
       b.z = b.homeZ + 3;
     }
-    const base = b.arch === "brute" ? 120 : b.arch === "runner" ? 44 : b.arch === "hood" ? 56 : b.arch === "hex" ? 72 : 64;
+    const base = b.arch === "brute" ? 120 : b.arch === "grappler" ? 96 : b.arch === "charger" ? 78 : b.arch === "counter" ? 68 : b.arch === "runner" ? 44 : b.arch === "hood" ? 56 : b.arch === "hex" ? 72 : 64;
     b.maxHp = Math.round(base * mission.hp * (mission.rule === "rival" ? 2.2 : 1));
     b.hp = b.maxHp;
   }
