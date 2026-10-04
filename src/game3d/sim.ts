@@ -773,6 +773,12 @@ function spawnBodies(sim: Sim) {
   addProp(sim, "table", 32.4, 0, -19.4, 2, "");
   addProp(sim, "chair", 30.2, 0, -18.2, 1, "");
   addProp(sim, "car", 11, 0, -21, 18, "");
+  addProp(sim, "crate", -39, 0, 6, 3, "");
+  addProp(sim, "crate", -36.5, 0, 7.2, 3, "pipe");
+  addProp(sim, "board", -28, 0.35, 29, 3, "");
+  addProp(sim, "board", 30, 0.35, -25, 3, "");
+  addProp(sim, "crate", 5, 0, 34, 3, "");
+  addProp(sim, "crate", -4, 0, -34, 3, "bottle");
   placePlayer(sim, sim.mode);
   sim.foes = 12;
 }
