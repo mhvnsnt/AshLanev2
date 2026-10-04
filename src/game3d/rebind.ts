@@ -124,21 +124,40 @@ export function wearMannequin(castRoot: THREE.Object3D, mannequinRoot: THREE.Obj
     }
     const skinIndex = new Uint16Array(count * 4);
     const skinWeight = new Float32Array(count * 4);
-    const score: { idx: number; d: number }[] = [];
+    // Mission-start hitch fix: the old path allocated/sorted a distance object
+    // array for every vertex. Keep only the four nearest bones in scalar slots.
+    // This preserves the same inverse-distance weighting without the per-vertex
+    // sort/GC cliff that could lock the main thread on larger cast meshes.
     for (let i = 0; i < count; i++) {
-      score.length = 0;
-      for (let b = 0; b < bones.length; b++) score.push({ idx: b, d: distToBone(placed[i], start[b], end[b]) });
-      score.sort((a, b) => a.d - b.d);
-      let sum = 0;
-      const w = [0, 0, 0, 0];
-      for (let k = 0; k < 4; k++) {
-        w[k] = 1 / (score[k].d + 0.025);
-        sum += w[k];
+      let i0 = 0, i1 = 0, i2 = 0, i3 = 0;
+      let d0 = Infinity, d1 = Infinity, d2 = Infinity, d3 = Infinity;
+      const p = placed[i];
+      for (let b = 0; b < bones.length; b++) {
+        const d = distToBone(p, start[b], end[b]);
+        if (d < d0) {
+          d3 = d2; i3 = i2;
+          d2 = d1; i2 = i1;
+          d1 = d0; i1 = i0;
+          d0 = d; i0 = b;
+        } else if (d < d1) {
+          d3 = d2; i3 = i2;
+          d2 = d1; i2 = i1;
+          d1 = d; i1 = b;
+        } else if (d < d2) {
+          d3 = d2; i3 = i2;
+          d2 = d; i2 = b;
+        } else if (d < d3) {
+          d3 = d; i3 = b;
+        }
       }
-      for (let k = 0; k < 4; k++) {
-        skinIndex[i * 4 + k] = score[k].idx;
-        skinWeight[i * 4 + k] = w[k] / sum;
-      }
+      const w0 = 1 / (d0 + 0.025);
+      const w1 = 1 / (d1 + 0.025);
+      const w2 = 1 / (d2 + 0.025);
+      const w3 = 1 / (d3 + 0.025);
+      const sum = w0 + w1 + w2 + w3;
+      const o = i * 4;
+      skinIndex[o] = i0; skinIndex[o + 1] = i1; skinIndex[o + 2] = i2; skinIndex[o + 3] = i3;
+      skinWeight[o] = w0 / sum; skinWeight[o + 1] = w1 / sum; skinWeight[o + 2] = w2 / sum; skinWeight[o + 3] = w3 / sum;
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
