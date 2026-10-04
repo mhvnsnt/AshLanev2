@@ -200,6 +200,7 @@ export const ROSTER: LaneFighter[] = [
     bio: "Jager. Body from the Brutal Fist set.",
     attires: [a("base", "Base", "JAGER.glb")],
   },
+  {
     id: "oss_knight",
     name: "Knight",
     martial: "karate",
