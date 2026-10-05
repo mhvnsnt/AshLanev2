@@ -39,6 +39,15 @@ export function AshlaneApp() {
   const seeded = useRef(false);
 
   useEffect(() => {
+    // Register the root-scoped PWA worker for installable launch and best-effort
+    // offline caching. Failure must never block playing the browser build.
+    if ("serviceWorker" in navigator) {
+      void navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" })
+        .catch((error: unknown) => console.warn("[AshLane] PWA worker registration failed", error));
+    }
+  }, []);
+
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const handle = mount(canvas, setHud);
