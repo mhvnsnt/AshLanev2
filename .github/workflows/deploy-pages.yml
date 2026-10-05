@@ -27,11 +27,14 @@ jobs:
 
       - run: npm ci --no-audit --no-fund
       - run: npx tsc --noEmit || echo "typecheck warnings"
-      - run: npm run build
+
+      - run: PAGES_BUILD=1 npm run build
+        env:
+          PAGES_BUILD: "1"
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./.output/public
 
   deploy:
     needs: build
