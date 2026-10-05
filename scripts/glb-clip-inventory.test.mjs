@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import testRunner from "node:test";
 
 const root = resolve(".");
 const publicRoot = join(root, "public");
 const rosterText = readFileSync(join(root, "src/game3d/roster.ts"), "utf8");
 const stylesText = readFileSync(join(root, "src/game3d/styles.ts"), "utf8");
-const pipelineText = readFileSync(join(root, "src/game3d/rig-pipeline.ts"), "utf8");
 const martialBlock = stylesText.match(/export const MARTIAL:[\s\S]*?\n\];/)?.[0] ?? "";
 const slotNames = "idle walk run back strafeL strafeR jump fall jab cross launch sweep lunge armedJab armedCross armedLaunch armedSweep armedLunge spin hit dodge down death pickup throw grab block cheer".split(" ");
 const mappedClips = [...new Set(
