@@ -43,5 +43,5 @@ jobs:
       - name: Production build
         run: npm run build:dev
 
-      - name: Verify generated build exists
-        run: test -d dist && test -f dist/index.html
+      - name: Verify deployable Vercel build and PWA worker exist
+        run: test -f .vercel/output/nitro.json && test -f .vercel/output/functions/__server.func/index.mjs && test -f .vercel/output/static/sw.js
