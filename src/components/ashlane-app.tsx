@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+
+type DeferredInstallPrompt = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+};
 import { EMPTY_HUD, parseSpecText, specDocument, type Hud, type Mode } from "@/game3d/spec";
 import { mount, type Handle } from "@/game3d/mount";
 import { MISSIONS, placeName, ruleLabel } from "@/game3d/campaign";
@@ -33,6 +38,7 @@ export function AshlaneApp() {
   const [pendingWho, setPendingWho] = useState<string | null>(null);
   const [suiteWho, setSuiteWho] = useState<string | null>(null);
   const [menu, setMenu] = useState<"main" | "jobs" | "style" | "library" | "story" | "arenas">("main");
+  const [installPrompt, setInstallPrompt] = useState<DeferredInstallPrompt | null>(null);
   const [arena, setArena] = useState("ward");
   const [slot, setSlot] = useState<Slot>("jab");
   const [clip, setClip] = useState("Unarmed_Melee_Attack_Punch_A");
@@ -45,6 +51,20 @@ export function AshlaneApp() {
       void navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" })
         .catch((error: unknown) => console.warn("[AshLane] PWA worker registration failed", error));
     }
+  }, []);
+
+  useEffect(() => {
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as DeferredInstallPrompt);
+    };
+    const onInstalled = () => setInstallPrompt(null);
+    window.addEventListener("beforeinstallprompt", onBeforeInstall);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
   }, []);
 
   useEffect(() => {
@@ -158,6 +178,19 @@ export function AshlaneApp() {
                   <div className="mt-4 flex flex-col gap-2">
                     <button type="button" className="rounded-full bg-ember px-5 py-3 font-display text-sm text-ink" onClick={() => setMenu("story")}>
                       Story
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-full border border-line bg-ink-2 px-5 py-3 text-sm text-cream"
+                      onClick={() => {
+                        if (installPrompt) {
+                          void installPrompt.prompt().then(() => installPrompt.userChoice).then(() => setInstallPrompt(null));
+                        } else {
+                          window.location.assign("/?install=1");
+                        }
+                      }}
+                    >
+                      {installPrompt ? "Install AshLane" : "Install on phone"}
                     </button>
                     <div className="grid grid-cols-2 gap-2">
                       <button type="button" className="rounded-full border border-line bg-ink-2 px-3 py-3 text-sm" onClick={() => api.current?.startBout("exhibit", arena)}>
