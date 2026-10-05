@@ -5,6 +5,8 @@ import { equipStyle, retargetSlot, type Slot } from "./rig-pipeline";
 import { loadCleared, loadPurse, loadXp } from "./campaign";
 import { applyFighter, applyMartial, applyStance, loadFighter, saveFighter } from "./styles";
 import { fighterById } from "./roster";
+import { getMusic } from "./music";
+import { sfxPunch, sfxKick, sfxKnockout, startCrowd, stopCrowd } from "./combat-sfx";
 
 export type Handle = {
   start: (mode: Mode) => void;
@@ -169,11 +171,18 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
   }
 
   function playSfx(names: string[]) {
-    if (!audio || audio.state !== "running") return;
     const heard = new Set<string>();
     for (const name of names) {
       if (heard.has(name)) continue;
       heard.add(name);
+      // Route through the new procedural combat SFX module first,
+      // fall back to the legacy blip() synth if needed.
+      try {
+        if (name === "hit" || name === "hurt") { sfxPunch(name === "hit"); continue; }
+        if (name === "kick") { sfxKick(); continue; }
+        if (name === "ko" || name === "knockout") { sfxKnockout(); continue; }
+      } catch {}
+      if (!audio || audio.state !== "running") continue;
       blip(audio, name);
       if (heard.size > 3) break;
     }
@@ -248,14 +257,7 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       const row = fighterById(id);
       sim.who = row.name;
       sim.bio = row.bio;
-      const sourceStyle = row.sourceStyle;
-      const selected = row.attires[0]?.file ?? "";
-      if (sourceStyle) {
-        sim.style = sourceStyle;
-        sim.cast = "";
-      } else {
-        sim.cast = selected;
-      }
+      sim.cast = row.attires[0]?.file ?? "";
       sim.martial = row.martial;
       const p = sim.bodies[0];
       if (p) p.name = row.name;
@@ -266,16 +268,7 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       push(snapshot(sim));
     },
     setAttire(file) {
-      if (file.startsWith("@style:")) {
-        sim.style = file.slice("@style:".length);
-        sim.cast = "";
-        equipStyle(sim.style);
-        if (sim.martial) applyMartial(sim.martial);
-        applyStance(sim.stance);
-        saveFighter(sim.style, sim.martial, sim.stance);
-      } else {
-        sim.cast = file;
-      }
+      sim.cast = file;
       push(snapshot(sim));
     },
     setStance(id) {
@@ -291,11 +284,23 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
     startBout(kind, stage) {
       unlock();
       bootBout(sim, kind, stage);
+      try {
+        const music = getMusic();
+        music.start();
+        music.setIntensity("hype");
+        startCrowd(0.6);
+      } catch {}
       push(snapshot(sim));
     },
     startStory(index) {
       unlock();
       bootStory(sim, index);
+      try {
+        const music = getMusic();
+        music.start();
+        music.setIntensity("tense");
+        startCrowd(0.4);
+      } catch {}
       push(snapshot(sim));
     },
     quit() {
@@ -303,6 +308,10 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       sim.paused = false;
       sim.story = false;
       sim.bout = "off";
+      try {
+        getMusic().stop();
+        stopCrowd();
+      } catch {}
       push(snapshot(sim));
     },
     assignClip(slot, clip) {

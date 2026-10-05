@@ -175,12 +175,6 @@ export function renderWebManifest(hostHeader) {
           sizes: "180x180",
           type: "image/png",
         },
-        {
-          src: "/favicon.svg",
-          sizes: "any",
-          type: "image/svg+xml",
-          purpose: "any maskable",
-        },
       ],
     },
     null,
@@ -315,17 +309,12 @@ export function resolveOgTitle(
   host = "",
   documentTitle = "",
 ) {
-  // The actual document title is the most specific identity for this
-  // response. A baked site title is a fallback for documents without one.
+  const fromSite = String(site.title ?? "").trim();
+  if (fromSite) return fromSite;
   const fromDoc = String(documentTitle ?? "").trim();
   if (fromDoc) return fromDoc;
-  const fromSite = String(site.title ?? "").trim();
-  // "Ashlane" is the workspace template's baked default, not an explicit
-  // published app identity. Let the published grok.me slug fill that default.
-  if (fromSite && fromSite.toLowerCase() !== "ashlane") return fromSite;
   const fromHost = appNameFromHost(host);
   if (fromHost && fromHost !== DEFAULT_APP_NAME) return fromHost;
-  if (fromSite) return fromSite;
   const fromArg = String(appName ?? "").trim();
   return fromArg || DEFAULT_APP_NAME;
 }
@@ -426,12 +415,14 @@ function insertBeforeHeadClose(html, snippet) {
 
 export function normalizeHeadContext(ctx = {}) {
   const cwd = ctx.cwd ?? process.cwd();
-  // The caller decides whether workspace identity is part of this render.
-  // Runtime/plugin entry points pass a baked snapshot; pure helper calls and
-  // tests without a site stay isolated from the repository's own public/og.jpg
-  // and site.json. When a snapshot is supplied, a newly-created public card
-  // still wins over a stale bake.
-  const site = ctx.site !== undefined ? applyCustomCardFromFs(ctx.site, cwd) : {};
+  // Middleware passes a baked `site`. Still consult the workspace so a
+  // public/og.jpg generated after that snapshot (or missed by a wrong cwd)
+  // wins over the og.grok.me placeholder. Vercel has no public/ to read, so
+  // a correct bake is unchanged.
+  const site = applyCustomCardFromFs(
+    ctx.site !== undefined ? ctx.site : snapshotOgIdentity(cwd).site,
+    cwd,
+  );
   const appName = resolveOgTitle(site, ctx.appName ?? DEFAULT_APP_NAME, ctx.host ?? "");
   return {
     appName,

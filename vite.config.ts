@@ -146,6 +146,8 @@ function authPopupPlugin(): Plugin {
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
 export default defineConfig(({ command, isPreview }) => ({
+  // GitHub Pages serves from /AshLanev2/ — assets must use relative base.
+  base: "/AshLanev2/",
   server: {
     host: "0.0.0.0",
     port: 8080,

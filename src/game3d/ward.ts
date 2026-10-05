@@ -42,13 +42,9 @@ export const WARD: WardFighter[] = [
   { id: "token", name: "Token Ames", home: "subway", arch: "hood", style: "turnstile", line: "Fights in the narrow." },
   { id: "highbeam", name: "High Beam", home: "crane", arch: "hex", style: "the drop", line: "North roof. The edge is the move." },
   { id: "ledger", name: "Ledger Cho", home: "office", arch: "hex", style: "back room", line: "Keeps the paper past the market." },
-  { id: "hook", name: "Hook Vale", home: "market", arch: "grappler", style: "clinch pressure", line: "Gets both hands on you before the stalls can hide you." },
-  { id: "rush", name: "Rush Mercer", home: "yard", arch: "charger", style: "straight-line rush", line: "Crosses the yard before you can reset." },
-  { id: "glass", name: "Glass Reed", home: "dock", arch: "counter", style: "counter fighter", line: "Waits for the swing and answers from range." },
-  { id: "quinn", name: "Quinn Vale", home: "office", arch: "counter", style: "paper counter", line: "Keeps the back room tight and punishes overreach." },
 ];
 
-export const PARTNER = { name: "Rook Calder", style: "comes in after the plaza", line: "Not from the other book. Ash Lane's second." };
+export const PARTNER = { name: "Rook Calder", style: "comes in after the plaza", line: "Not from the other book. Buffalo Bill's second." };
 
 const taken = new Set<string>();
 

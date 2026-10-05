@@ -6,10 +6,13 @@ import { motionDur, motionReady } from "./motion-bank";
 import { fighterById } from "./roster";
 import { LEASE_NAME, PARTNER, claimWard, resetWard, wardByName } from "./ward";
 import { resetYoko, tickYokosukaBelt } from "./yokosuka/belt";
+import { createLockOn, lockOnPress, lockOnUpdate, clearLock, type LockOnState } from "./federated/lockon";
+import { pickFreeflowTarget, freeflowLunge } from "./federated/freeflow";
+import { requestAttack, releaseAttack, type GroupAIState } from "./federated/groupai";
 
 export type Phase = "free" | "atk" | "hit" | "launch" | "down" | "grab" | "throw" | "dash" | "spin" | "windup" | "out";
 export type Home = "plaza" | "street" | "scaffold" | "market" | "yard" | "dock" | "under" | "ring" | "cage" | "subway" | "crane" | "office";
-export type Arch = "brawler" | "runner" | "brute" | "hood" | "hex" | "grappler" | "charger" | "counter";
+export type Arch = "brawler" | "runner" | "brute" | "hood" | "hex";
 export type Weapon = "fist" | "pipe" | "bottle" | "board" | "blade" | "spear";
 
 export type Body = {
@@ -39,6 +42,7 @@ export type Body = {
   comboWindow: number;
   cd: number;
   iframe: number;
+  stopT: number;
   grounded: boolean;
   alive: boolean;
   slam: boolean;
@@ -155,6 +159,10 @@ export type Sim = {
   pairVic: number;
   pairLen: number;
   lockArm: number;
+  group: GroupAIState;
+  lock: LockOnState;
+  bufLock: number;
+  prevLock: boolean;
   rush: boolean;
   chain: boolean;
   chains: number;
@@ -230,6 +238,7 @@ export type FrameInput = {
   jump: boolean;
   dash: boolean;
   use: boolean;
+  lock?: boolean;
 };
 
 const R = 0.42;
@@ -390,6 +399,7 @@ function blankBody(sim: Sim, partial: Pick<Body, "kind" | "x" | "z"> & Partial<B
     comboWindow: 0,
     cd: 0.45,
     iframe: grunt ? 0 : 0.7,
+    stopT: 0,
     grounded: true,
     alive: true,
     slam: false,
@@ -552,6 +562,10 @@ export function createSim(tune?: Tune): Sim {
     pairVic: -1,
     pairLen: 0,
     lockArm: 0,
+    group: { activeAttackers: [] },
+    lock: createLockOn(),
+    bufLock: 0,
+    prevLock: false,
     rush: false,
     chain: false,
     chains: 0,
@@ -658,15 +672,6 @@ function addGrunt(sim: Sim, x: number, z: number, y: number, home: Home, arch: A
   } else if (arch === "hex") {
     g.hp = 72;
     g.maxHp = 72;
-  } else if (arch === "grappler") {
-    g.hp = 96;
-    g.maxHp = 96;
-  } else if (arch === "charger") {
-    g.hp = 78;
-    g.maxHp = 78;
-  } else if (arch === "counter") {
-    g.hp = 68;
-    g.maxHp = 68;
   }
   const p = sim.bodies[0];
   g.yaw = p ? yawFromDir(p.x - g.x, p.z - g.z) : 0;
@@ -712,6 +717,8 @@ function spawnBodies(sim: Sim) {
   sim.props = [];
   resetWard();
   sim.grabId = -1;
+  sim.group.activeAttackers = [];
+  clearLock(sim.lock);
   sim.pair = "";
   sim.pairT = 0;
   sim.cleared = false;
@@ -742,9 +749,6 @@ function spawnBodies(sim: Sim) {
   addGrunt(sim, 22, -19, 0, "market", "hex");
   addGrunt(sim, 31, -18.2, 0, "market", "runner");
   addGrunt(sim, 39, -20, 0, "market", "hood");
-  addGrunt(sim, 34, -15, 0, "market", "grappler");
-  addGrunt(sim, -39, 5, 0, "yard", "charger");
-  addGrunt(sim, 5, 35, 0, "dock", "counter");
   addGrunt(sim, -36, 2, 0, "yard", "brute");
   addGrunt(sim, -42, -6, 0, "yard", "runner");
   addGrunt(sim, -30, 7, 0, "yard", "hood");
@@ -761,7 +765,6 @@ function spawnBodies(sim: Sim) {
   addGrunt(sim, -3, -64, 0, "subway", "hood");
   addGrunt(sim, 0, 72, 3.4, "crane", "hex");
   addGrunt(sim, 74, -26, 0, "office", "hex");
-  addGrunt(sim, 78, -29, 0, "office", "counter");
   addProp(sim, "spear", 66, 0.2, 30, 7, "");
   addProp(sim, "blade", -60, 0.2, 2, 6, "");
   addProp(sim, "crate", -15.4, 0, -8.2, 2, "");
@@ -773,12 +776,6 @@ function spawnBodies(sim: Sim) {
   addProp(sim, "table", 32.4, 0, -19.4, 2, "");
   addProp(sim, "chair", 30.2, 0, -18.2, 1, "");
   addProp(sim, "car", 11, 0, -21, 18, "");
-  addProp(sim, "crate", -39, 0, 6, 3, "");
-  addProp(sim, "crate", -36.5, 0, 7.2, 3, "pipe");
-  addProp(sim, "board", -28, 0.35, 29, 3, "");
-  addProp(sim, "board", 30, 0.35, -25, 3, "");
-  addProp(sim, "crate", 5, 0, 34, 3, "");
-  addProp(sim, "crate", -4, 0, -34, 3, "bottle");
   placePlayer(sim, sim.mode);
   sim.foes = 12;
 }
@@ -1005,6 +1002,8 @@ function breakGrab(sim: Sim) {
   if (p?.state === "grab") p.state = "free";
   if (e && e.state === "grab") e.state = "hit";
   sim.grabId = -1;
+  sim.group.activeAttackers = [];
+  clearLock(sim.lock);
   sim.pair = "";
   sim.pairT = 0;
   sim.rearLock = false;
@@ -1115,7 +1114,7 @@ function hurt(sim: Sim, b: Body, dmg: number, poiseDmg: number, kx: number, kz: 
   b.vz = kz / mass;
   b.vy = Math.max(b.vy, lift / mass);
   b.iframe = b.kind === "player" ? 0.38 : 0.14;
-  sim.hitstop = Math.max(sim.hitstop, lift > 4 ? 0.06 : 0.04);
+  b.stopT = Math.max(b.stopT, lift > 4 ? 0.06 : 0.04);
   sim.shake = Math.min(1, sim.shake + (lift > 4 ? 0.55 : 0.32));
   sim.sfx.push(b.kind === "player" ? "hurt" : "hit");
   burst(sim, b.x, b.y + 1, b.z, b.kind === "player" ? 0xe4572e : 0xf0b429);
@@ -1283,6 +1282,7 @@ function hitGrunts(sim: Sim, hx: number, hz: number, radius: number, dmg: number
       }
     }
   }
+  if (any) p.stopT = Math.max(p.stopT, 0.04);
   return any;
 }
 
@@ -1442,8 +1442,36 @@ function swingDur(swing: number) {
 function beginSwing(sim: Sim, p: Body) {
   const diving = !p.grounded && p.y > 0.85 && !(p.comboWindow > 0 || p.queued);
   const fast = Math.hypot(p.vx, p.vz) > 4.4;
-  if (!diving) commitFacing(sim, p);
-  else if (sim.flow > 40) faceFlow(sim, p);
+  let ffDone = false;
+  if (!diving) {
+    const stickMag = Math.hypot(sim.stickX, sim.stickY);
+    let ffT: Body | null = null;
+    const locked = lockOnUpdate(sim.lock, sim.bodies);
+    if (locked && Math.hypot(locked.x - p.x, locked.z - p.z) < 15) ffT = locked;
+    if (!ffT) ffT = pickFreeflowTarget(p, sim.bodies, sim.stickX, sim.stickY, stickMag);
+    if (ffT) {
+      p.yaw = yawFromDir(ffT.x - p.x, ffT.z - p.z);
+      const lg = freeflowLunge(p, ffT);
+      const LUNGE_T = 0.14;
+      const LUNGE_MAX = 10;
+      let lvx = lg.dx / LUNGE_T;
+      let lvz = lg.dz / LUNGE_T;
+      const lsp = Math.hypot(lvx, lvz);
+      if (lsp > LUNGE_MAX) {
+        lvx = (lvx / lsp) * LUNGE_MAX;
+        lvz = (lvz / lsp) * LUNGE_MAX;
+      }
+      p.vx = 0;
+      p.vz = 0;
+      p.vx += lvx;
+      p.vz += lvz;
+      ffDone = true;
+    }
+  }
+  if (!ffDone) {
+    if (!diving) commitFacing(sim, p);
+    else if (sim.flow > 40) faceFlow(sim, p);
+  }
   tryCounter(sim, p);
   if (diving) {
     const f = forward(p.yaw);
@@ -2253,6 +2281,10 @@ function updateEnemies(sim: Sim, dt: number) {
   const p = sim.bodies[0];
   for (const e of sim.bodies) {
     if (e.kind !== "grunt") continue;
+    if (e.stopT > 0) {
+      e.stopT -= dt;
+      continue;
+    }
     const yokoStreet = sim.mode === "belt" && e.home === "street";
     e.iframe = Math.max(0, e.iframe - dt);
     e.cd = Math.max(0, e.cd - dt);
@@ -2326,21 +2358,24 @@ function updateEnemies(sim: Sim, dt: number) {
         if (!e.swung && e.stateT < 0.14) {
         e.swung = true;
         const f = forward(e.yaw);
-        const bite = (e.arch === "brute" ? 14 : e.arch === "grappler" ? 13 : e.arch === "charger" ? 12 : e.arch === "hex" ? 11 : e.arch === "counter" ? 10 : e.arch === "hood" ? 8 : e.arch === "runner" ? 7 : 9) * (e.chest < 35 ? 0.65 : 1);
-        const tag = e.swing === 5 || e.arch === "runner" ? "low" : e.arch === "brute" || e.arch === "charger" ? "high" : "mid";
+        const bite = (e.arch === "brute" ? 14 : e.arch === "hex" ? 11 : e.arch === "hood" ? 8 : e.arch === "runner" ? 7 : 9) * (e.chest < 35 ? 0.65 : 1);
+        const tag = e.swing === 5 || e.arch === "runner" ? "low" : e.arch === "brute" ? "high" : "mid";
         for (const target of sim.bodies) {
           if (target.kind === "grunt" || !target.alive) continue;
           if (target.iframe > 0) continue;
           if (Math.hypot(target.x - e.x, target.z - e.z) > 1.22 || Math.abs(target.y - e.y) >= 1.2) continue;
-          hurt(sim, target, bite, 10, f.x * 6.5, f.z * 6.5, e.swing === 5 ? 0.25 : e.arch === "brute" ? 2.4 : 1.2, tag);
+          if (hurt(sim, target, bite, 10, f.x * 6.5, f.z * 6.5, e.swing === 5 ? 0.25 : e.arch === "brute" ? 2.4 : 1.2, tag)) {
+            e.stopT = Math.max(e.stopT, 0.04);
+          }
         }
       }
       if (e.stateT <= 0) {
+        releaseAttack(sim.group, e.id);
         e.state = "free";
         const f = forward(e.yaw);
         e.vx = -f.x * 2.2;
         e.vz = -f.z * 2.2;
-        e.cd = e.arch === "runner" || e.arch === "hood" ? 0.42 : e.arch === "charger" ? 0.48 : e.arch === "counter" ? 0.9 : e.arch === "grappler" || e.arch === "brute" ? 1.15 : 0.7;
+        e.cd = e.arch === "runner" || e.arch === "hood" ? 0.42 : e.arch === "brute" ? 1.15 : 0.7;
       }
       continue;
     }
@@ -2361,10 +2396,11 @@ function updateEnemies(sim: Sim, dt: number) {
     const d = Math.hypot(ax, az) || 1;
     const playerOpen = p && p.state === "atk" && p.swung && p.stateT < 0.16;
     const playerThreat = p && p.state === "atk" && !p.swung;
-    if (hot && p && pressing && !swinging && e.cd <= 0 && Math.abs(e.y - p.y) < 1.1 && d < (playerOpen ? 2.5 : e.arch === "counter" ? 2.0 : e.arch === "hex" ? 2.3 : e.arch === "charger" ? 1.65 : e.arch === "grappler" ? 1.5 : 1.35)) {
+    if (hot && p && pressing && !swinging && e.cd <= 0 && Math.abs(e.y - p.y) < 1.1 && d < (playerOpen ? 2.5 : e.arch === "hex" ? 2.3 : 1.35)) {
+      if (!requestAttack(sim.group, e.id, sim.bodies)) continue;
       e.swing = p.state === "down" || e.arch === "runner" ? 5 : 0;
       e.state = "windup";
-      e.stateT = (playerOpen ? 0.12 : SPEC.enemyWindup) * (e.arch === "charger" ? 0.55 : e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "grappler" || e.arch === "brute" || e.arch === "hex" ? 1.28 : e.arch === "counter" ? 1.05 : 1);
+      e.stateT = (playerOpen ? 0.12 : SPEC.enemyWindup) * (e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "brute" || e.arch === "hex" ? 1.28 : 1);
       e.yaw = yawFromDir(ax, az);
       e.vx = 0;
       e.vz = 0;
@@ -2379,7 +2415,7 @@ function updateEnemies(sim: Sim, dt: number) {
       const orbit = e.id * 0.9 + sim.time * 0.45;
       ax = p.x + Math.sin(orbit) * 2.55 - e.x;
       az = p.z + Math.cos(orbit) * 2.55 - e.z;
-    } else if (hot && p && playerThreat && e.arch !== "brute" && e.arch !== "grappler" && e.arch !== "charger" && d < 2.1) {
+    } else if (hot && p && playerThreat && e.arch !== "brute" && d < 2.1) {
       ax = e.x - p.x;
       az = e.z - p.z;
     }
@@ -2399,9 +2435,9 @@ function updateEnemies(sim: Sim, dt: number) {
       }
     }
     const m = Math.hypot(ax, az) || 1;
-    const archMul = e.arch === "charger" ? 1.55 : e.arch === "runner" ? 1.38 : e.arch === "hood" ? 1.2 : e.arch === "brute" ? 0.72 : e.arch === "grappler" ? 0.76 : e.arch === "counter" ? 0.92 : e.arch === "hex" ? 0.84 : 1;
+    const archMul = e.arch === "runner" ? 1.38 : e.arch === "hood" ? 1.2 : e.arch === "brute" ? 0.72 : e.arch === "hex" ? 0.84 : 1;
     const heat = sim.story ? 1 + sim.mission * 0.012 : 1;
-    const retreat = hot && p && playerThreat && e.arch !== "brute" && e.arch !== "grappler" && e.arch !== "charger" && d < 2.1;
+    const retreat = hot && p && playerThreat && e.arch !== "brute" && d < 2.1;
     const sp = (!hot ? sim.tune.enemySpeed * 0.65 : retreat ? sim.tune.enemySpeed * 0.8 : !pressing ? sim.tune.enemySpeed * 0.75 : d < 1.05 ? sim.tune.enemySpeed * 0.35 : sim.tune.enemySpeed) * archMul * heat * (e.legs < 35 ? 0.55 : 1);
     e.vx = (ax / m) * sp;
     e.vz = (az / m) * sp;
@@ -2412,6 +2448,20 @@ function updateEnemies(sim: Sim, dt: number) {
 function updatePlayer(sim: Sim, dt: number, dashEdge: boolean) {
   const p = sim.bodies[0];
   p.iframe = Math.max(0, p.iframe - dt);
+  if (p.stopT > 0) {
+    p.stopT -= dt;
+    return;
+  }
+  if (sim.bufLock > 0) {
+    sim.bufLock = 0;
+    const was = sim.lock.isLocked;
+    lockOnPress(sim.lock, p, sim.bodies);
+    if (sim.lock.isLocked && !was) {
+      sim.banner = "Locked on";
+      sim.bannerT = 0.4;
+    }
+  }
+  lockOnUpdate(sim.lock, sim.bodies);
   const atk = sim.bufAtk > 0;
   const grab = sim.bufGrab > 0;
   const blast = sim.bufBlast > 0;
@@ -3463,7 +3513,7 @@ function focusPack(sim: Sim) {
       b.x = b.homeX + 3;
       b.z = b.homeZ + 3;
     }
-    const base = b.arch === "brute" ? 120 : b.arch === "grappler" ? 96 : b.arch === "charger" ? 78 : b.arch === "counter" ? 68 : b.arch === "runner" ? 44 : b.arch === "hood" ? 56 : b.arch === "hex" ? 72 : 64;
+    const base = b.arch === "brute" ? 120 : b.arch === "runner" ? 44 : b.arch === "hood" ? 56 : b.arch === "hex" ? 72 : 64;
     b.maxHp = Math.round(base * mission.hp * (mission.rule === "rival" ? 2.2 : 1));
     b.hp = b.maxHp;
   }
@@ -3530,12 +3580,14 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   const jumpEdge = input.jump && !sim.prevJump;
   const dashEdge = input.dash && !sim.prevDash;
   const useEdge = input.use && !sim.prevUse;
+  const lockEdge = !!input.lock && !sim.prevLock;
   sim.prevAtk = input.attack;
   sim.prevGrab = input.grab;
   sim.prevBlast = input.blast;
   sim.prevJump = input.jump;
   sim.prevDash = input.dash;
   sim.prevUse = input.use;
+  sim.prevLock = !!input.lock;
   if (atkEdge) sim.bufAtk = 0.16;
   else sim.bufAtk = Math.max(0, sim.bufAtk - dt);
   if (grabEdge) sim.bufGrab = 0.16;
@@ -3546,6 +3598,8 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   else sim.bufJump = Math.max(0, sim.bufJump - dt);
   if (useEdge) sim.bufUse = 0.2;
   else sim.bufUse = Math.max(0, sim.bufUse - dt);
+  if (lockEdge) sim.bufLock = 0.2;
+  else sim.bufLock = Math.max(0, sim.bufLock - dt);
 
   if (!sim.running || sim.paused) return;
   if (sim.hitstop > 0) {
@@ -3561,11 +3615,15 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   updateEnemies(sim, dt);
   updateAlly(sim, dt);
   tickYokosukaBelt(sim, input, dt);
-  for (const b of sim.bodies) moveBody(sim, b, dt);
+  for (const b of sim.bodies) {
+    if (b.stopT > 0) continue;
+    moveBody(sim, b, dt);
+  }
   stickPair(sim);
   for (let i = 0; i < sim.bodies.length; i++) {
     const a = sim.bodies[i];
     if (!a.alive || a.state === "out" || a.state === "grab" || a.state === "throw") continue;
+    if (a.stopT > 0) continue;
     for (let j = i + 1; j < sim.bodies.length; j++) {
       const b = sim.bodies[j];
       if (!b.alive || b.state === "out" || b.state === "grab" || b.state === "throw") continue;

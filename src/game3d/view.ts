@@ -6,7 +6,6 @@ import type { Body, Box, Sim } from "./sim";
 import { HAND_SLOT, PROP_MESH, TARGET_HEIGHT, adoptRig, castMoveset, clipForMoveset, slotFor } from "./rig-pipeline";
 import { forgeCar, forgeStreet, poseCar } from "./forge";
 import { bakeMotion, loadMotionBank, motionNames, retargetUal, setUal } from "./motion-bank";
-import { wearMannequin } from "./rebind";
 
 type Fighter = {
   id: number;
@@ -183,40 +182,31 @@ export function createView(canvas: HTMLCanvasElement) {
   let rigKey = "";
   const loader = new GLTFLoader();
   loader.setMeshoptDecoder(MeshoptDecoder);
-  void loader.loadAsync("/motion/ual/AnimationLibrary_Godot_Standard.gltf").then((gltf) => {
-    setUal(gltf.scene, gltf.animations);
-    rigKey = "";
-  });
+  // Load all three UAL libraries: Godot Standard (base) + UAL1/UAL2 (86 combat clips).
+  // UAL1/UAL2 ship on the Quaternius 65-joint rig — retargetUal() handles the mapping.
+  const ualLibs = [
+    "/motion/ual/AnimationLibrary_Godot_Standard.gltf",
+    "/motion/ual/UAL1_Standard.glb",
+    "/motion/ual/UAL2_Standard.glb",
+  ];
+  void Promise.all(ualLibs.map((url) => loader.loadAsync(url).catch(() => null))).then(
+    (gltfs) => {
+      const valid = gltfs.filter((g): g is NonNullable<typeof g> => g !== null);
+      if (valid.length === 0) return;
+      const allClips = valid.flatMap((g) => g.animations);
+      setUal(valid[0].scene, allClips);
+      rigKey = "";
+    }
+  );
   const castRigs = new Map<string, RigTemplate>();
   const castLoading = new Set<string>();
   function ensureCast(file: string) {
-    if (!file || castLoading.has(file)) return;
-    const have = castRigs.get(file);
-    if (have?.scene.userData.fitted) return;
-    if (!mannequin) return;
+    if (!file || castRigs.has(file) || castLoading.has(file)) return;
     castLoading.add(file);
     loader.loadAsync(`/models/cast/${file}`).then((gltf) => {
-      const rig = mannequin;
-      if (!rig) {
-        castLoading.delete(file);
-        return;
-      }
-      // Do not run the expensive vertex retargeter in the same task that
-      // starts a mission. Let the browser give the game a quiet frame first.
-      const hydrate = () => {
-        try {
-          const fitted = wearMannequin(gltf.scene, rig.scene);
-          castRigs.set(file, adoptRig(fitted, [], castMoveset(file)));
-          rigKey = "";
-        } finally {
-          castLoading.delete(file);
-        }
-      };
-      if ("requestIdleCallback" in window) {
-        (window as Window & { requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number }).requestIdleCallback?.(hydrate, { timeout: 1500 });
-      } else {
-        requestAnimationFrame(() => requestAnimationFrame(hydrate));
-      }
+      castRigs.set(file, adoptRig(gltf.scene, gltf.animations, castMoveset(file)));
+      castLoading.delete(file);
+      rigKey = "";
     }).catch(() => {
       castLoading.delete(file);
     });
@@ -1125,7 +1115,7 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
   const xz = scale * bulk * (0.9 + shoulder * 0.1);
   model.scale.set(xz, yScale, xz);
   model.position.y = -bounds.min.y * yScale;
-  if (template.moveset.startsWith("cast:") && !template.scene.userData.fitted) model.rotation.y = -Math.PI / 2;
+  if (template.moveset.startsWith("cast:")) model.rotation.y = -Math.PI / 2;
   model.traverse((obj) => {
     if (PROP_MESH.test(obj.name)) obj.visible = false;
     if (obj.name === "head" || obj.name === "Head" || obj.name === "DEF-head") obj.scale.setScalar(0.85 + head * 0.15);

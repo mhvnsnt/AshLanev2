@@ -2,18 +2,6 @@ import { MOVESETS, equipStyle, retargetSlot, type Slot } from "./rig-pipeline";
 
 export const MARTIAL: { id: string; label: string; note: string; clips: Partial<Record<Slot, string>> }[] = [
   {
-    id: "boxing",
-    label: "Boxing",
-    note: "Compact hands, a straight cross, and a kick to stop the rush.",
-    clips: {
-      jab: "Unarmed_Melee_Attack_Punch_A",
-      cross: "Unarmed_Melee_Attack_Punch_B",
-      launch: "Unarmed_Melee_Attack_Punch_B",
-      sweep: "Unarmed_Melee_Attack_Kick",
-      lunge: "Unarmed_Melee_Attack_Kick",
-    },
-  },
-  {
     id: "kickboxing",
     label: "Kickboxing",
     note: "Hands, then a kick. Spin is still L.",

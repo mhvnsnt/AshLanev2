@@ -105,7 +105,6 @@ function wrapHtmlResponses(middlewares, cwd) {
     const injector = createHeadInjector({
       host,
       cwd,
-      site: snapshotOgIdentity(cwd).site,
     });
     let mode = null; // null = undecided, "inject" | "passthrough"
 
@@ -170,7 +169,6 @@ export function grokPwaPlugin() {
       return injectGrokPwaHead(html, {
         host: process.env.VITE_PUBLIC_HOSTNAME ?? "",
         cwd: root,
-        site: snapshotOgIdentity(root).site,
       });
     },
     configureServer(server) {
