@@ -26,26 +26,26 @@ This document defines the asset pipeline for AshLanev2: where animation sources 
   - Status: Active
   - Notes: Keep the current roster as the compatibility baseline
 
-### Upcoming sources to integrate
+### Audited sources and next intake
 
-- User-owned Schwarzerblitz fork
-  - Status: Awaiting exact repository path
-  - Goal: Bring in fuller movesets and animation variants that the user owns or can redistribute
-- Kenney animated character pack
-  - Status: Planned
-  - Goal: Additional humanoid animation coverage and variants
-- Additional public asset packs with permissive licensing
-  - Status: Planned
-  - Goal: More environmental clutter, props, and combat-ready poses
+- User-owned SchwarzerblitzEngine fork — https://github.com/mhvnsnt/SchwarzerblitzEngine
+  - Status: Audited; reference-only.
+  - Its `master` tree contains four `moves.txt` files: common (13), dummy (24), tutor (47), tutor2 (47). These are shared/tutorial/test definitions, not four complete main-fighter kits.
+  - 69 distinct source animation references have zero exact-name matches in AshLane's 50-key baked bank. Do not wire those names as if the animations exist.
+- Quaternius UAL2 / additional CC0 packs
+  - Status: Candidate, not yet imported as a second binary pack.
+  - Require exact archive/file inventory, license confirmation, clip-name extraction, rig test, and runtime validation before integration.
+- Open-source combat-engine references
+  - Ikemen GO (MIT engine), SlopArena (MIT 3D platform fighter), Fury-Fist (MIT code with separate asset provenance), Deathblood Lazer (MIT code but art/audio/character designs All Rights Reserved), and Godot Mugen (BSD-3-Clause early-stage) are tracked for code/data-schema study. They are not direct drop-in animation libraries.
 
 ## Recommended repo sources
 
 These are useful starting points to keep the motion library broad and open-source-friendly:
 
-- User-owned Schwarzerblitz fork: exact repository URL must be recorded before importing
-- https://github.com/KayKit3D/ (KayKit assets)
-- https://github.com/quaternius/ (public model and animation packs)
-- https://github.com/KennyNL/ (Kenney asset repositories)
+- User-owned SchwarzerblitzEngine fork: https://github.com/mhvnsnt/SchwarzerblitzEngine; its available move files are tutorial/dummy/common data and must not be mislabeled as four complete fighter kits
+- https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 (CC0 KayKit source already used)
+- https://quaternius.com/ (CC0 UAL source already checked in; additional packs remain candidates)
+- https://kenney.nl/ (CC0 environment/asset packs; audit exact pack before adding)
 - https://github.com/Unity-Technologies/ (reference animation and rigging examples, when needed)
 
 ## Integration rules
