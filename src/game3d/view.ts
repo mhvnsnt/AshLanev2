@@ -6,6 +6,16 @@ import type { Body, Box, Sim } from "./sim";
 import { HAND_SLOT, PROP_MESH, TARGET_HEIGHT, adoptRig, castMoveset, clipForMoveset, slotFor } from "./rig-pipeline";
 import { forgeCar, forgeStreet, poseCar } from "./forge";
 import { bakeMotion, loadMotionBank, motionNames, retargetUal, setUal } from "./motion-bank";
+// Wired modules (services.ts hub): weather drives sun/fog/rain, boids drive
+// bird meshes, streaming ticks the chunk state machine, springbones step
+// secondary motion, universal-retarget remaps template clips per model.
+import {
+  rainIntensity, fogDensity, sunElevation, type WeatherSim,
+} from "./federated/weather";
+import { updateFlock, type Flock } from "./federated/boids";
+import { updateStreaming } from "./federated/streaming";
+import { stepSpringBone } from "./federated/springbones";
+import { retargetClip, collectRest as collectRestPose } from "./universal-retarget";
 
 type Fighter = {
   id: number;
@@ -269,6 +279,34 @@ export function createView(canvas: HTMLCanvasElement) {
   const _target = new THREE.Vector3();
   const flickers: { mat: THREE.MeshBasicMaterial; rate: number }[] = [];
   const rain = makeRain(scene);
+  // Wired: boids.ts bird flock — simple two-triangle birds driven by the
+  // flock sim in services. Positions update in render().
+  const birdGeo = new THREE.BufferGeometry();
+  birdGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array([
+    -0.5, 0, 0, 0, 0.12, 0.18, 0, 0, -0.18,
+    0.5, 0, 0, 0, 0, -0.18, 0, 0.12, 0.18,
+  ]), 3));
+  const birdMat = new THREE.MeshBasicMaterial({ color: 0x1c2126, side: THREE.DoubleSide });
+  const birdMeshes: THREE.Mesh[] = [];
+  for (let i = 0; i < 9; i++) {
+    const m = new THREE.Mesh(birdGeo, birdMat);
+    m.frustumCulled = false;
+    scene.add(m);
+    birdMeshes.push(m);
+  }
+  // Wired: pedestrians.ts crowd — cheap capsule peds synced from the sim.
+  const pedGeo = new THREE.CapsuleGeometry(0.28, 0.9, 3, 8);
+  const pedMats = [0x8a7a6a, 0x5c6b73, 0x6e4a3a, 0x3a465c, 0x777788].map(
+    (c) => new THREE.MeshLambertMaterial({ color: c }),
+  );
+  const pedMeshes: THREE.Mesh[] = [];
+  for (let i = 0; i < 40; i++) {
+    const m = new THREE.Mesh(pedGeo, pedMats[i % pedMats.length]);
+    m.visible = false;
+    m.frustumCulled = false;
+    scene.add(m);
+    pedMeshes.push(m);
+  }
   let idle = 0.4;
   let built = false;
 
@@ -717,6 +755,11 @@ export function createView(canvas: HTMLCanvasElement) {
     return [soldier, soldierf, drifter, knight, rogue, hood, brute, hex].filter((rig): rig is RigTemplate => rig !== null);
   }
 
+  /** Realistic crowd pool — NO KayKit, NO skeletons, NO zombies. Real people only. */
+  function realistic(): RigTemplate[] {
+    return [soldier, soldierf, drifter, mannequin].filter((rig): rig is RigTemplate => rig !== null);
+  }
+
   function mixed(): RigTemplate[] {
     const extra = [skel, bones, skull, minion, zombie, zombief, mannequin].filter((rig): rig is RigTemplate => rig !== null);
     return [...people(), ...extra];
@@ -724,31 +767,33 @@ export function createView(canvas: HTMLCanvasElement) {
 
   function rigFor(b: Body, sim: Sim): RigTemplate | null {
     const humans = people();
+    const real = realistic();
     const all = sim.crowd === "chibi" ? [knight, rogue, hood, brute, hex, skel, bones, skull, minion].filter((rig): rig is RigTemplate => rig !== null) : mixed();
-    if (!humans.length && !all.length && !knight) return null;
+    if (!humans.length && !all.length && !soldier) return null;
     if (b.kind === "player") {
       if (sim.cast && castRigs.has(sim.cast)) return castRigs.get(sim.cast) ?? null;
-      if (sim.style === "soldier") return soldier ?? humans[0] ?? knight;
-      if (sim.style === "soldierf") return soldierf ?? humans[0] ?? knight;
-      if (sim.style === "zombie") return zombie ?? humans[0] ?? knight;
-      if (sim.style === "zombief") return zombief ?? humans[0] ?? knight;
-      if (sim.style === "mannequin") return mannequin ?? humans[0] ?? knight;
-      if (sim.style === "drifter") return drifter ?? humans[0] ?? knight;
-      if (sim.style === "runner" || sim.style === "ash") return sim.build === "chibi" ? rogue ?? knight : soldierf ?? rogue ?? humans[0] ?? knight;
-      if (sim.style === "brute" || sim.style === "pit") return sim.build === "chibi" ? brute ?? knight : soldier ?? brute ?? humans[0] ?? knight;
-      if (sim.style === "hood") return sim.build === "chibi" ? hood ?? knight : soldierf ?? hood ?? knight;
-      if (sim.style === "hex") return sim.build === "chibi" ? hex ?? knight : soldier ?? hex ?? knight;
-      if (sim.style === "skeleton") return skel ?? knight;
-      if (sim.style === "bones") return bones ?? knight;
-      if (sim.style === "skull") return skull ?? knight;
-      if (sim.style === "minion") return minion ?? knight;
+      if (sim.style === "soldier") return soldier ?? real[0] ?? soldier;
+      if (sim.style === "soldierf") return soldierf ?? real[0] ?? soldier;
+      if (sim.style === "zombie") return zombie ?? real[0] ?? soldier;
+      if (sim.style === "zombief") return zombief ?? real[0] ?? soldier;
+      if (sim.style === "mannequin") return mannequin ?? real[0] ?? soldier;
+      if (sim.style === "drifter") return drifter ?? real[0] ?? soldier;
+      if (sim.style === "runner" || sim.style === "ash") return sim.build === "chibi" ? rogue ?? knight : soldierf ?? rogue ?? real[0] ?? soldier;
+      if (sim.style === "brute" || sim.style === "pit") return sim.build === "chibi" ? brute ?? knight : soldier ?? brute ?? real[0];
+      if (sim.style === "hood") return sim.build === "chibi" ? hood ?? knight : soldierf ?? hood ?? real[0] ?? soldier;
+      if (sim.style === "hex") return sim.build === "chibi" ? hex ?? knight : soldier ?? hex ?? real[0];
+      if (sim.style === "skeleton") return skel ?? soldier;
+      if (sim.style === "bones") return bones ?? soldier;
+      if (sim.style === "skull") return skull ?? soldier;
+      if (sim.style === "minion") return minion ?? soldier;
       if (sim.build === "chibi") return knight;
-      return soldier ?? soldierf ?? drifter ?? humans[0] ?? knight;
+      return soldier ?? soldierf ?? drifter ?? real[0] ?? null;
     }
-    if (b.kind === "ally") return soldierf ?? hood ?? rogue ?? knight;
-    const pool = sim.crowd === "full" ? humans : all;
+    if (b.kind === "ally") return soldierf ?? real[0] ?? soldier;
+    // "full" = realistic humans only (no KayKit). "mix" = variety incl. KayKit. "chibi" = all KayKit.
+    const pool = sim.crowd === "full" ? real : sim.crowd === "mix" ? all : all;
     if (pool.length) return pool[b.id % pool.length];
-    return knight;
+    return soldier;
   }
 
   function syncFighters(sim: Sim) {
@@ -903,7 +948,64 @@ export function createView(canvas: HTMLCanvasElement) {
       return idle;
     });
     const beat = sim.hitstop > 0 ? 1.8 : 1;
-    rain.step(sim.reduced ? 0 : dt * beat, camera);
+    // ---- Wired services: weather / boids / streaming / springbones ----
+    // (services.ts hub; skipped entirely when mount() hasn't attached it.)
+    const svcs = sim.services;
+    if (svcs) {
+      const w: WeatherSim = svcs.weather;
+      // Rain follows the weather sim (drizzle -> storm); dry weather hides it.
+      const rainI = rainIntensity(w);
+      rain.step(sim.reduced || rainI <= 0 ? 0 : dt * beat, camera);
+      // Fog density from weather; lightning flashes during storms.
+      const fog = scene.fog as THREE.Fog | null;
+      if (fog) {
+        const d = fogDensity(w);
+        fog.near = 24 - d * 14;
+        fog.far = 90 - d * 55;
+      }
+      if (w.lightning > 0.02) {
+        sun.intensity += w.lightning * 3;
+        hemi.intensity += w.lightning * 1.5;
+      }
+      // Boids: drift the flock (already ticked in sim), place bird meshes.
+      const birds = svcs.flock.birds;
+      for (let i = 0; i < birdMeshes.length; i++) {
+        const b = birds[i % birds.length];
+        const m = birdMeshes[i];
+        m.position.set(b.x, b.y, b.z);
+        m.rotation.y = Math.atan2(b.vx, b.vz);
+        m.visible = !sim.reduced;
+      }
+      // Streaming: district chunk state machine follows the player.
+      if (p) updateStreaming(svcs.stream, p.x, p.z);
+      // Pedestrians: sync cheap capsule peds from the sim crowd.
+      {
+        const peds = svcs.peds.peds;
+        for (let i = 0; i < pedMeshes.length; i++) {
+          const m = pedMeshes[i];
+          const ped = peds[i];
+          if (!ped || sim.reduced) {
+            m.visible = false;
+            continue;
+          }
+          m.visible = true;
+          m.position.set(ped.x, 0.75, ped.z);
+          m.rotation.y = Math.atan2(ped.vx, ped.vz);
+          // Panic reads as a hop; cower crouches.
+          const hop = ped.state === "panic" ? Math.abs(Math.sin(sim.time * 9 + ped.id)) * 0.25 : 0;
+          m.position.y = 0.75 + hop;
+          m.scale.y = ped.state === "cower" ? 0.7 : 1;
+        }
+      }
+      // Spring bones: hair/cloth secondary motion per fighter.
+      for (const chains of svcs.springs.values()) {
+        for (const chain of chains) {
+          for (const bone of chain.bones) stepSpringBone(bone, dt, 0, 0, 0);
+        }
+      }
+    } else {
+      rain.step(sim.reduced ? 0 : dt * beat, camera);
+    }
     for (const glow of flickers) {
       glow.mat.opacity = sim.reduced ? 0.9 : 0.72 + Math.sin(sim.time * glow.rate) * 0.22;
     }
@@ -1150,6 +1252,17 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
   if (template.moveset.startsWith("cast:")) {
     for (const clip of retargetUal(model)) {
       actions[clip.name] = mixer.clipAction(clip);
+    }
+  }
+  // Universal retargeter: remap any template clip whose bone names don't
+  // match this model, so one animation bank plays on every rig without
+  // per-model retargeting. Additive — never replaces a loaded clip.
+  {
+    const srcRest = collectRestPose(template.scene);
+    for (const clip of template.animations) {
+      if (clip.name in actions) continue;
+      const mapped = retargetClip(clip, srcRest.quats, srcRest.names, model);
+      if (mapped) actions[clip.name] = mixer.clipAction(mapped);
     }
   }
   const slots: THREE.Object3D[] = [];
