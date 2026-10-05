@@ -62,7 +62,8 @@ self.addEventListener("fetch", (event) => {
     event.respondWith((async () => {
       try {
         const response = await fetch(request);
-        if (response.ok && url.pathname === "/") {
+        // Never let the install-guide query overwrite the cached game shell.
+        if (response.ok && url.pathname === "/" && !url.searchParams.has("install")) {
           const cache = await caches.open(SHELL_CACHE);
           await cache.put("/", response.clone());
         }
