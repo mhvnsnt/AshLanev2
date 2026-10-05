@@ -1,0 +1,3477 @@
+{
+  "generatedFrom": "mhvnsnt/SchwarzerblitzEngine@master",
+  "generatedAt": "2026-10-04",
+  "rightsNote": "Move names, inputs, frame ranges, and combat metadata are catalogued as reference data. No Schwarzerblitz character meshes, animation binaries, music, or other restricted bundled assets are copied into AshLanev2.",
+  "sourceFiles": [
+    "schwarzerblitz_engine/bin/media/characters/chara_dummy/moves.txt",
+    "schwarzerblitz_engine/bin/media/characters/chara_tutor/moves.txt",
+    "schwarzerblitz_engine/bin/media/characters/chara_tutor2/moves.txt",
+    "schwarzerblitz_engine/bin/media/characters/common/moves.txt"
+  ],
+  "totalMoves": 131,
+  "sets": [
+    {
+      "source": "schwarzerblitz_engine/bin/media/characters/chara_dummy/moves.txt",
+      "moves": [
+        {
+          "name": "Run1",
+          "display": null,
+          "animation": "running",
+          "frames": [
+            0,
+            0
+          ],
+          "input": "> >",
+          "stance": "Ground",
+          "range": [
+            60,
+            350
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "BackStepOld",
+          "display": null,
+          "animation": "walkFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "< <",
+          "stance": "Ground",
+          "range": [
+            60,
+            75
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Ukemi",
+          "display": "Ukemi",
+          "animation": "rolloutRight",
+          "frames": [
+            5,
+            12
+          ],
+          "input": "T",
+          "stance": "Landing",
+          "range": [
+            80,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Rollout_Front",
+          "display": "Rolling_on_the_River",
+          "animation": "rolloutRight",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "2 + T",
+          "stance": "Ground",
+          "range": [
+            80,
+            320
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Rollout_Back",
+          "display": "Rolling_on_the_River_(II)",
+          "animation": "rollout",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "8 + T",
+          "stance": "Ground",
+          "range": [
+            80,
+            320
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "BackStep",
+          "display": null,
+          "animation": "walkFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "< <",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! AirRotation",
+          "display": "Dominos_are_Falling",
+          "animation": "randomSquareRotation2",
+          "frames": [
+            0,
+            27
+          ],
+          "input": "K",
+          "stance": "Air",
+          "range": [
+            0,
+            120
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 0,
+              "end": 4,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra1",
+              "start": 5,
+              "end": 7,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra1",
+              "start": 8,
+              "end": 12,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra1",
+              "start": 13,
+              "end": 15,
+              "value": 5,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra1",
+              "start": 17,
+              "end": 19,
+              "value": 5,
+              "hits": "multiHit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! FaceRun",
+          "display": "Proudly_Facing_the_Enemy",
+          "animation": "faceRun2",
+          "frames": [
+            3,
+            26
+          ],
+          "input": "K",
+          "stance": "Running",
+          "range": [
+            0,
+            120
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 3,
+              "end": 8,
+              "value": 20,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! SupineReversal",
+          "display": "Facing_the_Enemy_(recovery)",
+          "animation": "faceRun2",
+          "frames": [
+            3,
+            26
+          ],
+          "input": "P + K",
+          "stance": "Supine",
+          "range": [
+            0,
+            120
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 3,
+              "end": 8,
+              "value": 35,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! QuickRotation",
+          "display": "Don_Quixotte",
+          "animation": "quickRotation",
+          "frames": [
+            0,
+            19
+          ],
+          "input": "P",
+          "stance": "Running",
+          "range": [
+            0,
+            120
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra4",
+              "start": 2,
+              "end": 5,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "StrongMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra4",
+              "start": 6,
+              "end": 9,
+              "value": 12,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! AirRazor",
+          "display": "If_Dodos_Could_Fly",
+          "animation": "airRazor",
+          "frames": [
+            0,
+            20
+          ],
+          "input": "P",
+          "stance": "Air",
+          "range": [
+            0,
+            120
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 0,
+              "end": 4,
+              "value": 5,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra1",
+              "start": 5,
+              "end": 7,
+              "value": 6,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Extra1",
+              "start": 8,
+              "end": 12,
+              "value": 7,
+              "hits": "multiHit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! AirSmash",
+          "display": "They_Would_Probably_Fall_Anyway",
+          "animation": "fallingFace",
+          "frames": [
+            0,
+            20
+          ],
+          "input": "2 + P",
+          "stance": "Air",
+          "range": [
+            0,
+            100
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra5",
+              "start": 3,
+              "end": 6,
+              "value": 20,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Facerush",
+          "display": "In_Your_Face",
+          "animation": "faceRush2",
+          "frames": [
+            0,
+            16
+          ],
+          "input": "4 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 9,
+              "end": 11,
+              "value": 12,
+              "hits": "multiHit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Rise",
+          "display": "Raising_the_Stakes",
+          "animation": "lowAttack1",
+          "frames": [
+            0,
+            10
+          ],
+          "input": "P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 2,
+              "end": 4,
+              "value": 12,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Slide",
+          "display": "Let_It_Slide_(II)",
+          "animation": "lowAttack2",
+          "frames": [
+            0,
+            7
+          ],
+          "input": "K",
+          "stance": "Crouch",
+          "range": [
+            0,
+            60
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 1,
+              "end": 3,
+              "value": 12,
+              "hits": "1hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Slide_GND",
+          "display": "Let_It_Slide",
+          "animation": "lowAttack2",
+          "frames": [
+            0,
+            7
+          ],
+          "input": "2 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            60
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 1,
+              "end": 3,
+              "value": 12,
+              "hits": "1hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Facepalm",
+          "display": "Facepalm",
+          "animation": "facepalm",
+          "frames": [
+            0,
+            16
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "Torso",
+              "start": 6,
+              "end": 8,
+              "value": 15,
+              "hits": "multiHit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! GigaRandom",
+          "display": "Screw_the_Rules",
+          "animation": "gigaRandom",
+          "frames": [
+            0,
+            30
+          ],
+          "input": "2 1 4 P",
+          "stance": "Ground",
+          "range": [
+            60,
+            120
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra4",
+              "start": 10,
+              "end": 12,
+              "value": 35,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! TripleFacepalm",
+          "display": "Triple_Facepalm",
+          "animation": "tripleFacepalm",
+          "frames": [
+            9,
+            36
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "Torso",
+              "start": 15,
+              "end": 17,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "StrongMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "Torso",
+              "start": 24,
+              "end": 26,
+              "value": 10,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Facesweep",
+          "display": "Flying_Carpet",
+          "animation": "faceSweep",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "Torso",
+              "start": 3,
+              "end": 5,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "StrongLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! FacesweepLoop",
+          "display": "Looping_Loop_Again",
+          "animation": "randomFlight",
+          "frames": [
+            11,
+            34
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 12,
+              "end": 13,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "StrongLow",
+              "height": "Low"
+            },
+            {
+              "bone": "Extra1",
+              "start": 23,
+              "end": 24,
+              "value": 6,
+              "hits": "multiHit",
+              "type": "StrongLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Megiddo",
+          "display": "Megiddo_Extinction_Cannon",
+          "animation": "randominator",
+          "frames": [
+            0,
+            39
+          ],
+          "input": "2 3 6 T",
+          "stance": "Ground",
+          "range": [
+            140,
+            300
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra3",
+              "start": 13,
+              "end": 13,
+              "value": 45,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Punch_Throw",
+          "display": "Smashing_Pumpkins",
+          "animation": "highPunch",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "T",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 5,
+              "value": 0,
+              "hits": "1hit",
+              "type": "None",
+              "height": "Throw"
+            }
+          ]
+        },
+        {
+          "name": "! TW_KneeBash",
+          "display": null,
+          "animation": "kneeThrow_slow",
+          "frames": [
+            0,
+            18
+          ],
+          "input": "",
+          "stance": "Ground",
+          "range": [
+            0,
+            0
+          ],
+          "hitboxes": [
+            {
+              "bone": "! RightKnee",
+              "start": 7,
+              "end": 18,
+              "value": 30,
+              "hits": "1Hit",
+              "type": "None",
+              "height": "High"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "schwarzerblitz_engine/bin/media/characters/chara_tutor/moves.txt",
+      "moves": [
+        {
+          "name": "BackStepOld",
+          "display": null,
+          "animation": "walkFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "< <",
+          "stance": "Ground",
+          "range": [
+            60,
+            75
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Ukemi",
+          "display": "Ukemi",
+          "animation": "rolloutRight",
+          "frames": [
+            5,
+            12
+          ],
+          "input": "T",
+          "stance": "Landing",
+          "range": [
+            80,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Rollout_Front",
+          "display": "Rollback",
+          "animation": "rolloutRight",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "v + T",
+          "stance": "Ground",
+          "range": [
+            30,
+            90
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Rollout_Back",
+          "display": "Rollback_(II)",
+          "animation": "rollout",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "^ + T",
+          "stance": "Ground",
+          "range": [
+            30,
+            90
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! RunSwitch",
+          "display": null,
+          "animation": "running",
+          "frames": [
+            0,
+            0
+          ],
+          "input": "H6",
+          "stance": "Ground",
+          "range": [
+            0,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! RunningTackle",
+          "display": "Ransomware_Annihilation",
+          "animation": "grafShoulderThrust",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "P",
+          "stance": "Running",
+          "range": [
+            0,
+            75
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightElbow",
+              "start": 3,
+              "end": 5,
+              "value": 18,
+              "hits": "1Hit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Jump_Punch",
+          "display": "GIT_Commit",
+          "animation": "defaultJumpPunch2",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "P",
+          "stance": "Air",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 1,
+              "end": 2,
+              "value": 8,
+              "hits": "1Hit",
+              "type": "StrongHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Jump_Kick",
+          "display": "SVN_Commit",
+          "animation": "defaultJumpKick",
+          "frames": [
+            0,
+            6
+          ],
+          "input": "K",
+          "stance": "Air",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 3,
+              "end": 6,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! WaveSweeper",
+          "display": "Empty_Recycle_Bin",
+          "animation": "waveSweeperBackTurn",
+          "frames": [
+            0,
+            15
+          ],
+          "input": "1 + K",
+          "stance": "Ground",
+          "range": [
+            40,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightKnee",
+              "start": 4,
+              "end": 10,
+              "value": 4,
+              "hits": "1Hit",
+              "type": "WeakLow",
+              "height": "Low"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 4,
+              "end": 10,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "StandFlight",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! WaveSweeperDiskWipe",
+          "display": "Disk_Wiping",
+          "animation": "waveSweeperBackTurnMidMirror",
+          "frames": [
+            0,
+            15
+          ],
+          "input": "3 + K",
+          "stance": "Crouch",
+          "range": [
+            40,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightKnee",
+              "start": 4,
+              "end": 10,
+              "value": 4,
+              "hits": "1Hit",
+              "type": "WeakMid",
+              "height": "Mid"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 4,
+              "end": 10,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! WaveSweeperLauncher",
+          "display": "Wave_Sweeper_Launcher_(Chain)",
+          "animation": "punchKickCombo",
+          "frames": [
+            19,
+            31
+          ],
+          "input": "K",
+          "stance": "Crouch",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 23,
+              "end": 25,
+              "value": 19,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Throw",
+          "display": "Customer_Service",
+          "animation": "throwStart_step",
+          "frames": [
+            0,
+            8
+          ],
+          "input": "T",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 6,
+              "end": 6,
+              "value": 0,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "Throw"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Punch_Throw",
+          "display": "Customer_Service_T",
+          "animation": "throwStart_step",
+          "frames": [
+            0,
+            8
+          ],
+          "input": "T",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 6,
+              "end": 6,
+              "value": 0,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "Throw"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Punch_Throw_CRC",
+          "display": "Customer_Service_(Chain)",
+          "animation": "throwStart_step",
+          "frames": [
+            2,
+            7
+          ],
+          "input": "T",
+          "stance": "Crouch",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 5,
+              "end": 6,
+              "value": 0,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "Throw"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick",
+          "display": "New_Release",
+          "animation": "heavyKick",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "4 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 3,
+              "end": 7,
+              "value": 18,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Geforce",
+          "display": "G-force",
+          "animation": "rolloverTitan",
+          "frames": [
+            0,
+            34
+          ],
+          "input": "7 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            80
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 5,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "StandFlight",
+              "height": "High"
+            },
+            {
+              "bone": "RightPunch",
+              "start": 6,
+              "end": 7,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "High"
+            },
+            {
+              "bone": "RightPunch",
+              "start": 8,
+              "end": 10,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "High"
+            },
+            {
+              "bone": "RightPunch",
+              "start": 14,
+              "end": 15,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Mid"
+            },
+            {
+              "bone": "LeftPunch",
+              "start": 3,
+              "end": 5,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "StandFlight",
+              "height": "High"
+            },
+            {
+              "bone": "LeftPunch",
+              "start": 6,
+              "end": 7,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "High"
+            },
+            {
+              "bone": "LeftPunch",
+              "start": 8,
+              "end": 10,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "WeakMid",
+              "height": "High"
+            },
+            {
+              "bone": "LeftPunch",
+              "start": 14,
+              "end": 15,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! TW_KneeBash",
+          "display": "_",
+          "animation": "kneeThrow_slow",
+          "frames": [
+            0,
+            18
+          ],
+          "input": "",
+          "stance": "Ground",
+          "range": null,
+          "hitboxes": [
+            {
+              "bone": "! RightKnee",
+              "start": 10,
+              "end": 18,
+              "value": 45,
+              "hits": "1Hit",
+              "type": "None",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! TW_KneeBash_CRC",
+          "display": "_",
+          "animation": "kneeThrow_slow",
+          "frames": [
+            0,
+            18
+          ],
+          "input": "",
+          "stance": "Ground",
+          "range": null,
+          "hitboxes": [
+            {
+              "bone": "! RightKnee",
+              "start": 10,
+              "end": 18,
+              "value": 25,
+              "hits": "1Hit",
+              "type": "None",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Quick_Kick",
+          "display": "Quick_Scan",
+          "animation": "quickKick",
+          "frames": [
+            0,
+            6
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 4,
+              "end": 5,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Axe_Kick",
+          "display": "V.R._Crusher",
+          "animation": "axeKick",
+          "frames": [
+            0,
+            10
+          ],
+          "input": "8 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            75
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 2,
+              "end": 5,
+              "value": 10,
+              "hits": "multiHit",
+              "type": "WeakHigh",
+              "height": "Mid"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 5,
+              "end": 10,
+              "value": 8,
+              "hits": "1Hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Gyaku_Zuki",
+          "display": "Breaking_the_Firewall",
+          "animation": "gyakuZuki",
+          "frames": [
+            0,
+            10
+          ],
+          "input": "4 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            60
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 4,
+              "end": 5,
+              "value": 8,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Gyaku_Zuki_Combo1",
+          "display": "Oi_Zuki_(Chain)",
+          "animation": "gyakuZuki_Combo",
+          "frames": [
+            7,
+            12
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 10,
+              "end": 12,
+              "value": 8,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Gyaku_Zuki_Combo2",
+          "display": "Palm_Strike_(Chain)",
+          "animation": "gyakuZuki_Combo",
+          "frames": [
+            12,
+            21
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 19,
+              "end": 20,
+              "value": 12,
+              "hits": "1hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Gyaku_Zuki_Combo3",
+          "display": "Bug_Fix",
+          "animation": "gyakuZuki_Combo",
+          "frames": [
+            21,
+            27
+          ],
+          "input": "2 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 24,
+              "end": 24,
+              "value": 8,
+              "hits": "1hit",
+              "type": "StrongLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Punch_Combo",
+          "display": "Patch",
+          "animation": "punchKickCombo",
+          "frames": [
+            0,
+            6
+          ],
+          "input": "> + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            60
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 3,
+              "end": 4,
+              "value": 6,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Left_Punch",
+          "display": "Motodachi_Gyaku_Zuki_(Chain)",
+          "animation": "punchKickCombo",
+          "frames": [
+            6,
+            11
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            60
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 7,
+              "end": 11,
+              "value": 7,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Left_Punch_Kick",
+          "display": "Ushiro_Ura_Mawashi_(Chain)",
+          "animation": "punchKickCombo",
+          "frames": [
+            11,
+            31
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            65,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 23,
+              "end": 25,
+              "value": 20,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "High"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 25,
+              "end": 27,
+              "value": 14,
+              "hits": "1hit",
+              "type": "WeakMedium",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! RoundhouseLow_Followup",
+          "display": "Roundabout_(Chain)",
+          "animation": "roundhouseLow",
+          "frames": [
+            0,
+            15
+          ],
+          "input": "4 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 7,
+              "end": 9,
+              "value": 20,
+              "hits": "1hit",
+              "type": "StrongLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Roundhouse_Kick",
+          "display": "Version_Update",
+          "animation": "quickRoundhouse",
+          "frames": [
+            0,
+            16
+          ],
+          "input": "6 + K",
+          "stance": "Ground",
+          "range": [
+            65,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 8,
+              "end": 9,
+              "value": 22,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "High"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 8,
+              "end": 10,
+              "value": 14,
+              "hits": "1hit",
+              "type": "WeakMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Roundhouse_Kick_High_FWP",
+          "display": "Quick_Ushiro_Ura_Mawashi_(Chain)",
+          "animation": "quickRoundhouse",
+          "frames": [
+            0,
+            16
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 8,
+              "end": 9,
+              "value": 22,
+              "hits": "1hit",
+              "type": "StrongHigh",
+              "height": "High"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 8,
+              "end": 10,
+              "value": 14,
+              "hits": "1hit",
+              "type": "WeakMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Cartwheel_kick",
+          "display": "Kernel_Panic",
+          "animation": "amyRolloverKick",
+          "frames": [
+            0,
+            17
+          ],
+          "input": "3 + K",
+          "stance": "Ground",
+          "range": [
+            20,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 6,
+              "end": 9,
+              "value": 18,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Cartwheel_kick_2",
+          "display": "Kernel_Panic_II",
+          "animation": "amyRolloverKick",
+          "frames": [
+            0,
+            17
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            20,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 6,
+              "end": 9,
+              "value": 18,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! CrouchingKick_2",
+          "display": "Battery_Low",
+          "animation": "crouchingKickRenzo",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "K",
+          "stance": "Crouch",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 3,
+              "end": 3,
+              "value": 10,
+              "hits": "1hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! CrouchingPunch",
+          "display": "Charging_the_Phone",
+          "animation": "crouchingKickRenzo",
+          "frames": [
+            6,
+            20
+          ],
+          "input": "P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 9,
+              "end": 10,
+              "value": 12,
+              "hits": "1hit",
+              "type": "StrongLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Rotary_Kick",
+          "display": "Maximum_Speed_Fan",
+          "animation": "flyingKick",
+          "frames": [
+            0,
+            22
+          ],
+          "input": "K",
+          "stance": "Running",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 6,
+              "end": 11,
+              "value": 18,
+              "hits": "1Hit",
+              "type": "Flight",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! SupineReversal",
+          "display": "Maximum_Speed_Fan_(recovery)",
+          "animation": "flyingKick",
+          "frames": [
+            0,
+            22
+          ],
+          "input": "P + K",
+          "stance": "Supine",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 6,
+              "end": 11,
+              "value": 30,
+              "hits": "1Hit",
+              "type": "Flight",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Dynamite_Punch",
+          "display": "Nuke_It_from_the_Orbit",
+          "animation": "abigailPunchTrip2",
+          "frames": [
+            0,
+            49
+          ],
+          "input": "2 1 4 P",
+          "stance": "Ground",
+          "range": [
+            50,
+            100
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 11,
+              "end": 12,
+              "value": 40,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "Mid"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 27,
+              "end": 28,
+              "value": 5,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Left_Jab",
+          "display": "Customer_Rights",
+          "animation": "skeletonPunch",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 3,
+              "end": 4,
+              "value": 4,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Dual_Punch",
+          "display": null,
+          "animation": "dualPunch_2",
+          "frames": [
+            5,
+            9
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 8,
+              "end": 9,
+              "value": 4,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! CrouchingKick",
+          "display": "Guarantee_Expiration",
+          "animation": "lowKick2",
+          "frames": [
+            0,
+            9
+          ],
+          "input": "2 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 3,
+              "end": 4,
+              "value": 10,
+              "hits": "1hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! LowPunch2",
+          "display": "Blue_Screen_of_Death",
+          "animation": "crouchingPunch2",
+          "frames": [
+            0,
+            10
+          ],
+          "input": "3 + P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 2,
+              "end": 3,
+              "value": 10,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! LowPunch2_FWP",
+          "display": "Blue_Screen_of_Death",
+          "animation": "crouchingPunch2",
+          "frames": [
+            0,
+            10
+          ],
+          "input": "P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 2,
+              "end": 3,
+              "value": 10,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! TwinVirtual",
+          "display": "Virtual_Machine_Galore",
+          "animation": "twinVirtual",
+          "frames": [
+            0,
+            21
+          ],
+          "input": "8 + P",
+          "stance": "Ground",
+          "range": [
+            30,
+            90
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 2,
+              "end": 4,
+              "value": 9,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            },
+            {
+              "bone": "RightPunch",
+              "start": 7,
+              "end": 9,
+              "value": 9,
+              "hits": "1hit",
+              "type": "StrongHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! PaperShredder",
+          "display": "Zero_Day_Exploit",
+          "animation": "paperShredder2",
+          "frames": [
+            0,
+            20
+          ],
+          "input": "9 + K",
+          "stance": "Ground",
+          "range": [
+            80,
+            140
+          ],
+          "hitboxes": [
+            {
+              "bone": "Extra1",
+              "start": 4,
+              "end": 6,
+              "value": 5,
+              "hits": "1hit",
+              "type": "StrongHigh",
+              "height": "High"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 4,
+              "end": 5,
+              "value": 25,
+              "hits": "1hit",
+              "type": "StrongHigh",
+              "height": "High"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 6,
+              "end": 6,
+              "value": 35,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! PhotonBurst",
+          "display": "Photon_Wave_(56k)",
+          "animation": "monoJumpPalm",
+          "frames": [
+            0,
+            4
+          ],
+          "input": "T",
+          "stance": "Air",
+          "range": [
+            0,
+            250
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 2,
+              "end": 2,
+              "value": 12,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! PhotonWave",
+          "display": "Photon_Wave_(Low_Ping)",
+          "animation": "photonWave",
+          "frames": [
+            0,
+            15
+          ],
+          "input": "6 + T",
+          "stance": "Ground",
+          "range": [
+            100,
+            180
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 4,
+              "end": 4,
+              "value": 13,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! SlowPhotonWave",
+          "display": "Photon_Wave_(High_Ping)",
+          "animation": "photonWave",
+          "frames": [
+            0,
+            15
+          ],
+          "input": "4 + T",
+          "stance": "Ground",
+          "range": [
+            100,
+            210
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 4,
+              "end": 4,
+              "value": 12,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "schwarzerblitz_engine/bin/media/characters/chara_tutor2/moves.txt",
+      "moves": [
+        {
+          "name": "Run1",
+          "display": null,
+          "animation": "running",
+          "frames": [
+            0,
+            0
+          ],
+          "input": "> >",
+          "stance": "Ground",
+          "range": [
+            60,
+            300
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "BackStepOld",
+          "display": null,
+          "animation": "walkFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "< <",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Ukemi",
+          "display": "Ukemi",
+          "animation": "rolloutRight",
+          "frames": [
+            5,
+            12
+          ],
+          "input": "T",
+          "stance": "Landing",
+          "range": [
+            90,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Rollout_Front",
+          "display": "Side_Roll",
+          "animation": "rolloutRight",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "2 + T",
+          "stance": "Ground",
+          "range": [
+            30,
+            160
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Rollout_Back",
+          "display": "Side_Roll_(II)",
+          "animation": "rollout",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "8 + T",
+          "stance": "Ground",
+          "range": [
+            30,
+            160
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! Quick_Left_Punch",
+          "display": "Quick_Jab",
+          "animation": "TigerQuickPunch",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 3,
+              "end": 4,
+              "value": 5,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Ducking_Comet",
+          "display": null,
+          "animation": "DuckingComet_2",
+          "frames": [
+            0,
+            15
+          ],
+          "input": "1 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            72
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 7,
+              "end": 8,
+              "value": 20,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Jump_Punch",
+          "display": "Jumping_Jab",
+          "animation": "defaultJumpPunch",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "P",
+          "stance": "Air",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 1,
+              "end": 2,
+              "value": 8,
+              "hits": "1Hit",
+              "type": "StrongHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Air_Comet",
+          "display": "Ducking_Comet_(II)",
+          "animation": "DuckingComet_2",
+          "frames": [
+            0,
+            12
+          ],
+          "input": "K",
+          "stance": "Air",
+          "range": [
+            0,
+            72
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 7,
+              "end": 8,
+              "value": 20,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Double_Hammer",
+          "display": null,
+          "animation": "DoubleHammer",
+          "frames": [
+            0,
+            11
+          ],
+          "input": "4 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 4,
+              "end": 6,
+              "value": 16,
+              "hits": "1hit",
+              "type": "StrongMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Dynamo_Punch",
+          "display": null,
+          "animation": "DynamoNova0",
+          "frames": [
+            0,
+            8
+          ],
+          "input": "6 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 1,
+              "end": 2,
+              "value": 8,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! DynamoPunchEnding",
+          "display": null,
+          "animation": "DynamoNova",
+          "frames": [
+            4,
+            16
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            60
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 5,
+              "end": 6,
+              "value": 13,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! SobatEnder",
+          "display": null,
+          "animation": "RollingSobat",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "6 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 3,
+              "end": 4,
+              "value": 16,
+              "hits": "1hit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Right_Punch_Throw",
+          "display": "Star_Platinum_Dance",
+          "animation": "throwStart_step",
+          "frames": [
+            0,
+            8
+          ],
+          "input": "T",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 6,
+              "end": 6,
+              "value": 0,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "Throw"
+            }
+          ]
+        },
+        {
+          "name": "! CrouchUppercut",
+          "display": "Rising_Poke",
+          "animation": "uppercut",
+          "frames": [
+            2,
+            10
+          ],
+          "input": "3 + P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            40
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 2,
+              "end": 10,
+              "value": 13,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! TW_OraOraOra",
+          "display": null,
+          "animation": "oraoraora",
+          "frames": [
+            0,
+            57
+          ],
+          "input": "",
+          "stance": "Ground",
+          "range": null,
+          "hitboxes": [
+            {
+              "bone": "! RightPunch",
+              "start": 0,
+              "end": 3,
+              "value": 2,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! LeftPunch",
+              "start": 4,
+              "end": 7,
+              "value": 2,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! RightPunch",
+              "start": 8,
+              "end": 11,
+              "value": 2,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! LeftPunch",
+              "start": 12,
+              "end": 15,
+              "value": 2,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! RightPunch",
+              "start": 16,
+              "end": 19,
+              "value": 2,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! LeftPunch",
+              "start": 20,
+              "end": 23,
+              "value": 2,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! RightPunch",
+              "start": 24,
+              "end": 25,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! LeftPunch",
+              "start": 28,
+              "end": 31,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! RightPunch",
+              "start": 32,
+              "end": 35,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! LeftPunch",
+              "start": 36,
+              "end": 39,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! RightPunch",
+              "start": 40,
+              "end": 43,
+              "value": 4,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            },
+            {
+              "bone": "! LeftPunch",
+              "start": 44,
+              "end": 45,
+              "value": 5,
+              "hits": "multiHit",
+              "type": "None",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Eins",
+          "display": "Russian_Boot",
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            0,
+            11
+          ],
+          "input": "4 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            75
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 4,
+              "end": 5,
+              "value": 16,
+              "hits": "1Hit",
+              "type": "StrongHigh",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Zwei",
+          "display": null,
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            11,
+            17
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 14,
+              "end": 15,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Drei",
+          "display": null,
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            17,
+            23
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 19,
+              "end": 20,
+              "value": 8,
+              "hits": "1Hit",
+              "type": "WeakMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Vier",
+          "display": null,
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            23,
+            30
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 27,
+              "end": 29,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_VierFWP",
+          "display": null,
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            23,
+            30
+          ],
+          "input": "2 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 27,
+              "end": 29,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Fuenf",
+          "display": "Rising_Fang",
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            30,
+            36
+          ],
+          "input": "P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 33,
+              "end": 34,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Sechs",
+          "display": null,
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            36,
+            42
+          ],
+          "input": "P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 38,
+              "end": 39,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "StrongHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Heavy_Kick_Sechs_2",
+          "display": null,
+          "animation": "tiger_heavyKickCombo",
+          "frames": [
+            36,
+            42
+          ],
+          "input": "< + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 38,
+              "end": 39,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "StrongHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Quick_Kick",
+          "display": "Gut_Kick",
+          "animation": "quickKick",
+          "frames": [
+            0,
+            6
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 3,
+              "end": 4,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakMid",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! SupineReversal",
+          "display": "Scarlet_Screw_(recovery)",
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "P + K",
+          "stance": "Supine",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 30,
+              "hits": "1Hit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! TwinScarletScrew",
+          "display": "Scarlet_Screw_(Twinned)",
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 11,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! AirScarletScrew",
+          "display": "Air_Screw",
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "9 + P",
+          "stance": "Air",
+          "range": [
+            60,
+            105
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 11,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! CrouchingScarletScrew",
+          "display": "Scarlet_Screw_(II)",
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "1 + P",
+          "stance": "Crouch",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 11,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! GroundScarletScrew",
+          "display": "Scarlet_Screw",
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "2 1 4 P",
+          "stance": "Ground",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 11,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! RolloutScarletScrew",
+          "display": null,
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 11,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! RunningScarletScrew",
+          "display": "Scarlet_Screw_(III)",
+          "animation": "TigerScarletScrew_noKick_fix",
+          "frames": [
+            0,
+            14
+          ],
+          "input": "P",
+          "stance": "Running",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 3,
+              "end": 4,
+              "value": 11,
+              "hits": "1Hit",
+              "type": "StrongMedium",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! RunningScarletScrew_Kick",
+          "display": null,
+          "animation": "TigerScarletScrew_fix",
+          "frames": [
+            7,
+            18
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 11,
+              "end": 13,
+              "value": 15,
+              "hits": "1Hit",
+              "type": "Flight",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! RunningScarletScrew_LowKick",
+          "display": null,
+          "animation": "TigerScarletScrew_lowKick",
+          "frames": [
+            10,
+            13
+          ],
+          "input": "2 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftFoot",
+              "start": 11,
+              "end": 12,
+              "value": 12,
+              "hits": "1Hit",
+              "type": "StrongLow",
+              "height": "Low"
+            },
+            {
+              "bone": "RightFoot",
+              "start": 11,
+              "end": 12,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "StrongLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_Blast",
+          "display": "Knee_Commando_(II)",
+          "animation": "TigerCommandoComboEx",
+          "frames": [
+            0,
+            7
+          ],
+          "input": "K",
+          "stance": "Running",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightKnee",
+              "start": 3,
+              "end": 5,
+              "value": 15,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_Commando",
+          "display": "Knee_Commando",
+          "animation": "TigerCommandoComboEx",
+          "frames": [
+            0,
+            7
+          ],
+          "input": "6 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightKnee",
+              "start": 3,
+              "end": 5,
+              "value": 15,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_CommandoFirstPunch",
+          "display": null,
+          "animation": "TigerCommandoCombo1",
+          "frames": [
+            7,
+            10
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 7,
+              "end": 8,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_CommandoFirstPunch_2",
+          "display": null,
+          "animation": "TigerKneeBashSlow",
+          "frames": [
+            6,
+            12
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            75
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 9,
+              "end": 10,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_CommandoFirstPunch_Standalone",
+          "display": null,
+          "animation": "TigerKneeBashSlow",
+          "frames": [
+            6,
+            12
+          ],
+          "input": "6 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 9,
+              "end": 10,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_CommandoSecondPunch",
+          "display": null,
+          "animation": "TigerCommandoCombo1",
+          "frames": [
+            10,
+            13
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            95
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 11,
+              "end": 12,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakMedium",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_CommandoSecondPunch_2",
+          "display": null,
+          "animation": "TigerKneeBashSlow",
+          "frames": [
+            12,
+            17
+          ],
+          "input": "6 + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            85
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 16,
+              "end": 17,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakMedium",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! Knee_CommandoFinishingKick",
+          "display": null,
+          "animation": "TigerCommandoComboEx",
+          "frames": [
+            13,
+            22
+          ],
+          "input": "K",
+          "stance": "Ground",
+          "range": [
+            0,
+            75
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 15,
+              "end": 16,
+              "value": 21,
+              "hits": "1Hit",
+              "type": "Flight",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Rising_Blade",
+          "display": null,
+          "animation": "TigerCommandoComboEx",
+          "frames": [
+            13,
+            22
+          ],
+          "input": "8 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            75
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 16,
+              "end": 16,
+              "value": 19,
+              "hits": "1Hit",
+              "type": "StrongHigh",
+              "height": "Mid"
+            }
+          ]
+        },
+        {
+          "name": "! Crouching_Kick",
+          "display": "Ambush",
+          "animation": "crouchingKick",
+          "frames": [
+            0,
+            7
+          ],
+          "input": "2 + K",
+          "stance": "Ground",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 2,
+              "end": 4,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Low_Kick",
+          "display": "Ambush_(II)",
+          "animation": "crouchingKick",
+          "frames": [
+            0,
+            7
+          ],
+          "input": "K",
+          "stance": "Crouch",
+          "range": [
+            0,
+            55
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightFoot",
+              "start": 2,
+              "end": 4,
+              "value": 10,
+              "hits": "1Hit",
+              "type": "WeakLow",
+              "height": "Low"
+            }
+          ]
+        },
+        {
+          "name": "! Dynamo_Punch",
+          "display": null,
+          "animation": "TigerDynamoPunch_fix",
+          "frames": [
+            0,
+            4
+          ],
+          "input": "> + P",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "LeftPunch",
+              "start": 3,
+              "end": 4,
+              "value": 8,
+              "hits": "1hit",
+              "type": "WeakHigh",
+              "height": "High"
+            }
+          ]
+        },
+        {
+          "name": "! DynamoPunchEnding",
+          "display": null,
+          "animation": "TigerDynamoPunch",
+          "frames": [
+            4,
+            13
+          ],
+          "input": "P",
+          "stance": "Ground",
+          "range": [
+            0,
+            50
+          ],
+          "hitboxes": [
+            {
+              "bone": "RightPunch",
+              "start": 8,
+              "end": 9,
+              "value": 13,
+              "hits": "1hit",
+              "type": "WeakMedium",
+              "height": "Mid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "schwarzerblitz_engine/bin/media/characters/common/moves.txt",
+      "moves": [
+        {
+          "name": "Ukemi",
+          "display": "Ukemi",
+          "animation": "rolloutRight",
+          "frames": [
+            5,
+            12
+          ],
+          "input": "T",
+          "stance": "Landing",
+          "range": [
+            80,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "BackgroundUkemi",
+          "display": "Ukemi",
+          "animation": "rolloutRight",
+          "frames": [
+            5,
+            12
+          ],
+          "input": "8 + T",
+          "stance": "Landing",
+          "range": [
+            0,
+            400
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "BackStep",
+          "display": null,
+          "animation": "walkFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "4 4",
+          "stance": "Ground",
+          "range": [
+            0,
+            65
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "SideStepBackground",
+          "display": null,
+          "animation": "sidestepFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "8 8",
+          "stance": "Ground",
+          "range": [
+            0,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "SideStepForeground",
+          "display": null,
+          "animation": "sidestepFast",
+          "frames": [
+            0,
+            5
+          ],
+          "input": "2 2",
+          "stance": "Ground",
+          "range": [
+            0,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "BackStepCancel",
+          "display": null,
+          "animation": "walkFast",
+          "frames": [
+            0,
+            3
+          ],
+          "input": "4",
+          "stance": "Ground",
+          "range": [
+            0,
+            70
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "SideStepBackgroundCancel",
+          "display": null,
+          "animation": "sidestepFast",
+          "frames": [
+            0,
+            3
+          ],
+          "input": "8",
+          "stance": "Ground",
+          "range": [
+            0,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "SideStepForegroundCancel",
+          "display": null,
+          "animation": "sidestepFast",
+          "frames": [
+            0,
+            3
+          ],
+          "input": "H2",
+          "stance": "Ground",
+          "range": [
+            0,
+            200
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Gbackroll",
+          "display": null,
+          "animation": "lazorBackroll",
+          "frames": [
+            6,
+            17
+          ],
+          "input": "P",
+          "stance": "Supine",
+          "range": [
+            0,
+            100
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Gforeroll",
+          "display": null,
+          "animation": "lazorForwardRoll",
+          "frames": [
+            2,
+            11
+          ],
+          "input": "K",
+          "stance": "Supine",
+          "range": [
+            240,
+            320
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Ubackroll",
+          "display": null,
+          "animation": "lazorBackroll",
+          "frames": [
+            6,
+            17
+          ],
+          "input": "P",
+          "stance": "Landing",
+          "range": [
+            0,
+            320
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "Uforeroll",
+          "display": null,
+          "animation": "lazorForwardRoll",
+          "frames": [
+            2,
+            11
+          ],
+          "input": "K",
+          "stance": "Landing",
+          "range": [
+            240,
+            320
+          ],
+          "hitboxes": []
+        },
+        {
+          "name": "! SupineReversal",
+          "display": null,
+          "animation": null,
+          "frames": null,
+          "input": "",
+          "stance": "Supine",
+          "range": null,
+          "hitboxes": []
+        }
+      ]
+    }
+  ]
+}
