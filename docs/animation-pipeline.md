@@ -28,9 +28,9 @@ This document defines the asset pipeline for AshLanev2: where animation sources 
 
 ### Upcoming sources to integrate
 
-- swarzerblits fork
-  - Status: Planned / In progress
-  - Goal: Bring in fuller movesets and animation variants
+- User-owned Schwarzerblitz fork
+  - Status: Awaiting exact repository path
+  - Goal: Bring in fuller movesets and animation variants that the user owns or can redistribute
 - Kenney animated character pack
   - Status: Planned
   - Goal: Additional humanoid animation coverage and variants
@@ -42,7 +42,7 @@ This document defines the asset pipeline for AshLanev2: where animation sources 
 
 These are useful starting points to keep the motion library broad and open-source-friendly:
 
-- https://github.com/swarzerblits/ (personal fork / motion set repo)
+- User-owned Schwarzerblitz fork: exact repository URL must be recorded before importing
 - https://github.com/KayKit3D/ (KayKit assets)
 - https://github.com/quaternius/ (public model and animation packs)
 - https://github.com/KennyNL/ (Kenney asset repositories)
@@ -104,10 +104,10 @@ sources:
     status: active
     notes: Core fighter motion library
   - name: swarzerblits-movesets
-    url: https://github.com/swarzerblits/
+    url: pending-user-repo-url
     license: review-required
-    status: planned
-    notes: Full move variants and custom attacks
+    status: awaiting-source
+    notes: Full move variants and custom attacks; import only rights-cleared assets
 ```
 
 ## Recommended workflow for new motion packs
