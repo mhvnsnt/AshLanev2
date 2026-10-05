@@ -41,7 +41,7 @@ jobs:
         run: npm run lint
 
       - name: Production build
-        run: npm run build
+        run: npm run build:dev
 
       - name: Verify generated build exists
         run: test -d dist && test -f dist/index.html
