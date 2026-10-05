@@ -175,6 +175,12 @@ export function renderWebManifest(hostHeader) {
           sizes: "180x180",
           type: "image/png",
         },
+        {
+          src: "/favicon.svg",
+          sizes: "any",
+          type: "image/svg+xml",
+          purpose: "any maskable",
+        },
       ],
     },
     null,

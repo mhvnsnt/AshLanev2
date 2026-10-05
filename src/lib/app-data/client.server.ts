@@ -278,7 +278,9 @@ function tokenIdentityKey(token: string): string {
             .digest("base64url");
         }
       }
-    } catch {}
+    } catch {
+      // Malformed or non-JWT tokens fall through to the stable token hash.
+    }
   }
   return createHash("sha256").update(token).digest("base64url");
 }
