@@ -83,27 +83,21 @@ self.addEventListener("fetch", (event) => {
   if (!isStaticAsset(url)) return;
   event.respondWith((async () => {
     const cache = await caches.open(ASSET_CACHE);
-    const cached = await cache.match(request);
-    if (cached) {
-      event.waitUntil(fetch(request).then(async (response) => {
-        if (response.ok) {
-          const size = Number(response.headers.get("content-length") || 0);
-          if (!size || size <= MAX_ASSET_BYTES) {
-            await cache.put(request, response.clone());
-            await trimAssetCache(cache);
-          }
+    try {
+      // Network-first keeps mutable manifests/motion data current after deploys.
+      const response = await fetch(request);
+      if (response.ok) {
+        const size = Number(response.headers.get("content-length") || 0);
+        if (!size || size <= MAX_ASSET_BYTES) {
+          await cache.put(request, response.clone());
+          await trimAssetCache(cache);
         }
-      }).catch(() => {}));
-      return cached;
-    }
-    const response = await fetch(request);
-    if (response.ok) {
-      const size = Number(response.headers.get("content-length") || 0);
-      if (!size || size <= MAX_ASSET_BYTES) {
-        await cache.put(request, response.clone());
-        await trimAssetCache(cache);
       }
+      return response;
+    } catch {
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      throw new Error("Asset is not cached and the device is offline: " + url.pathname);
     }
-    return response;
   })());
 });
