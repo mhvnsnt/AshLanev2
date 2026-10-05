@@ -68,8 +68,9 @@ export function npcDirections(actor: Npc, actors: Npc[], rand: () => number) {
   const directions = movementDirectionsFromUserInput(pad, actor.facing_left);
   const distance = Math.hypot(target.position.x - actor.position.x, target.position.y - actor.position.y);
   if (distance <= 32 * YOKO_PX) {
-    if (rand() < 0.05) directions.push("punch");
-    else if (rand() < 0.05) directions.push("kick");
+    const attackRoll = rand();
+    if (attackRoll < 0.05) directions.push("punch");
+    else if (attackRoll < 0.1) directions.push("kick");
   }
   return directions;
 }
