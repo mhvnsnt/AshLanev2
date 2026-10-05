@@ -49,6 +49,7 @@ This document tracks the animation and asset sources currently used in AshLane, 
 - https://github.com/Binoui/SlopArena — MIT 3D platform fighter; study modular fighter packages, move-slot contracts, combat simulation tests, hitstop/hitstun, and validation. Its platform-fighter rules are reference material, not a replacement for AshLane's Urban Reign-inspired gameplay.
 - https://github.com/KFCheems/Fury-Fist — MIT code; useful beat-'em-up/combo architecture. The README asks redistributors to check provenance of extracted upstream assets, so code reference only until assets are cleared.
 - https://github.com/ironmoose/deathblood-lazer — MIT code, but art/audio/character designs are explicitly All Rights Reserved; use code patterns only.
+- https://github.com/DCurrent/openbor — permissive BSD-style engine license; useful for beat-'em-up move/collision/wave logic, but its 2D modules and art are separately licensed and are not GLB animation sources.
 - https://github.com/jefersondaniel/godot-mugen — BSD-3-Clause, early-stage browser-targeted MUGEN-like project; useful for comparing state architecture, not a 3D animation source.
 - https://quaternius.com/ — CC0 animation/model packs; current UAL source files are already checked into `public/motion/ual/`.
 - https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 — CC0; current character files and notices are already checked in.
