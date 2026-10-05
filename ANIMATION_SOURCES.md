@@ -28,16 +28,12 @@ This document tracks the animation and asset sources currently used in AshLane, 
 
 ### Pending integration
 
-#### swarzerblits fork movesets
-- Status: High priority
-- Source: Your swarzerblits fork (same animation/moveset stack that is already known to be richer than the current free set)
-- Goal: import the full moveset library and wire each character to the appropriate attack, block, fall, guard, and special state clips.
-- Suggested path:
-  1. Audit all move files and identify the exact rig conventions
-  2. Check for bone naming or rotation differences against the mannequin rig
-  3. Retarget only the clips that do not match the current skeleton
-  4. Assign export metadata per character and move set
-  5. Validate run-time state transitions and hit timing
+#### User-owned SchwarzerblitzEngine fork
+- Status: Source tree audited; move data is reference-only, not imported as playable animation.
+- Source: https://github.com/mhvnsnt/SchwarzerblitzEngine (default branch `master`)
+- Verified inventory: only four `moves.txt` files were found: `common` (13 definitions), `chara_dummy` (24), `chara_tutor` (47), and `chara_tutor2` (47), 131 definitions total.
+- Important limitation: the dummy, tutorial, and shared files are not four complete main-fighter movesets. Their 69 distinct animation references have zero exact-name matches against AshLane's 50-key baked bank. The source tree is an input/frame-data reference; it is not a plug-in set of four GLB-ready movesets.
+- Next step: keep the move schema as a reference for input/state/frame/hitbox/cancel metadata, then map each intended AshLane fighter to clips that actually exist in the checked-in UAL/runtime bank. Do not claim a move works until the correct rig, input, attacker/receiver role, and in-game reaction are tested.
 
 #### Kenney animated character packs
 - Status: Under review
@@ -47,17 +43,18 @@ This document tracks the animation and asset sources currently used in AshLane, 
 - Status: Under review
 - Notes: Useful for filling out market, dock, yard, office, and other district variations without breaking the existing world layout.
 
-## Candidate repositories to review
+## Open-source fighting-game and beat-'em-up references
 
-The following should be reviewed for compatible open-source combat and animation assets:
+- https://github.com/ikemen-engine/Ikemen-GO — MIT engine; study state machines, command inputs, hit definitions, cancels, and character data. Bundled motifs and community characters have separate rights.
+- https://github.com/Binoui/SlopArena — MIT 3D platform fighter; study modular fighter packages, move-slot contracts, combat simulation tests, hitstop/hitstun, and validation. Its platform-fighter rules are reference material, not a replacement for AshLane's Urban Reign-inspired gameplay.
+- https://github.com/KFCheems/Fury-Fist — MIT code; useful beat-'em-up/combo architecture. The README asks redistributors to check provenance of extracted upstream assets, so code reference only until assets are cleared.
+- https://github.com/ironmoose/deathblood-lazer — MIT code, but art/audio/character designs are explicitly All Rights Reserved; use code patterns only.
+- https://github.com/jefersondaniel/godot-mugen — BSD-3-Clause, early-stage browser-targeted MUGEN-like project; useful for comparing state architecture, not a 3D animation source.
+- https://quaternius.com/ — CC0 animation/model packs; current UAL source files are already checked into `public/motion/ual/`.
+- https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 — CC0; current character files and notices are already checked in.
+- https://kenney.nl/ — CC0 packs for props/environment and selected character content; audit each pack's exact files before adding more.
 
-- https://github.com/KenneyNL/kenney-animations
-- https://github.com/KenneyNL/kenney-micro-roguelike
-- https://github.com/KenneyNL/kenney-asset-pack-3d
-- https://github.com/Quaternius/Quaternius
-- https://github.com/KayKit-3D
-- https://github.com/swarzerblits
-- Any downstream repos that mirror or re-export the same open-source animator packs in GLB format
+Do not import a whole engine or a copyrighted character pack to obtain a move list. Record the exact repository commit, asset paths, license, and integration/test status for every intake.
 
 ## Integration workflow
 
@@ -117,4 +114,4 @@ The following should be reviewed for compatible open-source combat and animation
 
 ## Summary
 
-The project is now in a good place to expand from the current free/open-source base into a richer, more complete combat animation stack. The main near-term win is to absorb the swarzerblits fork movesets and then evaluate additional CC0 motion sources that maintain the same rig conventions.
+AshLane already includes the Quaternius UAL source glTF/BIN, a baked motion bank, KayKit CC0 character bodies, and Kenney CC0 environment assets. The next win is not blindly importing the Schwarzerblitz tutorial/dummy files: it is making every roster martial style resolve to a verified clip profile, mapping the four intended main GLB fighters once their IDs are grounded, and extending the actual clip bank only with rights-cleared assets that pass rig and runtime checks.
