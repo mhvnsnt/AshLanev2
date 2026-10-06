@@ -115,3 +115,10 @@
 - **License:** NONE FOUND — no LICENSE file, no license field on the repo page (all rights reserved by default)
 - **Verdict:** research-only — read, don't copy
 - **Notes:** Pattern reference only: how AI traffic/pedestrians and a wanted/heat system are structured in a three.js open world. Do not reuse code or assets (it also bundles a CC-BY 3.0 motorcycle model needing attribution, and the GTA proximity is its own IP risk).
+
+## three-vat
+- **URL:** https://github.com/mikefernandez-pro/three-vat
+- **What:** Bakes glTF AnimationClips into GPU textures (vertex or rig encoding) at runtime — hundreds to thousands of instanced characters animate with zero per-frame CPU, one draw call per material, on WebGL and WebGPU. Per-instance clip/offset/speed, crossfades, worker bakes, shadow support. Rig encoding is tiny (177KB vs 25MB vertex in their benchmark).
+- **License:** MIT (npm license badge links to LICENSE file)
+- **Verdict:** commercial-safe
+- **Notes:** The GPU crowd-animation answer for mobile: bake the pedestrian walk/idle/cheer clips once, draw the entire street crowd in a handful of draw calls. Pair with any agent AI above (Yuka/navcat drive the instance transforms; VAT drives the animation).
