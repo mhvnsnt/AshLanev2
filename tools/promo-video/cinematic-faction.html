@@ -19,7 +19,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { loadMotionBanks, makeCastDirector } from './faction-motion.js';
 
 const DUR = 50;
-const W = 1920, H = 1080;
+const W = window.innerWidth || 1920, H = window.innerHeight || 1080;
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setSize(W, H);
 renderer.outputColorSpace = THREE.SRGBColorSpace;

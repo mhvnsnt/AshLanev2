@@ -67,7 +67,8 @@ async function main() {
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--disable-gpu-sandbox', '--force-device-scale-factor=1']
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: 1920, height: 1080 });
+  const vw = parseInt(a.width || '1920', 10), vh = parseInt(a.height || '1080', 10);
+  await page.setViewport({ width: vw, height: vh });
   await page.goto(`http://127.0.0.1:${port}/${pageFile}?model=${encodeURIComponent(model)}${extra ? '&' + extra : ''}`, { waitUntil: 'networkidle0', timeout: 120000 });
   await page.waitForFunction('window.__ready === true', { timeout: 120000 });
 
