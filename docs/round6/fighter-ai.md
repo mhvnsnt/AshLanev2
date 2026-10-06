@@ -231,3 +231,24 @@ checked 2026-10-06. Re-verify before shipping.
   for Bannon's 3D ring movement (circling, cornering, rope awareness) and
   for AshLane's 3D brawler spacing. Smaller codebase than a commercial
   engine — tractable to read end-to-end in an afternoon.
+
+---
+
+## Game AI Pro (free book — study reference)
+
+- **URL:** https://www.gameaipro.com
+- **What:** Free online book series (3 volumes) of short chapters written
+  by professional game AI programmers: behavior trees, utility AI, planning,
+  steering, pathfinding, animation-driven AI, and — critically — chapters
+  on fighting-game and sports-game AI, difficulty tuning, and "AI that
+  feels fair."
+- **License:** Free to read online; chapters are author-copyrighted, not
+  open-source code.
+- **Verdict:** study-only (concepts are free to reimplement; don't copy
+  text/code verbatim into the repo).
+- **Notes:** The canonical professional reference. Prioritize the chapters
+  on utility scoring (for move selection), hierarchical AI (boss phases),
+  and perceived fairness. Pair with Mat Buckland's "Programming Game AI by
+  Example" (recommended by Yuka's docs) for steering/FSM fundamentals.
+  Keep a reading list in the repo as we implement — cite chapter, not
+  copied code.
