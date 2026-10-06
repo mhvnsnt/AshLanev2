@@ -130,6 +130,8 @@ export type Sim = {
   time: number;
   banner: string;
   bannerT: number;
+  splash: string;
+  splashT: number;
   sfx: string[];
   cleared: boolean;
   streetClear: boolean;
@@ -538,6 +540,8 @@ export function createSim(tune?: Tune): Sim {
     time: 0,
     banner: "",
     bannerT: 0,
+    splash: "",
+    splashT: 0,
     sfx: [],
     cleared: false,
     streetClear: false,
@@ -820,6 +824,8 @@ export function setMode(sim: Sim, mode: Mode) {
   spawnBodies(sim);
   sim.banner = intro(mode);
   sim.bannerT = 2.4;
+  sim.splash = intro(mode);
+  sim.splashT = 2.4;
 }
 
 export function warp(sim: Sim, mode: Mode) {
@@ -832,6 +838,8 @@ export function warp(sim: Sim, mode: Mode) {
   placePlayer(sim, mode);
   sim.banner = intro(mode);
   sim.bannerT = 1.6;
+  sim.splash = intro(mode);
+  sim.splashT = 1.6;
 }
 
 function intro(mode: Mode) {
@@ -859,6 +867,8 @@ export function rematch(sim: Sim) {
   placePlayer(sim, mode);
   sim.banner = "Rematch";
   sim.bannerT = 1;
+  sim.splash = "Rematch";
+  sim.splashT = 1;
 }
 
 export function startStory(sim: Sim, index: number) {
@@ -915,6 +925,8 @@ export function startStory(sim: Sim, index: number) {
   }
   sim.banner = `${mission.title}. ${placeName(mission.drop)}`;
   sim.bannerT = 2.4;
+  sim.splash = `${mission.title}. ${placeName(mission.drop)}`;
+  sim.splashT = 2.4;
   sim.stage = mission.stage;
 }
 
@@ -993,6 +1005,8 @@ export function startBout(sim: Sim, kind: "exhibit" | "practice", stage: string)
   }
   sim.banner = kind === "practice" ? "Practice. The bag does not swing." : "Exhibition.";
   sim.bannerT = 2;
+  sim.splash = kind === "practice" ? "Practice. The bag does not swing." : "Throwdown.";
+  sim.splashT = 2;
 }
 
 function burst(sim: Sim, x: number, y: number, z: number, color: number) {
@@ -3750,6 +3764,8 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   if (sim.comboT <= 0) sim.combo = 0;
   sim.bannerT -= dt;
   if (sim.bannerT <= 0) sim.banner = "";
+  sim.splashT -= dt;
+  if (sim.splashT <= 0) sim.splash = "";
   sim.shake *= Math.exp(-3.2 * dt);
 
   refreshZone(sim);
@@ -3829,6 +3845,7 @@ export function snapshot(sim: Sim): Hud {
     combo: sim.combo,
     foes: sim.foes,
     banner: sim.banner,
+    splash: sim.splash,
     face: (() => {
       const foe = nearestGrunt(sim, 7);
       if (!foe) return "";

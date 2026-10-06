@@ -50,6 +50,7 @@ export type Hud = {
   combo: number;
   foes: number;
   banner: string;
+  splash: string;
   face: string;
   canGrab: boolean;
   cleared: boolean;
@@ -109,6 +110,7 @@ export const EMPTY_HUD: Hud = {
   combo: 0,
   foes: 0,
   banner: "",
+  splash: "",
   face: "",
   canGrab: false,
   cleared: false,
