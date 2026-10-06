@@ -125,3 +125,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The SENSOR for adaptive music: read fight state from the audio itself — beat-track the combat BGM (web-audio-beat-detector, also MIT, is a companion), drive hit-flash/particles on beat, duck music under KO slow-mo, raise intensity when spectral energy spikes. Feed frames from an AudioWorklet (avoid the deprecated ScriptProcessor wrapper).
 
+## 18. FMOD Studio — adaptive audio middleware (proprietary)
+- **URL:** https://www.fmod.com
+- **What:** Industry-standard adaptive/interactive audio middleware: event system, parameter-driven music (layers, transitions, stingers on game parameters), 3D spatial audio, DSP. The reference design for "fight heat → music intensity".
+- **License:** **Proprietary.** Non-commercial license free; commercial use requires a paid tier (Indie license for budgets under ~US$600k, then Basic/Premium). Not open source.
+- **Verdict:** ❌ **Prototype-only** — fails the permissive-license rule. Never ship without a paid license.
+- **Notes:** Study FMOD's parameter/event model as the DESIGN reference for our own MIT adaptive-music layer (Howler.js + stems + Meyda): replicate its "music event + intensity parameter + transition rules" shape in ~200 lines of TS rather than adopting the middleware. Wwise has the same profile (free for small projects, proprietary) — same verdict.
+
