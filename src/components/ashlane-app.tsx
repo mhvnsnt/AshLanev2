@@ -12,6 +12,7 @@ import { StreetBackdrop } from "@/game3d/menu-backdrop";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
 import type { FactionId } from "@/game3d/char-gen";
 import "@/game3d/menu-theme.css";
+import { NarratorOverlay, watchNarrator } from "@/game3d/narrator";
 
 /* Roster fighter id -> faction (for emblems + portrait backgrounds) */
 const FIGHTER_FACTIONS: Record<string, FactionId> = {
@@ -112,6 +113,12 @@ export function AshlaneApp() {
     wireMenuSfx(sheetRef.current);
   }, [menu, pendingJob, suite]);
 
+  // THE NARRATOR watches story/campaign state and breaks the 4th wall
+  // at curated story-progression moments (scarcity is the point).
+  useEffect(() => {
+    watchNarrator(hud);
+  }, [hud]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -205,8 +212,9 @@ export function AshlaneApp() {
       </header>
 
       <div className="relative min-h-0 flex-1 px-3 pb-3">
-        <div className="stage h-full overflow-hidden rounded-2xl border border-line">
+        <div className="stage relative h-full overflow-hidden rounded-2xl border border-line">
           <canvas ref={canvasRef} className="h-full w-full" />
+          <NarratorOverlay />
           {hud.running && hud.banner ? <><VsSplash /><p className="al-banner pointer-events-none absolute inset-x-0 top-4 text-center text-xl">{hud.banner}</p></> : null}
           {playing && hud.face ? <p className="pointer-events-none absolute inset-x-0 top-12 text-center font-display text-xs uppercase tracking-widest text-cream">{hud.face}</p> : null}
           {hud.combo > 1 && playing ? <p className="al-title pointer-events-none absolute right-4 top-4 text-2xl text-ember">{hud.combo} HIT</p> : null}
@@ -234,7 +242,7 @@ export function AshlaneApp() {
                     </button>
                     <div className="grid grid-cols-2 gap-2.5">
                       <button type="button" className="al-btn al-rise al-rise-1" onClick={() => api.current?.startBout("exhibit", arena)}>
-                        <span className="al-btn-icon"><MenuIcon name="fight" />Exhibition</span>
+                        <span className="al-btn-icon"><MenuIcon name="fight" />Throw down</span>
                       </button>
                       <button type="button" className="al-btn al-rise al-rise-1" onClick={() => api.current?.startBout("practice", arena)}>
                         <span className="al-btn-icon"><MenuIcon name="trophy" />Practice</span>
@@ -279,7 +287,7 @@ export function AshlaneApp() {
                 {menu === "arenas" ? (
                   <div className="mt-4 flex flex-col gap-2.5">
                     <div className="al-section"><span className="al-section-title">Pick a block</span></div>
-                    <p className="text-sm text-cream-dim">Exhibition and Practice use a ring in the middle of it. Ward still walks the whole lane.</p>
+                    <p className="text-sm text-cream-dim">Throwdowns and Practice clear the middle of the block. Ward still walks the whole lane.</p>
                     {ARENAS.map((place, i) => (
                       <button
                         key={place.id}
@@ -296,7 +304,7 @@ export function AshlaneApp() {
                       </button>
                     ))}
                     <button type="button" className="al-btn al-btn-primary" onClick={() => api.current?.startBout("exhibit", arena)}>
-                      <span>Exhibition here</span>
+                      <span>Throw down here</span>
                     </button>
                     <button type="button" className="al-btn" onClick={() => api.current?.startBout("practice", arena)}>
                       <span>Practice here</span>
@@ -639,8 +647,8 @@ export function AshlaneApp() {
           {hud.running && hud.paused && hud.bout === "done" && !suite ? (
             <div className="veil al-sheet absolute inset-0 flex items-end justify-center p-4 sm:items-center">
               <div className="w-full max-w-sm al-rise">
-                <p className="al-kicker">Card's down</p>
-                <h2 className="al-title text-4xl mt-1">Exhibition clear</h2>
+                <p className="al-kicker">They're down</p>
+                <h2 className="al-title text-4xl mt-1">Block taken</h2>
                 <div className="al-rip mt-2" aria-hidden="true" />
                 <p className="mt-2 text-sm text-cream-dim">Flow was <span className="font-headline text-brass">{hud.flow}</span>.</p>
                 <div className="mt-4 flex flex-col gap-2.5">
@@ -789,7 +797,7 @@ function labelFor(mode: Mode) {
 
 function objective(hud: Hud) {
   if (hud.bout === "practice") return "Practice. The bag stays. Try the dives, the grabs, and the flow counter.";
-  if (hud.bout === "exhibit" || hud.bout === "done") return "Exhibition. One card in the ring. Hit them as they swing and it counts as flow.";
+  if (hud.bout === "exhibit" || hud.bout === "done") return "Throwdown. One of theirs in the middle. Hit them as they swing and it counts as flow.";
   if (hud.story) return `Rank ${hud.level}. ${hud.actName}. ${hud.missionTitle}. Wave ${hud.wave}/${hud.waveMax}. Purse ${hud.purse}. ${hud.missionStep}`;
   if (hud.scuffle || hud.phase === "clear") return `${hud.phase}. ${hud.phaseStep}`;
   if (hud.area === "house") return hud.weapon === "fist" ? "Noodle house. Take the pipe. Smash the crate." : "Pipe's in hand. Run and the swing lunges. It snaps.";
