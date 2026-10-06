@@ -98,6 +98,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe** — the reference design for our JS animation state machine. Port the graph/transition/parameter semantics to three.js; study the blend-tree math for upper-body/locomotion layering.
 - **Notes:** Covers the "JS animation state machines" ask outright. AnimComponentLayer's weight/blendType/mask model is exactly what AshLane needs for punch-while-walking layering. Editor is a bonus reference for a future in-house anim graph UI.
 
+## Foot IK for three.js (fullik / THREE.IK)
+
+- **URL:** https://github.com/lo-th/fullik · https://github.com/jsantell/THREE.IK
+- **What:** Two JS IK solvers for three.js. **fullik** (lo-th): full-body FABRIK solver (port of Java Caliko by Andreas Aristidou) — Bone3D/Chain3D/Structure3D with joint constraints, demo-proven for feet planting, reaching, full-body posing. **THREE.IK** (jsantell): CCD/FABRIK-style per-chain solver with a clean three.js-native API (IKChain, IKJoint, targets).
+- **License:** THREE.IK = **MIT** (Copyright 2018 Jordan Santell, repo README). fullik: no LICENSE file found in the repo snapshot — lo-th's projects are conventionally MIT, but **unverified; confirm the LICENSE file before shipping**.
+- **Verdict:** ✅ **commercial-safe (THREE.IK, MIT)** — archived 2018 but the math doesn't rot; ⚠️ **prototype-only (fullik) until its LICENSE is confirmed**.
+- **Notes:** Foot IK is the mandatory companion to motion matching and retargeted mocap: lock feet to the ground plane, kill foot-skate on locomotion, plant feet for wrestling grapples. FABRIK is cheap enough to run per-frame on multiple fighters.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
