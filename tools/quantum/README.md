@@ -9,7 +9,7 @@ Real QPUs (IBM Quantum free tier) are optional — see `docs/QUANTUM_PIPELINE.md
 ```sh
 cd tools/quantum
 python3 -m venv .venv
-.venv/bin/pip install qiskit qiskit-aer pennylane
+.venv/bin/pip install qiskit qiskit-aer pennylane qulacs qutip cirq qsimcirq simanneal
 ```
 
 (`.venv/` is git-ignored; the model/scripts are the deliverable, not the env.)
@@ -21,13 +21,20 @@ python3 -m venv .venv
 | `qubo_bone_map.py` | Map source bone names → canonical slots (`tools/anim-retarget/skeletons.py`) | QUBO assignment | exact brute-force vs QAOA (Aer simulator) |
 | `qaoa_clip_setcover.py` | Pick min clip set covering all move slots from the 220-clip batch (88 PASS / 72 WARN / 60 FAIL) | QUBO set cover (NP-hard) | exact brute-force vs QAOA (Aer simulator) |
 | `vqe_toy.py` | Variational loop smoke test (toy 2-qubit "pose energy") | VQE | exact diagonalization vs VQE (PennyLane) |
+| `quantum_inspired.py` | Larger set cover (40 clips × 12 slots); hierarchy-aware bone map as QAP (n=6) | set cover / QAP (NP-hard) | greedy vs simulated annealing vs exact |
+| `simulator_shootout.py` | Which local simulator is fastest for our QAOA workload | benchmark | Aer vs Qulacs vs qsim vs QuTiP exact |
+| `backends.py` | Backend swap paths (simulator → IBM/D-Wave later) | infra | raises clear token instructions; no tokens stored |
 
-Run: `./.venv/bin/python qubo_bone_map.py`, etc. Each writes a `*_result.json`.
+Run: `./.venv/bin/python quantum_inspired.py`, etc. Each writes a `*_result.json`.
 
 ## Licenses (prototype manifest)
 
 - qiskit, qiskit-aer: Apache 2.0
 - pennylane: Apache 2.0
+- qulacs: MIT
+- qutip: BSD-3
+- cirq, qsimcirq: Apache 2.0
+- simanneal: MIT
 - scipy, numpy: BSD
 All permissive. No GPL/AGPL in the quantum path.
 

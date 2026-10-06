@@ -127,10 +127,88 @@ No quantum speedup was measured on any problem. None is claimed.
 
 ```sh
 cd tools/quantum
-python3 -m venv .venv && .venv/bin/pip install qiskit qiskit-aer pennylane
+python3 -m venv .venv && .venv/bin/pip install qiskit qiskit-aer pennylane qulacs qutip cirq qsimcirq simanneal
 .venv/bin/python qubo_bone_map.py --n 3 --p 2
 .venv/bin/python qaoa_clip_setcover.py --p 2
 .venv/bin/python vqe_toy.py --steps 150
+.venv/bin/python quantum_inspired.py --seed 7
+.venv/bin/python simulator_shootout.py --n 6 --p 1
+.venv/bin/python backends.py
 ```
 
 Each script writes a `*_result.json` with the measured numbers.
+
+## 7. Expansion (2026-10-06) — new SDKs, quantum-inspired solvers, QAP, backend paths
+
+### 7a. New SDKs installed (all free, all local simulators, no tokens)
+
+| Package | Version | License | Role |
+|---|---|---|---|
+| qulacs | 0.6.14 | MIT | fast CPU statevector simulator |
+| qutip | 5.3.1 | BSD-3 | exact diagonalization / open quantum systems reference |
+| cirq | 1.7.0 | Apache 2.0 | Google's circuit framework |
+| qsimcirq | (bundled) | Apache 2.0 | qsim high-performance simulator for Cirq |
+| simanneal | 0.5.0 | MIT | (not used directly — we wrote our own SA; listed for the manifest) |
+
+### 7b. Simulator shootout (`simulator_shootout.py`)
+
+Same QAOA ansatz circuit simulated on Aer vs Qulacs vs qsim, plus QuTiP exact
+diagonalization as the classical reference. All simulators agree (norm = 1.0).
+
+| n qubits | Aer | Qulacs | qsim | QuTiP exact |
+|---|---|---|---|---|
+| 6 | 0.029 s | **0.002 s** | 0.021 s | 0.101 s |
+| 10 | 0.013 s | **0.001 s** | 0.011 s | 1.419 s |
+| 14 | 0.011 s | 0.086 s | **0.010 s** | OOM (2^14 dense matrix, by design) |
+
+Honest notes: Qulacs wins at small n; at n=14 our Qulacs RZZ-via-DenseMatrix
+implementation is the bottleneck (native parametric gates would fix it —
+implementation matters more than the library). All three stay under 0.1 s at
+n=14. **Decision: Qulacs is the default for small variational experiments;
+Aer/qsim for larger circuits.** QuTiP stays as the exact-reference tool for
+small Hamiltonians.
+
+### 7c. Quantum-inspired classical solvers (`quantum_inspired.py`)
+
+Classical heuristics that borrow from annealing — the strongest baseline any
+quantum method must beat. No simulator, no qubits, just CPU.
+
+**Larger clip set cover (40 clips × 12 slots):** greedy found 4 clips covering
+everything in **0.08 ms**; simulated annealing matched it (4 clips, same cost)
+in 899 ms. **Greedy wins outright** — SA adds nothing at this structure.
+
+**Hierarchy-aware bone mapping as QAP (n=6, parent→child bonuses):**
+exact permutation scan found the optimum in **3.56 ms**; SA found the *same*
+optimum in 72.8 ms. The mapping matches the pipeline's ground truth
+(pelvis→Hips, spine_01→Spine, neck_01→Neck, upperarm_l→LeftArm,
+lowerarm_l→LeftForeArm, hand_l→LeftHand).
+
+**Honest verdict:** at these scales classical exact/greedy still wins on every
+problem. SA's value proposition is at scales where exact is infeasible
+(50+ bones, 200+ clips) — formulated and ready, not yet needed. A future
+quantum annealer (D-Wave) or QAOA must beat *greedy+SA*, not brute force, to
+matter. We do not claim otherwise.
+
+### 7d. Backend swap paths (`backends.py`)
+
+`get_backend(name)` centralizes simulator→QPU swaps. `"aer"` (default),
+`"qulacs"`, `"qsim"` work with zero credentials. `"ibm"` and `"dwave"` raise a
+clear error naming the exact signup step and env var (`IBQ_TOKEN`,
+`DWAVE_TOKEN`) — **no tokens collected, none stored, none needed**. Our QUBO
+dicts convert directly via `dimod.BinaryQuadraticModel.from_qubo()` for D-Wave
+later. IonQ/Braket: no meaningful free tier — not wired.
+
+### 7e. Updated benchmark table
+
+| Problem | Classical best | Quantum (simulator) | Winner |
+|---|---|---|---|
+| Bone map, n=3 | exact, 0.4 ms | QAOA p=2, 5.1 s | **classical** |
+| Clip set cover, 10 clips | brute force, 54.8 ms | QAOA p=2, 10.5 s | **classical** |
+| VQE toy, 2 qubits | diagonalization, 7.5 ms | VQE, 9.9 s | **classical** |
+| Clip set cover, 40 clips | greedy, 0.08 ms | SA 899 ms (matched) | **classical (greedy)** |
+| QAP bone map, n=6 | exact, 3.56 ms | SA 72.8 ms (optimal) | **classical** |
+| Simulator speed, n=6–14 | — | Qulacs/Aer/qsim all < 0.1 s | **Qulacs (small), Aer/qsim (large)** |
+
+No quantum speedup measured on any problem. None claimed. The bridge is
+built, benchmarked, and kept warm — formulations ready when hardware or
+problem scale catches up.

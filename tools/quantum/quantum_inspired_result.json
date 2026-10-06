@@ -1,0 +1,43 @@
+{
+  "setcover_40": {
+    "greedy": {
+      "n_clips": 4,
+      "cost": 2.0,
+      "ms": 0.08,
+      "covers_all": true
+    },
+    "simanneal": {
+      "n_clips": 4,
+      "cost": 2.0,
+      "ms": 898.8,
+      "covers_all": true
+    }
+  },
+  "qap_bonemap_6": {
+    "exact": {
+      "cost": -6.96,
+      "ms": 3.56,
+      "mapping": {
+        "pelvis": "Hips",
+        "spine_01": "Spine",
+        "neck_01": "Neck",
+        "upperarm_l": "LeftArm",
+        "lowerarm_l": "LeftForeArm",
+        "hand_l": "LeftHand"
+      }
+    },
+    "simanneal": {
+      "cost": -6.96,
+      "ms": 72.83,
+      "optimal": true,
+      "mapping": {
+        "pelvis": "Hips",
+        "spine_01": "Spine",
+        "neck_01": "Neck",
+        "upperarm_l": "LeftArm",
+        "lowerarm_l": "LeftForeArm",
+        "hand_l": "LeftHand"
+      }
+    }
+  }
+}
