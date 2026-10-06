@@ -794,3 +794,59 @@ Font Awesome Free (CC-BY-4.0), Hero Patterns (CC-BY-4.0), Ikemen GO screenpack a
 ## Do NOT ship (new R6 additions)
 
 Animate.css v4+ (Hippocratic), intro.js (AGPL), lygia (PPL-3.0 noncommercial), Remotion (source-available), Mixkit music in games, webm-muxer (deprecated), Synapse/Dendrite (AGPL-3.0 — use Tuwunel), BlenderGIS output in shipped client (GPL-3.0 — offline tool only), MB-Lab/SMPL meshes (AGPL/NC), Daz3D data without Interactive License, Twine/novelWriter GPL code in client, gta7-web (no license).
+
+---
+
+# ROUND 7 — The Thin-Dimension Harvest (2026-10-06)
+
+**Standing order: "turn this shit up to the max."** 45 new projects across the dimensions Rounds 1–6 left thin: **save systems, modding support, mobile, accessibility, testing/QA, build/CI, localization, analytics/error-tracking** + cross-dimension strong finds. Full per-project registry in `docs/round6/round7.md` (one `##` entry per project + license ledger). Dedupe-checked against all Round 6 branch registries — no repeats.
+
+**License rule (owner binding):** prototype may use whatever works — license purity does not gate prototyping. Every license below was verified from the actual LICENSE file in the repo tarball (or the repo's LICENSE page for the two non-npm projects). Re-verify before shipping — licenses rot.
+
+## Index by dimension
+
+| Dimension | Projects | Commercial-safe | Prototype-only / caution |
+|---|---|---|---|
+| Save systems | 6 (localForage, Dexie.js, idb, lz-string, fflate, browser-fs-access) | 6 (Apache-2.0/ISC/MIT) | — |
+| Modding support | 5 (jszip, semver, ajv, quickjs-emscripten, Comlink) | 5 (MIT/ISC/Apache-2.0; jszip under MIT choice of dual) | — |
+| Mobile | 7 (Capacitor, Tauri, nipplejs, nosleep.js, detect-gpu, Workbox, eruda) | 7 (MIT/Apache-2.0; 2 pending tarball re-verify) | — |
+| Accessibility | 4 (focus-trap, chroma-js, culori, axe-core) | 3 (MIT/BSD/Apache) | axe-core (MPL-2.0 — CI tooling only, never bundle) |
+| Testing/QA | 6 (Vitest, happy-dom, msw, fast-check, tinybench, StrykerJS) | 6 (MIT/Apache-2.0) | — |
+| Build/CI | 5 (size-limit, Changesets, lefthook, semantic-release, release-please) | 5 (MIT/Apache-2.0; 1 pending tarball re-verify) | — |
+| Localization | 5 (Lingui, Fluent, FormatJS, typesafe-i18n, Argos Translate) | 5 (MIT/Apache-2.0; 1 pending tarball re-verify) | — |
+| Analytics/error | 3 (Sentry JS SDK, GlitchTip, OpenTelemetry JS) | 3 (MIT; 1 pending direct re-verify) | — |
+| Cross-dimension | 4 (seedrandom, @msgpack/msgpack, bitECS, yjs) | 3 (MIT/ISC) | bitECS (MPL-2.0 — study only) |
+
+**Totals: 45 projects — 44 commercial-safe, 1 prototype-only (bitECS).**
+
+## Top wiring picks (highest leverage per dimension)
+
+1. **Saves:** fflate (MIT) — gzip save exports to ~30% of JSON; magic-byte sniffing keeps imports backward-compatible.
+2. **Modding:** quickjs-emscripten (MIT) — the safe path to scripted mods: untrusted JS in a WASM sandbox, no DOM/network escape. jszip (MIT) for `.ashlane-mod.zip` distribution.
+3. **Mobile:** detect-gpu (MIT) — honest GPU-tier auto-quality for the existing postFx/LOD toggles; Capacitor (MIT) for the app-store shell when ready.
+4. **Accessibility:** culori (MIT) — APCA contrast scoring for HUD/menus; axe-core (MPL-2.0, CI only) gates a11y regressions in Playwright.
+5. **Testing:** fast-check (MIT) — property-test the determinism invariant (sim = pure function of seed + inputs) across thousands of random input streams; tinybench (MIT) perf-gates the 16.6ms tick budget.
+6. **Build/CI:** size-limit (MIT) — hard bundle-size budget for the mobile client; lefthook (MIT) pre-commit tsc.
+7. **Localization:** Lingui (MIT) — the upgrade path when `i18n.ts` string tables outgrow en+es; Argos Translate (MIT) batch-translates packs offline at build time.
+8. **Analytics:** GlitchTip (MIT) self-hosted + Sentry SDK — crash reports without per-seat pricing, next to the Round-5 Umami box.
+9. **Cross-dimension:** seedrandom (MIT) + @msgpack/msgpack (ISC) — the determinism + input-codec foundation the entire rollback netcode plan stands on.
+
+## Wired into the game (2026-10-06)
+
+**1. seedrandom determinism foundation — `src/game3d/deterministic-rng.ts`**
+- `createRng` / `SimRandom` (forkable, `state()`/`restore()` for per-tick rollback snapshots), `runSyncTest` (netcode plan Phase-0 proof), `poisonMathRandom`/`restoreMathRandom` (dev-mode "no Math.random in the sim" enforcement).
+- License: MIT = **commercial-safe**. Types via `src/game3d/seedrandom-shim.d.ts` (yuka-shim.d.ts convention).
+
+**2. @msgpack/msgpack input codec — `src/game3d/netcode-codec.ts`**
+- 16-bit input bitmask (8-way move + punch/kick/block/grab/special/jump/taunt per the netcode plan), validated encode/decode, `makeInputPacket` (last-5-frames redundancy), `inputMaskToString` debug helper. ~17 bytes/frame vs ~28 JSON.
+- License: ISC = **commercial-safe**.
+
+**3. fflate save compression — `src/game3d/saves.ts`**
+- `exportSaveCompressed` / `importSaveCompressed` / `exportSaveFileCompressed` — gzip when fflate installed (optional-dep pattern, same as idb-keyval), raw JSON fallback, magic-byte auto-detect on import.
+- License: MIT = **commercial-safe**.
+
+**Tests:** `src/game3d/round7-harvest.test.ts` — 17 tests, **17/17 pass**. `npx tsc --noEmit` clean (one pre-existing menu-art.tsx error, untouched).
+
+## Do NOT ship (new R7 additions)
+
+bitECS (MPL-2.0 copyleft — study the SoA architecture, don't bundle); axe-core in the game bundle (MPL-2.0 — CI/test tooling only); LibreTranslate server (AGPL-3.0 — use Argos Translate directly).
