@@ -55,3 +55,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe WITH attribution on the free tier.
 - **Notes:** Good ambient/cinematic beds for district ambience and menus. Re-verify the current license page before shipping (terms evolve). Not a CC license — follow their credit-line wording exactly.
 
+## 8. TeknoAXE
+- **URL:** http://teknoaxe.com · tracks mirrored at https://www.free-stock-music.com (search "teknoaxe")
+- **What:** Large catalog (hundreds of tracks) by YouTube musician TeknoAXE — metal, synthwave, electronic, rock, ambient. Tracks tagged with BPM; several explicitly described as fitting video games ("The Exile of Kronos", "This Is My City" synthwave, "Waypoint H" metal).
+- **License:** **CC-BY 4.0 / CC-BY 3.0** (per track) — free for commercial use with credit: `<Track> by TeknoAXE | http://teknoaxe.com / Creative Commons Attribution 4.0 https://creativecommons.org/licenses/by/4.0/`.
+- **Verdict:** ✅ Commercial-safe WITH attribution — credit per track on the credits screen.
+- **Notes:** Strong fit for AshLane combat BGM (metal/synthwave/electronic) and Bannon entrance themes (heavy guitar tracks). Verify the license version per track (mix of 3.0/4.0) and never redistribute as standalone music.
+
