@@ -92,3 +92,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The friendliest 2D physics for menu/loading-screen toys and HUD debris (bouncing logos, coin bursts). Mature plugin ecosystem; broadphase is fine for dozens of bodies. Keep 2D-only — it is not a substitute for the 3D combat physics.
 
+## planck.js
+- **URL:** https://github.com/piqnt/planck.js
+- **What:** JavaScript rewrite of Box2D (C++ physics) — continuous collision, joints, motors, raycasting; the most battle-tested 2D solver lineage available in JS.
+- **License:** MIT (LICENSE file, Ali Shakiba / planck.js contributors).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** When 2D physics must be CORRECT (not just pretty): Box2D's continuous collision prevents tunneling for fast projectiles in top-down map views or 2D bonus stages. Deterministic enough for synced multiplayer prototypes. Heavier API than matter-js — pick planck when accuracy matters, matter when iteration speed matters.
+
