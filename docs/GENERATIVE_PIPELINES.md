@@ -223,3 +223,75 @@ Or `python3 colab-batch.py --auto-name characters.json` to auto-generate names.
 
 **Never in the build:** GPL code (Veloren, OpenRA — lessons only),
 Stability AI Community License (Stable Fast 3D), Tencent license (Hunyuan3D-2).
+
+## 4c. Fully Automated Character Generation — ⭐ ZERO MANUAL STEPS
+
+**No Colab. No browser clicks. No homework.** Run a script, get GLBs.
+
+**File:** `tools/generative/character/auto-character.py`
+
+### How it works
+
+```
+Text/Image → HuggingFace Space (free GPU) → GLB download → Postprocess → Output
+```
+
+### Usage
+
+```bash
+cd tools/generative/character
+
+# From text prompt (simplest)
+python3 auto-character.py --prompt "muscular wrestler in purple tights" --name vato
+
+# From reference image
+python3 auto-character.py --image ref.png --name cyborg
+
+# Batch mode - unattended generation of entire roster
+python3 auto-character.py --batch batch-example.json --output ./output/
+```
+
+### Backends
+
+| Backend | Input | Quality | Speed | Status |
+|---------|-------|---------|-------|--------|
+| **Shap-E** (`hysts/Shap-E`) | Text or Image | Medium | ~2 min | ✅ **WORKING** - tested end-to-end |
+| **TRELLIS** (`trellis-community/TRELLIS`) | Image | High | ~5 min | ⚠️ Space API unstable |
+| **Stable Fast 3D** (`stabilityai/stable-fast-3d`) | Image | High | ~3 min | ⚠️ Space API errors |
+
+**Proof:** `tools/generative/character/proof-shap-e-wrestler.glb` — generated from
+"a muscular wrestler in purple tights" via Shap-E API, downloaded automatically,
+render-verified. No human touched anything.
+
+### Free API test results (2026-10-06)
+
+| Option | Result |
+|--------|--------|
+| HF Serverless Inference API | ❌ No 3D models supported (no inference providers) |
+| TripoSR Spaces (stabilityai, hansyan, mrdas, seawolf) | ❌ All in error or paused |
+| Stable Fast 3D Space | ❌ API raises exceptions |
+| TRELLIS Space (trellis-community) | ⚠️ Connects but generation errors |
+| **Shap-E Space (hysts/Shap-E)** | ✅ **Works** - text-to-3D and image-to-3D |
+
+### Self-hosted GPU fallback
+
+If free Spaces are down:
+
+```bash
+cd tools/generative/character
+./deploy-gpu.sh runpod    # ~$0.34/hr RTX 3090
+./deploy-gpu.sh vast      # ~$0.25/hr
+```
+
+Deploys a Docker container running TripoSR (MIT) with a simple HTTP API.
+See `Dockerfile`, `server.py` for details.
+
+### License ledger
+
+| Component | License |
+|-----------|---------|
+| Shap-E model | MIT (OpenAI) |
+| TRELLIS | MIT |
+| TripoSR | MIT (Stability AI / VAST-AI-Research) |
+| auto-character.py | MIT |
+| server.py, Dockerfile | MIT |
