@@ -115,3 +115,22 @@ Research date: 2026-10-06.
   toggles. Single binary; Redis engine for horizontal scale later.
 
 ---
+## 7. Matrix — E2EE chat (matrix-js-sdk + Tuwunel homeserver)
+- **URL:** https://github.com/matrix-org/matrix-js-sdk (browser client) ·
+  https://github.com/matrix-construct/tuwunel (homeserver)
+- **What:** Open federated chat protocol with end-to-end encryption
+  (Olm/Megolm), rooms, DMs, message history, typing/presence. matrix-js-sdk is
+  the TypeScript client (used by Element Web); Tuwunel is the actively-maintained
+  Rust homeserver (successor of the Conduit→conduwuit lineage, v1.5.x in 2026,
+  ~20–50 MB idle RAM, embedded RocksDB, single Docker container, SSO/OIDC).
+- **License:** **Apache-2.0** for both (matrix-js-sdk: SPDX Apache-2.0, verified
+  via npm/third-party notices; Tuwunel: Apache-2.0, verified 2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** The "serious" chat option: E2EE DMs, persistent crew rooms, and
+  federation (players could chat from any Matrix client). Heavier than
+  Centrifugo: accounts/homeserver are mandatory per MXID, history persists by
+  default, E2EE needs per-device key state. ⚠️ Avoid Synapse/Dendrite — relicensed
+  AGPL-3.0 (Nov 2023); Tuwunel keeps the permissive lineage. Use Matrix if chat
+  is a product pillar; use Centrifugo (#6) if it's just lobby chat.
+
+---
