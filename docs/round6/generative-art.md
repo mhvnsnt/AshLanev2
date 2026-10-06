@@ -45,3 +45,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **AGPL-3.0** (LICENSE file).
 - **Verdict:** **prototype-only as a server tool** — AGPL-3.0's network clause means: run it locally/behind our own firewall for art generation, never expose it as a public service or bundle it into a shipped product. Generated images are our own work product.
 - **Notes:** AshLane use: one local SD API endpoint (`http://127.0.0.1:7860/sdapi/v1/txt2img`) that batch scripts hit for concept art, textures, menu backgrounds. Adetailer extension specifically helps the "AI hands/faces" problem on character portraits. Superseded for scripted work by diffusers (above), but unmatched for interactive prompt iteration.
+
+## ComfyUI (headless workflow API)
+
+- **URL:** https://github.com/Comfy-Org/ComfyUI (moved from comfyanonymous/ComfyUI)
+- **What:** Node-graph SD frontend that doubles as a *headless* batch engine: design a workflow once in the UI, save the JSON, then execute it via the `/prompt` API with different inputs — no GUI needed. The serious pipeline choice for multi-stage art (generate → upscale → detail-fix → outpaint) because the whole chain is one versioned JSON file.
+- **License:** **GPL-3.0** (LICENSE file).
+- **Verdict:** **prototype-only as a tool** — same reasoning as chaiNNer: GPL-3.0 is fine for build-time art generation, never ship or publicly host the server itself. Workflow JSONs and output images are ours.
+- **Notes:** AshLane use: canonical workflows in `tools/gen-art/workflows/` — e.g. `character-portrait.json` (txt2img → face detail → 2× upscale), `graffiti-wall.json` (txt2img → outpaint to 21:9), `texture-tile.json` (txt2img → make tileable). Agents and scripts queue jobs by POSTing workflow JSON + prompt text. The "one workflow file = reproducible art factory" model is exactly what the owner asked for.
