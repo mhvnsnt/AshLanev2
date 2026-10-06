@@ -1,0 +1,121 @@
+/* AshLane PWA intro sequence: tap-to-start + fullscreen intro video. */
+
+.al-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #12100e;
+  color: #f5ead6;
+  font-family: "Outfit", system-ui, sans-serif;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* ---------- tap-to-start ---------- */
+.al-intro-tap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  background:
+    radial-gradient(120% 90% at 50% 10%, rgba(228, 87, 46, 0.16) 0%, rgba(18, 16, 14, 0) 55%),
+    linear-gradient(180deg, #171310 0%, #12100e 60%, #0d0b09 100%);
+}
+
+.al-intro-logo {
+  width: min(72vw, 420px);
+  height: auto;
+}
+
+.al-intro-tagline {
+  font-family: "Anton", "Outfit", sans-serif;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  font-size: clamp(13px, 3.4vw, 20px);
+  color: #e4572e;
+}
+
+.al-intro-tap-hint {
+  margin-top: 24px;
+  font-family: "Anton", "Outfit", sans-serif;
+  font-size: clamp(20px, 5.5vw, 34px);
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: #f5ead6;
+  animation: al-intro-blink 1.6s ease-in-out infinite;
+}
+
+.al-intro-sub {
+  font-size: 13px;
+  color: rgba(245, 234, 214, 0.55);
+  max-width: 34ch;
+  line-height: 1.5;
+}
+
+@keyframes al-intro-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ---------- fullscreen video ---------- */
+.al-intro-video-wrap {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.al-intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.al-intro-skip {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 2;
+  font-family: "Anton", "Outfit", sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: #f5ead6;
+  background: rgba(18, 16, 14, 0.72);
+  border: 1px solid rgba(228, 87, 46, 0.65);
+  border-radius: 999px;
+  padding: 12px 22px 12px 26px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.al-intro-skip:hover,
+.al-intro-skip:focus-visible {
+  background: #e4572e;
+  border-color: #e4572e;
+  color: #12100e;
+  outline: none;
+}
+
+.al-intro-skip-hint {
+  position: absolute;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 2;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(245, 234, 214, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .al-intro-tap-hint { animation: none; }
+}

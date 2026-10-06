@@ -19,6 +19,16 @@ export function setMenuSfxEnabled(on: boolean) {
   enabled = on;
 }
 
+/**
+ * Force-create (or resume) the shared menu AudioContext inside a user
+ * gesture. Call from tap-to-start so later video/menu audio is unlocked.
+ * Safe to call repeatedly; returns true when audio is live.
+ */
+export function unlockMenuAudio(): boolean {
+  const c = ac();
+  return c !== null && c.state === "running";
+}
+
 function blip(freq: number, dur: number, type: OscillatorType, gain: number, slideTo?: number) {
   const c = ac();
   if (!c) return;
