@@ -138,6 +138,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe as tools** — prefer **ufbx (MIT)** for anything we build/ship; FBX2glTF is fine as a local conversion utility with the SDK caveat noted.
 - **Notes:** FBX is unavoidable (Mixamo previews, store packs, mocap vendors). Standardize on ufbx-based ingestion; keep FBX2glTF CLI as the quick manual path.
 
+## FreeMoCap (record your own mocap)
+
+- **URL:** https://github.com/freemocap/freemocap · https://freemocap.org
+- **What:** Free, open-source, markerless motion capture: 2-6 USB webcams (or video files) → synchronized recording → 3D body trajectories → rigged character animation, with a Blender addon for cleanup. The answer to "no open wrestling/parkour/martial-arts dataset exists": capture the exact moves the books demand (grapples, finishers, taunts) with the owner's own performers.
+- **License:** **AGPL-3.0** (repo README/LICENSE; confirmed by the FreeMoCap Foundation). The mocap DATA you record is yours.
+- **Verdict:** ✅ **commercial-safe as a tool via sidecar pattern** — run FreeMoCap out-of-process (subprocess + on-disk handoff); importing AGPL code in-process into the game would trigger copyleft. Recorded animations are your own data, shippable freely.
+- **Notes:** Highest-leverage "dataset" in this wave for Bannon/AshLane: custom wrestling moves, gang-sign taunts, and dance celebrations that no public corpus has. Budget: $0 + webcams. Pair with Cascadeur (below) for cleanup.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
