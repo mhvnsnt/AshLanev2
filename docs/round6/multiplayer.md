@@ -98,3 +98,20 @@ Research date: 2026-10-06.
   for rated rooms.
 
 ---
+## 6. Centrifugo — realtime lobby chat & presence
+- **URL:** https://github.com/centrifugal/centrifugo
+- **What:** Language-agnostic realtime messaging server (Go): PUB/SUB over
+  WebSocket, SSE, HTTP-streaming, gRPC, WebTransport. Channels with presence,
+  join/leave events, message history + recovery. Backend publishes via HTTP/gRPC
+  API; browser JS client subscribes. The self-hosted answer to Pusher/Ably —
+  one Docker container, millions of connections.
+- **License:** **Apache-2.0** (repo LICENSE badge + skill metadata, verified
+  2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** Perfect lobby-chat + presence layer: global chat, crew channels,
+  "friend online" presence, match-found push, live tournament brackets. Decouples
+  realtime transport from game logic — Nakama/Colyseus stay authoritative while
+  Centrifugo fans out chat. Namespaces give per-channel history TTLs and presence
+  toggles. Single binary; Redis engine for horizontal scale later.
+
+---
