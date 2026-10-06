@@ -202,3 +202,21 @@ Research date: 2026-10-06.
   and 100× smaller). Use rrweb for UI sessions, input logs for fights.
 
 ---
+## 12. mp4-muxer — in-browser replay clips (WebCodecs → MP4)
+- **URL:** https://github.com/Vanilagy/mp4-muxer (npm: `mp4-muxer`)
+- **What:** Pure-TypeScript MP4 multiplexer on the WebCodecs API: feed it
+  encoded video/audio chunks (e.g. from a canvas-captured fight replay) and get
+  a downloadable/shareable .mp4 — no server, no ffmpeg.wasm, no upload. Built
+  for exactly this use case: an offline replay renderer for a web game
+  (author's marbleblast game), rendering at any resolution/framerate.
+- **License:** **MIT** (LICENSE, verified via downstream THIRD-PARTY-NOTICES
+  2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** "Save highlight clip" feature without backend cost: re-simulate the
+  input log offscreen → WebCodecs encode → mp4-muxer → shareable file. Sibling
+  webm-muxer is **deprecated** by the author (migrate to mediabunny, which is
+  MPL-2.0 = prototype-only under the license rule) — use mp4-muxer. ⚠️ Do NOT
+  bundle ffmpeg.wasm with libx264 into the game client (GPL encoder concern,
+  flagged in round 5) — WebCodecs + mp4-muxer keeps it clean.
+
+---
