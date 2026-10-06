@@ -275,3 +275,27 @@ checked 2026-10-06. Re-verify before shipping.
   Bannon use: jobber-to-main-eventer progression where early opponents
   have long reaction delays and small move pools, later ones replan and
   punish.
+
+---
+
+## Fair-play AI: anti-input-reading & rubber-banding — technique notes
+
+- **URL:** N/A — design technique survey (fighting-game community
+  documentation; MUGEN AI-level conventions; arcade difficulty design).
+- **What:** Fighting-game AI must never feel like it cheats. Two classic
+  failure modes and their fixes: (1) INPUT READING — AI reacting to the
+  player's button press on the same frame. Fix: the AI decides on a fixed
+  tick from *sensed* state only (animation states, positions), with a
+  reaction delay; it may read the player's *character state*, never their
+  *inputs*. (2) RUBBER-BANDING — AI gets secretly stronger when losing.
+  Fix: keep it honest and visible — e.g. a "comeback mechanic" both sides
+  can use, rather than hidden stat boosts.
+- **License:** N/A (technique, not code).
+- **Verdict:** commercial-safe (our own implementation).
+- **Notes:** AshLane law: the AI plays the same game the player plays —
+  same frame data, same damage, same rules. Difficulty comes from
+  decision quality and reaction time, not stat cheats. Implement the
+  perception layer (Yuka-style) as the ONLY input to the decision layer,
+  with an explicit, difficulty-scaled reaction delay — this structurally
+  prevents input reading. Log AI decisions in debug builds so "the AI
+  cheated" claims can be disproven with data.
