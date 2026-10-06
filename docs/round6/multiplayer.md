@@ -63,3 +63,20 @@ Research date: 2026-10-06.
   alongside LiveKit's in-browser path. Murmur uses ~10–40 kbit/s per user.
 
 ---
+## 4. Open Match — matchmaking framework
+- **URL:** https://github.com/googleforgames/open-match
+- **What:** Google-origin open-source matchmaking framework: the hard plumbing
+  (ticket queues, match profiles, evaluator/synchronizer cycle) is provided as Go
+  microservices; you write only the match logic (Director + MatchFunction) — e.g.
+  "pair 1v1 fighters within ±150 rating and <80ms ping". Pairs with Agones
+  (below): Open Match makes the match, Agones allocates the dedicated server.
+- **License:** **Apache-2.0** (repo license badge + README "Apache 2.0", verified).
+- **Verdict:** commercial-safe — but heavyweight.
+- **Notes:** Designed for Kubernetes at scale; overkill for launch, right-shaped
+  for growth. ⚠️ Maintenance caveat (2026-10-06): community notes say upstream
+  went quiet after maintainers stepped down (~Dec 2023) — treat as
+  adopt-with-care; the Nakama built-in matchmaker covers ranked 1v1 until player
+  counts justify this. Evaluate at the "we need custom match functions" stage,
+  not now.
+
+---
