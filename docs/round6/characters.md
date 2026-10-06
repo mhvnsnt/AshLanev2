@@ -154,3 +154,23 @@
 
 ---
 
+## 16. Auto-Rig Pro
+
+- **URL:** https://superhivemarket.com/products/auto-rig-pro ($50)
+- **What:** The reference Blender auto-rig add-on: automatic bone placement, full-body + face rigs, smart skinning, built-in **game-engine export (FBX/GLTF)** for Unity/Unreal/Godot, **bone remapper** to retarget any armature action (Mixamo, BVH, FBX) onto the rig with IK support. Trial version on GitHub (thecoderraman/auto_rig) is feature-limited.
+- **License:** **Paid ($50), released under multiple licenses (code GPL-family per Blender add-on norms).** Rigs and exports you produce are yours — standard tool/output split.
+- **Verdict:** ⚠️ PAID TOOL, commercial-safe outputs. The strongest Blender-native rigger for game export; the bone remapper directly serves our retargeting pipeline. Purchase decision for the owner — free alternatives (Rigify entry 3, AccuRIG entry 14) cover the same job at lower polish.
+- **Notes:** Budget alternative spotted in the same search: **Cinevva Rig** ($29 one-time launch price, offline unlimited rigging, 260 CC0 animations, game-ready export) — worth evaluating if we buy rather than build.
+
+---
+
+## 17. KeenTools FaceBuilder
+
+- **URL:** https://keentools.io/products/facebuilder-for-blender
+- **What:** Photo-to-3D-head builder for Blender (also Nuke): place pins on face photos from a few angles → clean-topology head mesh matching the actor, with textures. Exports any 3D format; documented MetaHuman-creation workflow; supports Live Link Face.
+- **License:** **Rental subscription** — Freelancer (individuals) $15.99–19.99/mo for Blender. KeenTools states: **"All subscriptions can be used for commercial work. All results of your work with our products belong to you."**
+- **Verdict:** ⚠️ PAID SUBSCRIPTION, commercial-safe outputs. The fastest path from a reference photo (e.g., the owner's fighter concepts) to a game-ready head mesh with real likeness. Evaluate against free photogrammetry (Meshroom + wrap) before subscribing.
+- **Notes:** Heads only — bodies still come from entries 1/6. Useful for the 30+ roster's face diversity where parametric sliders aren't enough.
+
+---
+
