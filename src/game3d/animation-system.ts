@@ -90,6 +90,18 @@ const CLIPS: Record<string, ClipRef> = {
   ko_defeat: ["ko_defeat", "fallflat", "flat"],
 
   // Grapples — PAIRED (attacker + victim play synchronized via vic tracks)
+  // Wrestling game mocap (Drive: 1chJYomdZW6E7jqUUHZTn1w9wLTakRfvG)
+  wrestling_suplex: ["wrestling_suplex", "suplex"],
+  wrestling_ddt: ["wrestling_ddt", "ddt"],
+  wrestling_german: ["wrestling_german", "german"],
+  wrestling_chokeslam: ["wrestling_chokeslam", "chokeslam"],
+  wrestling_tombstone: ["wrestling_tombstone", "chokeslam"],
+  wrestling_brainbuster: ["wrestling_brainbuster", "brainbuster"],
+  wrestling_neckbreaker: ["wrestling_neckbreaker", "ddt"],
+  wrestling_hurricanerana: ["wrestling_hurricanerana", "hurricane"],
+  wrestling_powerbomb: ["wrestling_powerbomb", "chokeslam"],
+  wrestling_piledriver: ["wrestling_piledriver", "wrestling_tombstone"],
+  // Legacy paired grapples
   clinch: ["takedown", "combo"],
   takedown: ["takedown", "combo"],       // double-leg, has vic track
   suplex: ["suplex", "backdrop"],        // has vic track
@@ -131,6 +143,11 @@ const CLIPS: Record<string, ClipRef> = {
 const PAIRED_GRAPPLES = new Set([
   "clinch", "takedown", "suplex", "german_suplex",
   "ddt", "brainbuster", "chokeslam", "backdrop", "feral_maul",
+  // Wrestling game mocap
+  "wrestling_suplex", "wrestling_ddt", "wrestling_german",
+  "wrestling_chokeslam", "wrestling_tombstone", "wrestling_brainbuster",
+  "wrestling_neckbreaker", "wrestling_hurricanerana",
+  "wrestling_powerbomb", "wrestling_piledriver",
 ]);
 
 // States that lock the fighter until the animation completes
@@ -141,6 +158,11 @@ const LOCKED_STATES = new Set([
   "dropkick", "hurricane_kick", "capoeira",
   "takedown", "suplex", "german_suplex", "ddt", "brainbuster",
   "chokeslam", "backdrop", "feral_maul", "clinch",
+  // Wrestling game mocap
+  "wrestling_suplex", "wrestling_ddt", "wrestling_german",
+  "wrestling_chokeslam", "wrestling_tombstone", "wrestling_brainbuster",
+  "wrestling_neckbreaker", "wrestling_hurricanerana",
+  "wrestling_powerbomb", "wrestling_piledriver",
   "knockdown", "knockdown_back", "knockdown_fwd",
   "ko_headshot", "ko_defeat",
   "getup", "getup_kip", "getup_cover",
