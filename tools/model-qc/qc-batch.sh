@@ -5,8 +5,16 @@
 # Usage: ./qc-batch.sh ../public/models/cast ./out/batch 4
 set -u
 QCDIR="$(cd "$(dirname "$0")" && pwd)"
-MODELDIR="$1"
+# resolve model dir relative to QCDIR so relative paths work from anywhere
+case "$1" in
+  /*) MODELDIR="$1" ;;
+  *) MODELDIR="$QCDIR/$1" ;;
+esac
 OUT="${2:-$QCDIR/out/batch}"
+case "$OUT" in
+  /*) ;;
+  *) OUT="$QCDIR/$OUT" ;;
+esac
 JOBS="${3:-4}"
 mkdir -p "$OUT"
 

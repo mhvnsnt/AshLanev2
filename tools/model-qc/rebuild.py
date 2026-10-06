@@ -70,12 +70,22 @@ def main():
         js['bufferViews'][bv_idx]['byteLength'] = len(new_bytes)
         cursor = end
     out += bin_raw[cursor:]
+    # Shift every absolute buffer offset at/after each replaced region:
+    # bufferView.byteOffset AND EXT_meshopt_compression.byteOffset
+    # (the latter is absolute to the buffer, not relative to the view).
     for i, bv in enumerate(js['bufferViews']):
         bo = bv.get('byteOffset') or 0
         for pos, delta in shifts:
             if bo >= pos:
                 bo += delta
         bv['byteOffset'] = bo
+        mext = (bv.get('extensions') or {}).get('EXT_meshopt_compression')
+        if mext and 'byteOffset' in mext:
+            eo = mext['byteOffset']
+            for pos, delta in shifts:
+                if eo >= pos:
+                    eo += delta
+            mext['byteOffset'] = eo
     js_str = json.dumps(js, separators=(',', ':')).encode('utf-8')
     js_pad = (-len(js_str)) % 4
     js_chunk = struct.pack('<II', len(js_str) + js_pad, 0x4E4F534A) + js_str + b' ' * js_pad
