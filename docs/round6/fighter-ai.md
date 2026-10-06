@@ -24,3 +24,22 @@ checked 2026-10-06. Re-verify before shipping.
   spacing), navmesh + steering for multi-fighter positioning and tag-partner
   movement. Engine-independent (no three.js dependency). Last release 0.7.8
   (2022) — stable but slow maintenance.
+
+---
+
+## behavior3js
+
+- **URL:** https://github.com/linchendev/behavior3js (fork of behavior3/behavior3js)
+- **What:** JavaScript behavior-tree library: BehaviorTree, Blackboard (agent
+  memory), composites (Sequence, Priority, MemSequence, MemPriority), decorators
+  (Inverter, Limiter, MaxTime, Repeater, RepeaterUntilSuccess/Failure), actions
+  and conditions as extensible node classes. Ships with a visual tree editor.
+  Lightweight, `npm install behavior3js`.
+- **License:** MIT (LICENSE file: "The MIT License (MIT)", Copyright (c)
+  2015 Renato de Pontes Pereira).
+- **Verdict:** commercial-safe.
+- **Notes:** Best fit for opponent decision trees in a brawler: e.g. a root
+  selector `Priority[ Sequence[PlayerInRange?, Attack], Sequence[LowHealth?,
+  Retreat], Approach ]` with blackboard tracking player habits (blocks high,
+  throws a lot). Visual editor lets designers (not just coders) author boss and
+  faction AI. Pair with Yuka: behavior3js decides WHAT, Yuka executes movement.
