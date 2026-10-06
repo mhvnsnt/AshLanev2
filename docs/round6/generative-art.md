@@ -77,3 +77,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** The service is explicitly positioned as a **non-commercial** public alternative ("a non-commercial alternative must also exist" — their mission). Community guidance: free for non-commercial use; paid/ad-based integrations are asked to share profits back with the horde. All workers run open-source models only.
 - **Verdict:** **prototype-only** — the non-commercial ethos rules out shipped art; ideal for free concept batches.
 - **Notes:** AshLane use: backup free GPU when local hardware is busy — queue overnight batches of texture/mural concepts. Slower than Pollinations at peak, but supports more exotic community models and img2img/alchemy post-processing. Good citizen rule: contribute idle GPU as a worker to earn kudos rather than hammering the anonymous queue.
+
+## vtracer (raster → SVG vectorizer)
+
+- **URL:** https://github.com/visioncortex/vtracer
+- **What:** Rust raster-to-vector tracer with color mode — turns PNG logos, graffiti pieces, and sticker art into clean multi-color SVGs with smooth splines. Ships as CLI, Rust lib, Python bindings (`pip install vtracer`), and WASM (runs in-browser). Benchmarks put it at/near potrace quality for color art, without potrace's GPL.
+- **License:** **MIT** (LICENSE file, visioncortex).
+- **Verdict:** **commercial-safe** — the MIT-licensed workhorse of the vector pipeline.
+- **Notes:** AshLane use: THE logo/sticker pipeline step — AI-generated or hand-drawn graffiti → vtracer → crisp SVG faction logos, wall tags, menu emblems that scale from phone HUD to 4K title screens. Alternatives noted: `mringler/image-tracer-ts` (MIT, TypeScript port of imagetracerjs — browser/Node, jagged curves on detail) and potrace (next entry) for pure black-and-white work. vtracer is the default for anything with color.
