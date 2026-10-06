@@ -9,3 +9,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** Collection-level claim is public domain, but the collection is only ~65% verified PD; rights vary per item (user uploads; some titles had copyright restored under GATT/URAA).
 - **Verdict:** Commercial-safe ONLY with per-title verification (check the item's `licenseurl`/`rights` fields via `https://archive.org/metadata/<identifier>`). Otherwise prototype-only.
 - **Notes:** Larger than Prelinger for long-form footage (flavor on in-game TVs, promo B-roll, title-card textures). Never assume "old = PD" — the test is publication date + registration/renewal status, not age.
+## NARA — National Archives motion picture holdings
+- **URL:** https://catalog.archives.gov (series info: https://www.archives.gov/research/motion-pictures/newsreels)
+- **What:** 300,000+ reels of motion picture film: US-govt-produced films (military, educational, WWII-era documentaries 1915–1976), plus gift collections — e.g. Universal Newsreel releases and outtakes 1929–1967 (MCA/Universal deeded the copyright to the US Government).
+- **License:** Federal works are public domain under 17 U.S.C. 105; NARA states "the vast majority of the digital images in the National Archives Catalog are in the public domain." BUT: NARA does not confirm copyright status — some holdings (donated/private materials) are copyrighted, and individual reels can include third-party-owned content.
+- **Verdict:** Commercial-safe for federal-produced works; verify per item (user's responsibility per NARA policy). Universal Newsreels mostly PD but check per reel.
+- **Notes:** Online downloads limited; most material viewable/copiable in the College Park research room. NARA's YouTube channel links catalog downloads for a subset — good scouting shortcut.
