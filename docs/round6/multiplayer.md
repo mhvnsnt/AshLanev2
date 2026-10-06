@@ -151,3 +151,19 @@ Research date: 2026-10-06.
   tracker for peer discovery.
 
 ---
+## 9. Agones — dedicated game-server fleet orchestration
+- **URL:** https://github.com/agones-dev/agones (moved from googleforgames/agones)
+- **What:** Kubernetes-native hosting for dedicated game servers: CRDs
+  (GameServer/Fleet/FleetAutoscaler) that allocate, health-check, scale, and
+  shut down server processes; SDK sidecar lets the game server signal
+  Ready/Allocated/Shutdown. Used in production by Ubisoft, Embark. Helm install,
+  Prometheus metrics out of the box.
+- **License:** **Apache-2.0** (repo LICENSE + pkg.go.dev, verified 2026-10-06).
+- **Verdict:** commercial-safe — infra-stage only.
+- **Notes:** The answer to "we outgrew one Nakama box": run authoritative fight
+  servers as an Agones fleet, autoscaled by queue depth. Presupposes a K8s
+  cluster and a separately-built dedicated server binary — NOT a launch-stage
+  tool. Pair with Open Match (#4): matchmaker picks players, Agones provides the
+  arena. Revisit when CCU or cheat pressure demands dedicated servers.
+
+---
