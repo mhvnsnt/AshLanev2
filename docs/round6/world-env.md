@@ -269,3 +269,33 @@ Prelinger.
 - **Notes:** Complements building-gen.py's procedural water towers/AC units with
   higher-detail hero tanks. Check tri counts on import — these are baked-texture
   models, decimate before dropping into the game build.
+
+## License ledger
+
+| Project | License (source) | Verdict |
+|---|---|---|
+| procedural-weather-threejs (CK42BB) | MIT (README) | commercial-safe |
+| threejs-conference (ektogamat) | MIT (LICENSE file) | commercial-safe |
+| three.js official GPU rain/snow examples | MIT (three.js) | commercial-safe |
+| threex.daynight (jeromeetienne) | MIT (author convention; no LICENSE file — re-verify) | commercial-safe* |
+| SunCalc (mourner) | BSD-2-Clause (downstream manifests) | commercial-safe |
+| three.js Sky addon | MIT (three.js) | commercial-safe |
+| BinaryConstruct Skybox Editor | MIT (LICENSE file) | commercial-safe |
+| procedural-stars-threejs (CK42BB) | MIT (README) | commercial-safe |
+| procedural-clouds-threejs (CK42BB) | MIT (README) | commercial-safe |
+| procedural-cities roadGen.js (lanmower) | MIT (README) | commercial-safe |
+| BlenderGIS (domlysz) | GPL-3.0 (LICENSE file) | prototype-only |
+| OGA Environment Decals (Savino) | CC0 (page) | commercial-safe |
+| three.js DecalGeometry | MIT (three.js) | commercial-safe |
+| OGA Neon Sign 2 (plaggy) | CC0 (page) | commercial-safe |
+| Sketchfab street lamps (woulfric) | CC-BY (page) | commercial-safe (attribution) |
+| OGA Medieval Tavern Props Pack | unclear (no formal license) | prototype-only |
+| PSX Subway Station (JoeTheBox) | ambiguous (CC0 claimed, credit required ≈ CC-BY) | prototype-only |
+| OGA Industrial Extension Pack 4 (rubberduck) | CC0 (page + glportal LICENSE-tank.md) | commercial-safe |
+
+\* threex.daynight: MIT per the author's stated convention across threex.*
+modules, but the repo ships no LICENSE file — confirm before ship.
+
+**Harvest gaps flagged for later rounds:** dedicated CC0 modern bar/gym/club
+interior kits (paid marketplaces dominate: CGTrader, Fab, ArtStation); a CC0
+modern subway-station kit (only the ambiguous-license PSX pack found).
