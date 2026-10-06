@@ -104,3 +104,13 @@
 
 ---
 
+## 11. MakeHuman Community asset library (clothes / hair / targets)
+
+- **URL:** http://www.makehumancommunity.org/content/user_contributed_assets.html | packs: https://static.makehumancommunity.org/assets/
+- **What:** The community asset repository: curated packs of clothing (shirts, pants, suits, dresses, boots, armor), hair (25+ styles in the `hair01` pack alone — braids, bobs, buns, messy, anime), skins, materials, poses, and morph targets. Per-pack pages list every asset with its license in a table.
+- **License:** **Bundled/included assets + anything produced by MakeHuman = CC0** (2020 license change, LICENSE.md in the repo: "assets included with and produced by makehuman are CC0 no matter how you got hold of them"). **User-contributed assets: CC0 or CC-BY — check the per-pack license table** (the asset pages show License per asset).
+- **Verdict:** ✅ COMMERCIAL-SAFE with per-pack verification. This is the clothing/hair answer for the whole parametric-human pipeline (MakeHuman/MPFB/Anny): bodies from entries 1/6, outfits + hair from here, all CC0.
+- **Notes:** Also ships **MakeClothes/MakeTarget/MakeWalk** (Blender plug-ins) for building custom clothing fitted to our body variants — the long-term answer for fighter-specific outfits (streetwear, gang colors per the faction art direction). Targets double as face/body morphs.
+
+---
+
