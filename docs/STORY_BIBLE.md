@@ -278,13 +278,13 @@ Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang
 
 **These secrets must NEVER appear in:** menus, roster UI, HUD, character select, or any player-facing text. Writers and story scripts only.
 
-## KG Mudo — 9th Robed Council Member (OCCASIONAL)
+## Kiko Tanaka — 9th Robed Council Member (OCCASIONAL)
 
-> ⚠️ NAME CLARIFICATION: A previous agent conflated KG Mudo with Kiko Tanaka. They are DIFFERENT characters. Kiko Tanaka is "The Ghost" — a JPCW book-canon psychological threat. KG Mudo is a separate Great Muta-inspired character.
+**Kiko Tanaka** (book canon, JPCW — "The Ghost"). NOT a permanent council member — appears only sometimes.
 
-**KG Mudo**, Keiji Mutoh-inspired. NOT a permanent council member — appears only sometimes.
+Note: "KG Mudo" was a speech-to-text mishearing of **"Keiji Mutoh"** — the inspiration for this attire, NOT a separate character.
 
-**Street Attire (unpainted, unmasked):**
+**Keiji Mutoh-inspired Attire:**
 - Multicolored spray-painted dragon tights (vibrant, many colors)
 - White fur coat/jacket with fringe
 - NO face paint, NO mask — gray beard, older Keiji Muto look
