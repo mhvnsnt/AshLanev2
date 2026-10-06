@@ -118,3 +118,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (BSD-3 / MIT).
 - **Notes:** Tracker modules are TINY (KBs vs MBs for MP3) and loop perfectly — the classic game-music format. Compose original .xm/.it modules (OpenMPT tracker is free) → ship as modules → decode at runtime. Ideal for lofi/chiptune district beds and menu music with zero streaming cost.
 
+## 17. Meyda — real-time audio feature extraction
+- **URL:** https://github.com/meyda/meyda · npm `meyda`
+- **What:** Web Audio API feature extraction: MFCC, spectral centroid/rolloff/flux, chroma, loudness, zero-crossing, energy — realtime or offline. `npm i meyda`.
+- **License:** **MIT** (verified via npm/libraries.io + WAC paper).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The SENSOR for adaptive music: read fight state from the audio itself — beat-track the combat BGM (web-audio-beat-detector, also MIT, is a companion), drive hit-flash/particles on beat, duck music under KO slow-mo, raise intensity when spectral energy spikes. Feed frames from an AudioWorklet (avoid the deprecated ScriptProcessor wrapper).
+
