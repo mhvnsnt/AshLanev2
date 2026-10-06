@@ -363,3 +363,93 @@ ground game.
 | **Broken** | Auto-drop; may spawn shard/board piece |
 | **Dropped** | Knock-away on big hits; stealable (UR hot-potato) |
 | **Disarmed** | Enemy grab → weapon taken (Yakuza disarm heat) |
+
+---
+
+## 6. ASHLANE MAPPING — what sim.ts has vs what's missing
+
+Current `src/game3d/sim.ts` body states: `free, atk, windup, dash, spin,
+hit, launch, down, grab, throw, out`. Systems present: `poise` (stagger
+meter), `meter` (0-100, builds on hits), `stopT` (hit-stop), `splat` +
+`wallSlam()` (wall splat with follow-up bonus), `tech` (wake flag),
+`hitProps()` (crate/chair/table/car break → debris loot, "Through the
+table" body slams), weapons with durability numbers (pipe 8, spear 7,
+blade 6, board 5, bottle 3), variable hit-stop (jabs ~5f, big counters
+12f — done), stick-aimed body-zone targeting (head/body/legs — done).
+
+| Sub-state / mechanic | Source | sim.ts status | Priority |
+|---|---|---|---|
+| Variable hit-stop by power | UR feel | **HAVE** (2471e45) | — |
+| Body-region targeting | UR | **HAVE** (9e02999) | — |
+| Reversals / grab escapes | UR | PARTIAL (in progress) | P0 |
+| Wall splat + follow-up bonus | Tekken/UR | **HAVE** (`wallSlam`, `splat`) | — |
+| Wall *break* (walls with HP, post-break area) | Tekken | MISSING | P1 |
+| Floor break / drop to lower level | Tekken | MISSING | P2 |
+| Balcony break | Tekken | MISSING | P3 |
+| Juggle extender token (once/combo) | Tekken | MISSING (launch exists, no extender rule) | P1 |
+| Damage scaling per juggle hit | Tekken/Capcom | MISSING | P1 |
+| Grounded-can't-relaunch rule | Tekken | MISSING | P1 |
+| Okizeme: tech roll / getup kick / spring kick | Tekken | PARTIAL (`down` + `tech` flag exist, no option select) | P1 |
+| Cheap shot from behind + telegraph | UR feel | PARTIAL (in progress) | P0 |
+| Dodge as timed button (no hold-block) | UR | MISSING (no dodge state) | P0 |
+| Chained-dodge auto-shove | UR | MISSING | P2 |
+| Special Arts meter (shared offense/defense) | UR | PARTIAL (`meter` exists, no SP moves) | P1 |
+| SP as combo-breaker | UR | MISSING | P2 |
+| Stun/dizzy meter (visible) | Capcom | MISSING (`poise` is stagger, not dizzy) | P1 |
+| Throw tech | Capcom/UR | MISSING | P2 |
+| Air grapple | UR | MISSING | P2 |
+| Double-team sync grapple | UR | MISSING | P2 |
+| Weapon throw (stun projectile) | UR | MISSING (weapons are melee only) | P2 |
+| Weapon durability economy (heat-action discount) | Yakuza | PARTIAL (durability numbers exist, no economy) | P2 |
+| Contextual heat actions (wall/car/weapon/down) | Yakuza | MISSING | P2 |
+| Disarm grab | Yakuza | MISSING | P3 |
+| Breakable → debris-as-weapon (board/shard) | Yakuza | **HAVE** (table → board) | — |
+| Object HP states (intact→damaged→broken) | All | PARTIAL (props have hp, no damaged visual state) | P2 |
+| Crush system (high/low evasion) | Tekken | MISSING | P3 |
+| Counter-hit bonus states | Tekken | MISSING | P2 |
+| Stance system | Tekken/Yakuza | MISSING | P3 |
+| Heat/aggression window (chip on everything) | T8 | MISSING | P3 |
+| V-Reversal (defense that clears stun) | Capcom | MISSING | P3 |
+
+### Build order rationale
+
+- **P0** (feel-critical, UR identity): timed dodge, reversals/grab escapes,
+  telegraphed cheap shots. Without these the game doesn't *feel* like Urban
+  Reign no matter what else ships.
+- **P1** (combo/depth layer): wall breaks, juggle extender + scaling,
+  no-relaunch rule, okizeme options, visible stun meter, SP meter with
+  actual SP moves.
+- **P2** (texture): chained-dodge shove, SP combo-breaker, throw tech, air
+  grapple, double-teams, weapon throws, durability economy, heat actions,
+  object damage states.
+- **P3** (mastery layer): crush, counter-hits, stances, Heat window,
+  V-Reversal, disarms, balcony breaks.
+
+### Open-source fills (per gap)
+
+- **Timed dodge + i-frames**: standard fighting-game pattern; implement in
+  sim.ts (`dash` exists — add dodge variant with invuln window). No external
+  dependency needed.
+- **Juggle scaling / extender token**: pure state-machine rules; implement
+  directly (combo counter + one-extender flag on Body).
+- **Okizeme options**: extend `down` state with getup choice inputs
+  (tech roll dir, getup kick 3/4, spring kick) — input layer + state exits.
+- **Visible stun meter**: HUD element bound to a new `stun` field; drains
+  after 1s untouched (SFV pattern).
+- **Wall/floor break**: mark stage walls/floors with `breakHp`; `wallSlam()`
+  decrements; on break, swap geometry + allow combo continuation.
+- **CC0 mocap for new states**: the 220-clip retarget library
+  (tools/anim-retarget) covers walk/idle/attack; gap-fill with CC0 mocap
+  (CMU, Mixamo free packs) for dodge rolls, getup, air grapple — run through
+  the retargeter + model-QC gate.
+
+---
+
+*Sources: Wikipedia (Urban Reign gameplay), Tekken Wiki (Heat, Screw, Bound),
+SuperCombo Wiki (SF2T/SFIV system, Tekken dictionary), sdtekken.com (Tekken
+101), gamingbolt.com (T8 guide), gamerant.com (T8 features, Yakuza tips),
+Steam community guides (Yakuza Kiwami), yakuza.fandom.com (Y0 heat actions),
+gamefaqs.gamespot.com (Yakuza 3 weapon thread), polygon.com (SFV stun),
+gamespot.com + gamesradar.com + ps2.gamespy.com (Urban Reign reviews),
+forum.digitpress.com (UR player guide), vectree.io (UR knowledge map).
+Mechanics described in our own words; no proprietary code/assets reproduced.*
