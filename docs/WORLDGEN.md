@@ -15,6 +15,8 @@ Same seed = same district, every time. No hand-placed levels.
 | `worldgen-textures.ts` | Procedural canvas textures (asphalt, brick, facades, graffiti, neon) |
 | `worldgen-buildings.ts` | Building generator (facades, storefronts, fire escapes, signage) |
 | `worldgen-streets.ts` | Street blocks, prop scattering, territory storytelling |
+| `sky.ts` | **Per-district sky system** — gradient dome, sun/moon, stars, clouds, light rig |
+| `env-assets.ts` | **CC0 asset registry** — Kenney + Quaternius GLBs organized by district |
 
 ## Districts
 
@@ -87,6 +89,75 @@ Generate one district per chunk, or one large district with sub-chunks.
 
 **View:** Call `d.tick(t, dt)` per frame for animated elements.
 Set scene fog from `d.group.userData.fog`.
+The district sky travels with the group (`d.group.userData.sky`).
+
+## Sky System (`sky.ts`)
+
+Every district gets its own sky — not just fog color, but a full atmospheric
+identity: gradient dome shader, sun/moon orb, star field, clouds, horizon glow,
+and a complete light rig (hemisphere + key + rim).
+
+| District | Sky | Feel |
+|----------|-----|------|
+| **The Alleys** | Hazy orange sodium glow, low sun | Perpetual late evening, warm |
+| **The Strip** | Deep blue night, neon horizon bleed | Electric night, stars visible |
+| **The Yards** | Cold grey overcast, hidden sun | Industrial noon, flat light |
+| **The Tunnels** | Pitch black, purple + toxic green Malakor wash | Menacing, otherworldly |
+| **The High Line** | Dawn/dusk gold, large low sun | Golden hour, open sky |
+| **Ember Park** | Natural daylight blue, bright sun | Clear day, fresh |
+
+API:
+```ts
+import { buildSky, applySkyLights, skyFor } from "./sky";
+
+// Build and add to scene
+const sky = buildSky("subway");
+scene.add(sky.group);
+
+// Per-frame (cloud drift, Malakor pulse)
+sky.tick(t);
+
+// Weather integration
+sky.setDay(0.5); // 0=night, 1=noon
+
+// Apply light rig to existing scene (view.ts integration)
+applySkyLights(scene, "strip", { hemi, key: sun, rim });
+
+// Cleanup
+sky.dispose();
+```
+
+The sky dome follows the camera (position.copy in render loop).
+Malakor accents (purple/green point lights) pulse slowly — heavy, not strobing.
+
+**view.ts integration:** `applyStage()` now builds per-stage skies via
+`STAGE_SKY` mapping (ward→alleys, dock→strip, pit→alleys, high→rooftops,
+yard→warehouses, under→subway). The legacy inline fog overrides are kept
+for ground-skin switching; the sky system handles all lighting.
+
+## Environment Assets (`env-assets.ts`)
+
+All CC0 environment GLBs organized by district. Kenney.nl (CC0) + Quaternius (CC0).
+See `ASSET_LICENSES` in the module for source URLs.
+
+```ts
+import { DISTRICT_ASSETS, assetsFor, allAssetPaths } from "./env-assets";
+
+// Get buildings for a district
+const buildings = assetsFor("warehouses", "building");
+
+// Preload everything
+const paths = allAssetPaths();
+```
+
+| District | Key Assets |
+|----------|------------|
+| Alleys | Kenney buildings, Quaternius street pieces, streetlights, signs |
+| Strip | Skyscrapers, 4-way intersections, streetlights |
+| Warehouses | Industrial buildings, elevated streets, bridges |
+| Tunnels | Underpass pieces (primarily procedural) |
+| Rooftops | Skyscrapers, elevated streets, bridges |
+| Park | Oak trees, bushes, rocks, fences, benches |
 
 ## Future
 

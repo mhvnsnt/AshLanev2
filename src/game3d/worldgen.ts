@@ -165,6 +165,7 @@ export const DISTRICT_IDS = Object.keys(DISTRICTS) as DistrictId[];
 import * as THREE from "three";
 import { generateBuilding } from "./worldgen-buildings";
 import { generateStreetBlock, scatterProps, addTerritoryMarkings } from "./worldgen-streets";
+import { attachSkyToDistrict } from "./sky";
 
 export interface DistrictBounds {
   minX: number; maxX: number;
@@ -242,6 +243,9 @@ export function generateDistrict(
   moon.position.set(-20, 30, 12);
   group.add(moon);
   group.userData.fog = { color: def.fogColor, near: def.fogNear, far: def.fogFar };
+
+  // -- Per-district sky: dome, stars, sun/moon, clouds, Malakor washes --
+  const sky = attachSkyToDistrict(group, def);
 
   // -- Street grid --
   for (let bx = 0; bx < blocks; bx++) {
@@ -337,8 +341,9 @@ export function generateDistrict(
     { x: worldW / 4, z: worldD / 4, yaw: -Math.PI / 2, kind: "npc" },
   );
 
-  // -- Per-frame tick (flicker, flame dance) --
+  // -- Per-frame tick (flicker, flame dance, sky) --
   const tick = (t: number, _dt: number) => {
+    sky.tick(t);
     for (const f of flickers) {
       // fluorescent stutter + fire dance
       const base = f.userData.baseIntensity ?? f.intensity;
@@ -352,6 +357,7 @@ export function generateDistrict(
   };
 
   const dispose = () => {
+    sky.dispose();
     group.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (mesh.isMesh) {

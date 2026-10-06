@@ -22,6 +22,7 @@ import {
   addMalakorVignette,
   applyMalakorGrade,
 } from "./malakor";
+import { buildSky, applySkyLights, type BuiltSky, type DistrictId } from "./sky";
 
 type Fighter = {
   id: number;
@@ -346,9 +347,28 @@ export function createView(canvas: HTMLCanvasElement) {
   scene.add(curb);
 
   let stageId = "";
+  let stageSky: BuiltSky | null = null;
+  // stage -> worldgen district for sky lookup
+  const STAGE_SKY: Record<string, DistrictId> = {
+    ward: "alleys", dock: "strip", pit: "alleys",
+    high: "rooftops", yard: "warehouses", under: "subway",
+  };
   function applyStage(id: string) {
     if (id === stageId) return;
     stageId = id;
+    // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
+    // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
+    // horizon glow, light rig, and Malakor accents where defined.
+    const skyId = STAGE_SKY[id] ?? "alleys";
+    if (stageSky) {
+      scene.remove(stageSky.group);
+      stageSky.dispose();
+    }
+    stageSky = buildSky(skyId);
+    scene.add(stageSky.group);
+    applySkyLights(scene, skyId, { hemi, key: sun, rim });
+    // keep weather-system day blend wired to the new sky dome
+    (stageSky as BuiltSky & { setDay: (v: number) => void }).setDay(0.65);
     const look =
       id === "dock"
         ? { fog: 0x163044, sky: 0xb7d4ea, near: 16, far: 70 }
@@ -361,10 +381,7 @@ export function createView(canvas: HTMLCanvasElement) {
             : id === "under"
               ? { fog: 0x1a2830, sky: 0x7f96a4, near: 12, far: 52 }
               : { fog: 0x243044, sky: 0xd7e6f8, near: 22, far: 90 };
-    scene.background = new THREE.Color(look.fog);
-    scene.fog = new THREE.Fog(look.fog, look.near, look.far);
-    hemi.color.setHex(look.sky);
-    hemi.intensity = 1.45;
+    // legacy ground-skin switch (kept — sky system handles fog/lights above)
     sun.intensity = id === "under" ? 1.15 : 1.55;
     // Malakor atmosphere retunes fog + accent lights for this stage.
     malakor.setStage(id, look.fog);
@@ -903,7 +920,18 @@ export function createView(canvas: HTMLCanvasElement) {
     const p = sim.bodies[0];
     applyStage(sim.story ? sim.stage : p && p.x < -26 ? "yard" : p && p.z > 26 ? "dock" : p && p.z < -26 ? "under" : sim.stage);
     const day = (Math.sin(sim.time * 0.045) + 1) / 2;
+    // New sky system: per-district dome + day blend + tick
+    if (stageSky) {
+      stageSky.setDay(day);
+      stageSky.tick(sim.time);
+      stageSky.group.position.copy(camera.position);
+    }
+    // Legacy sky objects (kept for weather compat — hidden when stageSky active)
     skyMat.uniforms.uDay.value = day;
+    sky.visible = !stageSky;
+    stars.visible = !stageSky;
+    sunOrb.visible = !stageSky && day > 0.08;
+    for (const cl of clouds) cl.visible = !stageSky;
     sky.position.copy(camera.position);
     stars.position.copy(camera.position);
     (stars.material as THREE.PointsMaterial).opacity = Math.max(0, 0.9 - day * 1.6);
