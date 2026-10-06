@@ -101,3 +101,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The cheapest way to make menus feel alive: mission lists, move lists, inventory grids, and toast stacks animate for free with one hook. Use for *structural* transitions (lists appearing/disappearing); use anime.js (#13) or the R5 Motion stack for choreographed sequences (versus-screen intros, round announcements). SSR-safe import pattern documented for TanStack Start.
 - **AshLane use:** Animated menu lists (missions, moves, inventory), toast/notification stacks, settings toggles.
+
+## 13. anime.js
+- **URL:** https://github.com/juliangarnier/anime · https://animejs.com
+- **What:** Lightweight JS animation engine (v4, ES modules): unified tween API for CSS, SVG, DOM attributes and JS objects; timelines, stagger, springs, scroll triggers, SVG morphing (`morphTo`), motion paths, text splitting. Optional Three.js adapter.
+- **License:** **MIT** — "© Julian Garnier | MIT License", LICENSE.md in repo root. Verified via upstream license references (checked 2026-10-06). Active (v4.5.0, 2026).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The choreography engine for the menu kit: versus-screen build-ups, round-announcement sequences, combo-counter pops, graffiti-logo draw-on effects (SVG stroke animation via `createDrawable`), title-card text splits. SVG morphing is ideal for animated faction emblems and the SWMG wizard mark. Lighter and more controllable than CSS keyframes for sequenced UI; complements AutoAnimate (#12, structural) and Motion (R5, React components).
+- **AshLane use:** Versus-screen/round-announcement choreography, graffiti-logo draw-on, combo-counter pops, animated SVG emblems.
