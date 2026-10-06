@@ -33,3 +33,4 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 | Mesh2Motion | MIT code / CC0 assets (repo README) | commercial-safe |
 | AMASS | non-commercial scientific research (LICENSE + license.html) | prototype-only |
 | BABEL | non-commercial scientific research (repo README) | prototype-only |
+| HumanML3D | MIT code / AMASS-derived data = non-commercial research | prototype-only (data) |
