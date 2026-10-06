@@ -22,3 +22,18 @@ Prelinger.
 - **Notes:** Best-in-class drop-in weather brain for AshLane's districts. Pair with
   Open-Meteo (already wired, round 2) so in-game weather matches the player's real
   location. Works with three r170+; TSL path needs WebGPU-capable browser.
+
+## threejs-conference (ektogamat)
+- **URL:** https://github.com/ektogamat/threejs-conference
+- **What:** WebGPU + three.js + TSL rainy cyberpunk alley demo with techniques
+  directly portable to AshLane streets: GPU rain that respects rooftops and props
+  (collision-height "hit" texture so rain splashes on geometry instead of falling
+  through), wet pavement (ripples + planar reflection), neon billboards, cinematic
+  post-processing, first-person exploration with BVH collision, rain-on-glass intro
+  effect. README includes a "Replication recipe" for the collision rain.
+- **License:** MIT License (per repo metadata; LICENSE file in root).
+- **Verdict:** commercial-safe
+- **Notes:** The collision-height rain technique is the key prize — rain that
+  visibly strikes rooftops/awnings is a huge realism step for a city brawler.
+  WebGPU-only path; AshLane targets WebGL2 fallback too, so port the height-texture
+  idea rather than the code verbatim.
