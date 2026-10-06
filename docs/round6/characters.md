@@ -64,3 +64,13 @@
 
 ---
 
+## 7. VRoid Studio (pixiv)
+
+- **URL:** https://vroid.com/en/studio | VRM spec: https://vrm.dev
+- **What:** pixiv's free anime-stylized character creator (desktop/iPad). Sliders for face/body/skin, procedural + texture-painted hair, outfit editor, exports VRM 0.x/1.0 (glTF-based) with full finger bones and spring-bone hair physics. VRM loaders exist for three.js (three-vrm, MIT) and Blender (VRM add-on).
+- **License:** **VRoid Studio Terms of Use (Arts. 11–13): provided content licensed for "any purpose and any use"** — commercial use in games stated outright, no credit required. NOT CC0: base meshes and preset items remain pixiv's copyright; some bundled items/sample models carry their own special terms — check per item. **You may NOT build a character-creator app with it** (an app that generates/outputs models from VRoid-made meshes needs a separate pixiv license). VRM files embed their own per-file license meta (VRMC_vrm) — read it per file. VRoid Hub community models: per-uploader terms (pixiv's own AvatarSample_A/B/C are CC0).
+- **Verdict:** ✅ COMMERCIAL-SAFE for shipped characters (per-item check on bundled presets); the anime aesthetic doesn't fit AshLane's grounded street style, so use case = stylized fighters / crowd NPC variants, or base meshes to reskin. Never as an in-game avatar creator.
+- **Notes:** Export → VRM → Blender VRM add-on → re-rig to game skeleton → GLB. The VRM spring-bone hair system is worth studying for our own hair-card physics. Style mismatch is the real blocker, not the license.
+
+---
+
