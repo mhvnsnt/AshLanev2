@@ -290,3 +290,76 @@ ground game.
   knives) with simple durability.
 - Crowd control via knockback arcs — one swing hits a *line*, positioning is
   everything.
+
+---
+
+## 5. ENVIRONMENTAL DESTRUCTION LAYER
+
+### 5.1 Walls: splat → break (the Tekken grammar)
+
+- **Wall splat (W!)**: knockback attack connects near wall → opponent sticks to
+  wall, vulnerable. Follow-up window ≈ 3 fast hits (slow power moves: ~2).
+- **Wall break**: *specific strong moves* on a splatted opponent break the
+  wall — extra damage, opponent left stunned and open, sometimes a new area.
+  Breakable vs solid walls are a *stage property* (designers choose per wall).
+- **Balcony break**: knock through railing → both drop a level → combo can
+  continue on landing.
+- **Screw/Tornado vs walls**: tailspin extenders do NOT work at walls and can't
+  cause floor breaks (they throw backward, not downward) — extender choice is
+  *positional*.
+- **One wall splat per wall per combo** — but carrying to a *second* wall can
+  earn another. Positioning compounds.
+
+### 5.2 Floors: break and drop
+
+- **Floor break**: slam-down moves on marked floors → both fighters drop to a
+  lower level; combo continues after landing.
+- **Hard floor break (T8)**: requires *two* hits — the floor has HP.
+- **Heat Smash shortcut (T8)**: Heat Smash triggers hard breaks in one hit.
+- Design lesson: floors/walls as *HP objects* with thresholds, not binary flags.
+
+### 5.3 Yakuza wall heat actions
+
+- Contextual: grab near wall → Wall Crush (punch then head-into-wall),
+  Back Crush (leg sweep, crush against wall with body weight),
+  guardrail drops (pick up, back-first onto rail).
+- The wall is a *move list extension* — same grab input, different output by
+  proximity.
+
+### 5.4 Juggle rules, unified
+
+1. **Launcher** puts opponent airborne (launchers are per-move flags).
+2. **Filler**: air hits keep them up; damage scales per hit (scaling is the
+   anti-infinite).
+3. **Extender (once per combo)**: Bound (spike down, T6) / Screw-Tornado
+   (tailspin back, T7/8). One token per combo — routing decision.
+4. **Ender**: spike/finisher; grounded opponents can't be re-launched (Tekken's
+   foundational rule).
+5. **Wall carry**: juggle drift toward wall → splat → wall combo.
+6. **Ground bounce**: some slams bounce (vs splat) — bounce *continues*,
+   splat *pauses*.
+
+### 5.5 Breakables: object HP states
+
+- **States**: intact → damaged → broken. Each transition is a *feel event*
+  (crack sound, debris, banner).
+- **What breaks what**: tables/chairs/crates break from body slams and heavy
+  hits; bottles shatter on first weapon-hit; cars dent (multi-stage) but don't
+  shatter.
+- **Broken pieces as weapons**: table → board (fewer swings, heavier);
+  bottle → shard. The debris is *loot*.
+- **Yakuza economy**: every weapon swing costs 1 durability; Heat Actions
+  cost 1 (not per-swing); fight-ending weapon Heat costs 0. Repair costs money
+  → weapons are budget decisions.
+
+### 5.6 Weapons: full state list
+
+| State | Notes |
+|---|---|
+| **On ground** | Pickup prompt in radius |
+| **Equipped** | Moveset override (swing arcs, reach) |
+| **Thrown** | Projectile; stuns on hit (UR) |
+| **Durability tick** | Per swing (Yakuza) or per hit |
+| **Broken** | Auto-drop; may spawn shard/board piece |
+| **Dropped** | Knock-away on big hits; stealable (UR hot-potato) |
+| **Disarmed** | Enemy grab → weapon taken (Yakuza disarm heat) |
