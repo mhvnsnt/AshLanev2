@@ -154,6 +154,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe (tool)** within the revenue cap + attribution — animations you create/clean are yours to ship.
 - **Notes:** The cleanup station for everything in this wave: FreeMoCap recordings, retargeted AIST++/CMU clips, and hand-keyed combat moves all get physics-plausibility passes here before hitting the game. $0 to start; the $100k cap is far above current revenue.
 
+## Bandai Namco motion dataset (stylized)
+
+- **URL:** Distributed via the Motion-X / research community mirrors; original release by Bandai Namco Research
+- **What:** Large stylized (anime/game-style, exaggerated) full-body motion dataset in BVH — useful precisely because it is NOT realistic: snappy game-feel locomotion, exaggerated attacks, and expressive idles that read well at PS1/low-poly fidelity (Brutal Fist lane) and as stylization reference for AshLane finishers.
+- **License:** **CC BY-NC-ND 4.0** (per independent license audits, e.g. the opengym3d FREE_ASSET_RESEARCH.md survey).
+- **Verdict:** ⚠️ **prototype-only** — non-commercial + no-derivatives. Study the timing/spacing for game-feel reference; do not ship clips or retargeted derivatives.
+- **Notes:** The only stylized corpus in this wave — everything else is realistic mocap. Valuable for calibrating "how exaggerated should a hit reaction be" against real mocap baselines.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
@@ -167,3 +175,4 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 | KIT Whole-Body Motion DB | research-community terms, no commercial grant | prototype-only |
 | Rokoko Studio Live Blender | LGPL-3.0 retarget engine (Mesh2Motion NOTICE.md) | commercial-safe (tool) |
 | Rigify / Mr Mannequins / Auto-Rig Pro | GPL / GPL / proprietary paid (~$40) | commercial-safe (tools) |
+| Bandai Namco dataset | CC BY-NC-ND 4.0 (license audits) | prototype-only |
