@@ -101,3 +101,10 @@
 - **License:** Eclipse Public License 2.0 (weak copyleft — NOT in the permissive list)
 - **Verdict:** prototype-only — build-time tool, never ship its code
 - **Notes:** Offline use only: import an OSM district → simulate rush-hour traffic and pedestrian flows → export vehicle/pedestrian timelines → bake them as waypoint schedules the game replays. Tool output is not infected by EPL; the simulator itself never ships in the game.
+
+## cs105_simcityclone
+- **URL:** https://github.com/mingnhaymua/cs105_simcityclone
+- **What:** Three.js city builder (Vite) with a graph-based autonomous vehicle traffic system navigating a dynamic road network (straights, curves, T-junctions, intersections), plus a citizen simulation (jobs, population, building growth) and day-night cycle.
+- **License:** MIT (badge on README — verify the LICENSE file before shipping)
+- **Verdict:** commercial-safe (pending license-file verification)
+- **Notes:** Study reference for in-game traffic AI: read the `vehicles/` and `simulation/` systems for graph-based junction navigation patterns. Don't lift art or game code wholesale — extract the traffic/citizen patterns into our own systems.
