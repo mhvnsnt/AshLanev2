@@ -101,3 +101,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **Apache-2.0** (LICENSE file — relicensed from MPL-2.0; GitHub detection confirms Apache-2.0).
 - **Verdict:** **commercial-safe** — can be bundled into build tools and even the game toolchain.
 - **Notes:** AshLane use: `svg → resvg → PNG` bake step for all vector art (faction logos on arena aprons, HUD emblems, spray-tag decals). Pairs with opentype.js (next): text → SVG paths → resvg → texture. Related: `scour` (Apache-2.0, now at scour-project/scour) and `svgo` (MIT) for optimizing SVG file size before rasterizing.
+
+## opentype.js (text → SVG paths for logos)
+
+- **URL:** https://github.com/opentypejs/opentype.js
+- **What:** JavaScript font parser: load any TTF/OTF/WOFF and convert text to raw SVG path data (`font.getPath('ASHLANE', x, y, size).toSVG()`). The programmatic logo engine — take the Round-2 OFL street fonts (Rubik Spray Paint, Permanent Marker, Bangers, Bungee Shade…), render words as vector paths, then warp/skew/outline/drip them in code.
+- **License:** **MIT** (LICENSE file).
+- **Verdict:** **commercial-safe** — and the fonts it consumes are OFL (already cleared in Round 2).
+- **Notes:** AshLane use: generative wordmarks — faction names, fighter nicknames ("SOMBRA NEGRA"), menu titles as SVG paths with code-driven effects (offset drop shadows, outlines, gradient fills, drip distortions). No font files ship in the game if paths are baked at build time. This + resvg + vtracer = the complete "type → logo → texture" chain.
