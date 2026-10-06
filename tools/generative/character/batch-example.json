@@ -1,0 +1,20 @@
+[
+  {
+    "name": "vato",
+    "prompt": "muscular luchador wrestler, purple tights with gold trim, gold chains, black boots, long black hair",
+    "seed": 42,
+    "notes": "Vato character"
+  },
+  {
+    "name": "skeleton_warrior",
+    "prompt": "muscular warrior with skeletal body paint, skull motifs, fringed black pants, long black hair",
+    "seed": 123,
+    "notes": "Skeleton warrior"
+  },
+  {
+    "name": "cyborg_fighter",
+    "prompt": "cyborg fighter, exposed circuitry, armored right arm, yellow pants, brown skin",
+    "seed": 456,
+    "notes": "Cyborg Stick-Up style"
+  }
+]
