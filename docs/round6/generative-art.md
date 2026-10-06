@@ -37,3 +37,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **Apache-2.0** (LICENSE file) — the library itself is commercial-safe.
 - **Verdict:** **commercial-safe (library); per-checkpoint verdicts:** checkpoints carry their own licenses. SD 1.5/2.1/XL = **CreativeML Open RAIL-M** (allows commercial use but with behavioral use-restrictions + the murky-training-data caveat) → **prototype-only** for shipped art per the owner rule. **FLUX.1-schnell = Apache-2.0 weights** → **commercial-safe** and the recommended checkpoint for any art that might ship.
 - **Notes:** AshLane use: `tools/gen-art/` scripts — `gen-batch.py --prompt ... --checkpoint <id> --seeds ...` writing PNG + JSON sidecars (prompt, seed, checkpoint, license). Deterministic seeds = regenerable art. Runs on free Colab/Kaggle GPUs or the owner's machine; no paid key (owner has no paid Tripo key and the same frugality applies here).
+
+## Stable Diffusion WebUI — AUTOMATIC1111 (API server)
+
+- **URL:** https://github.com/AUTOMATIC1111/stable-diffusion-webui
+- **What:** The classic SD web UI with a full REST API (`--api` flag): POST prompts → get PNGs back. Mature extension ecosystem (ControlNet, Adetailer for faces/hands, regional prompter). Easiest way to stand up a *local* image-gen API the rest of the pipeline (and agents) can call over HTTP.
+- **License:** **AGPL-3.0** (LICENSE file).
+- **Verdict:** **prototype-only as a server tool** — AGPL-3.0's network clause means: run it locally/behind our own firewall for art generation, never expose it as a public service or bundle it into a shipped product. Generated images are our own work product.
+- **Notes:** AshLane use: one local SD API endpoint (`http://127.0.0.1:7860/sdapi/v1/txt2img`) that batch scripts hit for concept art, textures, menu backgrounds. Adetailer extension specifically helps the "AI hands/faces" problem on character portraits. Superseded for scripted work by diffusers (above), but unmatched for interactive prompt iteration.
