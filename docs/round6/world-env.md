@@ -254,3 +254,18 @@ Prelinger.
 - **Notes:** Only dedicated subway-station kit found that isn't paid. Pairs with
   the KayKit Dungeon Remastered tiles (already wired, round 2) for tunnel
   sections. If the author confirms CC-BY, it's commercial-safe with attribution.
+
+## OpenGameArt Industrial Extension Pack 4: more tanks (rubberduck)
+- **URL:** http://opengameart.org/content/industrial-extension-pack-4-more-tanks
+- **What:** CC0 industrial rooftop/industrial-district props: 2 large rusty
+  industrial tank objects with baked + texture-painted textures (33.3MB zip),
+  plus ladders/towers in the sibling Pack 1. Built as an extension to the author's
+  "high quality industrial asset pack." Directly usable as rooftop water-tank /
+  industrial-tank dressing for AshLane's industrial district and rooftop arenas.
+- **License:** CC0 — confirmed both on the OpenGameArt page and in the
+  glportal-data repo's meshes/LICENSE-tank.md ("CC0 Absolutely free to use or to
+  modify in any kind of work (personal, commercial or else)").
+- **Verdict:** commercial-safe
+- **Notes:** Complements building-gen.py's procedural water towers/AC units with
+  higher-detail hero tanks. Check tri counts on import — these are baked-texture
+  models, decimate before dropping into the game build.
