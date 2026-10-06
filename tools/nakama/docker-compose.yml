@@ -1,0 +1,48 @@
+# tools/nakama/docker-compose.yml — one-command AshLane Nakama backend.
+#
+#   cd tools/nakama && docker compose up
+#
+# Spins up:
+#   - postgres:16  (port 5432, local only) — Nakama's database
+#   - nakama       (ports 7349/7350/7351)  — game server
+#
+# The Nakama server config lives in data.yml (same folder). Data persists in
+# the `postgres-data` named volume, so `docker compose down` keeps wallets,
+# leaderboards and accounts.
+#
+# Client (nakama-js) connects to the HTTP API on port 7350.
+# Admin console: http://127.0.0.1:7351  (default login admin / password)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nakama
+      POSTGRES_USER: nakama
+      POSTGRES_PASSWORD: nakama
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nakama -d nakama"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  nakama:
+    image: heroiclabs/nakama:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "7349:7349"  # gRPC API
+      - "7350:7350"  # HTTP/JSON API (what the game client uses)
+      - "7351:7351"  # admin console
+    volumes:
+      - ./data.yml:/nakama/data/data.yml:ro
+    command: ["nakama", "--config", "/nakama/data/data.yml"]
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
