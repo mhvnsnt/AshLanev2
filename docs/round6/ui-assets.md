@@ -77,3 +77,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** Not the main theme (Concrete Jungle is street, not retro) — but valuable as a *contrast layer*: arcade-mode screens, retro mini-game overlays, or a "classic" HUD skin option. The pixel-icon technique (box-shadow pixel art in pure CSS) is directly reusable for custom street-style pixel badges. Study its border-image/corner-cut patterns for textured menu boxes.
 - **AshLane use:** Retro/arcade-mode UI skin, pixel badge technique reference, textured-box border patterns.
+
+## 10. daisyUI
+- **URL:** https://github.com/saadeghi/daisyui · https://daisyui.com
+- **What:** Tailwind CSS component library — 61 component families (buttons, cards, modals, drawers, toasts, tabs, badges, menus, tooltips) as semantic CSS classes (`btn btn-primary`), framework-agnostic, no JS required. 35 built-in themes + custom theme tokens.
+- **License:** **MIT** — confirmed in repo-root `LICENSE` and GitHub license metadata. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The pragmatic base for the street-art menu kit: take daisyUI's component *structure* (modal, drawer, menu, toast) and reskin with Concrete Jungle tokens — this is exactly how you avoid the "generic mobile-style menu" the owner rejected. Custom theme support means the SWMG palette (ember, brass, concrete) becomes a first-class theme. CSS-only = zero runtime cost, works with the existing Tailwind v4 setup.
+- **AshLane use:** Menu component base (modals, drawers, toasts, tabs) reskinned to Concrete Jungle; settings screens.
