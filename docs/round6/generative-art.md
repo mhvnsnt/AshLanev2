@@ -109,3 +109,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **MIT** (LICENSE file).
 - **Verdict:** **commercial-safe** — and the fonts it consumes are OFL (already cleared in Round 2).
 - **Notes:** AshLane use: generative wordmarks — faction names, fighter nicknames ("SOMBRA NEGRA"), menu titles as SVG paths with code-driven effects (offset drop shadows, outlines, gradient fills, drip distortions). No font files ship in the game if paths are baked at build time. This + resvg + vtracer = the complete "type → logo → texture" chain.
+
+## Logoipsum (placeholder logo library) ⚠️ not CC0
+
+- **URL:** https://logoipsum.com · License: https://logoipsum.com/license/
+- **What:** Hundreds of clean SVG placeholder logos (abstract marks + wordmarks) with a Figma plugin. Useful as *stand-ins* while real faction/company logos are being designed.
+- **License:** Custom **"Fair Use License"** (NOT CC0 — corrected 2026-10-06): irrevocable, worldwide, perpetual, royalty-free; commercial projects OK, no attribution required. **BUT: unaltered logos may only be used as placeholders** — they may NOT be used as final logos, trademarks, or brand identities, and may not be resold/redistributed as-is.
+- **Verdict:** **prototype-only** — perfect for menu mockups, UI wireframes, and sponsor-board filler. Never ship an unaltered Logoipsum mark as an AshLane faction/company logo (that's trademark territory); heavily modified versions are permitted but still get owner sign-off.
+- **Notes:** AshLane use: drop Logoipsum marks into menu mockups and arena sponsor boards *today* so layouts read correctly, then replace one-by-one with originals from the opentype.js/vtracer pipeline. Tag every placeholder in the asset manifest so none leak into a build.
