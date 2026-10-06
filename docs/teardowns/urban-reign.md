@@ -56,3 +56,34 @@ In Urban Reign, a character's **named style is a design contract**: it fixes the
 **The Tekken-anchor trick.** Nearly every style has a documented Tekken analogue (Grimm≈Steve Fox, Chris≈Eddy Gordo, Park≈Hwoarang/Baek, Tong Yoon≈Bruce Irvin, Lin Fong≈Feng Wei, Shun Ying≈Ling Xiaoyu, Kadonashi≈Jin/Kazuya, Golem≈Craig Marduk). The Tekken team reused their own matchup vocabulary, so players already knew how to fight each archetype on first sight.
 
 Sources: [GameSpot E3 2005 preview](https://www.gamespot.com/articles/urban-reign-e3-2005-preshow-impressions/1100-6124406/) · [Tekken Wiki](https://tekken.fandom.com/wiki/Urban_Reign)
+
+## 3. Factions / gangs in the story — names, leaders, turf, relationships
+
+Green Harbor's gang war is a **layered power structure**: street gangs fight each other at the bottom, a Yakuza outfit engineers the conflict in the middle, and a corrupt politician profits at the top. The inciting incident — the kidnapping of a Zaps member — is a false flag.
+
+| Faction | Leader | Turf / base | Plot role |
+|---|---|---|---|
+| **Shun Ying Lee's Chinese Triad** | Shun Ying Lee (24; inherited Chinatown leadership from her father; her younger brother was passed over) | Chinatown; runs a restaurant as a front | Hires protagonist Brad Hawk to find the kidnapped gang member and clear her name; at war with the Zaps (a war she didn't start) |
+| **The Zaps** | Dwayne Davis (32; lost his family young, fiercely loyal to his "homeboys") | The streets / Ragtown blocks | Member **KG** is kidnapped — the inciting incident. Dwayne blames Shun Ying's gang and starts the gang war |
+| **Hell's Legions** (bikers) | Glen Kluger (41; "a thorough biker gang stereotype") | Biker turf | Hired by Dwayne and the Zaps as muscle against Brad and Shun Ying |
+| **Mushin-Kai** (Yakuza) | **Shinkai** (65; master swordsman; "mysterious leader" of the gang) | Operates across the city; rooftop HQ | The engineers: paid to wreak havoc, they kidnapped KG to incite the street gangs against each other. Hired by the mayor as "consultants" for his security firm |
+| **Lin Fong Lee's splinter gang** | Lin Fong Lee (22; Shun Ying's younger brother; possibly murdered their father) | Splinter of the triad | Succession war against his sister; deploys Golem to kill her |
+| **Kadonashi Dojo** | Sho Kadonashi (34; came from Japan chasing the "American dream") | The dojo | Neutral karate school drawn into the street war |
+| **Shadow Platoon** | Douglas McKinzie (37; formed the gang after being discharged from military service for abandoning his post) | Underground network | Ex-military commandos; "will answer anyone" who pays — mercenary chaos agents |
+| **The Outlaws** | Napalm 99 (35; ex-convict) | Convict underworld | Gang of ex-cons who "despise all good in society" — pure disorder faction |
+| **Skinhead gang** (name not pinned down in available sources) | Unknown | Street turf | Muscle-bound, tattooed (multi-ethnic) heavy faction — the game's designated "big body" mooks |
+| **Zanetti gang** | Unknown | Street turf | Minor named gang encountered in missions |
+| **Mayor William Bordin's machine** | Mayor **William Bordin** | City government | The true mastermind (the "Batman Gambit"): orchestrated the kidnappings and riots to manufacture a crisis, then planned to have the Yakuza sweep in and "save" the city — riding the popularity into a run for state governor. Final boss is deliberately anticlimactic (he just shoots a gun); players widely consider Shinkai the real final fight |
+
+**The relationship map (how the war actually works):**
+
+1. **Bordin** pays the **Mushin-Kai** to destabilize the city.
+2. The **Mushin-Kai** kidnaps **KG** (Zaps) to make the street gangs turn on each other.
+3. The **Zaps** blame **Shun Ying's triad**; she hires **Brad Hawk** (brawler-for-hire) to untangle it.
+4. Dwayne hires **Hell's Legions** as muscle; **Lin Fong** splits from his sister's triad and hires **Golem** as an assassin.
+5. **Shadow Platoon** and **the Outlaws** sell violence to whoever pays — chaos mercenaries.
+6. Brad defeats Shinkai, finds Bordin's signed contract, and exposes the mayor.
+
+**The "defeat means friendship" engine.** Beaten bosses recur as *allies*: later escort missions have Brad protecting former enemies (Glen, Dwayne, Grimm, Tong Yoon) — the roster is recruited through combat, and today's boss is tomorrow's partner. This is also the unlock system: defeating fighters unlocks them for free/multiplayer modes. Faction membership is therefore **porous** — a design choice that keeps a 60-fighter roster narratively manageable.
+
+Sources: [Wikipedia plot summary](https://en.wikipedia.org/wiki/Urban_Reign) · [Eurogamer Apr 2005 preview](https://www.eurogamer.net/news270405tekkenurban) · [Shinkai](https://villains.fandom.com/wiki/Shinkai) · [Golem](https://villains.fandom.com/wiki/Golem_(Urban_Reign)) · [All The Tropes plot breakdown](https://allthetropes.org/wiki/Urban_Reign) · [digitpress fan review (mission/faction detail)](https://forum.digitpress.com/forum/showthread.php?71009-urban-reign-VERSUS-beatdown-fists-of-vengeance)
