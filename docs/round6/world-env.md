@@ -196,3 +196,15 @@ Prelinger.
   Rock Salt / Rubik Spray Paint fonts), bullet holes, blood splatter, worn
   posters, faction turf markings — all as decals on the procedural buildings.
   Zero downloads, already inside AshLane's three.js dependency.
+
+## OpenGameArt Neon Sign 2 (plaggy)
+- **URL:** https://Opengameart.org/content/neon-sign-2
+- **What:** CC0 3D neon sign — music/guitar-store neon sign with the sign texture
+  included (background plate not included, easy to rebuild). 608KB zip.
+- **License:** CC0 (stated on the OpenGameArt page).
+- **Verdict:** commercial-safe
+- **Notes:** Template for AshLane's district signage: swap the texture for
+  canvas-rendered neon text (club names, bar names, faction tags in Bungee Shade
+  / Bangers) and pair with UnrealBloomPass (already available, round 2) for the
+  neon-district look. Neon is approved for ONE specific district per the owner's
+  art direction — use sparingly elsewhere.
