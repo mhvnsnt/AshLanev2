@@ -16,6 +16,12 @@ import { updateFlock, type Flock } from "./federated/boids";
 import { updateStreaming } from "./federated/streaming";
 import { stepSpringBone } from "./federated/springbones";
 import { retargetClip, collectRest as collectRestPose } from "./universal-retarget";
+import {
+  MalakorLayer,
+  addMalakorProps,
+  addMalakorVignette,
+  applyMalakorGrade,
+} from "./malakor";
 
 type Fighter = {
   id: number;
@@ -35,6 +41,18 @@ type Fighter = {
 };
 
 type RigTemplate = { scene: THREE.Group; animations: THREE.AnimationClip[]; moveset: string };
+
+/** Deterministic PRNG for set-dressing (same props every load). */
+function mulberry(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
 
 const PAL = [
   { cloth: 0xe4572e, skin: 0xe6c2a2, visor: 0xf0b429 },
@@ -107,6 +125,12 @@ export function createView(canvas: HTMLCanvasElement) {
   const rim = new THREE.DirectionalLight(0xe4572e, 0.28);
   rim.position.set(12, 6, -10);
   scene.add(rim);
+
+  // Malakor visual layer — underlying atmosphere (modern high-fidelity neon,
+  // never retro). Grade once; per-stage intensity handled in applyStage().
+  applyMalakorGrade(renderer);
+  const malakor = new MalakorLayer(scene, { mobile: phone });
+  addMalakorVignette(canvas);
 
   const groundMat = new THREE.MeshPhongMaterial({ map: groundTex(), color: 0xffffff, shininess: 22, specular: 0x3d5166 });
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(180, 180), groundMat);
@@ -342,6 +366,8 @@ export function createView(canvas: HTMLCanvasElement) {
     hemi.color.setHex(look.sky);
     hemi.intensity = 1.45;
     sun.intensity = id === "under" ? 1.15 : 1.55;
+    // Malakor atmosphere retunes fog + accent lights for this stage.
+    malakor.setStage(id, look.fog);
     const floor = id === "dock" ? dockSkin : id === "pit" ? pitSkin : asphalt;
     groundMat.map = floor;
     groundMat.color.setHex(0xffffff);
@@ -363,6 +389,9 @@ export function createView(canvas: HTMLCanvasElement) {
     addLamps();
     addSign();
     addUrban(flickers);
+    // Malakor set-dressing: gold-trimmed barriers + neon totems (subtle tier;
+    // per-stage lighting/atmosphere intensity is handled by MalakorLayer).
+    addMalakorProps(scene, mulberry(1337), 1);
     addDress();
     addMarket();
     for (const model of forgeStreet({ asphalt, brick, dock: dockSkin, pit: pitSkin })) scene.add(model);
@@ -1011,10 +1040,13 @@ export function createView(canvas: HTMLCanvasElement) {
     for (const glow of flickers) {
       glow.mat.opacity = sim.reduced ? 0.9 : 0.72 + Math.sin(sim.time * glow.rate) * 0.22;
     }
+    // Malakor atmosphere: slow neon pulse (skipped cheaply at intensity 0).
+    if (!sim.reduced) malakor.tick(sim.time);
     renderer.render(scene, camera);
   }
 
   function dispose() {
+    malakor.dispose();
     renderer.dispose();
     scene.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
