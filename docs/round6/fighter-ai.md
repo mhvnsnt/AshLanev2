@@ -192,3 +192,25 @@ checked 2026-10-06. Re-verify before shipping.
   aggression tuning. Read its enemy AI scripts as the spec for our
   multi-fighter coordination layer. Its "one attacker at a time" fairness
   conventions are directly applicable.
+
+---
+
+## IKEMEN GO (study: fighting-game AI architecture)
+
+- **URL:** https://github.com/ikemen-engine/Ikemen-GO
+- **What:** Open-source 2D fighting-game engine compatible with MUGEN
+  content (~1.6k stars). AI opponents are character-defined state machines
+  (MUGEN CNS/AI scripting): per-state triggers, distance-based decision
+  tables, reaction-timing parameters, and difficulty-scaled AI levels.
+  The community has decades of documented AI-writing craft.
+- **License:** NOASSERTION — no LICENSE file in the repo (checked
+  2026-10-06).
+- **Verdict:** prototype-only / study-only. Read and learn; do not ship its
+  code.
+- **Notes:** STUDY target #2 for Bannon. The MUGEN AI model is the closest
+  public reference for wrestling/fighting opponent brains: AI "levels"
+  (reaction speed, decision frequency, move-choice randomness) are exactly
+  the difficulty-scaling knobs AshLane/Bannon need. Study how character
+  authors write AI triggers (e.g. `trigger1 = p2stateno = 200 && random <
+  300`) — this is the concrete pattern for our own difficulty-scaled
+  fighter AI, reimplemented clean.
