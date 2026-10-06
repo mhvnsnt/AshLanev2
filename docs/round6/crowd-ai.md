@@ -17,3 +17,10 @@
 - **License:** MIT (repo page license field, LICENSE file at root)
 - **Verdict:** commercial-safe
 - **Notes:** The heavy-duty crowd option: hundreds of agents with real collision avoidance in 3D districts. Cost is the WASM payload + init — prefer navcat (pure JS, below) on tight mobile budgets. Also useful: `donmccurdy/glTF-Transform-Recast-Config` bakes navmeshes inside the glTF asset pipeline.
+
+## navcat
+- **URL:** https://github.com/isaac-mason/navcat
+- **What:** Pure-JavaScript navmesh generation + querying by the recast-navigation-js author — same algorithms, no WASM. Solo + tiled navmeshes, fully JSON-serializable data structures, tree-shakeable, `navcat/blocks` generation presets, optional crowd modules, `navcat/three` three.js entrypoint, live examples including crowd simulation, crowd stress test, and flow-field pathfinding.
+- **License:** MIT (repo page license field, LICENSE file at root)
+- **Verdict:** commercial-safe
+- **Notes:** Best default for AshLane's streets: no WASM init cost on mobile, navmesh data serializes to JSON (replay/network friendly), and the flow-field example is exactly how to move hundreds of pedestrians cheaply — one field, many agents. Pair with Yuka steering for local avoidance.
