@@ -29,3 +29,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe with attribution (CC-BY on the icons — add one line to credits/ATTRIBUTION.md; the OFL/MIT parts need no action).
 - **Notes:** The free **brands** set covers social/share icons (Twitch/YouTube/Discord) for menu share buttons and streamer-mode UI. Solid style matches heavy street headers; `fa-burst`-style layered icons work for combo-counter badges. Heavier than Phosphor — cherry-pick SVGs.
 - **AshLane use:** Social/brand icons, settings glyphs, share buttons, achievement badges.
+
+## 4. Remix Icon
+- **URL:** https://github.com/Remix-Design/RemixIcon · https://remixicon.com
+- **What:** 3,000+ neutral-style system icons, every icon in `-line` (outline) and `-fill` (solid) variants. SVG, icon font, and framework packages.
+- **License:** **Apache-2.0** — per the repo's `License` file ("free for personal and commercial use; mention appreciated but not required; icons are not for sale" — i.e. don't resell the set itself). Verified via upstream license file references (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (Apache-2.0; keep the license notice with the icons).
+- **Notes:** The line/fill duality maps perfectly onto menu active/inactive and HUD on/off states (e.g. `volume-up-line` vs `volume-up-fill`). Neutral geometric style takes the Concrete Jungle theme well (tint + texture does the work). Largest Apache-licensed set — good default when Phosphor lacks a glyph.
+- **AshLane use:** Menu chrome icons, HUD toggles, settings glyphs (active/inactive pairs).
