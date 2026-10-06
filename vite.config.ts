@@ -175,7 +175,21 @@ export default defineConfig(({ command, isPreview }) => ({
     // PWA head + ?install=1 tutorial page; runs before Start/Nitro.
     grokPwaPlugin(),
     tailwindcss(),
-    tanstackStart(),
+    // GitHub Pages (PAGES_BUILD=1) is a pure static SPA deploy: no Nitro
+    // server bundling. The nitro/vite plugin's "nitro" environment has no
+    // entry for static presets, which makes Rolldown fall back to index.html
+    // as the SSR input and fail the build ("rolldownOptions.input should not
+    // be an html file when building for SSR"). Skipping nitro here avoids
+    // that entirely — the client environment produces everything Pages needs.
+    //
+    // Pages also gets a client-only boot entry (src/client-pages.tsx). The
+    // default TanStack Start client entry hydrates and requires window.$_TSR
+    // (the SSR bootstrap), which a static shell never has — the boot crashed
+    // with "Cannot set properties of undefined (setting 't')". The Pages
+    // entry skips hydration and mounts with createRoot instead.
+    tanstackStart(
+      process.env.PAGES_BUILD ? { client: { entry: "./client-pages" } } : undefined,
+    ),
     // GitHub Pages (PAGES_BUILD=1) is a pure static SPA deploy: no Nitro
     // server bundling. The nitro/vite plugin's "nitro" environment has no
     // entry for static presets, which makes Rolldown fall back to index.html
