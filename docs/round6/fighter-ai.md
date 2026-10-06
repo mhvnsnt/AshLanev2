@@ -81,3 +81,22 @@ checked 2026-10-06. Re-verify before shipping.
   style/heat. AshLane use: boss AI that re-plans mid-fight (goal shifts from
   "DealDamage" to "Survive" below 30% HP), tag partners with assist desires.
   Plan caching matters on mobile — budget planning to every Nth frame.
+
+---
+
+## javascript-state-machine
+
+- **URL:** https://github.com/jakesgordon/javascript-state-machine
+- **What:** Tiny, battle-tested finite-state-machine library for JS.
+  Declarative transitions (`{ name: 'punch', from: 'idle', to: 'attacking' }`),
+  lifecycle hooks (onBefore/onEnter/onAfter), async transitions, state
+  history, visualization via a state-diagram plugin. Zero dependencies.
+- **License:** MIT (LICENSE file: standard MIT text, Copyright (c) 2012–2018
+  Jake Gordon and contributors).
+- **Verdict:** commercial-safe.
+- **Notes:** The pragmatic FSM for fighter state management — every
+  opponent is idle/approach/attack/block/hitstun/knockdown/getup/KO with
+  guarded transitions. Lifecycle hooks are the clean place to enforce
+  fighting-game rules (cancel windows, hitstop, armor). Async transitions
+  fit animation-driven state changes. Use it for the low-level combat
+  statechart; layer behavior3js/Yuka on top for decisions/movement.
