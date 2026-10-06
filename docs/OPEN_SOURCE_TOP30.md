@@ -426,3 +426,233 @@ Ranked: what we can pull in *this week* and feel the difference.
 8. **city-pcg → worldgen algorithm** (§7.1) — cleaner city generation
 9. **stickman-fighter → combat debug tools** (§8.1) — hitbox display, frame stepping
 10. **dot-npc-ai → behavior trees** (§8.3) — smarter NPCs
+
+---
+
+# ROUND 3 — 2026-10-06: Urban Reign mechanics, mobile perf pipeline, monetization, netcode, crowd AI
+
+> Research: 2026-10-06. Builds on Round 2 (2026-10-05) and §§4–8 (parallel round, same day).
+> De-duplicated against §§4–8: entries already covered there are cross-referenced, not repeated.
+> License rule unchanged: only MIT / Apache-2.0 / BSD / CC0 / ZLib / Unlicense go into the commercial build.
+> ⚠️ = strategy/lessons only, no code merged.
+> ✅ WIRED = actually installed, run, and measured this round (not just documented).
+
+## TOP 3 most impactful this round
+
+1. **meshoptimizer + glTF-Transform + Basis Universal** — ✅ WIRED. One-command GLB pipeline:
+   `gltf-transform optimize` took a real repaired model 5.86 MB → 1.26 MB (−78%), skinning intact,
+   validate clean. This is the download-size answer for the PWA and the 1.9M-face Tripo problem at
+   the packaging stage. Script + verified numbers in `docs/asset-pipeline/`.
+2. **Nakama (Apache-2.0)** — the monetization/live-ops backbone: accounts, inventory, virtual wallet
+   (in-game currency), leaderboards, clans, authoritative multiplayer, server-side TS/Go/Lua logic for
+   stores and battle passes. Self-hostable, no per-sale fees.
+3. **TripoSR (MIT) + TRELLIS.2 (§4.2, MIT)** — the owner-mandated generative 3D pipeline,
+   license-clean, in two tiers: TripoSR = fast (0.5s, 6GB VRAM) for props/backgrounds, same lineage
+   as the owner's Tripo workflow; TRELLIS.2 = hero assets with PBR materials (~24GB VRAM, batch on
+   a workstation).
+
+---
+
+## 3A. Urban Reign mechanics study (research, from Wikipedia / Fandom / GameSpot)
+
+Urban Reign (Namco, PS2, 2005) — the game's explicit north star. What actually made it work:
+
+- **4 simultaneous fighters** on screen (AI + human), 60-character roster, 100 missions.
+- **Simplified controls, deep situations:** one strike button, one grapple button, one dash, one
+  evade. No block — defense is a **timed dodge**; dodge + up/down at the right moment = **reversal**.
+- **Grappling system:** low grapples, high grapples, **air grapples**, counters and re-counters,
+  each with per-character animations (compared to Tobal 2's system).
+- **Juggle launcher:** 3-hit string, third hit launches → choice of air grapple, special, reposition,
+  or run for a weapon. No long combo memorization.
+- **Weapons:** knives, pipes, bats, swords — pick up, use, throw. Environment as arsenal.
+- **AI partners:** issue commands — come to aid, double-team move, **hand you their weapon**.
+  Two fighters can grapple the same enemy simultaneously (tandem attacks).
+- **Special arts:** strike+grapple, meter-gated, **uncounterable except by another special**, bufferable.
+
+**AshLane mapping (what to build, in order):**
+1. Timed dodge + reversal (replaces block) — biggest feel differentiator vs. Tekken-likes.
+2. Low/high/air grapple taxonomy with per-character throw anims — foundation before finishers.
+3. Weapon pickup/use/throw + throwable props — cheap, high-fun.
+4. AI partner commands (aid / double-team / give weapon) — yuka (Round 2) + RVO2 (§3D.5).
+5. Special-arts meter + uncounterable supers.
+
+Open-source equivalents: Ikemen GO (§3B.1) for combat state machines, yuka + RVO2/recast for
+partner/crowd AI, OpenBOR (Round 2) as the brawler design bible. No complete open-source 3D
+Urban-Reign-like was found — this is a gap AshLane itself fills.
+
+---
+
+## 3B. Combat systems
+
+### 3B.1 Ikemen GO — MIT ✅
+- https://github.com/ikemen-engine/Ikemen-GO
+- Open-source 2D fighting game engine (MUGEN-compatible), builds on Windows/Linux/macOS/Android.
+  Engine is MIT (bundled screenpack assets are CC-BY — don't ship those).
+- Why: the reference implementation for **combat state machines** — states, triggers, hitdefs,
+  helpers, frame-precise logic. Our 3D combat sim should steal its state/trigger architecture
+  even though we're 3D. Study how it does reversals, juggles, and helper-based double-team logic.
+- Fits: AshLane combat sim, Brutal-Fist.
+
+## 3C. Animation
+
+### 3C.1 orangeduck/motion-matching — MIT code, ⚠️ dataset is NOT commercial
+- https://github.com/orangeduck/motion-matching
+- Learned Motion Matching: the modern answer to locomotion — search a motion database every frame
+  instead of blending a handful of clips. Code is MIT; **the bundled Ubisoft La Forge dataset is
+  CC-BY-NC-ND (research only)** — retrain on CMU data (§6.4) or own mocap before commercial use.
+- Why: this is how AAA locomotion works now (Ubisoft's For Honor/AC). Our walk/run/idle could
+  graduate from clip-blending to database search. Pairs with MediaPipe-captured custom data (§3C.2).
+- Fits: AshLane locomotion, Bannon.
+
+### 3C.2 MediaPipe — Apache-2.0 ✅
+- https://github.com/google/mediapipe
+- Google's pose estimation: 33 body landmarks, runs **in the browser via WASM** (~30fps CPU),
+  Apache-2.0 models + code. (RTMPose, also Apache-2.0, is the faster alternative if we need it.)
+- Why: **webcam mocap pipeline** — the owner performs a throw/taunt once, we capture joint angles,
+  retarget to the 58-bone skeleton. Zero-cost custom animation capture, no suits. This is the
+  "generative animation" feedstock for motion matching.
+- Fits: AshLane animation pipeline, Asset Doctor.
+
+## 3D. Performance (mobile)
+
+### 3D.1 meshoptimizer — MIT ✅ WIRED
+- https://github.com/zeux/meshoptimizer/blob/HEAD/gltf/README.md
+- Mesh optimization: simplification, vertex-cache optimization, quantization, overdraw reduction.
+  `gltfpack` CLI + `clusterlod.h` for continuous LOD. WASM decoder (`meshopt_decoder.js`) for web.
+- Why: the industry-standard mesh diet. Wired this round — see `docs/asset-pipeline/`.
+- Fits: AshLane build pipeline, all 3D repos.
+
+### 3D.2 glTF-Transform — MIT ✅ WIRED
+- https://github.com/donmccurdy/glTF-Transform
+- glTF 2.0 SDK + CLI for Node/browser: `prune`, `dedup`, `join`, `instance`, `simplify`,
+  `draco`/`meshopt` geometry compression, WebP/KTX2 texture conversion, texture resize.
+  One command — `gltf-transform optimize input.glb output.glb --texture-compress webp` — did
+  −78% on a real model this round.
+- Why: the asset-pipeline workhorse. Every GLB entering `public/models/` should pass through it.
+- Fits: AshLane build pipeline.
+
+### 3D.3 Basis Universal + Draco — Apache-2.0 ✅
+- https://github.com/BinomialLLC/basis_universal · https://github.com/google/draco
+- Basis Universal: GPU texture supercompression (KTX2/ETC1S/UASTC) — textures stay compressed
+  **in VRAM**, the actual mobile bottleneck. Draco: geometry compression alternative to meshopt.
+  Both reachable through glTF-Transform (`uastc`/`etc1s`/`draco` commands).
+- Why: download size is only half the mobile story — VRAM is the other half. Basis is how the
+  PWA holds street textures on a mid-range Android.
+- Fits: AshLane mobile perf. (KTX2Loader wiring is a tracked follow-up.)
+
+### 3D.4 recastnavigation — ZLib ✅
+- https://github.com/recastnavigation/recastnavigation
+- Industry-standard navmesh: Recast (bake) + Detour (runtime queries) + **DetourCrowd** (crowd
+  movement with avoidance) + DetourTileCache (dynamic obstacles). ZLib = fully permissive.
+- Why: bakes walkable streets from our procedural city geometry; DetourCrowd moves dozens of
+  pedestrians/fighters with collision avoidance. The crowd-AI pathfinding answer.
+- Fits: AshLane crowds, Bannon arenas.
+
+### 3D.5 RVO2 — Apache-2.0 ✅
+- https://github.com/snape/RVO2 (UNC original)
+- Optimal Reciprocal Collision Avoidance: thousands of agents, collision-free, milliseconds per
+  step, no inter-agent communication needed. Apache-2.0.
+- Why: the lightweight alternative/complement to DetourCrowd for brawl scenes — 8+ fighters plus
+  bystanders all steering without overlap. Simple C++98 API, portable.
+- Fits: AshLane brawl AI.
+
+## 3E. Generative pipelines (owner priority)
+
+### 3E.1 TRELLIS.2 — see §4.2 (already covered)
+- Round 3 note: pairs with TripoSR (§3E.2) as the two-tier pipeline — TRELLIS.2 for hero assets
+  with PBR materials (~24GB VRAM, batch on a workstation), TripoSR for volume. Both MIT.
+
+### 3E.2 TripoSR — MIT ✅
+- https://github.com/VAST-AI-Research/TripoSR
+- Stability AI × Tripo AI: feed-forward single-image→3D in ~0.5s on A100, runs on **6GB VRAM**,
+  MIT including weights. (TripoSG, same org, is the higher-fidelity middle ground.)
+- Why: same lineage as the owner's Tripo workflow, self-hostable, consumer-GPU friendly.
+  Fast enough for background props, greebles, street clutter — the volume play.
+- Fits: AshLane worldgen props, Asset Doctor.
+
+### 3E.3 xatlas — MIT ✅
+- https://github.com/jpcy/xatlas
+- Automatic UV atlas generation. MIT.
+- Why: generative models (TripoSR/TRELLIS) output meshes that need clean UVs before our
+  texture pipeline touches them. xatlas closes that gap in the automated chain.
+- Fits: asset pipeline.
+
+### 3E.4 AudioCraft — see §5.7 (already covered)
+- Round 3 note: the play is **offline generation** — per-district music beds ("dark boom-bap,
+  minor key, 90 BPM") and per-move impact sweeteners generated once with MusicGen/AudioGen,
+  shipped as static assets. Zero runtime cost, infinite variety.
+
+### 3E.5 Bark — see §5.4 (already covered)
+- Round 3 note: the killer feature for a brawler is Bark's **non-speech** output — laughter,
+  shouts, exertion grunts, crowd noise. Generate fighter barks and ambient street voices
+  instead of recording them.
+
+## 3F. Monetization tech
+
+### 3F.1 Nakama — Apache-2.0 ✅
+- https://github.com/heroiclabs/nakama
+- Heroic Labs' game backend: accounts/auth, friends/groups/chat, storage, **in-game currencies
+  (virtual wallet)**, leaderboards/tournaments, realtime authoritative multiplayer + matchmaking,
+  server runtime in Go/TypeScript/Lua. Self-hosted or managed.
+- Why: THE monetization answer — player accounts, cosmetic inventory, virtual currency, battle
+  pass state, leaderboards, and anti-cheat-authoritative multiplayer in one Apache-2.0 box.
+  TypeScript server logic matches our stack.
+- Fits: AshLane live-ops/monetization, Bannon online.
+
+### 3F.2 Colyseus — MIT ✅
+- https://github.com/colyseus/colyseus
+- Node.js multiplayer framework: rooms, binary delta-compressed state sync, matchmaking,
+  reconnection. v0.18 (2026) added **built-in client-side prediction + lag compensation**.
+  MIT, self-hostable.
+- Why: if Nakama is the full backend, Colyseus is the lightweight netcode for actual
+  **online brawls** — 4-player Urban-Reign-style co-op over WebSocket. Prediction/lag-comp
+  is exactly what a melee game needs.
+- Fits: AshLane multiplayer.
+
+### 3F.3 Medusa — MIT ✅
+- https://github.com/medusajs/medusa
+- Headless commerce platform (Node/TypeScript): products, carts, orders, promotions,
+  multi-region/currency. Self-hosted, no per-sale fees.
+- Why: the **real-money merch store** (AshLane apparel, physical goods) and digital-goods
+  storefront without Shopify lock-in. Pairs with Nakama's virtual wallet: Medusa = real money,
+  Nakama = in-game economy.
+- Fits: money-machine-hq, AshLane merch.
+
+## 3G. Audio (runtime)
+
+### 3G.1 jsfxr — Unlicense (public domain) ✅
+- https://github.com/chr15m/jsfxr
+- JS port of sfxr: parameterized procedural SFX (pickup, explosion, hit/hurt, jump, UI).
+  Tiny, Web Audio playback + WAV export.
+- Why: zero-asset combat SFX synthesis — generate every punch/whiff/UI blip from parameters
+  at build time. No sample licensing, bytes not megabytes.
+- Fits: AshLane SFX.
+
+### 3G.2 ZzFX — MIT ✅
+- https://github.com/KilledByAPixel/ZzFX
+- Absurdly small JS SFX synth — MIT, parameter-array API.
+- Why: the fallback when even jsfxr is too big — procedural hit sounds in ~1KB of code.
+- Fits: AshLane SFX, PWA size budget.
+
+### 3G.3 Resonance Audio — Apache-2.0 ✅
+- https://github.com/vecnode/resonance-audio-web-sdk (community fork; Google's original
+  web SDK is archived — code is Apache-2.0 per Google's open-source announcement)
+- Real-time spatial audio for the Web Audio API: HRTF binaural rendering, room reflections,
+  reverb. Pure JS.
+- Why: positional brawl audio — hear the punch land *behind* you, crowd swells by direction.
+  The "expensive sound" upgrade for free.
+- Fits: AshLane 3D audio.
+
+---
+
+## Updated pull order
+
+**Wired this round:** glTF-Transform + meshoptimizer pipeline (`docs/asset-pipeline/` — run it on
+every GLB before it enters `public/models/`).
+**Next wire-ups (in order):** jsfxr/ZzFX for combat SFX → RVO2 or DetourCrowd for brawl AI →
+MediaPipe webcam-mocap prototype → Nakama account + inventory spike → TripoSR prop pipeline.
+**Research bets:** TRELLIS.2 workstation batch, AudioCraft music beds (§5.7), Colyseus online-brawl
+spike, Ikemen GO state-machine study for the combat rewrite, motion-matching retrained on own
+mocap (CMU data §6.4).
+
+*License gate stands: MIT/Apache/BSD/CC0/ZLib/Unlicense only into the build. ⚠️ items are strategy-only.*
