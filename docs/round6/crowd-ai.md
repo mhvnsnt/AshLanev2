@@ -129,3 +129,30 @@
 - **License:** MIT (three.js core license)
 - **Verdict:** commercial-safe
 - **Notes:** Reference implementations for the technique three-vat productizes — read before building custom crowd rendering. Also note `THREE.LOD` (built into three.js, MIT) for crowd LOD: full VAT crowd near, cheap billboard/impostor far.
+
+## License ledger
+
+| # | Project | License | Evidence | Verdict |
+|---|---|---|---|---|
+| 1 | Yuka | MIT | README badge → LICENSE file | commercial-safe |
+| 2 | recast-navigation-js | MIT | repo page license field, LICENSE at root | commercial-safe |
+| 3 | navcat | MIT | repo page license field, LICENSE at root | commercial-safe |
+| 4 | three-pathfinding | MIT | repo page license field, LICENSE at root | commercial-safe |
+| 5 | PathFinding.js | MIT | license section in user guide | commercial-safe |
+| 6 | easystarjs | MIT | README license section ("You may use it for commercial use.") | commercial-safe |
+| 7 | javascript-state-machine | MIT | README → LICENSE file | commercial-safe |
+| 8 | ink / inkjs | MIT | inkle org page; inkjs MIT | commercial-safe |
+| 9 | tracery | Apache | LICENSE.MD in repo root; downstream ports inherit Apache | commercial-safe |
+| 10 | meyda | MIT | repo page license field, LICENSE.md at root | commercial-safe |
+| 11 | rbush | MIT | repo page license field, LICENSE at root | commercial-safe |
+| 12 | miniplex | MIT | npm registry metadata — VERIFY LICENSE file before shipping | commercial-safe* |
+| 13 | three-mesh-bvh | MIT | repo page license field, LICENSE at root | commercial-safe |
+| 14 | SUMO | EPL-2.0 | eclipse.org / Wikipedia | prototype-only (build-time tool) |
+| 15 | cs105_simcityclone | MIT | README badge — VERIFY LICENSE file before shipping | commercial-safe* |
+| 16 | gta7-web | none found | no LICENSE file, no license field on repo | research-only |
+| 17 | three-vat | MIT | npm license badge → LICENSE file | commercial-safe |
+| 18 | three.js instanced skinning examples | MIT | three.js core license | commercial-safe |
+
+\* Re-verify the LICENSE file before shipping. Standing rule: re-verify every license before anything goes in the game build.
+
+**Stack sketch (no code this wave):** navcat (paths + flow fields) → Yuka (steering) → javascript-state-machine (NPC brains) → ink/tracery (barks) → miniplex (entity mgmt) + rbush (neighbor queries) + three-mesh-bvh (perception LOS) → three-vat (GPU crowd rendering) + meyda (sound-reactive excitement). SUMO offline for traffic patterns; cs105_simcityclone + gta7-web as study references.
