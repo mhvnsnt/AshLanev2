@@ -930,3 +930,155 @@
 .al-emblem-btn[data-on="1"] .al-emblem-label {
   color: #f0b429;
 }
+
+/* ============================================================
+   MENU ART — rich photographic backdrops (decked-out menus)
+   Layered under StreetBackdrop's animated SVG so the scene
+   feels alive: photo environment + animated rain/embers/neon.
+   ============================================================ */
+
+.al-menu-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.al-menu-art-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  /* subtle slow drift so the backdrop breathes */
+  animation: al-menu-art-drift 24s ease-in-out infinite alternate;
+}
+@keyframes al-menu-art-drift {
+  from { transform: scale(1.02) translateX(-0.6%); }
+  to { transform: scale(1.08) translateX(0.6%); }
+}
+/* dark veil keeps text readable over the art */
+.al-menu-art-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 6, 10, 0.62) 0%, rgba(8, 6, 10, 0.38) 40%, rgba(8, 6, 10, 0.72) 100%),
+    radial-gradient(120% 90% at 50% 10%, rgba(88, 28, 135, 0.18) 0%, transparent 60%);
+}
+/* StreetBackdrop's animated SVG sits above the photo */
+.al-sheet .al-street-bg {
+  z-index: 1;
+}
+.al-sheet .al-sheet-inner,
+.al-sheet .al-menu-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- faction banners ---------- */
+.al-faction-banner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.al-faction-banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  opacity: 0.85;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.al-faction-banner-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 6, 10, 0.45) 0%, rgba(8, 6, 10, 0.68) 100%);
+}
+/* emblem buttons get banner art behind them */
+.al-emblem-btn {
+  position: relative;
+  overflow: hidden;
+}
+.al-emblem-btn .al-faction-banner {
+  z-index: 0;
+}
+.al-emblem-btn > *:not(.al-faction-banner) {
+  position: relative;
+  z-index: 1;
+}
+.al-emblem-btn:hover .al-faction-banner-img,
+.al-emblem-btn[data-on="1"] .al-faction-banner-img {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+/* ---------- VS splash ---------- */
+.al-vs-splash {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  animation: al-vs-in 0.45s ease-out;
+}
+@keyframes al-vs-in {
+  from { opacity: 0; transform: scale(1.06); }
+  to { opacity: 1; transform: scale(1); }
+}
+.al-vs-splash-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.al-vs-splash-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(100% 100% at 50% 40%, transparent 30%, rgba(8, 6, 10, 0.55) 100%);
+}
+.al-banner {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.9), 0 0 48px rgba(168, 85, 247, 0.45);
+}
+
+/* ---------- loading art ---------- */
+.al-loading-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.al-loading-art-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.al-loading-art-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(90% 90% at 50% 45%, transparent 20%, rgba(5, 4, 8, 0.8) 100%);
+}
+
+/* ---------- fighter cards get art headers ---------- */
+.al-fighter-card {
+  position: relative;
+  overflow: hidden;
+}
+.al-fighter-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #a855f7, #e4572e, #f0b429);
+  opacity: 0.9;
+}
