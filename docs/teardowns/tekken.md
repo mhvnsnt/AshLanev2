@@ -231,3 +231,98 @@ bosses.
    stakes. The boss doesn't ambush you in an alley — he summons you to *his*
    venue. AshLane corpo bosses should be fought in their boardrooms,
    penthouses, and private arenas, not on the street.
+
+---
+
+## 4. Outfit / costume design language
+
+### The design philosophy (per the directors)
+
+Ikeda (Tekken 8 game director, via TechRadar): a new character must be
+"generally appealing to all players" visually AND have a solid, unique
+playstyle concept — "from a design standpoint and a gameplay standpoint
+they'll appeal not only to veterans of the series but to newcomers."
+Example given: Azucena — "she's a striker but she has a certain stance so
+that means she can evade various different attacks which is kind of a fun
+and unique characteristic." **Visual hook and mechanical hook are designed
+together, never separately.** Harada adds that the team avoids "compatible
+characters" (same moveset, different skin) — uniqueness is enforced at both
+layers.
+
+### What a default costume must signal (the Tekken rules)
+
+| Signal | How Tekken does it | AshLane takeaway |
+|---|---|---|
+| **Nationality** | Eddy = Brazilian flag colors; Hwoarang = Korean taekwondo dobok; King = Mexican lucha mask; Dragunov = Russian military; Shaheen = Saudi fatigues; Leroy = Harlem street + Wing Chun | District of origin must be readable in the outfit — but per owner rules, via *accents*, not flags-as-uniform |
+| **Fighting style** | Gi pants = karate; boxing kit = boxer; mask + tights = wrestler; cane = Wing Chun master; gun + sword = weapon user | Silhouette = move-logic (see §1) |
+| **Personality** | Kazuya's snakeskin jacket = wealth + menace; Lee's flamboyant purple = playboy showman; Leroy's "drip" = stylish elder; Bryan's military gear = soldier-cyborg | Outfit is character bible — taste, age, attitude |
+| **Allegiance** | Heihachi's gold Zaibatsu emblem on the gi chest; Tekken Force uniforms; Reina's school uniform hiding Mishima moves (allegiance *twist*) | Emblems/insignia on chest or shoulder = faction read without uniforms |
+| **Character arc** | Jin's T8 jacket blends Jun's black/white with his red — "heroic roots" arc rendered as clothing; Heihachi's monk attire = amnesia arc | Costume changes mark story chapters — AshLane attires should evolve with the turf-war narrative |
+| **Rank/threat** | Final-boss escalation: devil forms, battle-damaged "Awakened" variants, Jinpachi's corruption stages | Corrupted/second-phase forms = Malakor grammar |
+
+### Evolution across games — why redesigns work or fail
+
+- **Kazuya (T8):** best-received redesign in the roster — fused his T2 suit,
+  T6/T7 looks, and snakeskin texture into one "final boss" silhouette. Worked
+  because it *accumulated* history instead of discarding it.
+- **Jin (T8):** Tekken 7's design was fine, but T8's is "the logical next
+  step" — mother's color scheme + his red. Worked because the arc is legible.
+- **Hwoarang (T8):** returned to Tekken 3 roots (tied-back hair, orange
+  gloves, black/white) after the grungy eyepatch era. Worked — "sometimes,
+  simple changes are the most effective."
+- **Nina (T8):** T7's wedding-dress default was widely seen as a misstep;
+  T8's dark tactical dress + leather jacket + thigh knife restored "killer
+  assassin" quality. A failed experiment corrected by returning to the
+  archetype's visual grammar.
+- **Asuka / Paul (T8):** the cautionary tale. Asuka's redesign was hated;
+  Paul's new default looked like a "midlife crisis." Harada promised classic
+  costumes would be available — but they landed in the paid Tekken Shop,
+  sparking a monetization backlash. **Lesson: never gate a character's
+  canonical look behind paywall outrage; redesigns must respect the
+  archetype's silhouette.**
+- **Yoshimitsu:** reinvented every single game (T8 = cosmic blue/red armored
+  samurai). The exception that proves the rule — his archetype *is*
+  reinvention, and players expect it.
+
+### Customization system (what Tekken lets players do)
+
+- **Tekken 7:** could customize *within* the base outfit (change King's
+  tights, add upper-body clothes, keep the rest).
+- **Tekken 8:** full-body outfits OR full custom-clothing sets — **no mixing
+  with the base outfit** (technical limitation of UE5 models). Dozens of
+  upper/lower body items, hair, hats, glasses, accessories; two accessory
+  slots (face, head, shoulders, arms, legs, back, hovering); position/size/
+  angle adjustable; separate footwear slot; full color control.
+- **Unlocks:** Fight Money (earned in-game) buys most items *per character*;
+  Super Ghost Battle victories unlock alt outfits; story completion unlocks
+  some; the **Tekken Shop** sells legacy costumes and avatar skins for
+  **Tekken Coins (real money)** — the monetization layer that caused the
+  backlash above.
+- **Item moves:** back-slot accessories can have hit effects (a Tekken
+  tradition since T6).
+- **AshLane takeaway:** AshLane should keep Tekken 7's approach, not T8's —
+  let players customize *within* the default outfit (patch swaps, color
+  accents, accessories) so the archetype silhouette survives customization.
+  And: canonical outfits must never be monetized in a way that angers the
+  base; customization is the revenue layer, identity is sacred.
+
+### Outfit rules to port to AshLane
+
+1. **Design the visual hook and mechanical hook together** (Ikeda's rule).
+   No character gets a look without a unique move-logic, and vice versa.
+2. **Defaults must read nationality + style + personality + allegiance at a
+   glance.** If a player can't tell the boxer from the grappler from the
+   PMC operative in a lineup screenshot, the outfit failed.
+3. **Faction allegiance = emblem/insignia, never uniforms.** Tekken's own
+   rule matches the owner's binding rule: chest emblem (Heihachi), Tekken
+   Force patch-equivalents, Reina's hidden twist. AshLane: patches,
+   armbands, small accents, symbols — per district palette, not
+   single-color matching.
+4. **Redesigns accumulate, never erase.** Kazuya's T8 look works because it
+   layers 30 years of history. When AshLane attires evolve, keep the
+   silhouette and add, don't replace.
+5. **Corruption/milestone forms are a visual grammar.** Battle damage,
+   tattered clothes, supernatural aura — Jinpachi → Devil Kazuya → Malakor
+   corruption. Boss fights get second-phase outfits.
+6. **Customization must preserve the archetype.** Let players restyle within
+   the default (T7 model); keep the canonical look free.
