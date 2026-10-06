@@ -8,8 +8,14 @@
  *     timeline events (lighting changes, animation triggers, letterbox, SFX).
  *   - Letterbox bars + skip prompt handled here (DOM overlay, transform-only).
  *
- * Player-visible uses: fighter entrances, KO slow-mo replays, round intros,
- * story-mode cutscenes.
+ * Player-visible uses: block arrivals / roll-ups, KO slow-mo replays, round
+ * intros, story-mode cutscenes.
+ *
+ * Identity note (owner 2026-10-06): AshLane is a street brawler, not a
+ * wrestling game. Pre-fight presentation is a STREET arrival — rolling up on
+ * a block, turf standoff, crew face-off. Wrestling ring entrances belong
+ * ONLY at wrestling-arena locations and in wrestler-character promos
+ * (El Toro de Oro, Static, Hollow — wrestling-industry by book canon).
  *
  * Video export (promo videos): pair this with `vfxmajmuni/html-to-video`
  * (MIT) — deterministic frame-by-frame headless Chromium render of any
@@ -242,16 +248,20 @@ export class Cinematic {
 }
 
 // ---------------------------------------------------------------------------
-// Preset: 50-second entrance-kit shot list (matches the promo video pipeline)
+// Preset: 50-second street-arrival shot list (matches the promo video pipeline)
 // ---------------------------------------------------------------------------
 
 /**
- * Builds a dramatic entrance sequence for a fighter standing at `focus`.
+ * Builds a dramatic block-arrival sequence for a fighter standing at `focus`.
  * Total runtime ≈ 50s: dark open (5s) → hero reveal → orbit → close-ups →
  * wide stage → title hold. Pair with the promo-video pipeline's staged
- * entrance: same shots, same timing, in-engine and in-video.
+ * arrival: same shots, same timing, in-engine and in-video.
+ *
+ * This is a STREET arrival (rolling up on the block). A ring-entrance variant
+ * for wrestling-arena locations lives with the wrestling presentation kit —
+ * never the default.
  */
-export function entranceShots(focus: Vec3Like): Shot[] {
+export function arrivalShots(focus: Vec3Like): Shot[] {
   const f = focus;
   return [
     {
