@@ -29,3 +29,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Zero-dependency starting points already matched to our three.js version. Cloth demo is the cheapest cloth win on mobile (verlet, no physics engine). ConvexObjectBreaker is the classic crate/barrel shatter for AshLane destructibles; DecalGeometry handles scorch marks and blood decals on floors/walls.
 
+## three-nebula
+- **URL:** https://github.com/creativelifeform/three-nebula
+- **What:** GPU-accelerated particle system for three.js (successor to the old three.js ParticleEngine). Emitters, zones, behaviours, sprite/texture particles; CPU + GPU paths.
+- **License:** MIT (LICENSE file, Luke Moody / creativelifeform).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Candidate upgrade path from our hand-rolled `impact-particles.ts` for smoke columns, dust kicks, muzzle flash and weather — GPU path keeps it viable on mobile. API surface is large; wrap behind our own emitter interface if adopted.
+
