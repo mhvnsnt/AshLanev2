@@ -129,3 +129,44 @@ Sources: [Wikipedia plot summary](https://en.wikipedia.org/wiki/Urban_Reign) · 
 **What "street" must avoid:** costume-y uniformity. Urban Reign's street fighters look like they *dressed themselves* — the faction shows in one or two markers, and everything else is personal. That's the line between a gang and a sports team.
 
 Sources: [GameSpot E3 2005 preview](https://www.gamespot.com/articles/urban-reign-e3-2005-preshow-impressions/1100-6124406/) · [GameSpot review](http://gamespot.com/reviews/urban-reign-review/1900-6133344/) · [GameSpy review](http://ps2.gamespy.com/playstation-2/urban-reign/651217p1.html) · [digitpress fan review](https://forum.digitpress.com/forum/showthread.php?71009-urban-reign-VERSUS-beatdown-fists-of-vengeance) · [futurefive review](https://futurefive.co.nz/story/urban-reign)
+
+## 6. AshLane mapping — concrete and actionable
+
+Grounded in the factions already established in this repo (`docs/STORY_BIBLE.md`, `docs/EMBLEM_SYSTEM.md`): **the Ashes** (protagonist neighborhood crew, led by Buffalo Bill), **the Combine** (Kennedy Corporate Structure's street arm — ex-fighters doing evictions for the "Meridian Crossing" demolition), **the Hollows** (the burned, starving fighters gathering in the Park), **the Authority** (police; see `docs/POLICE_FACTION.md`), **Onyx's gang** (name unconfirmed — "The Painted" was a previous agent's invention, do not use), and **Unaffiliated** loners.
+
+### 6a. Faction archetype slots
+
+Each faction gets an Urban Reign analog, 2–3 style slots, and a subtle-identifier kit. **One slot per faction is deliberately left open** — factions recruit across styles as the story progresses (the "defeat means friendship" engine, §3).
+
+| AshLane faction | Urban Reign analog | Style slots to fill | Subtle identifiers (never uniforms) |
+|---|---|---|---|
+| **Ashes** (the block) | The Zaps + Brad Hawk's crew | Rush brawler (Dwayne slot — fast, loyal, homeboy energy); All-Rounder (Brad slot — the hired-hand veteran); street-boxer (Grimm slot) | Hoods/masks + one flame-tag patch (ties to the existing Ashes flame emblem) + accent worn three ways (bandana / armband / wrap). Varied civilian streetwear otherwise — cornrows, dreads, hoodies, jerseys |
+| **Combine** (corporate eviction muscle) | Bordin's machine + Shadow Platoon | Submission commando (McKinzie slot — kickboxing + joint locks; private-security "knife" reads as baton/taser); technical wrestler (Jake slot — ex-amateur-wrestler security) | Corporate lanyard/badge pin + steel-blue trim on workwear (matches the existing Combine emblem palette); private-security polos and tactical gear, *not* matching uniforms |
+| **Hollows** (the burned) | The Outlaws + Mighty heavies | Mighty super-heavy (Golem/Napalm slot — the terrifying Park-dweller); Power brawler (Glen slot — slow, heavy, relentless) | Prison-style ink + scorch/burn marks on skin and clothes + toxic-purple stitching accent (matches the Hollows emblem); torn, damaged clothing — wear-and-tear as identity |
+| **Authority** (police) | Jake Hudson muscle-for-hire energy (no direct UR analog — this is AshLane-original) | Technical wrestler (Jake slot — control holds, takedowns); boxer (Grimm slot — riot-baton-as-extended-fist reads) | Badge-star pin (matches the Authority emblem) + gold chevron tape on duty gear; plainclothes + duty belts, never full dress uniforms on street fighters |
+| **Onyx's gang** (name TBD) | Shun Ying's triad + Mushin-Kai | Kung fu sword specialist (Shun Ying slot); weapon-master boss (Shinkai slot — ONE signature-weapon master, katana or equivalent) | Suit cuts + ink + the weapon carried visibly as identity object; one lieutenant = one signature weapon |
+| **Unaffiliated** | Kadonashi Dojo + loners (Park, Tong Yoon, Chris Bowman) | Karateka (Kadonashi slot — the neutral master); TKD or Muay Thai purist (Park/Tong Yoon slot — the master-for-hire); Capoeirista (Chris slot — the outsider) | **The absence of faction markers is the marker.** Discipline-coded garb only — gi, hand wraps, headbands, Muay Thai shorts. The player reads "unaffiliated" because there is no patch, no ink, no pin |
+| Bikers (unaffiliated-allied) | Hell's Legions | Power brawler (Glen slot) | Leather/denim + hesher hair + **one** club patch on the vest — the single-patch rule is the whole identifier |
+
+### 6b. The visual-identifier system (repo-ready rule set)
+
+Plugs directly into the existing `docs/EMBLEM_SYSTEM.md` (6 faction emblems already designed):
+
+1. **Every faction gets exactly three marker types: symbol · accent garment · body/head mark.** Ship the *symbol* as the EMBLEM_SYSTEM emblem (already done for Ashes, Combine, Hollows, Authority, Unaffiliated); the *accent garment* is one item (bandana, armband, lanyard, chevron tape, stitching color); the *body/head mark* is hair, ink, or headgear. Members mix the other 90% of their outfit freely.
+2. **Faction color = trim, never the outfit.** Ashes fire-orange appears as bandanas and flame-tag patches; Combine steel-blue as lanyard trim; Hollows toxic-purple as stitching; Authority gold as chevron tape. This is the binding no-uniforms rule, mechanized.
+3. **Discipline garb overrides faction dress.** A Combine karateka wears a gi with a lanyard pin; an Ashes boxer wears wraps and a bandana. Style identity (§2) always wins over faction identity — Urban Reign's GameSpot rule, adopted as law.
+4. **Weapons as identity objects.** One signature weapon per lieutenant, named in the style when relevant ("Kung Fu / Chinese sword" pattern) — ties into `docs/FIGHTING_STYLES_CATALOG.md` and the weapon-persistence systems in `docs/URBAN_REIGN_ANALYSIS.md`.
+
+### 6c. The plot engine to steal: the false-flag war
+
+Urban Reign's real design gift isn't a faction — it's the **war machine** (§3): a hidden hand (Bordin/Mushin-Kai) manufactures gang conflict so turf shifts feel authored, not random. For AshLane's turf war (`docs/TURF_WAR.md`):
+
+- **The Combine plays Bordin.** Evictions and demolitions need *justification* — the Combine manufactures street chaos (via Hollows provocations or Onyx's gang) so "Meridian Crossing" looks like rescue, not conquest. Every turf flip in Chapter 2–4 should trace back to a Combine-authored incident the player can uncover.
+- **The Mushin-Kai slot goes to whoever the player doesn't suspect.** Urban Reign hides the engineers one layer below the visible war. Keep one faction's true employer secret until endgame.
+- **"Defeat means friendship" as the recruitment loop.** Beaten lieutenants become protectable allies / playable partners (Urban Reign's escort missions: Glen, Dwayne, Grimm, Tong Yoon). This is how AshLane grows a large roster without a large cast of introductions — the roster *is* the defeated.
+
+## Top 3 recommendations (for the parent agent)
+
+1. **Adopt the two-flavor style split per faction.** Urban Reign's Wrestling = Jake (technique) + Alex (power) trick means one style name hosts two mechanical archetypes. Give every AshLane faction its primary style *plus an internal contrast* (Authority: technical-wrestler cops vs boxer riot-cops; Ashes: Rush rushers vs street-boxing brawlers). This is the cheapest path to roster depth and directly serves the 85/15 street/wrestling mix — the 15% wrestling flavor lives in *two grappler flavors*, not one.
+2. **Ship the 3-marker identifier kit per faction (§6b) and wire it to EMBLEM_SYSTEM.md.** One symbol (emblem already designed) + one accent garment + one body/head mark; colors as trim only. This is exactly Urban Reign's hoods/tattoos/hairstyles system, and it satisfies the binding no-uniforms rule with a mechanized checklist instead of vibes.
+3. **Run the turf war on the false-flag engine (§6c).** The Combine manufactures the chaos it "rescues" the district from — every territory flip traces to an authored incident. Pair with defeat-means-friendship recruitment so the roster grows through combat, not cutscenes.
