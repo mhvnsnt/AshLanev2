@@ -418,6 +418,227 @@ export const SAMPLE_PACK: DialogueSample[] = [
       "It's not personal. It's just... the game. And you, my friend, are several moves behind. Sign, or don't. The outcome's the same.",
     ],
   },
+  // ================== WAVE 2 — street-world expansion ==================
+  {
+    fighter: "Hollow",
+    fighterId: "hollow",
+    situation: "shakedown",
+    context: "Painted tax collection at a laundromat — the general sways in, laughing",
+    lines: [
+      "Heh... tribute time! The Painted's tax man is HERE — heh — and the machine's still running, so make it quick.",
+      "The envelope. Thick. The general likes THICK — heh — makes the sway... smoother.",
+      "Onyx provides PROTECTION. Protection costs. I'm the... heh... COLLECTOR. Pay the Painted or MEET the Painted. Heh... I'm the Painted. Hi.",
+    ],
+  },
+  {
+    fighter: "Static",
+    fighterId: "static",
+    situation: "recruit",
+    context: "Static spots a hungry kid watching the corner a little too long",
+    lines: [
+      "Yo — kid. Yeah, you. You've been watchin' my corner for twenty minutes like it's television. You want to WATCH it or you want to EAT off it?",
+      "Everybody starts runnin'. The smart ones end up OWNIN'. You look smart. Don't prove me wrong — I hate bein' wrong, my guy, it ruins my whole thing.",
+      "First lesson's free: the block provides. Second lesson costs: the block REMEMBERS. You good with both? Then be here tomorrow. Early. Hungry.",
+    ],
+  },
+  {
+    fighter: "Corner Bodega Owner",
+    fighterId: "__shopkeeper",
+    situation: "shakedown",
+    context: "Third envelope this month — the shopkeeper pays, and keeps the receipt book closed",
+    lines: [
+      "The envelope? AGAIN? I just paid — who was it, Tuesday? Was it you Tuesday? Everybody looks the same in a ski mask!",
+      "Look, I pay, I pay — just don't break anything THIS time. The cooler door still sticks from LAST time.",
+      "My cameras? Broken. Always broken. Amazing how often they're broken. Terrible wiring. Very sad. Here's the money.",
+    ],
+  },
+  {
+    fighter: "Cain Elias",
+    fighterId: "cain",
+    situation: "informant",
+    context: "Parking garage, 2AM — Cain buying a rival crew's schedule",
+    lines: [
+      "Information is an ASSET. I'm acquiring assets today. Name your price — and understand I've already verified half of what you're about to say.",
+      "Tell me what you know. Leave nothing out. Especially the parts that scare you — those are the parts I pay extra for.",
+      "Sources are protected. Protection is what I DO. But liabilities get... liquidated. So be an asset, not a liability. Talk.",
+    ],
+  },
+  {
+    fighter: "Stan Combs",
+    fighterId: "stan",
+    situation: "mourning",
+    context: "Corner memorial — candles, a photo taped to the light pole, Stan addressing the young ones",
+    lines: [
+      "I knew him when he was running packages. Now he's... gone. Pour one out.",
+      "The young ones think they're immortal. The block teaches different. Listen — I need you to HEAR me on this.",
+      "We don't cry long — we CAN'T. But we remember FOREVER. That's the block's promise. And when the time comes... we answer. Together.",
+    ],
+  },
+  {
+    fighter: "Stick-Up",
+    fighterId: "stickup",
+    situation: "informant",
+    context: "Debriefing a runner who saw something on the east block",
+    lines: [
+      "Slow down. Start from who, then where, then WHEN. The Ashes pay for order — even in gossip.",
+      "You sure? You BETTER be sure. I move on your word, your word moves ME — understand the weight?",
+      "Good. That's good work. The crew remembers who brings truth. Now disappear for two days — and kid? You did right.",
+    ],
+  },
+  {
+    fighter: "Door Muscle",
+    fighterId: "__bouncer",
+    situation: "confront",
+    context: "Two crews, one rope, one door — the bouncer holds the line",
+    lines: [
+      "The list is the list. Crew A's inside. Crew B — that's you — is OUTSIDE. That's geography, not disrespect.",
+      "You can leave walking or you can leave carried. Your call. And before you choose — I've carried bigger than you. All night. Every night.",
+      "Inside voices. Inside manners. Or outside. The rope doesn't move for NOBODY.",
+    ],
+  },
+  {
+    fighter: "Young Runner",
+    fighterId: "__runner",
+    situation: "heat",
+    context: "Caught mid-run by the beat cop — the bag is definitely not gym clothes",
+    lines: [
+      "Officer! Me? I'm just RUNNING! Exercise! Very healthy! Cardio! You should try it!",
+      "What's in the bag? ...Gym clothes! Very... rectangular gym clothes! Gotta go — I mean, am I FREE to go?",
+      "I didn't see anything! I was running TOO FAST to see! That's my whole thing! Speed! Please don't check the bag!",
+    ],
+  },
+  {
+    fighter: "Onyx",
+    fighterId: "onyx",
+    situation: "recruit",
+    context: "Onyx casting for the Painted — a prospect with the right face",
+    lines: [
+      "You have SUCH a face, darling — it would look DIVINE in paint. The bone structure, the hunger... yes.",
+      "The Painted are always casting, sweetie — and you're AUDITIONING right now. Everyone wants to be SEEN. We make people UNFORGETTABLE.",
+      "Talent, hunger, a little madness — you have all three, don't lie to me, I can SEE it. The paint's already mixed. Join us?",
+    ],
+  },
+  {
+    fighter: "The Fixer",
+    fighterId: "__fixer",
+    situation: "shakedown",
+    context: "Black car collection — the fixer visits a shop behind on its arrangement",
+    lines: [
+      "My employers offer protection. The premium is weekly. You're... two weeks behind. Let's discuss what 'behind' means.",
+      "Think of this as a SERVICE contract. The service is: nothing happens to you. The contract is: you pay. The penalty clause is: ME.",
+      "The envelope. The arrangement requires it. The alternative requires... other people. People you don't want to meet.",
+    ],
+  },
+  {
+    fighter: "Echo",
+    fighterId: "echo",
+    situation: "mourning",
+    context: "The memorial — Echo trying, for once, not to laugh",
+    lines: [
+      "He's gone? ...Oh. Oh no. Heheh — that's not funny. That's not funny at all. Sorry. Sorry.",
+      "He was my FAVORITE audience. He laughed at ALL my impressions — even the bad ones. Especially the bad ones.",
+      "We don't laugh tonight. The block's quiet. For HIM. ...I'll do his laugh, though. Forever. So he's still here. Heheh. ...Sorry.",
+    ],
+  },
+  {
+    fighter: "Cipher",
+    fighterId: "cipher",
+    situation: "shakedown",
+    context: "Cipher collecting the shine tax from a corner store",
+    lines: [
+      "The shine costs money, baby — and you're lookin' at the bill. Everybody who glows under my spotlight pays for the electricity.",
+      "This ain't a tax, it's a FAN CLUB fee. Membership includes: your shop, intact. Your windows, unbroken. ME, happy.",
+      "The envelope, baby. Make it FAT. The hour demands it — and the hour is ALWAYS right.",
+    ],
+  },
+  {
+    fighter: "Maime",
+    fighterId: "maime",
+    situation: "informant",
+    context: "The basement — Maime questioning someone who talked to the wrong people",
+    lines: [
+      "You HEARD something? Then you TOLD something. The basement wants to know the difference. Whisper it.",
+      "Who told you? Tell ME. The basement has... questions. Just questions. Mostly. The other one is taking notes. In BLOOD.",
+      "Information... tasty. But STALE information? I can SMELL stale. And what I smell right now... is FEAR. Good. Fear is fresh.",
+    ],
+  },
+  {
+    fighter: "Corner Lieutenant",
+    fighterId: "__lieutenant",
+    situation: "recruit",
+    context: "Testing a prospect — the lieutenant watches, the crew watches",
+    lines: [
+      "You want to run with the set? First you run ERRANDS. Then you run BLOCKS. Then — maybe — you run THINGS. Most never get past errands.",
+      "I see potential. Potential's just hunger with good PR. Show me DISCIPLINE. Show me SILENCE. Show me you can take an order from ME.",
+      "Everybody starts at the bottom. The bottom's where I WATCH you. Impress me — or disappear. Those are the only two outcomes.",
+    ],
+  },
+  {
+    fighter: "Corner Hustler",
+    fighterId: "__hustler",
+    situation: "recruit",
+    context: "The hustler spots a hungry kid and sees himself",
+    lines: [
+      "You want IN? I can put you ON! I know EVERYBODY! Well — I know a guy who knows everybody! Same thing!",
+      "Start as a runner! Runners become EARNERS! Earners become... look, just start running! I'll show you the ropes! I KNOW ropes!",
+      "The crew's hiring! You look hungry! Hungry's GOOD! Hungry plus ME equals... employed! Probably! Let's GO!",
+    ],
+  },
+  {
+    fighter: "Beat Cop",
+    fighterId: "__cop",
+    situation: "informant",
+    context: "Flipping a corner kid — the cop plays it straight, for once",
+    lines: [
+      "You want to talk? Talk. But it better be GOOD — my captain grades on a curve, and I grade on GUTS.",
+      "Information buys leniency. Not innocence — LENIENCY. Big difference. Give me something I can USE.",
+      "I've walked this beat twelve years. I know you're scared. Everybody's scared. The brave ones talk ANYWAY.",
+    ],
+  },
+  {
+    fighter: "El Toro de Oro",
+    fighterId: "toro",
+    situation: "shakedown",
+    context: "Toro interrupts a crew shaking down a laundromat owner",
+    lines: [
+      "¡BASTA! You collect tribute from the DEFENSELESS? Then you answer to the horns. That is the whole negotiation.",
+      "Señora — the bull handles the wolves. You handle the door. Lock it, por favor.",
+      "The bull does not permit TAXES on the innocent. Your operation ends HERE. With honor — or without teeth. Choose.",
+    ],
+  },
+  {
+    fighter: "Sombra Negra",
+    fighterId: "sombra_negra",
+    situation: "mourning",
+    context: "A contractor's grave — Sombra pays respects her way",
+    lines: [
+      "You were professional. Clean. On time. In our business, that's... that's everything.",
+      "I don't do eulogies. I do INVOICES — and yours is marked PAID IN FULL. Rest.",
+      "Whoever did this mistook you for a soft target. They'll learn. Professionals always... collect.",
+    ],
+  },
+  {
+    fighter: "Edwin Kennedy",
+    fighterId: "edwin",
+    situation: "recruit",
+    context: "Edwin building his entourage — the pitch is pure Kennedy",
+    lines: [
+      "You! Kid! You got the LOOK! EDWIN... KENNEDY... is always scouting! Interested in GREATNESS?",
+      "I'm building an ENTOURAGE. Requirements: loyalty, hustle, and the ability to say my name LOUD. Can you say it loud? Let me HEAR it.",
+      "Stick with me and you'll learn from the BEST. That's me. I'm the best. The block's ratings go UP just by association. Any questions? No? Good.",
+    ],
+  },
+  {
+    fighter: "Static",
+    fighterId: "static",
+    situation: "mourning",
+    context: "The block after a loss — Static addresses the corner",
+    lines: [
+      "We lost one of ours. So tonight the block goes quiet — no music, no loud talkin'. Just... quiet.",
+      "He was block. He was FAMILY. You don't get over that, my guy — you get EVEN. When it's time. Not before. WHEN IT'S TIME.",
+      "Pour one out. Say his name. And remember — the corner he stood on is STILL OURS. Certified. Forever.",
+    ],
+  },
 
 ];
 

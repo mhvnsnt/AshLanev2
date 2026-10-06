@@ -35,7 +35,11 @@ export type Situation =
   | "claim"          // territory claim: rolling up on a block
   | "civilian"       // civilian caught in it: shopkeeper, bystander
   | "loyalty"        // crew loyalty / street betrayal (not a locker room)
-  | "heat";          // police / authority pressure
+  | "heat"           // police / authority pressure
+  | "shakedown"      // crew collecting: the tax visit to a business or earner
+  | "recruit"        // bringing someone into the crew: pitch, test, warning
+  | "informant"      // buying or selling information: paranoia, prices, sources
+  | "mourning";      // the block lost someone: grief, respect, promised retaliation
 
 export interface SpeechProfile {
   pace: Pace;
@@ -69,6 +73,13 @@ export interface VoiceBible {
    * performance, the corner is survival. Undefined = same voice everywhere.
    */
   streetVoice?: string;
+  /**
+   * Wrestling-canon by the "Off The Top Rope" books (El Toro de Oro, Static,
+   * Hollow, and other wrestling-industry characters). Their wrestling voice
+   * stays AND bleeds into their street talk as flavor — a wrestler talks like
+   * a wrestler even on a corner. Non-canon characters keep street voice pure.
+   */
+  wrestlingCanon?: boolean;
 }
 
 export const VOICE_BIBLES: VoiceBible[] = [
@@ -77,6 +88,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     name: "Static",
     basedOn: "Enzo Amore",
     faction: "painted",
+    wrestlingCanon: true,
     archetype: "The mouth of the group — loud, brash, talks faster than anyone can interrupt",
     speech: {
       pace: "rapid",
@@ -121,13 +133,14 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "On the corner he's the same mouth but the audience changed — he's not performing " +
       "for a crowd, he's holding court for the block. Less 'certified' branding, more Jersey " +
       "block-talk: block politics, who's eating, who owes who. Still fast, still loud, but the " +
-      "JCPW code talk drops and the street code talk takes over. He knows every corner kid by name.",
+      "JCPW code talk drops and the street code talk takes over. He knows every corner kid by name. Wrestling-canon bleed: the ring never leaves his mouth — corners are rings, debts are matches, everything's a shoot. He talks like a wrestler on the block because he IS one.",
   },
   {
     id: "cipher",
     name: "Cipher",
     basedOn: "Lio Rush",
     faction: "painted",
+    wrestlingCanon: true,
     archetype: "High-energy showman — the man of the hour, and he'll tell you why",
     speech: {
       pace: "rapid",
@@ -163,13 +176,14 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The shine dials down and the nerves show. On the street he's still fast but it's " +
       "survival-fast, not hype-fast — he's the guy who knows everybody and owes half of them. " +
       "The sludge talk gets quieter and meaner away from cameras; nobody's watching, so there's " +
-      "no show to steal.",
+      "no show to steal. Wrestling-canon bleed: main-event language everywhere — the block is an arena, the crew is the card, every standoff is a title shot. Flashy even when it's life or death.",
   },
   {
     id: "echo",
     name: "Echo",
     basedOn: "Shotzi Blackheart",
     faction: "painted",
+    wrestlingCanon: true,
     archetype: "Chaotic punk — unhinged, playful, and she'll steal your moves mid-match",
     speech: {
       pace: "erratic",
@@ -204,7 +218,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Same chaos, smaller stage. On the street she's the girl who'll fight you for your bike " +
       "and then ride it better than you. The mimic thing works on corners too — she'll repeat a " +
       "lieutenant's threat back at him in his own voice and laugh. Civilians love her; crews find " +
-      "her exhausting.",
+      "her exhausting. Wrestling-canon bleed: calls street fights 'dark matches' and corners 'the cheap seats.' The punk show never ended; it just moved outside.",
   },
   {
     id: "stickup",
@@ -333,6 +347,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     name: "Onyx",
     basedOn: undefined,
     faction: "painted",
+    wrestlingCanon: true,
     archetype: "Leader of the Dark Clown Faction — theatrical beautiful menace",
     speech: {
       pace: "slow",
@@ -365,13 +380,14 @@ export const VOICE_BIBLES: VoiceBible[] = [
     streetVoice:
       "The ringmaster act stays but the paint's metaphor changes: on the street the 'show' is the " +
       "block itself and everyone's already in the cast. She's the block's beautiful rumor — generous " +
-      "to her people, theatrical to her enemies. The Painted run corners like venues.",
+      "to her people, theatrical to her enemies. The Painted run corners like venues. Wrestling-canon bleed: everything is a production — the street is her stage, the gang is her roster, betrayals are heel turns. Theatrical menace in both worlds.",
   },
   {
     id: "toro",
     name: "El Toro de Oro",
     basedOn: undefined,
     faction: "unaffiliated",
+    wrestlingCanon: true,
     archetype: "The golden bull — proud luchador, honor above all",
     speech: {
       pace: "booming",
@@ -404,7 +420,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     streetVoice:
       "The bull doesn't do street corners — honor has no turf. Off the plaza he's quieter, almost " +
       "gentle with civilians; the proclamation voice only comes out when challenged. A corner kid who " +
-      "shows him respect gets a blessing; a crew that disrespects the block gets the horns.",
+      "shows him respect gets a blessing; a crew that disrespects the block gets the horns. Wrestling-canon bleed: honor is honor, ring or street — the code doesn't change, only the venue. Speaks of the block the way he speaks of the arena: sacred ground.",
   },
   {
     id: "cain",
@@ -450,6 +466,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     name: "Edwin Kennedy",
     basedOn: "Mr. Kennedy (Ken Anderson) — mic-intro cadence",
     faction: "combine",
+    wrestlingCanon: true,
     archetype: "The arrogant showman — every introduction is a coronation",
     speech: {
       pace: "booming",
@@ -482,7 +499,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     streetVoice:
       "Off-camera the showman act thins — he's still loud but it's needier, like he's not sure the " +
       "street is watching. Name-drops his own name less; name-drops Combine money more. Corner kids " +
-      "imitate him and he HATES it, which makes it worse.",
+      "imitate him and he HATES it, which makes it worse. Wrestling-canon bleed: introduces himself on the street like he's being announced — the name, the pause, the coronation. The block is just a smaller arena with worse lighting.",
   },
   {
     id: "triplex",
@@ -528,6 +545,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     name: "Stan Combs",
     basedOn: undefined, // owner has not confirmed a basis — grounded in role only
     faction: "combine",
+    wrestlingCanon: true,
     archetype: "Old-school veteran enforcer — terse, physical, done talking",
     speech: {
       pace: "slow",
@@ -561,7 +579,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     streetVoice:
       "The street is where Stan's from and it shows: the veteran act drops and the old head comes " +
       "out. He knows the corner hustlers' fathers. Speaks softer on the block than in the ring — " +
-      "out of respect for the civilians, not fear of the crews.",
+      "out of respect for the civilians, not fear of the crews. Wrestling-canon bleed: twenty years of locker rooms leak into every sentence — the street is just another territory, the crew is just another locker room. Old-timer wisdom, wrestler's mouth.",
   },
   /* ---------------------------------------------------------------- */
   /* Street archetypes — the non-wrestler world. Original characters,     */
@@ -759,6 +777,127 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Talks to the player, not the character",
       "Voice = Bill $aber's voice — owner may record; confirm before AI",
     ],
+  },
+  {
+    id: "hollow",
+    name: "Hollow",
+    basedOn: undefined, // owner has not confirmed a basis — grounded in book role only
+    faction: "painted",
+    wrestlingCanon: true,
+    archetype: "The general of Onyx's gang — orange robe, drunken style, enforces the Painted's will",
+    speech: {
+      pace: "erratic",
+      register: "Drunken general — swaying menace, laughs at the wrong moments",
+      signaturePhrases: [
+        "The general doesn't ask twice.",
+        "Onyx sends her regards.",
+        "You're already painted.",
+        "Empty... hollow... that's the point.",
+      ],
+      vocab: ["general", "painted", "orange", "hollow", "empty", "regards", "orders", "gang", "tribute"],
+      neverSays: ["hurrying", "explaining Onyx's plans", "mercy for deserters", "apologizing", "staying sober"],
+      rhythm:
+        "Sways between sentences like he's mid-fight. Laughs mid-threat. " +
+        "The drunken style isn't an act — it's how he processes violence. " +
+        "Short declarations, then a laugh that lands wrong.",
+    },
+    attitude:
+      "Onyx's general — the orange robe means the Painted's business is official. " +
+      "Fights drunk-style: loose, laughing, lethal. The empty in 'Hollow' is what he leaves behind. " +
+      "A wrestler by trade and a general by appointment; the ring taught him the sway, the gang taught him the silence after.",
+    hooks: [
+      "General of Onyx's gang",
+      "Orange robe",
+      "Books 1-6",
+      "Enforces the Painted's will",
+    ],
+    streetVoice:
+      "On the street he's the Painted's tax collector with a sway — shows up where tribute's late, " +
+      "laughing, and the laughing IS the warning. Talks like a wrestler even on a corner: " +
+      "everything's a match, every debt's a stipulation. Civilians cross the street when the orange robe turns the corner.",
+  },
+  {
+    id: "__shopkeeper",
+    name: "Corner Bodega Owner",
+    faction: "unaffiliated",
+    archetype: "Civilian — bodega owner, has seen everything, wants the cooler stocked and nobody shot near the awning",
+    speech: {
+      pace: "measured",
+      register: "Tired civilian pragmatism — the block's unofficial witness",
+      signaturePhrases: [
+        "I sell sandwiches, not information.",
+        "You bleed on my awning, you pay for the awning.",
+        "I've seen this movie. It ends with my window broken.",
+        "Everybody's a regular until the shooting starts.",
+      ],
+      vocab: ["awning", "cooler", "regulars", "rent", "witness", "nothing", "sandwiches", "block", "cameras"],
+      neverSays: ["taking sides", "snitching for free", "romanticizing the life", "leaving the block"],
+      rhythm:
+        "Flat, tired, transactional. The only person on the block who charges everybody " +
+        "the same price: nothing — because he sells nothing but groceries.",
+    },
+    attitude:
+      "The civilian the street orbits around. He's not brave, he's PRESENT — twenty years " +
+      "behind the same counter. Everybody pays him in the same currency: leave my store out of it.",
+    hooks: ["Bodega / corner store", "Unofficial witness", "Neutral ground"],
+    streetVoice:
+      "This IS his street voice — there is no other register. The shopkeeper doesn't " +
+      "code-switch; the street comes to him.",
+  },
+  {
+    id: "__bouncer",
+    name: "Door Muscle",
+    faction: "unaffiliated",
+    archetype: "Professional door security — calm violence, the velvet rope is a border wall",
+    speech: {
+      pace: "slow",
+      register: "Calm professional — the quietest man at the door is the last warning",
+      signaturePhrases: [
+        "The list is the list.",
+        "Not tonight.",
+        "You can leave walking or you can leave carried. Your call.",
+        "Inside voices. Inside manners. Or outside.",
+      ],
+      vocab: ["door", "list", "tonight", "manners", "walking", "carried", "rope", "inside"],
+      neverSays: ["raising his voice", "explaining the rules twice", "drinking on shift", "taking a bribe he can't defend"],
+      rhythm:
+        "Slow. Deliberate. Every word weighed like he's already decided the outcome " +
+        "and he's just narrating it for you.",
+    },
+    attitude:
+      "The door is a country and he's customs. Not cruel — procedural. The violence is never " +
+      "personal; it's policy. That's what makes him scarier than the gangsters.",
+    hooks: ["Club / spot door", "Velvet rope authority", "Professional, not personal"],
+    streetVoice:
+      "Same voice everywhere — the door doesn't have a promo mode. On the street he's the guy " +
+      "both crews nod at because he keeps the peace better than the cops.",
+  },
+  {
+    id: "__runner",
+    name: "Young Runner",
+    faction: "unaffiliated",
+    archetype: "The kid who moves packages — fast mouth, faster feet, trying to get noticed",
+    speech: {
+      pace: "rapid",
+      register: "Hungry kid energy — every sentence is an audition",
+      signaturePhrases: [
+        "I can be there in ten. Nine if it's important.",
+        "Nobody saw me. Nobody EVER sees me.",
+        "Put me on, I'll show you.",
+        "I don't ask what's in the bag. That's why they trust me.",
+      ],
+      vocab: ["package", "ten minutes", "nobody saw", "put me on", "bag", "fast", "trust", "crew"],
+      neverSays: ["slowing down", "asking what's in the bag", "saying no to a run", "admitting he's scared"],
+      rhythm:
+        "Rapid, breathless, always mid-motion. Talks like he's already running the next errand " +
+        "while finishing this sentence.",
+    },
+    attitude:
+      "The street's circulatory system — packages, messages, warnings, all moving through one fast kid " +
+      "who wants a name. Loyal to whoever notices him first. That's the danger and the tragedy.",
+    hooks: ["Package runner", "Trying to get put on", "Sees everything, says little"],
+    streetVoice:
+      "This is all he has — no ring, no boardroom. The street is his whole resume and he's writing it at a sprint.",
   },
 ];
 
