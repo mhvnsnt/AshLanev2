@@ -83,3 +83,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (MIT) as a **build-time tool** — never ship in the game client.
 - **Notes:** Lighter/faster alternative to Demucs for batch stem extraction; ONNX conversions exist (sherpa-onnx) for runtime-lean pipelines. Same rights caveat as Demucs: only separate audio we have rights to. Avoid Ultimate Vocal Remover (UVR) for this role — its community model weights have no clear license (prototype-only).
 
+## 12. Howler.js — WebAudio playback engine
+- **URL:** https://howlerjs.com · https://github.com/goldfire/howler.js
+- **What:** The standard JS audio library for games: WebAudio with HTML5 fallback, audio sprites, volume/pan/rate control, mobile unlock handling, spatial (3D positional) audio. `npm i howler`.
+- **License:** **MIT** (James Simpson / GoldFire Studios).
+- **Verdict:** ✅ Commercial-safe (MIT) — the playback layer for all game music/SFX.
+- **Notes:** Adaptive-music architecture: layer Demucs-separated stems as multiple Howls and crossfade volumes by fight heat; audio sprites for menu UI; `stereo`/`pos()` for positional crowd/ambience. Replaces hand-rolled WebAudio plumbing.
+
