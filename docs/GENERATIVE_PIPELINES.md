@@ -152,6 +152,61 @@ bone moves 266 verts with the limb.
 
 ---
 
+## 4b. GPU Character Generation via Colab — ⭐ RECOMMENDED
+
+The CPU procedural path (§4) is a fallback only. **This is the real pipeline** —
+no more "no GPU in the sandbox."
+
+**File:** `tools/generative/character/AshLane_CharacterGen.ipynb`
+
+### Exact steps (2 minutes of your time)
+
+1. Open the notebook in Colab:
+   `https://colab.research.google.com/github/mhvnsnt/AshLanev2/blob/main/tools/generative/character/AshLane_CharacterGen.ipynb`
+2. **Runtime → Change runtime type → GPU (T4)** — free tier works
+3. Edit the **CONFIG** cell: set `PROMPT` (text) or `IMAGE_PATH` (reference image),
+   pick `BACKEND = "triposr"`, optionally fill `BATCH` for multiple characters
+4. **Runtime → Run all**
+5. Get textured GLBs — auto-downloaded **and** saved to `MyDrive/AshLane_CharacterGen/`
+
+### What runs inside
+
+| Stage | Tool | License | Notes |
+|-------|------|---------|-------|
+| Text → image | SD-Turbo (`stabilityai/sd-turbo`) | CC-BY-NC / Stability | 2 steps, ~seconds; prompt auto-enhanced (front-facing, white bg, T-pose) |
+| Image → 3D | TripoSR (`VAST-AI-Research/TripoSR`) | MIT | ~seconds on T4, textured GLB |
+| Postprocess | trimesh + fast-simplification | MIT | decimate to `TARGET_FACES` (default 20k), normalize 1.8m, feet on ground |
+| (Optional) | TRELLIS.2 (`microsoft/TRELLIS.2`) | MIT | better quality + PBR, ~10GB VRAM — set `BACKEND="trellis2"`, may want Colab Pro; weights are HF-gated (accept terms + `huggingface-cli login`) |
+
+### Batch mode
+
+Generate the batch config locally, paste into the notebook:
+
+```bash
+cd tools/generative/character
+python3 colab-batch.py characters.json
+# → paste the BATCH = [...] output into the CONFIG cell
+```
+
+`characters.json` format:
+```json
+[
+  {"name": "brawler-01", "prompt": "muscular street brawler, green mohawk, leather jacket"},
+  {"name": "boxer-01",   "prompt": "female boxer, purple braids, boxing gloves"}
+]
+```
+
+Or `python3 colab-batch.py --auto-name characters.json` to auto-generate names.
+
+### Tips for best results
+
+- **Front-facing reference images**, plain/white background — TripoSR quality lives or dies on this
+- The pipeline auto-enhances text prompts with "full body, T-pose, front facing, white background"
+- Generated GLBs drop straight into `public/models/cast/` — then run the existing
+  `char-pipeline.py --mode rig` / `auto-rig.py` stages to bind to the 58-joint skeleton
+
+---
+
 ## License Ledger
 
 | Dependency | License | Used in |
