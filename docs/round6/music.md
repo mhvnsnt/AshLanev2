@@ -41,3 +41,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ⚠️ **Mixed** — PDM 1.0-marked recordings are commercial-safe (no attribution); CC-BY recordings are commercial-safe WITH attribution; CC-BY-NC-SA recordings = prototype-only, never ship.
 - **Notes:** Classical/orchestral for dramatic entrances (Bannon wrestling entrances!), cinematic stingers, menu elegance. Keep a per-track provenance record (recording + license URL). Musopen's ToS boilerplate disclaims warranty of PD status — the per-recording icon is the authority.
 
+## 6. Mixkit Music (Envato) — ⚠️ MUSIC NOT FOR GAMES
+- **URL:** https://mixkit.co/free-stock-music/
+- **What:** Envato's curated free stock music library (1,000–2,000 tracks), no sign-up, no attribution required.
+- **License:** Mixkit Free License — but the **music license explicitly excludes use in video games** (covers web/social/video/VoD/podcasts/ads only; rules out CDs, DVDs, **video games**, TV/radio broadcast). (The separate Mixkit SFX license DOES allow games.)
+- **Verdict:** ❌ **DO NOT SHIP game music from Mixkit** — license excludes games. Prototype-only at most.
+- **Notes:** Documented here so nobody mistakes it for ship-safe. If a track is Content-ID-claimed, Mixkit support handles it — but that doesn't fix the game-use exclusion.
+
