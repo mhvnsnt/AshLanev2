@@ -37,3 +37,17 @@ Prelinger.
   visibly strikes rooftops/awnings is a huge realism step for a city brawler.
   WebGPU-only path; AshLane targets WebGL2 fallback too, so port the height-texture
   idea rather than the code verbatim.
+
+## three.js official GPU rain/snow examples
+- **URL:** https://threejs.org
+- **What:** The three.js example set ships `webgpu_compute_particles_rain` and
+  `webgpu_compute_particles_snow` — official GPU-compute particle demos for rain
+  and snow. Snow uses static-geometry instancing with compute-driven flakes;
+  rain uses the same compute-particle framework. Independently documented as
+  MIT-licensed in third-party attribution files of downstream ports
+  (e.g. takahirox/three-rs-wasm THIRD_PARTY.md cites the r186 MIT sources).
+- **License:** MIT (three.js license covers examples).
+- **Verdict:** commercial-safe
+- **Notes:** Use as the canonical reference implementation when porting the
+  CK42BB weather states or ektogamat rain into AshLane's pinned three.js version.
+  Check which three revision AshLane pins — the compute examples track latest.
