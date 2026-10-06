@@ -136,3 +136,20 @@ Prelinger.
   state machine — storm clouds for the storm state, wispy cirrus for clear days.
   Gives AshLane's skyline depth without HDRI downloads (Poly Haven HDRIs are a
   skipped/covered source).
+
+## procedural-cities roadGen.js (lanmower)
+- **URL:** https://github.com/lanmower/procedural-cities
+- **What:** Browser-based procedural city generator (three.js, live demo on
+  GitHub Pages). The prize is `roadGen.js`: priority-queue road expansion guided
+  by a simplex-noise heatmap — min-heap processes road candidates ordered by noise
+  value, each accepted segment spawns forward continuation + left/right branches,
+  main roads branch into main/secondary roads, loose ends extend to connect nearby
+  roads. Companion `plotGen.js` extracts city-block polygons from the road network
+  and `buildingGen.js` subdivides/extrudes plots. Faithful JS port of an Unreal
+  Engine C++ implementation (master's thesis).
+- **License:** MIT (stated in README).
+- **Verdict:** commercial-safe
+- **Notes:** roadGen.js is the missing piece for taking AshLane's city DEEPER:
+  generate organic road networks procedurally per district, then feed the road
+  graph into the existing building-gen.py block pipeline. Runs entirely in the
+  browser — no server, no downloads.
