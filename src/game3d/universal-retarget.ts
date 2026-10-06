@@ -14,7 +14,8 @@
  *  5. BVH text can be parsed straight to a THREE.AnimationClip, then retargeted.
  *
  * Families: mixamo-colon (AshLane cast, 58j), mixamo-packed, mixamo-stripped,
- *           quaternius (65j UE-style), rigify, kaykit, bannon-pos (positional).
+ *           quaternius (65j UE-style), rigify, kaykit, c4d (wrestling rigs),
+ *           quat (Quaternius-lite game exports), bannon-pos (positional).
  */
 import * as THREE from "three";
 
@@ -25,6 +26,8 @@ export type SkeletonFamily =
   | "quaternius"
   | "rigify"
   | "kaykit"
+  | "c4d"
+  | "quat"
   | "bannon-pos"
   | "unknown";
 
@@ -98,6 +101,52 @@ const FAMILY_TO_CANONICAL: Partial<Record<SkeletonFamily, Record<string, string>
     "lowerleg.l": "LeftLeg", "lowerleg.r": "RightLeg",
     "foot.l": "LeftFoot", "foot.r": "RightFoot",
   },
+  // C4D wrestling-move rigs (J_Hips, J_Elbow_L). Multi-character sources use
+  // J_*_2 / J_*_3 suffixes — strip the suffix before this lookup.
+  // Mirrors tools/anim-retarget/skeletons.py "c4d".
+  c4d: {
+    J_Hips: "Hips", J_Spine1: "Spine", J_Spine2: "Spine1",
+    J_Chest: "Spine2", J_Neck: "Neck", J_Head: "Head",
+    J_Clavicle_L: "LeftShoulder", J_Clavicle_R: "RightShoulder",
+    J_Shoulder_L: "LeftArm", J_Shoulder_R: "RightArm",
+    J_Elbow_L: "LeftForeArm", J_Elbow_R: "RightForeArm",
+    J_Wrist_L: "LeftHand", J_Wrist_R: "RightHand",
+    J_Leg_L: "LeftUpLeg", J_Leg_R: "RightUpLeg",
+    J_Knee_L: "LeftLeg", J_Knee_R: "RightLeg",
+    J_Foot_L: "LeftFoot", J_Foot_R: "RightFoot",
+    J_Toe_L: "LeftToeBase", J_Toe_R: "RightToeBase",
+    J_ThumbF1_L: "LeftHandThumb1", J_ThumbF2_L: "LeftHandThumb2",
+    J_ThumbF3_L: "LeftHandThumb3",
+    J_ThumbF1_R: "RightHandThumb1", J_ThumbF2_R: "RightHandThumb2",
+    J_ThumbF3_R: "RightHandThumb3",
+    J_IndexF0_L: "LeftHandIndex1", J_IndexF1_L: "LeftHandIndex2",
+    J_IndexF2_L: "LeftHandIndex3",
+    J_IndexF0_R: "RightHandIndex1", J_IndexF1_R: "RightHandIndex2",
+    J_IndexF2_R: "RightHandIndex3",
+    J_MiddleF0_L: "LeftHandMiddle1", J_MiddleF1_L: "LeftHandMiddle2",
+    J_MiddleF2_L: "LeftHandMiddle3",
+    J_MiddleF0_R: "RightHandMiddle1", J_MiddleF1_R: "RightHandMiddle2",
+    J_MiddleF2_R: "RightHandMiddle3",
+    J_RingF0_L: "LeftHandRing1", J_RingF1_L: "LeftHandRing2",
+    J_RingF2_L: "LeftHandRing3",
+    J_RingF0_R: "RightHandRing1", J_RingF1_R: "RightHandRing2",
+    J_RingF2_R: "RightHandRing3",
+    J_PinkyF0_L: "LeftHandPinky1", J_PinkyF1_L: "LeftHandPinky2",
+    J_PinkyF2_L: "LeftHandPinky3",
+    J_PinkyF0_R: "RightHandPinky1", J_PinkyF1_R: "RightHandPinky2",
+    J_PinkyF2_R: "RightHandPinky3",
+  },
+  // Quaternius-lite game exports (UpperArmL, FistL).
+  // Mirrors tools/anim-retarget/skeletons.py "quat".
+  quat: {
+    Hips: "Hips", Abdomen: "Spine", Torso: "Spine2", Head: "Head",
+    UpperArmL: "LeftArm", UpperArmR: "RightArm",
+    LowerArmL: "LeftForeArm", LowerArmR: "RightForeArm",
+    FistL: "LeftHand", FistR: "RightHand",
+    UpperLegL: "LeftUpLeg", UpperLegR: "RightUpLeg",
+    LowerLegL: "LeftLeg", LowerLegR: "RightLeg",
+    FootL: "LeftFoot", FootR: "RightFoot",
+  },
   // Bannon's procedural JSON clips: positional keyframes, abbreviated names.
   // NOTE: these carry positions, not rotations — the retargeter maps the bone
   // names; rotation synthesis from positions needs an IK pass (not here).
@@ -141,6 +190,10 @@ export function detectFamily(boneNames: Iterable<string>): SkeletonFamily {
   if (has("hips") && has("upperarm.l")) return "kaykit";
   // Quaternius / UE-style: pelvis + spine_01 + limb names.
   if (has("pelvis", "spine_01") && has("upperarm_l", "thigh_l")) return "quaternius";
+  // C4D wrestling rigs: J_ bones, incl. J_Hips_2 multi-character sources.
+  if (has("J_Hips", "J_Hips_2")) return "c4d";
+  // Quaternius-lite game exports.
+  if (has("UpperArmL") && has("FistL")) return "quat";
   if (has("Hips") && has("LeftArm", "RightUpLeg")) return "mixamo-stripped";
   // Sparse Mixamo exports (BVH conversions, mocap clips): Hips + Spine is enough.
   if (has("Hips") && has("Spine", "Spine1")) return "mixamo-stripped";
@@ -156,6 +209,13 @@ export function toCanonical(boneName: string, family: SkeletonFamily): string | 
       return boneName.startsWith("mixamorig") ? boneName.slice("mixamorig".length) : undefined;
     case "mixamo-stripped":
       return (CANONICAL_SLOTS as readonly string[]).includes(boneName) ? boneName : undefined;
+    case "c4d": {
+      // Strip multi-character suffixes: J_Elbow_L_2 -> J_Elbow_L.
+      const base = boneName.startsWith("J_") ? boneName.replace(/_\d+$/, "") : boneName;
+      return FAMILY_TO_CANONICAL.c4d?.[base];
+    }
+    case "quat":
+      return FAMILY_TO_CANONICAL.quat?.[boneName];
     default: {
       const table = FAMILY_TO_CANONICAL[family];
       return table?.[boneName];
