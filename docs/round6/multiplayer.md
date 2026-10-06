@@ -255,3 +255,35 @@ Research date: 2026-10-06.
   exactly like the digichess project does.
 
 ---
+## 15. Free hosting tiers — what's ACTUALLY free (compute, Oct 2026)
+- **URL:** vendor pricing pages (figures cross-checked 2026-09/10 research)
+- **What:** Survey of where to run Nakama/LiveKit/Colyseus/Centrifugo for $0.
+- **License:** n/a (services, not code). **Verdict:** commercial-safe (paid tiers).
+- **Findings:**
+  - **Oracle Cloud Always Free — the clear winner.** Up to 4 ARM Ampere OCPUs /
+    24 GB RAM (newer docs say 2 OCPU/12 GB — varies by revision), 200 GB block
+    storage, **10 TB/mo egress**, 2×20 GB autonomous DBs, FOREVER. Runs the whole
+    stack (Nakama + LiveKit + Postgres + TURN) on one box. Caveats: credit card
+    required for verification; ARM capacity scarce in popular regions (try Seoul/
+    Osaka/Mumbai); idle instances can be reclaimed — keep a heartbeat.
+  - **Google Cloud free tier:** 1× e2-micro (1 GB RAM, 30 GB disk) always-free +
+    Cloud Run 2M req/mo. Fine for a bastion/sidecar, not the game backend.
+  - **Fly.io: NO free tier for new accounts** (removed Oct 2024). Pay-as-you-go
+    only, ~2-hour/7-day trial, practical minimum ~$2–5/mo. Grandfathered Hobby
+    orgs keep old allowances — one-way door, don't switch plans.
+  - **Railway:** $5 one-time trial credit (30 days, no card) → Free plan =
+    **$1/mo credit** (1 vCPU, 0.5 GB RAM — a tiny idle app, not a backend).
+    Hobby $5/mo includes $5 usage credit. Good DX, not free.
+  - **Render:** free web services = 750 hrs/mo, **sleeps after 15 min idle**
+    (30–50s cold start; a keep-alive ping every 10 min fits in the allowance and
+    keeps one service warm). Static sites free. Bandwidth 5 GB/mo then $0.15/GB.
+  - **Koyeb:** free tier closed to new signups in 2026 (Mistral acquisition).
+  - **Hetzner:** no free tier (watch for promo credits).
+  - **Frontend:** Cloudflare Pages (unlimited bandwidth, no card), Vercel/Netlify
+    Hobby — all fine for the web client.
+- **Notes:** Launch plan: Oracle ARM box for Nakama+LiveKit+Murmur+Owncast
+  (single Docker host, $0), Cloudflare Pages for the client, keep-alive on
+  Render only if Oracle capacity fails. Re-check pricing quarterly — free tiers
+  keep shrinking.
+
+---
