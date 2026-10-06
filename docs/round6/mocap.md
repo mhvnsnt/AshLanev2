@@ -130,6 +130,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe** — BSD tool; converted output is yours.
 - **Notes:** Wire into the ingest pipeline as the first conversion stage: BVH/FBX → GLB → tools/anim-retarget/ → 58-bone skeleton. Also useful for validating downloaded mocap before retargeting.
 
+## FBX → glTF converters (FBX2glTF / ufbx)
+
+- **URL:** FBX2glTF — https://github.com/facebookincubator/FBX2glTF (Godot fork: https://github.com/godotengine/FBX2glTF) · ufbx — https://github.com/ufbx/ufbx
+- **What:** Two FBX ingestion paths. **FBX2glTF**: CLI converting FBX (incl. skinned animation takes) to glTF — `--anim-framerate (bake24|bake30|bake60)`, `--skinning-weights 4` flags matter for our skeleton. **ufbx**: a single-file C FBX loader now built into Godot 4.3+ (replacing FBX2glTF there) — embeddable in our own C/C++ tooling.
+- **License:** FBX2glTF tool = **3-clause BSD**, BUT precompiled binaries bundle **proprietary Autodesk FBX SDK 2020 code** under the Autodesk license agreement (stated in the Godot fork README: "By downloading and using this tool, you agree to the terms of that Autodesk proprietary license"). ufbx = **MIT** (clean-room, no Autodesk SDK).
+- **Verdict:** ✅ **commercial-safe as tools** — prefer **ufbx (MIT)** for anything we build/ship; FBX2glTF is fine as a local conversion utility with the SDK caveat noted.
+- **Notes:** FBX is unavoidable (Mixamo previews, store packs, mocap vendors). Standardize on ufbx-based ingestion; keep FBX2glTF CLI as the quick manual path.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
