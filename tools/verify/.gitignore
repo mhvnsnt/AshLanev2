@@ -1,0 +1,5 @@
+# tools/verify local-only artifacts: rebuilt with
+#   python3 -m venv tools/verify/.venv && tools/verify/.venv/bin/pip install -r tools/verify/requirements.txt
+.venv/
+models/
+__pycache__/
