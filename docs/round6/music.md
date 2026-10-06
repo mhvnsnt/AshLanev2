@@ -76,3 +76,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (MIT) as a **build-time tool** — never ship Demucs itself in the game client.
 - **Notes:** KEY pipeline tool: split any CC0/CC-BY track into stems (drums, bass, vocals, other) at build time → layer stems in-game for adaptive fight music (e.g. drums-only at low heat, full mix at high heat; mute vocals during dialogue). Also: strip vocals from tracks for ambience beds. Only process audio we have rights to (separating a copyrighted track we don't own is still infringement of the source).
 
+## 11. Spleeter (Deezer) — stem separation
+- **URL:** https://github.com/deezer/spleeter
+- **What:** Fast source separation (TensorFlow): 2-stem (vocals/accompaniment), 4-stem (vocals/drums/bass/other), 5-stem (+piano). 100× realtime on GPU. CLI + Python library; ships pretrained models. (Spleeter Pro is Deezer's separate commercial offering.)
+- **License:** **MIT** — code AND pretrained models per the repo's JOSS paper and license notices.
+- **Verdict:** ✅ Commercial-safe (MIT) as a **build-time tool** — never ship in the game client.
+- **Notes:** Lighter/faster alternative to Demucs for batch stem extraction; ONNX conversions exist (sherpa-onnx) for runtime-lean pipelines. Same rights caveat as Demucs: only separate audio we have rights to. Avoid Ultimate Vocal Remover (UVR) for this role — its community model weights have no clear license (prototype-only).
+
