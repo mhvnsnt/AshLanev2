@@ -354,3 +354,31 @@ checked 2026-10-06. Re-verify before shipping.
   "do something useful" idle fallback. Boss phases map to Yuka StateMachine
   superstates or XState hierarchical states. Referee counts must be
   frame-exact and visible — players WILL notice a fast count.
+
+---
+
+## License ledger
+
+| Project | License (source) | Verdict |
+|---|---|---|
+| Yuka | MIT (LICENSE file) | commercial-safe |
+| behavior3js | MIT (LICENSE file) | commercial-safe |
+| goap-minimal | MIT (GitHub API) | commercial-safe |
+| ddap | MIT (GitHub API) | commercial-safe |
+| javascript-state-machine | MIT (LICENSE file) | commercial-safe |
+| XState | MIT (GitHub API) | commercial-safe |
+| Ego | MIT (GitHub API) | commercial-safe |
+| brain.js | MIT (GitHub API) | commercial-safe |
+| neataptic | MIT (LICENSE file) | commercial-safe |
+| OpenBOR | BSD-3-Clause (GitHub API) | commercial-safe |
+| IKEMEN GO | NOASSERTION (no LICENSE file) | prototype-only / study-only |
+| SchwarzerblitzEngine | NOASSERTION (no machine-readable license) | prototype-only / study-only |
+| Game AI Pro | author-copyrighted, free to read | study-only (reimplement concepts) |
+| DDA techniques | N/A (technique) | commercial-safe (own implementation) |
+| Fair-play AI techniques | N/A (technique) | commercial-safe (own implementation) |
+| Reaction-time models | N/A (technique) | commercial-safe (own implementation) |
+| Tag/ref/boss patterns | N/A (design patterns) | commercial-safe (own implementation) |
+
+Rule applied throughout: prototype may use whatever works; only
+commercial-safe (MIT/BSD, verified above) goes in the shipped game.
+Re-verify every license before ship — licenses change.
