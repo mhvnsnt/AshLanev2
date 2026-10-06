@@ -20,7 +20,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (Glb, extract_animations, qmul, qnormalize, qangle,
                     qinv, IDENTITY_Q)
 from skeletons import (CORE_SLOTS, from_canonical, to_canonical)
-from canonical import fk_canonical, canonical_offsets
+from canonical import (canonical_definition, world_deltas,
+                       fk_world_deltas)
 
 TARGET_FAMILY = "mixamo-colon"
 
@@ -249,7 +250,7 @@ def validate_clip(name, anim, skel, fps=30):
     skate = {"grade": "PASS", "skate_m_s": 0.0,
              "note": "in-place clip, no root motion"}
     if has_root:
-        offsets = canonical_offsets(skel, "mixamo-colon")
+        parents, offsets, _ = canonical_definition(skel, "mixamo-colon")
         foot_bones = ["mixamorig:LeftFoot", "mixamorig:RightFoot"]
         step = max(1, n // 60)
         idx = list(range(0, n, step))
@@ -266,7 +267,8 @@ def validate_clip(name, anim, skel, fps=30):
                                      root_track["values"].reshape(-1, 3),
                                      fps)
                 rp = rv[min(fi, len(rv) - 1)]
-            wp = fk_canonical(skel, lq, offsets, rp)
+            wp = fk_world_deltas(parents, offsets,
+                                 world_deltas(skel, lq), rp)
             for fb in foot_bones:
                 p = wp.get(fb)
                 if p is None:

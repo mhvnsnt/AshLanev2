@@ -15,7 +15,8 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import qnormalize, IDENTITY_Q
 from validate import _bone_frames, resample_vec
-from canonical import fk_canonical, canonical_offsets
+from canonical import (canonical_definition, world_deltas,
+                       fk_world_deltas)
 from skeletons import from_canonical
 
 import matplotlib
@@ -36,14 +37,16 @@ COLORS = {"spine": "#e4572e", "armL": "#4d9de0", "armR": "#4d9de0",
           "legL": "#7bc96f", "legR": "#7bc96f"}
 
 
-def _pose_at(anim, skel, bones, fi, root_pos, offsets):
+def _pose_at(anim, skel, bones, fi, root_pos, canon):
+    parents, offsets = canon
     lq = {}
     for b in skel["names"]:
         if b in bones:
             lq[b] = bones[b][fi]
         else:
             lq[b] = skel["rest_quat"][b]
-    return fk_canonical(skel, lq, offsets, root_pos)
+    wd = world_deltas(skel, lq)
+    return fk_world_deltas(parents, offsets, wd, root_pos)
 
 
 def render_proof(anim, skel, out_path, title="", nframes=8):
@@ -70,7 +73,10 @@ def render_proof(anim, skel, out_path, title="", nframes=8):
         if all(b in skel["rest_quat"] for b in bn):
             chains[key] = bn
 
-    offsets = canonical_offsets(skel, "mixamo-colon")
+    # canonical skeleton: world-delta motion on a standing figure
+    # (cast GLB node offsets do not form an anatomical skeleton)
+    parents, offsets, _ = canonical_definition(skel, "mixamo-colon")
+    canon = (parents, offsets)
 
     fig, axes = plt.subplots(2, len(idx),
                              figsize=(2.2 * len(idx), 4.6),
@@ -81,7 +87,7 @@ def render_proof(anim, skel, out_path, title="", nframes=8):
         rp = np.zeros(3)
         if rv is not None:
             rp = rv[min(fi, len(rv) - 1)]
-        wp = _pose_at(anim, skel, bones, fi, rp, offsets)
+        wp = _pose_at(anim, skel, bones, fi, rp, canon)
         hips = wp.get("mixamorig:Hips", np.zeros(3))
         c = np.array([hips[0], 0, hips[2]])
         wpc = {k: v - c for k, v in wp.items()}
