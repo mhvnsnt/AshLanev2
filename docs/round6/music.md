@@ -20,3 +20,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ⚠️ **Mixed** — CC-BY tracks (e.g. dig.ccmixter.org game collection) are commercial-safe WITH attribution; NC/unclear tracks = prototype-only. Per-track license check is mandatory.
 - **Notes:** Good for remixed hip-hop/electronic fight music and vocal a cappellas (crowd chants, hype shouts). Record license name + version per track in a manifest.
 
+## 3. filmmusic.io (Sascha Ende)
+- **URL:** https://filmmusic.io
+- **What:** Large catalog of production music by composer Sascha Ende — cinematic, ambient, action, electronic, "video games music" categories. Free direct MP3 download per track.
+- **License:** **CC-BY 4.0** (standard license) — commercial use allowed, attribution required. Paid "pro" license removes the attribution requirement.
+- **Verdict:** ✅ Commercial-safe WITH attribution — put credit on the credits screen. (Attribution-free option available via paid upgrade, not needed for prototype.)
+- **Notes:** Strong fit for menu music, district ambience beds, story-mode cinematics. Has an explicit game-music category. Note exact license URL per track (filmmusic.io/standard-license).
+
