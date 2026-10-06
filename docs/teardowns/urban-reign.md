@@ -87,3 +87,45 @@ Green Harbor's gang war is a **layered power structure**: street gangs fight eac
 **The "defeat means friendship" engine.** Beaten bosses recur as *allies*: later escort missions have Brad protecting former enemies (Glen, Dwayne, Grimm, Tong Yoon) — the roster is recruited through combat, and today's boss is tomorrow's partner. This is also the unlock system: defeating fighters unlocks them for free/multiplayer modes. Faction membership is therefore **porous** — a design choice that keeps a 60-fighter roster narratively manageable.
 
 Sources: [Wikipedia plot summary](https://en.wikipedia.org/wiki/Urban_Reign) · [Eurogamer Apr 2005 preview](https://www.eurogamer.net/news270405tekkenurban) · [Shinkai](https://villains.fandom.com/wiki/Shinkai) · [Golem](https://villains.fandom.com/wiki/Golem_(Urban_Reign)) · [All The Tropes plot breakdown](https://allthetropes.org/wiki/Urban_Reign) · [digitpress fan review (mission/faction detail)](https://forum.digitpress.com/forum/showthread.php?71009-urban-reign-VERSUS-beatdown-fists-of-vengeance)
+
+## 4. Faction visual distinction — the subtle-identifier system
+
+**There are no matching uniforms anywhere in Urban Reign.** Factions read through *subcultural dress codes and physical markers*, never team jerseys. Wikipedia's character-design summary is the key document:
+
+- **The Zaps** — a *hooded and masked* gang, explicitly modeled on Crips/Bloods street culture; led by cornrow-wearing Dwayne.
+- **The skinheads** — muscle-bound and tattooed, *though of multi-ethnic origin* (the marker is physique + ink, not race).
+- **The Chinese gang** — Shaolin-style kung fu dress; Shun Ying herself wears a revealing Chinese-cut outfit with her sword as the identity object.
+- **The bikers** — tattooed "heshers": denim, leather, long metalhead hair.
+- **The Yakuza** — suits and swords; Shinkai's personal katana is his visual signature ("the deadliest of all weapons in the game").
+- **The karate school** — gi uniforms; discipline-coded, instantly readable.
+- **Convicts (the Outlaws)** — prison ink, workwear, heavy bodies.
+- **Shadow Platoon** — ex-military commando gear.
+
+**What does the distinguishing work, mechanically:**
+
+1. **Hairstyles and headgear** — cornrows, shaved heads, hesher manes, hoods, masks, bandanas. The head is the fastest read at brawler camera distance.
+2. **Tattoos** — faction ink (skinheads, bikers, yakuza, convicts) does more work than any color scheme.
+3. **Signature weapons/objects** — katana, Chinese sword, combat knife: carried visibly, fused to the character's style name.
+4. **Physique casting** — the skinhead gang is *defined* by being muscle-bound; the Outlaws by heavy convict bodies. Body type is a faction marker.
+5. **Damage as storytelling** — GameSpot's review notes bloodstains dotting characters' shirts after fights; wear-and-tear accumulates on the outfit, not just the health bar.
+
+**Distilled rules for AshLane (binding with the no-uniforms directive):**
+
+- **1 symbol + 1 accent garment + 1 body/head marker per faction.** Example: a patch *or* tag, *one* accent garment (bandana, armband, vest), and a head/body marker (hairstyle, ink, mask style). Never all three as a full uniform.
+- **Colors are accents, not team jerseys.** A faction color appears as a bandana, stitching, or trim — never as matching outfits across members.
+- **Discipline-coded members keep their discipline's garb.** A karateka in a gang still wears a gi; the *gang* shows in the patch/ink, not the outfit. This is exactly how Urban Reign keeps 60 fighters readable.
+
+## 5. Outfit design language — early-2000s streetwear
+
+**The vocabulary.** Urban Reign's closet is 2005 street culture, played straight: baggy hip-hop gear, jerseys, hoodies, bandanas, work boots (street brawlers); gothic fashion (Dae-Suk Park, the loner); metalhead denim-and-leather (bikers); prison workwear (convicts); military surplus (commandos); suits (yakuza); traditional martial-arts garb — gi, kung fu shirts, Muay Thai shorts, hand wraps, headbands.
+
+**"Street" vs "fighter" reads:**
+- **Street** = civilian clothes worn combatively. The outfit would work at a bus stop; the *wear* (bloodstains, torn sleeves, wraps) says fighter.
+- **Fighter** = discipline-coded garments. Gi, kung fu garb, Muay Thai shorts, boxing wraps — the outfit declares the moveset before a punch is thrown.
+- The GameSpot rule (§2) bridges them: even street-brawler outfits lean toward the character's *style* — hip-hop brawlers get stylish gear, martial artists get loose traditional cuts.
+
+**Silhouette diversity as a design tool.** The roster spans **170 cm / 54 kg (Shun Ying) to 207 cm / 158 kg (Golem)** — archetype reads at a glance from body shape alone, before costume details resolve. Age range runs 21 (Park) to 65 (Shinkai): older fighters visually code as masters and bosses, younger ones as prodigies and hotheads.
+
+**What "street" must avoid:** costume-y uniformity. Urban Reign's street fighters look like they *dressed themselves* — the faction shows in one or two markers, and everything else is personal. That's the line between a gang and a sports team.
+
+Sources: [GameSpot E3 2005 preview](https://www.gamespot.com/articles/urban-reign-e3-2005-preshow-impressions/1100-6124406/) · [GameSpot review](http://gamespot.com/reviews/urban-reign-review/1900-6133344/) · [GameSpy review](http://ps2.gamespy.com/playstation-2/urban-reign/651217p1.html) · [digitpress fan review](https://forum.digitpress.com/forum/showthread.php?71009-urban-reign-VERSUS-beatdown-fists-of-vengeance) · [futurefive review](https://futurefive.co.nz/story/urban-reign)
