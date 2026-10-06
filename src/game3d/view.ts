@@ -127,7 +127,7 @@ export function createView(canvas: HTMLCanvasElement) {
   const sunOrb = new THREE.Mesh(new THREE.SphereGeometry(2.2, 12, 10), new THREE.MeshBasicMaterial({ color: 0xfff1c4, fog: false }));
   scene.add(sunOrb);
   const door = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.35, 0.16), new THREE.MeshLambertMaterial({ color: 0x6b3a28 }));
-  door.position.set(-12.4, 1.18, -5.5);
+  door.position.set(-12.4, 1.18, -5.0); // centered in the 1m wall opening (was -5.5: at the back face)
   scene.add(door);
   const lamps: THREE.PointLight[] = [];
   const hemi = new THREE.HemisphereLight(0xd5e4f4, 0x2a2428, 1.45);
@@ -655,18 +655,29 @@ export function createView(canvas: HTMLCanvasElement) {
     const h = box.maxY - box.minY;
     const geo = new THREE.BoxGeometry(box.maxX - box.minX, h, box.maxZ - box.minZ);
     const wide = box.maxX - box.minX > 20 || box.maxZ - box.minZ > 20;
-    const color = box.kind === "gate" ? 0xe4572e : box.kind === "plat" ? 0x6a5438 : wide ? 0x3c4450 : h < 2 ? 0x3a342e : 0x2a313c;
+    const weakFloor = box.kind === "plat" && box.role === "weak";
+    const color = weakFloor ? 0x8a6a3a : box.kind === "gate" ? 0xe4572e : box.kind === "plat" ? 0x6a5438 : wide ? 0x3c4450 : h < 2 ? 0x3a342e : 0x2a313c;
     const plaza = box.maxX > -28 && box.minX < 26 && box.maxZ > -28 && box.minZ < 26;
     const pick = Math.abs(Math.round(midX * 3 + midZ * 7)) % 4;
     const skin = box.kind === "wall" && !plaza && h > 2 ? (pick === 1 ? brick : pick === 2 ? dockSkin : pick === 3 ? asphalt : null) : null;
     const mat = new THREE.MeshLambertMaterial({
       color: skin ? 0xffffff : color,
       map: skin,
-      transparent: box.kind === "gate",
-      opacity: box.kind === "gate" ? 0.45 : 1,
+      transparent: box.kind === "gate" || weakFloor,
+      opacity: box.kind === "gate" ? 0.45 : weakFloor ? 0.92 : 1,
+      // Weak floors get a hazard-wireframe overlay so players read them as breakable
+      wireframe: false,
     });
     const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(midX, h / 2, midZ);
+    mesh.position.set(midX, box.minY + h / 2, midZ); // was h/2: buried elevated slabs at ground
+    if (weakFloor) {
+      // Cracked-plate telegraph: darker edge frame marks the breakable section
+      const edge = new THREE.LineSegments(
+        new THREE.EdgesGeometry(geo),
+        new THREE.LineBasicMaterial({ color: 0xff3b30 })
+      );
+      mesh.add(edge);
+    }
     mesh.userData.shell = box.kind === "wall" && h > 3 && !wide;
     scene.add(mesh);
     return mesh;
@@ -696,10 +707,26 @@ export function createView(canvas: HTMLCanvasElement) {
     }
   }
 
+  // --- Wall-face mounting -------------------------------------------------------
+  // KayKit wall pieces are 1.0m thick, centered on the wall line. Signs/props
+  // mount ON the wall face (face + clearance), never at the wall center line
+  // (which buries them inside the wall) and never past the wall ends.
+  const WALL_T = 1.0;
+  /** z of the wall face toward the arena for a wall centered at zc. */
+  function wallFace(zc: number, toward: 1 | -1, clearance = 0.06): number {
+    return zc + toward * (WALL_T / 2 + clearance);
+  }
+  // Arena wall lines (must match wallRun calls in addDress + buildBoxes):
+  const FACE_N_WALL = wallFace(-5, 1);      // building fronts at z=-5  -> -4.44
+  const FACE_S_WALL = wallFace(5, -1);      // building fronts at z=+5  -> +4.44
+  const FACE_BACK_WALL = wallFace(-23.6, 1); // back wall at z=-23.6     -> -23.04
+
   function addSign() {
     const tex = signTex();
     const board = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.5), new THREE.MeshBasicMaterial({ map: tex }));
-    board.position.set(-6.92, 3.4, -4.88);
+    // Centered on the building face (x -18..-7), mounted on the wall face.
+    // Was (-6.92, -4.88): hanging past the corner AND buried in the wall.
+    board.position.set(-12.5, 3.4, FACE_N_WALL);
     board.rotation.y = 0;
     scene.add(board);
   }
@@ -717,11 +744,11 @@ export function createView(canvas: HTMLCanvasElement) {
       light.position.set(x, y, z + (rotY === 0 ? 0.4 : -0.4));
       scene.add(light);
     };
-    sign("LATE", "#3ee0c5", -10, 3.15, -23.88, 0, 1.7, 0.48, true);
-    sign("OPEN", "#e85aad", 2.2, 2.7, -23.88, 0, 1.35, 0.42, true);
-    sign("24", "#f0b429", 11.5, 3.3, -23.88, 0, 0.7, 0.7, false);
-    sign("NOODLE", "#e85aad", -12.2, 2.55, -4.88, 0, 2.1, 0.46, true);
-    sign("COIL", "#3ee0c5", 11, 2.4, 5.12, Math.PI, 1.5, 0.42, false);
+    sign("LATE", "#3ee0c5", -10, 3.15, FACE_BACK_WALL, 0, 1.7, 0.48, true);
+    sign("OPEN", "#e85aad", 2.2, 2.7, FACE_BACK_WALL, 0, 1.35, 0.42, true);
+    sign("24", "#f0b429", 11.5, 3.3, FACE_BACK_WALL, 0, 0.7, 0.7, false);
+    sign("NOODLE", "#e85aad", -12.2, 2.55, FACE_N_WALL, 0, 2.1, 0.46, true);
+    sign("COIL", "#3ee0c5", 11, 2.4, FACE_S_WALL, Math.PI, 1.5, 0.42, false);
 
     const awning = (x: number, z: number, len: number, rotY: number, color: number) => {
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, 0.08, 0.7), new THREE.MeshLambertMaterial({ color }));
@@ -729,9 +756,9 @@ export function createView(canvas: HTMLCanvasElement) {
       mesh.rotation.y = rotY;
       scene.add(mesh);
     };
-    awning(-10, -23.45, 2.4, 0, 0x1a3a40);
-    awning(2.2, -23.45, 1.8, 0, 0x4a2040);
-    awning(-12.2, -5.28, 2.4, 0, 0x4a2040);
+    awning(-10, FACE_BACK_WALL, 2.4, 0, 0x1a3a40);
+    awning(2.2, FACE_BACK_WALL, 1.8, 0, 0x4a2040);
+    awning(-12.2, FACE_N_WALL, 2.4, 0, 0x4a2040);
 
     const pane = (x: number, y: number, z: number, color: number) => {
       const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8 });
@@ -739,9 +766,9 @@ export function createView(canvas: HTMLCanvasElement) {
       mesh.position.set(x, y, z);
       scene.add(mesh);
     };
-    for (let i = 0; i < 9; i++) pane(-16 + i * 3.6, 3.5, -23.9, i % 2 ? 0x7fd0ff : 0xf0c36a);
-    for (let i = 0; i < 4; i++) pane(-16 + i * 2.4, 2.6, -4.9, 0xf2d7a2);
-    for (let i = 0; i < 4; i++) pane(8.2 + i * 2.2, 2.5, -4.9, 0x9fd7ff);
+    for (let i = 0; i < 9; i++) pane(-16 + i * 3.6, 3.5, FACE_BACK_WALL, i % 2 ? 0x7fd0ff : 0xf0c36a);
+    for (let i = 0; i < 4; i++) pane(-16 + i * 2.4, 2.6, FACE_N_WALL, 0xf2d7a2);
+    for (let i = 0; i < 4; i++) pane(8.2 + i * 2.2, 2.5, FACE_N_WALL, 0x9fd7ff);
 
     const puddle = (x: number, z: number, rx: number, rz: number) => {
       const mesh = new THREE.Mesh(
@@ -777,7 +804,7 @@ export function createView(canvas: HTMLCanvasElement) {
     scene.add(floor);
     const tex = labelTex("MARKET", "#f0b429");
     const board = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 0.55), new THREE.MeshBasicMaterial({ map: tex, transparent: true }));
-    board.position.set(20, 3.2, -23.88);
+    board.position.set(20, 3.2, FACE_BACK_WALL);
     scene.add(board);
   }
 
@@ -822,13 +849,13 @@ export function createView(canvas: HTMLCanvasElement) {
         drop("barrel_large", 34.5, -16.4);
         drop("box_small", 41, -22);
         drop("box_large", 26, -16.6);
-        drop("banner_red", 24, -23.3);
+        drop("banner_red", 24, FACE_BACK_WALL);
         drop("barrier", 28.5, -16.2);
         drop("barrier", 37, -22.4);
         drop("stool", -14.6, -7.4);
         drop("table_medium", 32.5, -21.6);
-        drop("torch_mounted", -10, -23.4);
-        drop("torch_mounted", 8, -23.4);
+        drop("torch_mounted", -10, FACE_BACK_WALL);
+        drop("torch_mounted", 8, FACE_BACK_WALL);
         drop("stairs_wood", -16.2, 17.1);
         drop("column", -4, 8);
         drop("wall_arched", -12.4, -5.15, Math.PI);

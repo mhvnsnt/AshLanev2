@@ -76,6 +76,8 @@ export type Body = {
   wake: number;
   landed: boolean;
   prone: boolean;
+  /** Grab-escape mash meter (0..1) when this body is grabbed by an enemy. */
+  grabMash: number;
   route: string;
   link: number;
 };
@@ -208,6 +210,12 @@ export type Sim = {
   spawnYaw: number;
   nextId: number;
   grabId: number;
+  /** ID of the grunt currently holding the PLAYER in a grab (-1 = none). Player is the victim. */
+  foeGrab: number;
+  /** Chained-dodge counter for UR reversals: consecutive clean evades. */
+  dodgeChain: number;
+  /** Window (s) in which a dodge continues the chain. */
+  dodgeChainT: number;
   coyote: number;
   springLock: number;
   canGrab: boolean;
@@ -328,6 +336,13 @@ function buildBoxes(): Box[] {
     box(16.2, 17.3, 17.2, 22.4, 2.5, "wall"),
     box(-18, -14, 18.7, 21.3, 1.15, "plat"),
     box(-10.6, -6.2, 18.7, 21.3, 2.4, "plat"),
+    // --- The Foundry (proof arena): breakable mezzanine floor ---
+    // Access steps (solid pedestals)
+    box(27, 30, 8, 14, 1.0, "plat"),
+    box(28.5, 30, 8, 14, 2.0, "plat"),
+    // Weak floor slab at 3m — elevated (minY>0), open space beneath.
+    // Slam a fighter down on it hard enough and it breaks: both drop to the pit.
+    { minX: 30, maxX: 36, minY: 2.7, maxY: 3.0, minZ: 8, maxZ: 14, kind: "plat", hp: 1, role: "weak" },
     box(-3, 1.4, 18.7, 21.3, 1.25, "plat"),
     box(4.6, 10.4, 18.7, 21.3, 2.55, "plat"),
     box(-13.5, -11.1, 19.2, 20.8, 0.2, "spring"),
@@ -439,6 +454,7 @@ function blankBody(sim: Sim, partial: Pick<Body, "kind" | "x" | "z"> & Partial<B
     chest: partial.chest ?? 100,
     legs: partial.legs ?? 100,
     wake: partial.wake ?? 0,
+    grabMash: 0,
     landed: partial.landed ?? false,
     prone: partial.prone ?? false,
     route: partial.route ?? "n",
@@ -619,11 +635,14 @@ export function createSim(tune?: Tune): Sim {
     spawnYaw: 0,
     nextId: 1,
     grabId: -1,
+    foeGrab: -1,
     coyote: 0.12,
     springLock: 0,
     canGrab: false,
     combo: 0,
     comboT: 0,
+    dodgeChain: 0,
+    dodgeChainT: 0,
     spinPulse: 0,
     aimX: 0,
     aimZ: 0,
@@ -1051,12 +1070,15 @@ function grantXp(sim: Sim, n: number) {
 }
 
 function breakGrab(sim: Sim) {
-  if (sim.grabId < 0 && sim.bodies[0]?.state !== "grab") return;
+  if (sim.grabId < 0 && sim.foeGrab < 0 && sim.bodies[0]?.state !== "grab") return;
   const p = sim.bodies[0];
   const e = sim.bodies.find((b) => b.id === sim.grabId);
+  const foe = sim.bodies.find((b) => b.id === sim.foeGrab);
   if (p?.state === "grab") p.state = "free";
   if (e && e.state === "grab") e.state = "hit";
+  if (foe && foe.state === "grab") foe.state = "free";
   sim.grabId = -1;
+  sim.foeGrab = -1;
   sim.group.activeAttackers = [];
   clearLock(sim.lock);
   sim.pair = "";
@@ -1099,6 +1121,74 @@ function hurt(sim: Sim, b: Body, dmg: number, poiseDmg: number, kx: number, kz: 
   }
   if (b.kind === "player" && b.state === "dash") {
     if (b.stateT > 0.08) {
+      // UR REVERSAL: dashing INTO the incoming attack (not away from it) at
+      // the right moment reverses it — the attacker eats their own hit and
+      // you slip behind them. Direction picked right = reversal; wrong = dodge.
+      const pm = Math.hypot(b.vx, b.vz) || 1;
+      const kl = Math.hypot(kx, kz) || 1;
+      const intoHit = (b.vx / pm) * (kx / kl) + (b.vz / pm) * (kz / kl);
+      let rev: Body | null = null;
+      let bestD = 2.2;
+      for (const e of sim.bodies) {
+        if (e.kind !== "grunt" || !e.alive || (e.state !== "atk" && e.state !== "windup")) continue;
+        const d = Math.hypot(e.x - b.x, e.z - b.z);
+        if (d < bestD) {
+          bestD = d;
+          rev = e;
+        }
+      }
+      if (rev && intoHit > 0.45) {
+        const r = rev;
+        r.hp -= dmg;
+        r.poise = 0;
+        r.state = "launch";
+        r.stateT = 0.5;
+        r.air = 2;
+        r.vx = kx * 0.9;
+        r.vz = kz * 0.9;
+        r.vy = 4.2;
+        // Slip behind the reversed attacker.
+        const rf = forward(r.yaw);
+        b.x = r.x - rf.x * 1.15;
+        b.z = r.z - rf.z * 1.15;
+        b.yaw = Math.atan2(-(r.z - b.z), r.x - b.x);
+        b.vx = 0;
+        b.vz = 0;
+        b.iframe = Math.max(b.iframe, 0.3);
+        sim.dodgeChain = sim.dodgeChainT > 0 ? sim.dodgeChain + 1 : 1;
+        sim.dodgeChainT = 1.2;
+        sim.hitstop = Math.max(sim.hitstop, hitstopFor(dmg));
+        sim.banner = "Reversal!";
+        sim.bannerT = 0.7;
+        sim.sfx.push("hit");
+        sim.flow = Math.min(100, sim.flow + 14);
+        if (r.hp <= 0) {
+          r.hp = 0;
+          r.alive = false;
+          r.state = "out";
+        }
+        return false;
+      }
+      // Chained dodge: a second clean evade slips you behind the attacker.
+      if (rev && sim.dodgeChainT > 0 && sim.dodgeChain >= 1) {
+        const r = rev;
+        const rf = forward(r.yaw);
+        b.x = r.x - rf.x * 1.15;
+        b.z = r.z - rf.z * 1.15;
+        b.yaw = Math.atan2(-(r.z - b.z), r.x - b.x);
+        b.vx = 0;
+        b.vz = 0;
+        b.iframe = Math.max(b.iframe, 0.3);
+        r.state = "hit";
+        r.stateT = 0.7;
+        r.poise = 0;
+        sim.dodgeChain += 1;
+        sim.dodgeChainT = 1.2;
+        sim.banner = "Slip behind";
+        sim.bannerT = 0.6;
+        sim.sfx.push("dash");
+        return false;
+      }
       for (const e of sim.bodies) {
         if (e.kind !== "grunt" || !e.alive || (e.state !== "atk" && e.state !== "windup")) continue;
         if (Math.hypot(e.x - b.x, e.z - b.z) > 1.8) continue;
@@ -1109,6 +1199,8 @@ function hurt(sim: Sim, b: Body, dmg: number, poiseDmg: number, kx: number, kz: 
         e.vz = (e.z - b.z) * 2.2;
       }
       b.iframe = Math.max(b.iframe, 0.16);
+      sim.dodgeChain = sim.dodgeChainT > 0 ? sim.dodgeChain + 1 : 1;
+      sim.dodgeChainT = 1.2;
       sim.banner = "Just frame";
       sim.bannerT = 0.55;
       sim.sfx.push("hit");
@@ -1924,19 +2016,20 @@ function wallSlam(sim: Sim, b: Body) {
   b.stateT = 0.25;
 }
 
-function crack(sim: Sim, box: Box | null) {
-  if (!box || box.hp <= 0 || box.kind === "open") return;
+function crack(sim: Sim, box: Box | null): boolean {
+  if (!box || box.hp <= 0 || box.kind === "open") return false;
   box.hp -= box.role === "cage" ? 1 : box.role === "door" ? 2 : 1.5;
   if (box.hp > 0) {
     sim.banner = box.role === "door" ? "Door buckles" : box.role === "cage" ? "Cage dents" : "Wall cracks";
     sim.bannerT = 0.6;
-    return;
+    return false;
   }
   box.kind = "open";
   box.maxY = 0;
   sim.banner = box.role === "door" ? "Door's down" : box.role === "cage" ? "Cage's down" : "Wall's open";
   sim.bannerT = 1.1;
   sim.sfx.push("slam");
+  return true;
 }
 
 function nearestHard(sim: Sim, b: Body) {
@@ -2084,6 +2177,24 @@ function resolveY(sim: Sim, b: Body, prevY: number) {
     if (box.kind === "gate" && sim.streetClear) continue;
     if (b.x + R <= box.minX || b.x - R >= box.maxX || b.z + R <= box.minZ || b.z - R >= box.maxZ) continue;
     if (prevY >= box.maxY - 0.06 && b.y < box.maxY && b.vy <= 0) {
+      // Breakable floor: a hard slam cracks the weak section (Tekken floor-break).
+      // Impact = downward speed; slams/launches from throws always count.
+      if (box.kind === "plat" && box.role === "weak" && box.hp > 0) {
+        const impact = -b.vy;
+        const slammed = b.slam || b.state === "launch" || (b.state === "throw" && b.slam);
+        if (impact > 9 || slammed) {
+          const broke = crack(sim, box);
+          if (broke) {
+            // Floor gave way — drop through to the lower level. Victim stays
+            // juggleable so the attacker is rewarded (Tekken-style).
+            sim.banner = "Floor breaks!";
+            sim.bannerT = 1.1;
+            sim.shake = Math.min(1, sim.shake + 0.9);
+            if (b.state !== "out") { b.state = "launch"; b.stateT = 0.4; }
+            continue; // don't ground — keep falling
+          }
+        }
+      }
       b.y = box.maxY;
       b.vy = 0;
       b.grounded = true;
@@ -2518,6 +2629,30 @@ function updateEnemies(sim: Sim, dt: number) {
     const d = Math.hypot((hot && p ? p.x : e.homeX) - e.x, (hot && p ? p.z : e.homeZ) - e.z) || 1;
     if (hot && p && intent.wantAttack) {
       if (!requestAttack(sim.group, e.id, sim.bodies)) continue;
+      // UR GRAB: brute (wrestling) archetype grabs the player instead of
+      // striking when chest-to-chest. Opens a mash-to-escape struggle.
+      const gdist = Math.hypot(p.x - e.x, p.z - e.z);
+      if (e.arch === "brute" && gdist < 1.15 && p.state === "free" && p.grounded && sim.foeGrab < 0 && Math.random() < 0.35) {
+        releaseAttack(sim.group, e.id);
+        e.yaw = yawFromDir(p.x - e.x, p.z - e.z);
+        e.x = p.x - Math.sin(e.yaw) * 0.62;
+        e.z = p.z - Math.cos(e.yaw) * 0.62;
+        e.vx = 0;
+        e.vz = 0;
+        e.state = "grab";
+        e.stateT = 1.7;
+        p.state = "grab";
+        p.stateT = 1.7;
+        p.grabMash = 0;
+        p.vx = 0;
+        p.vz = 0;
+        sim.foeGrab = e.id;
+        e.cd = 2.6;
+        sim.banner = "Grabbed! Mash attack!";
+        sim.bannerT = 0.9;
+        sim.sfx.push("grab");
+        continue;
+      }
       e.swing = p.state === "down" || e.arch === "runner" ? 5 : 0;
       e.state = "windup";
       e.stateT = SPEC.enemyWindup * brain.tuning.windupScale * (e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "brute" || e.arch === "hex" ? 1.28 : 1);
@@ -2775,6 +2910,78 @@ function updatePlayer(sim: Sim, dt: number, dashEdge: boolean, counterEdge: bool
   if (p.state === "grab") {
     p.vx = 0;
     p.vz = 0;
+    // UR GRAB ESCAPE: the player is the VICTIM of an enemy grab. Mash attack
+    // to fill the escape meter before the struggle window closes. Escape =
+    // break free + stagger the grabber. Timer out = the brute finishes the throw.
+    if (sim.foeGrab >= 0) {
+      const foe = sim.bodies.find((b) => b.id === sim.foeGrab);
+      if (!foe || !foe.alive) {
+        sim.foeGrab = -1;
+        p.state = "free";
+        p.iframe = 0.2;
+        return;
+      }
+      // Keep the pair locked together.
+      const f = forward(foe.yaw);
+      p.x = foe.x + Math.sin(foe.yaw) * 0.62;
+      p.z = foe.z + Math.cos(foe.yaw) * 0.62;
+      p.yaw = yawFromDir(foe.x - p.x, foe.z - p.z);
+      foe.stateT = Math.max(foe.stateT, p.stateT);
+      if (atk) {
+        sim.bufAtk = 0;
+        p.grabMash = Math.min(1, p.grabMash + 0.34);
+        sim.sfx.push("hit");
+        burst(sim, p.x, p.y + 1.1, p.z, 0xf0b429);
+        if (p.grabMash >= 1) {
+          // Escaped: shove the grabber off and punish.
+          foe.state = "hit";
+          foe.stateT = 0.55;
+          foe.poise = 0;
+          foe.vx = -f.x * 6;
+          foe.vz = -f.z * 6;
+          foe.hp -= 8;
+          if (foe.hp <= 0) {
+            foe.hp = 0;
+            foe.alive = false;
+            foe.state = "out";
+          }
+          p.state = "free";
+          p.iframe = 0.35;
+          p.vx = f.x * 5;
+          p.vz = f.z * 5;
+          sim.foeGrab = -1;
+          sim.banner = "Grab escape!";
+          sim.bannerT = 0.7;
+          sim.sfx.push("dash");
+          sim.flow = Math.min(100, sim.flow + 10);
+          return;
+        }
+      }
+      p.stateT -= dt;
+      if (p.stateT <= 0) {
+        // Struggle lost: the brute completes a body slam.
+        sim.foeGrab = -1;
+        foe.state = "free";
+        foe.cd = Math.max(foe.cd, 1.2);
+        p.hp -= 16;
+        p.head = Math.max(0, p.head - 10);
+        p.state = "throw";
+        p.slam = true;
+        p.stateT = 0.48;
+        p.vy = 4.5;
+        p.vx = f.x * 7;
+        p.vz = f.z * 7;
+        sim.banner = "Slammed!";
+        sim.bannerT = 0.7;
+        sim.sfx.push("slam");
+        sim.shake = Math.min(1, sim.shake + 0.5);
+        if (p.hp <= 0) {
+          p.hp = 0;
+        }
+        return;
+      }
+      return;
+    }
     const e = sim.bodies.find((b) => b.id === sim.grabId);
     if (!e || !e.alive) {
       sim.grabId = -1;
@@ -3965,7 +4172,7 @@ function updateDoor(sim: Sim, dt: number) {
     sim.door = 1;
     return;
   }
-  const near = Math.hypot(p.x + 12.4, p.z + 5.5) < 2.15;
+  const near = Math.hypot(p.x + 12.4, p.z + 5.0) < 2.15;
   sim.door = near ? Math.min(1, sim.door + dt * 2.6) : Math.max(0, sim.door - dt * 1.5);
 }
 
