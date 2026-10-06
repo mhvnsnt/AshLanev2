@@ -104,3 +104,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (Apache-2.0).
 - **Notes:** Best use: OFFLINE generation of original loops (generate → curate → render → ship audio; the model stays out of the game). Runtime in-browser generation is possible but heavy for a game client. Generated output from our own prompts is original work — no licensed-audio baggage. Watch checkpoint download size; generate at build time.
 
+## 15. Band.js — WebAudio music composer interface
+- **URL:** https://github.com/meenie/band.js
+- **What:** Declarative music-composition API over WebAudio: conductor/instruments, rhythms, repeating sections, complex time signatures. JSON song loading. Good for structured arrangements (intro/verse/chorus) that react to game state.
+- **License:** ⚠️ **UNVERIFIED** — GitHub reports "NOASSERTION" for this repo; a LICENSE file exists in the repo root but its text wasn't confirmed at research time.
+- **Verdict:** ❌ **Prototype-only until the LICENSE file is read and confirmed** (historically MIT, but don't trust memory).
+- **Notes:** If confirmed MIT: strong fit for adaptive arrangements — compose entrance themes / fight music as data, switch sections on game events. Re-verify before any ship use.
+
