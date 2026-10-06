@@ -1,0 +1,37 @@
+{
+  "name": "quantum_crowd_v1",
+  "quantum_bytes_hex": "ff02ac739f83c9d86cd13e06893ab05b977d07b6b81c75bed84f148a7a418437479b5761376c79528d6edde813d731e2deb8faaca7e96ef937d2d2fe8175763a",
+  "quantum_bytes_len": 64,
+  "provenance": "anu-qrng: REAL photonic quantum hardware via qrng.anu.edu.au (Australian National University, free public API, no signup). True unpredictability from quantum vacuum-fluctuation measurement.",
+  "arena": {
+    "layout": 2028830309045948430,
+    "props": 6029950338772724982,
+    "textures": 8364234797508817680,
+    "lighting": 1737677877359699925,
+    "graffiti": 18165328236067934625,
+    "audio": 3882910805372476557
+  },
+  "crowd": {
+    "section_a": 9050800603407452651,
+    "section_b": 13964313226580756815,
+    "section_c": 4140137449107999704,
+    "section_d": 18387848132380375581,
+    "section_e": 16845069986497565645,
+    "section_f": 11288179847908833461,
+    "variation": 16620256670062016955
+  },
+  "textures": {
+    "wall": 7207841874710747155,
+    "ground": 11828708428550495887,
+    "decal": 8406270666611092920,
+    "accent": 12026127669277088625,
+    "wear": 17368830878045826421
+  },
+  "props": {
+    "barrier": 2057721489893072212,
+    "trash": 12055874376244014552,
+    "signage": 12587134374441354313,
+    "vehicle": 2835186113102526021,
+    "fixture": 8296666642964792311
+  }
+}
