@@ -124,3 +124,13 @@
 
 ---
 
+## 13. MetaHuman (Epic Games)
+
+- **URL:** https://www.unrealengine.com/en-US/metahuman | Creator: https://www.fab.com
+- **What:** Browser-based photoreal human creator: face sculpting from presets/scans, body types, skin/hair/clothing libraries, full facial rig (Control Rig + Live Link face capture), LODs. Highest-fidelity free human generator available.
+- **License:** **Proprietary Epic EULA — free to use.** Key 2025 change: the EULA was updated so **MetaHumans can now be used in ANY engine or creative software** (no longer UE-locked); Epic also released a MetaHuman dev kit under MIT. Epic retains ownership of the MetaHuman technology; characters are licensed to you for use in projects (not sold, not open).
+- **Verdict:** ✅ FREE FOR COMMERCIAL GAME USE per the updated EULA (terms-based, not open-source). Viable for hero fighters and promo cinematics. Caveats: cloud account required; export pipeline is UE/FAB-centric (export via Bridge/Quixel, convert to GLB in Blender); stylized street-brawler looks need heavy customization away from the default "MetaHuman look."
+- **Notes:** Re-verify the current EULA text at download time — Epic changed it once (2025) and can change it again. Never treat MetaHuman outputs as CC0. The facial-rig quality is the real prize: even if bodies come from Anny/MakeHuman, study the MetaHuman face rig as the bar for our own.
+
+---
+
