@@ -239,3 +239,18 @@ Prelinger.
   gym/club packs are overwhelmingly paid: CGTrader, Fab, ArtStation). This pack
   is a workable dive-bar dresser for prototypes. Harvest gap flagged: a proper
   CC0 modern bar/gym/club interior kit is still wanted.
+
+## PSX Subway Station (JoeTheBox, itch.io)
+- **URL:** https://joethejunkbox.itch.io/psx-subway-station
+- **What:** Free PSX-style subway station asset pack (Blender 3.5 source). Low-poly
+  retro station geometry — fits AshLane's PS1-aware aesthetic and works as a
+  subway/tunnel level kit or reference for building one.
+- **License:** Ambiguous — the author's itch page suggests CC0 but the comment
+  thread shows the author describing "CC0, just use anything… make sure to put
+  my name or itch.io page somewhere in the credits," which commenters correctly
+  note is CC-BY 4.0, not CC0. No formal license file.
+- **Verdict:** prototype-only (license ambiguous — confirm with the author
+  before ship)
+- **Notes:** Only dedicated subway-station kit found that isn't paid. Pairs with
+  the KayKit Dungeon Remastered tiles (already wired, round 2) for tunnel
+  sections. If the author confirms CC-BY, it's commercial-safe with attribution.
