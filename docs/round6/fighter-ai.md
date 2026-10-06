@@ -214,3 +214,20 @@ checked 2026-10-06. Re-verify before shipping.
   authors write AI triggers (e.g. `trigger1 = p2stateno = 200 && random <
   300`) — this is the concrete pattern for our own difficulty-scaled
   fighter AI, reimplemented clean.
+
+---
+
+## Schwarzerblitz Engine (study: 3D fighter AI)
+
+- **URL:** https://github.com/AndreaJens/SchwarzerblitzEngine
+- **What:** Source code of Schwarzerblitz, an open 3D fighting game
+  (Irrlicht-based). Includes its AI opponent implementation for a true 3D
+  fighter — spacing, approach, attack selection, and blocking in three
+  dimensions, a rarer reference than 2D fighter AI.
+- **License:** NOASSERTION — no machine-readable license (checked 2026-10-06).
+- **Verdict:** prototype-only / study-only. Read and learn; do not ship its
+  code.
+- **Notes:** One of the few open 3D fighting games with readable AI. Useful
+  for Bannon's 3D ring movement (circling, cornering, rope awareness) and
+  for AshLane's 3D brawler spacing. Smaller codebase than a commercial
+  engine — tractable to read end-to-end in an afternoon.
