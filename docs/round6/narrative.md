@@ -279,3 +279,54 @@ prototype-only. Unclear = prototype-only.
 - **Notes:** Editor is GPL so it can't be embedded/shipped, but it's a fine
   free tool for Real to write the AshLane story bible and mission scripts in.
   Use as a tool, not a component.
+
+## Procedural quest/mission generators — GAP
+
+- **URL:** n/a (no strong standalone candidate found)
+- **What:** Searched for open-source procedural quest/mission generators
+  (radiant-quest style). Findings: only toy repos, engine-specific skill
+  docs, RPG-Maker/AI-text-adventure one-offs with restrictive or no licenses,
+  and academic papers without usable code. Nothing at the quality bar of the
+  engines above.
+- **License:** n/a
+- **Verdict:** n/a — do not adopt; build or borrow patterns
+- **Notes:** The practical path is compositional, not a library: (1) quest
+  templates + objective state machines modeled on QuestJS's quest/quality
+  system and Inform 7's rulebooks; (2) LLM drafting already in-house
+  (tools/free-apis/llm-dialogue-gen.py `--kind quest`) with human review.
+  Revisit if a real open generator surfaces.
+
+## License ledger
+
+| Project | License (as recorded) | Verdict |
+|---|---|---|
+| Yarn Spinner | MIT (LICENSE.md) | commercial-safe |
+| ink | MIT | commercial-safe |
+| inkjs | MIT (LICENSE) | commercial-safe |
+| Inky | MIT (README embeds full MIT text) | commercial-safe |
+| Twine (editor) | GPL-3.0 (LICENSE) | prototype-only |
+| Tweego | BSD-2-Clause | commercial-safe |
+| Twine story formats (SugarCube / Snowman / Chapbook) | BSD-2-Clause / MIT / GPL-3.0 | commercial-safe (SugarCube, Snowman) |
+| Squiffy | MIT (LICENSE) | commercial-safe |
+| Quest 5 | MIT (LICENSE) | commercial-safe |
+| QuestJS | MIT (LICENSE) | commercial-safe |
+| Undum | MIT (GitHub API spdx) | commercial-safe |
+| Inform 7 | Artistic License 2.0 (LICENSE) | commercial-safe |
+| Ren'Py | MIT (license page) | commercial-safe |
+| renpy-js | MIT (README -> LICENSE) | commercial-safe |
+| Monogatari | MIT (GitHub API spdx) | commercial-safe |
+| TyranoScript | Terms of use — commercial use explicitly granted (non-OSI) | commercial-safe (keep terms on file) |
+| Fungus | MIT (GitHub API spdx) | commercial-safe |
+| Dialogic | MIT (GitHub API spdx) | commercial-safe |
+| Dialogue Manager (Godot) | MIT (LICENSE, Nathan Hoad) | commercial-safe |
+| Corkboard | MIT (GitHub API spdx) | commercial-safe |
+| Dialogue Tree Editor | MIT (GitHub API spdx) | commercial-safe |
+| cutscene-script | MIT (GitHub API spdx) | commercial-safe |
+| WebQuestEngine | MIT (README -> LICENSE) | commercial-safe |
+| MZ Interaction Builder | MIT (GitHub API spdx) | commercial-safe |
+| MZ Scene Builder | MIT (GitHub API spdx) | commercial-safe |
+| novelWriter | GPL-3.0 (GitHub API spdx) | prototype-only |
+
+Shortlist for AshLane story pipeline: inkjs (runtime) + Dialogue Tree Editor
+or Corkboard (authoring) exporting Ink; Monogatari or renpy-js for VN-style
+presentation; cutscene-script syntax ideas for stage-direction scripts.
