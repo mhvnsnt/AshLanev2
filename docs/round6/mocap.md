@@ -66,6 +66,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ⚠️ **prototype-only** — research-community terms, no commercial license. Good local corpus for retargeting tests and text-to-motion experiments; do not ship.
 - **Notes:** MMM XML is a clean normalized format worth supporting in the retargeter's importer list (alongside BVH/FBX/C3D). KIT-ML annotations pair with HumanML3D for text-driven move prototyping.
 
+## HDM05
+
+- **URL:** https://resources.mpi-inf.mpg.de/HDM05/
+- **What:** 3+ hours of systematically recorded, well-documented Vicon mocap (C3D + ASF/AMC, 120 Hz) in ~100 manually cut motion classes: sports, kicks, punches, throws, dances, locomotion, cartwheels, handstands — 10-50 realizations per class by 5 actors. The classic "clean, labeled" corpus; ships a Matlab parser for C3D/ASF/AMC.
+- **License:** Site states objective is "to supply free motion capture data for research purposes"; copyright line: "licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License." Research framing + share-alike copyleft = not shippable cleanly. Acknowledgment requested: "The data used in this project was obtained from HDM05."
+- **Verdict:** ⚠️ **prototype-only** — research-framed terms and CC BY-SA 3.0 share-alike; use locally for retargeting/segmentation experiments, do not ship clips.
+- **Notes:** Pre-cut labeled clips (1,500 cuts / ~50 min) are ideal for training the motion-bank indexer and testing clip-trimming heuristics. ASF/AMC importer needed (same family as CMU).
+
 ## License ledger
 
 | Project | License (source) | Verdict |
