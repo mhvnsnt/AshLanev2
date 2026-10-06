@@ -122,3 +122,10 @@
 - **License:** MIT (npm license badge links to LICENSE file)
 - **Verdict:** commercial-safe
 - **Notes:** The GPU crowd-animation answer for mobile: bake the pedestrian walk/idle/cheer clips once, draw the entire street crowd in a handful of draw calls. Pair with any agent AI above (Yuka/navcat drive the instance transforms; VAT drives the animation).
+
+## three.js instanced skinning examples
+- **URL:** https://github.com/mrdoob/three.js/blob/dev/examples/webgpu_skinning_instancing.html
+- **What:** Official three.js examples for instanced animated crowds: `webgpu_skinning_instancing` (shared-skeleton instancing), `webgpu_skinning_instancing_individual` (per-instance bone matrices via the `InstancedSkinnedMesh` addon), and the community WebGL `webgl_instancing_skinning` technique (bone-matrix texture in the vertex shader, per NVIDIA GPU Gems 3 "Animated Crowd Rendering").
+- **License:** MIT (three.js core license)
+- **Verdict:** commercial-safe
+- **Notes:** Reference implementations for the technique three-vat productizes — read before building custom crowd rendering. Also note `THREE.LOD` (built into three.js, MIT) for crowd LOD: full VAT crowd near, cheap billboard/impostor far.
