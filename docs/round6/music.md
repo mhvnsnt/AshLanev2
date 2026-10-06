@@ -90,3 +90,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (MIT) — the playback layer for all game music/SFX.
 - **Notes:** Adaptive-music architecture: layer Demucs-separated stems as multiple Howls and crossfade volumes by fight heat; audio sprites for menu UI; `stereo`/`pos()` for positional crowd/ambience. Replaces hand-rolled WebAudio plumbing.
 
+## 13. Scribbletune — procedural music in JS
+- **URL:** https://scribbletune.com · https://github.com/scribbletune/scribbletune
+- **What:** "Create music with JavaScript" — scales, chords, arps, progressions, patterns → MIDI files (Node) or Tone.Sequence clips (browser). `npm i scribbletune`.
+- **License:** **MIT** (verified in repo + cdnjs).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** Compose original loops IN CODE: generate per-district chord progressions and drum patterns at build time → render to MIDI → render audio offline → ship loops. Zero licensed-audio baggage, infinite variety, fully original. Pair with Tone.js (already in stack) for rendering.
+
