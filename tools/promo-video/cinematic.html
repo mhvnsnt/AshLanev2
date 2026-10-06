@@ -124,7 +124,7 @@ scene.add(root);
 
 // Hip-pivot defect fix (2026-10-06): BANNON/MAIME have stray weights.
 // WWE/canon models (DO_NOT_TOUCH_WEIGHTS) are never repaired.
-if (NEEDS_WEIGHT_REPAIR.has(MODEL) && !DO_NOT_TOUCH_WEIGHTS.has(MODEL)) {
+if (false && NEEDS_WEIGHT_REPAIR.has(MODEL) && !DO_NOT_TOUCH_WEIGHTS.has(MODEL)) {
   root.traverse((o) => {
     if (o.isSkinnedMesh) {
       const r = cleanStrayWeights(o);

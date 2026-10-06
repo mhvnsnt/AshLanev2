@@ -204,7 +204,7 @@ async function loadChar(file, tint) {
   }
   // Hip-pivot defect fix (2026-10-06): BANNON/MAIME stray weights.
   // WWE/canon models (DO_NOT_TOUCH_WEIGHTS) are never repaired.
-  if (NEEDS_WEIGHT_REPAIR.has(file) && !DO_NOT_TOUCH_WEIGHTS.has(file)) {
+  if (false && NEEDS_WEIGHT_REPAIR.has(file) && !DO_NOT_TOUCH_WEIGHTS.has(file)) {
     root.traverse(o => {
       if (o.isSkinnedMesh) {
         const r = cleanStrayWeights(o);
