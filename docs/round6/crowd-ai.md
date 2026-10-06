@@ -10,3 +10,10 @@
 - **License:** MIT (badge on README links to LICENSE file)
 - **Verdict:** commercial-safe
 - **Notes:** The pedestrian-AI core. Wander + obstacle-avoidance + follow-path gives sidewalk crowds; flocking gives group movement; perception/vision gives NPCs that notice the player or a fight breaking out. Pairs with a navmesh lib (recast/navcat) for paths and Yuka for movement. Zero dependencies, three.js-friendly.
+
+## recast-navigation-js
+- **URL:** https://github.com/isaac-mason/recast-navigation-js
+- **What:** WebAssembly port of Recast Navigation: runtime navmesh generation from level geometry, Detour pathfinding queries, **DetourCrowd** crowd simulation (local agent avoidance), temporary obstacles, off-mesh connections, tiled navmeshes. Ships `@recast-navigation/three` helpers and a web navmesh-generator for offline bakes.
+- **License:** MIT (repo page license field, LICENSE file at root)
+- **Verdict:** commercial-safe
+- **Notes:** The heavy-duty crowd option: hundreds of agents with real collision avoidance in 3D districts. Cost is the WASM payload + init — prefer navcat (pure JS, below) on tight mobile budgets. Also useful: `donmccurdy/glTF-Transform-Recast-Config` bakes navmeshes inside the glTF asset pipeline.
