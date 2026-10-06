@@ -108,3 +108,10 @@
 - **License:** MIT (badge on README — verify the LICENSE file before shipping)
 - **Verdict:** commercial-safe (pending license-file verification)
 - **Notes:** Study reference for in-game traffic AI: read the `vehicles/` and `simulation/` systems for graph-based junction navigation patterns. Don't lift art or game code wholesale — extract the traffic/citizen patterns into our own systems.
+
+## gta7-web
+- **URL:** https://github.com/nullspawn/gta7-web
+- **What:** AI-built open-world three.js driving game (React Three Fiber): procedural city with roads/lanes/parks, AI traffic + pedestrians, a wanted system with chasing/ramming police, mission framework. Fixed-timestep sim decoupled from React rendering (mutable singleton + useFrame transform copies).
+- **License:** NONE FOUND — no LICENSE file, no license field on the repo page (all rights reserved by default)
+- **Verdict:** research-only — read, don't copy
+- **Notes:** Pattern reference only: how AI traffic/pedestrians and a wanted/heat system are structured in a three.js open world. Do not reuse code or assets (it also bundles a CC-BY 3.0 motorcycle model needing attribution, and the GTA proximity is its own IP risk).
