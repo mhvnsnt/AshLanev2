@@ -71,3 +71,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** PROTOTYPE-ONLY — cannot ship in the client. Reference inspiration only.
 - **Notes:** Flagged explicitly because it looks permissive at first glance. Useful as a reference for how to write specific SDF/noise functions (fire distortion, smoke curl, damage-mask patterns), but any shipped shader must be rewritten clean-room or sourced from glsl-noise/MIT snippets instead.
 
+## glsl-noise
+- **URL:** https://github.com/hughsk/glsl-noise
+- **What:** Classic/simplex 2D–4D noise GLSL snippets (Ashima/webgl-noise lineage, packaged for npm): snoise/vnoise/fbm ready to `#pragma`-include in three.js ShaderMaterials.
+- **License:** MIT (LICENSE file, Hugh Kennedy).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** The commercial-safe answer to lygia for our shaders: drives fire flicker, smoke billow, scorch-edge masks, and damage dissolve transitions. Already the de-facto standard — battle-tested on mobile GPUs.
+
