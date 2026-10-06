@@ -64,3 +64,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Research-only tier for gameplay, but two real uses: (1) menu/loading-screen fluid backgrounds that react to touch — premium feel for AshLane's street-art UI; (2) technique reference for blood-spray/ink decals and smoke advection. Heavy on low-end GPUs — keep behind a quality gate, never in the combat loop.
 
+## lygia
+- **URL:** https://github.com/patriciogonzalezvivo/lygia
+- **What:** Massive multi-language shader function library (GLSL/HLSL/MSL/WGSL/Metal): noise, SDFs, lighting, color, animation helpers, procedural patterns — the community successor to The Book of Shaders snippets.
+- **License:** PROSPERITY PUBLIC LICENSE 3.0.0 (LICENSE.md) — free for non-commercial use, 30-day commercial trial only. NOT MIT.
+- **Verdict:** PROTOTYPE-ONLY — cannot ship in the client. Reference inspiration only.
+- **Notes:** Flagged explicitly because it looks permissive at first glance. Useful as a reference for how to write specific SDF/noise functions (fire distortion, smoke curl, damage-mask patterns), but any shipped shader must be rewritten clean-room or sourced from glsl-noise/MIT snippets instead.
+
