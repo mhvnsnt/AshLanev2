@@ -1065,8 +1065,16 @@ function breakGrab(sim: Sim) {
   sim.grip = 0;
 }
 
-function hurt(sim: Sim, b: Body, dmg: number, poiseDmg: number, kx: number, kz: number, lift: number, tag: "mid" | "low" | "high" = "mid") {
-  if (!b.alive || b.iframe > 0 || b.state === "out") return false;
+/**
+ * UR-feel variable hit-stop: jabs pause briefly, big counters freeze hard.
+ * dmg ~12 (jab) -> ~0.085s (~5 frames); dmg ~35 (huge counter) -> 0.2s (12 frames).
+ */
+function hitstopFor(dmg: number): number {
+  const s = 0.025 + Math.max(0, dmg) * 0.005;
+  return Math.min(0.2, Math.max(0.03, s));
+}
+
+function hurt(sim: Sim, b: Body, dmg: number, poiseDmg: number, kx: number, kz: number, lift: number, tag: "mid" | "low" | "high" = "mid") {  if (!b.alive || b.iframe > 0 || b.state === "out") return false;
   // Hitting an ambient roster fighter provokes them — they fight back.
   if (b.kind === "ambient" && b.ambient && !b.ambient.provoked) {
     b.ambient.provoked = true;
@@ -1311,6 +1319,7 @@ function nearestGrunt(sim: Sim, maxDist: number) {
 function hitGrunts(sim: Sim, hx: number, hz: number, radius: number, dmg: number, kb: number, lift: number, poise: number, dirX: number, dirZ: number, tag: "mid" | "low" | "high" = "mid") {
   const p = sim.bodies[0];
   let any = false;
+  let maxDealt = 0;
   for (const e of sim.bodies) {
     // Player strikes land on grunts AND ambient roster fighters (hitting an
     // ambient provokes them — they fight back).
@@ -1348,6 +1357,7 @@ function hitGrunts(sim: Sim, hx: number, hz: number, radius: number, dmg: number
     }
     if (hurt(sim, e, dealt, poise, kx, kz, liftHit, stomp ? "low" : tag)) {
       any = true;
+      maxDealt = Math.max(maxDealt, dealt);
       p.meter = Math.min(100, p.meter + 8);
       sim.combo += 1;
       sim.comboT = 1.25;
@@ -1374,7 +1384,10 @@ function hitGrunts(sim: Sim, hx: number, hz: number, radius: number, dmg: number
       }
     }
   }
-  if (any) p.stopT = Math.max(p.stopT, 0.04);
+  if (any) {
+    p.stopT = Math.max(p.stopT, hitstopFor(maxDealt));
+    sim.hitstop = Math.max(sim.hitstop, hitstopFor(maxDealt) * 0.6);
+  }
   return any;
 }
 
@@ -1892,7 +1905,7 @@ function wallSlam(sim: Sim, b: Body) {
   b.vz *= -0.28;
   b.vy = bounced ? 6.4 : 4.2;
   sim.shake = Math.min(1, sim.shake + 0.75);
-  sim.hitstop = Math.max(sim.hitstop, 0.07);
+  sim.hitstop = Math.max(sim.hitstop, hitstopFor(sim.tune.wallBonus));
   sim.sfx.push("slam");
   burst(sim, b.x, b.y + 0.8, b.z, 0xf3e6d4);
   sim.banner = bounced ? "Wall bounce" : "Wall";
@@ -2479,7 +2492,7 @@ function updateEnemies(sim: Sim, dt: number) {
           if (target.iframe > 0) continue;
           if (Math.hypot(target.x - e.x, target.z - e.z) > 1.22 || Math.abs(target.y - e.y) >= 1.2) continue;
           if (hurt(sim, target, bite, 10, f.x * 6.5, f.z * 6.5, e.swing === 5 ? 0.25 : e.arch === "brute" ? 2.4 : 1.2, tag)) {
-            e.stopT = Math.max(e.stopT, 0.04);
+            e.stopT = Math.max(e.stopT, hitstopFor(bite));
           }
         }
       }
@@ -2871,7 +2884,7 @@ function updatePlayer(sim: Sim, dt: number, dashEdge: boolean, counterEdge: bool
         e.hp -= dmg;
         e.poise = Math.max(0, e.poise - 6);
         p.meter = Math.min(100, p.meter + 5);
-        sim.hitstop = 0.04;
+        sim.hitstop = Math.max(sim.hitstop, hitstopFor(dmg));
         sim.sfx.push("hit");
         sim.combo += 1;
         sim.comboT = 1.1;
@@ -3020,7 +3033,7 @@ function updatePlayer(sim: Sim, dt: number, dashEdge: boolean, counterEdge: bool
       e.poise -= 7;
       p.meter = Math.min(100, p.meter + 6);
       p.stateT = Math.max(p.stateT, 0.7);
-      sim.hitstop = 0.035;
+      sim.hitstop = Math.max(sim.hitstop, hitstopFor(dmg));
       sim.sfx.push("hit");
       burst(sim, e.x, e.y + 1, e.z, 0xf0b429);
       sim.banner = name;
