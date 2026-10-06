@@ -36,9 +36,19 @@ clip. Resemble AI Chatterbox: code + weights MIT (verified 2026-10-06), output
 carries an inaudible Perth watermark.
 
 ```bash
-pip install --break-system-packages chatterbox-tts   # torch CPU, one-time
+# 1. CPU torch FIRST (else pip pulls the ~800MB CUDA wheel and stalls)
+pip install --break-system-packages \
+  --index-url https://download.pytorch.org/whl/cpu \
+  "torch==2.6.0+cpu" "torchaudio==2.6.0+cpu"
+# 2. chatterbox (pins match torch 2.6.0; --ignore-installed works around
+#    debian-owned typing_extensions)
+pip install --break-system-packages --ignore-installed typing_extensions \
+  chatterbox-tts
+# 3. clone (weights ~3.2GB first run; use --weights-dir on proxy'd VMs —
+#    huggingface_hub's downloader breaks on this egress proxy, curl works)
 python3 tools/voice/clone-voice.py \
   --ref tools/voice/refs/static.wav \
+  --weights-dir ~/workspace/voice-clone-work/cb_weights \
   --text "They counted me out..." \
   --out /tmp/static_clone.wav \
   --exaggeration 0.6
