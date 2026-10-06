@@ -211,3 +211,71 @@ prototype-only. Unclear = prototype-only.
 - **Notes:** Runs in-browser and exports plain JSON — the closest thing to a
   drop-in web dialogue editor for our pipeline. Evaluate as the authoring
   frontend with a custom three.js JSON runner on the game side.
+
+## Dialogue Tree Editor (single-file)
+
+- **URL:** https://github.com/abdullahasaadghalihamza/dialogue-tree-editor
+- **What:** A visual node editor for NPC dialogue trees in ONE HTML file — no
+  install, no internet. Start/NPC-line/Player-choice/End nodes, conditions,
+  set-flags; exports to Ink, Twine/Twee, and JSON.
+- **License:** MIT (GitHub API: spdx MIT).
+- **Verdict:** commercial-safe
+- **Notes:** Killer pipeline fit: writers draw trees in a single HTML file,
+  export Ink, run it in the game via inkjs. Zero-dependency authoring that
+  Real can use himself. Shortlist for the story pipeline.
+
+## cutscene-script (Godot)
+
+- **URL:** https://github.com/alexofp/cutscene-script
+- **What:** A tiny bring-your-own-batteries scripting language for Godot 4
+  cutscenes/dialogues — `say`, `ask`/`answer`, labels, jumps, `if`,
+  variables, RNG — a plain-text script drives dialogue + scene direction.
+- **License:** MIT (GitHub API: spdx MIT — "A simple bring-your-own-batteries
+  scripting language for Godot 4.x designed for cutscenes/dialogues").
+- **Verdict:** commercial-safe
+- **Notes:** Godot runtime, but the LANGUAGE design is engine-agnostic and
+  trivially reimplementable: a line-oriented cutscene script with labels and
+  jumps is exactly what AshLane's 50s entrance-cinematic/stage-direction
+  scripts want. Copy the syntax ideas, write our own runner.
+
+## WebQuestEngine
+
+- **URL:** https://github.com/webquestengine/webquestengine
+- **What:** Browser-native point-and-click quest game engine + visual studio —
+  project tree (chapters/scenes/characters/objects), parallax walk-path
+  editor, WHEN/IF/THEN logic rule builder, branching dialogue tree studio with
+  conditional choices/portraits/rewards, full-screen playtest mode.
+- **License:** MIT ("MIT License. See LICENSE for details." — README).
+- **Verdict:** commercial-safe
+- **Notes:** The most complete web-native quest+dialogue authoring suite
+  found. Its quest-flag scoping (`quest:labUnlocked`) and dialogue-studio
+  data model are worth lifting for AshLane mission authoring; engine itself
+  is 2D point-and-click, so take patterns, not the renderer.
+
+## MZ Interaction Builder + MZ Scene Builder
+
+- **URL:** https://github.com/charatobu/mz-interaction-builder,
+  https://github.com/Wintersta7e/mz-scene-builder
+- **What:** Visual node-graph editor (React/Electron/TS) for RPG Maker MZ
+  dialogue trees — Start/Choice-Menu/Action/Comment nodes, exports to game
+  event commands; companion Scene Builder is a visual TIMELINE editor for
+  cutscenes/picture sequences. (Interaction Builder is archived but
+  functional.)
+- **License:** MIT for both (GitHub API: spdx MIT).
+- **Verdict:** commercial-safe
+- **Notes:** RPG Maker-specific export, but the node-graph dialogue editor and
+  the timeline-based cutscene editor are the two halves of AshLane's
+  story/cutscene authoring. TypeScript + React — the most portable
+  implementation reference in this wave for building our own.
+
+## novelWriter
+
+- **URL:** https://github.com/vkbo/novelWriter
+- **What:** Open-source plain-text novel-writing editor — project tree,
+  outline, scene/chapter organization, notes, distraction-free writing. For
+  the WRITING side of narrative design (bible, scripts, lore), not runtime.
+- **License:** GPL-3.0 (GitHub API: spdx GPL-3.0).
+- **Verdict:** prototype-only
+- **Notes:** Editor is GPL so it can't be embedded/shipped, but it's a fine
+  free tool for Real to write the AshLane story bible and mission scripts in.
+  Use as a tool, not a component.
