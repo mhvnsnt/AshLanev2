@@ -94,3 +94,13 @@
 
 ---
 
+## 10. HumGen3D
+
+- **URL:** https://github.com/OliverJPost/HumGen3D (code) | Store: https://blendermarket.com/products/humgen3d
+- **What:** Popular Blender add-on for photorealistic humans: age/gender/ethnicity sliders, skin shader system, hair (particle + hair cards), clothing library, pose library, batch generation.
+- **License:** **Code = GPL-3.0 (open source on GitHub). The 3D assets and textures are NOT included — they're a paid Blender Market purchase with a royalty-free license.** The free repo is the engine without the fuel.
+- **Verdict:** ⚠️ PAID PRODUCT, prototype-only as a free source. If the owner ever buys it, the royalty-free asset license covers commercial game use — worth noting as a purchase option, not a harvest target. Do not vendor the GPL code into shipped tooling.
+- **Notes:** Useful as a quality benchmark for what our free pipeline (Anny/MakeHuman + clothing sources) should match. The hair-card library is the part worth studying if purchased.
+
+---
+
