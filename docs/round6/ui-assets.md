@@ -13,3 +13,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT, no attribution required — keep a notice line in credits anyway).
 - **Notes:** The weight system is the killer feature for a street menu kit — same icon in thin (ghosted/disabled states) through fill (active states). Use for menu icons, HUD pictograms, settings glyphs, damage-type indicators. Pull individual SVGs, not the whole set.
 - **AshLane use:** Menu/HUD iconography layer under the Concrete Jungle theme.
+
+## 2. RPG Awesome
+- **URL:** https://github.com/uaktags/rpg-awesome (maintained fork) · original https://github.com/nagoshiashumari/Rpg-Awesome · demo https://nagoshiashumari.github.io/Rpg-Awesome/
+- **What:** 495 fantasy/RPG pictographic icons (swords, shields, potions, dice, skulls, armor) as a webfont + CSS toolkit — the game-flavored counterpart to neutral icon sets.
+- **License:** Font **SIL OFL 1.1** · CSS/SCSS **MIT** · docs CC-BY 3.0 — per the repo's own License section ("Attribution is appreciated but not required"). Verified from README license block (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (OFL font + MIT code).
+- **Notes:** Purpose-built for game UI: faction symbols, move/skill icons, inventory glyphs, achievement badges. Mature/stable (feature-complete, low churn). Icon style is fantasy-RPG — use for move lists, faction emblems, and loot/gear UI; pair with Phosphor for neutral chrome.
+- **AshLane use:** Move/skill icons, faction symbols, inventory glyphs.
