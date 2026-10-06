@@ -106,3 +106,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Third option in the 3D physics bake-off alongside cannon-es and ammo.js — Oimo is the fastest to drop in for simple falling-debris scenes. Less active maintenance than cannon-es, so treat as fallback candidate rather than first choice; evaluate if cannon-es shows perf issues on target phones.
 
+## verlet-js
+- **URL:** https://github.com/subprotocol/verlet-js
+- **What:** Tiny verlet-integration library: points, constraints, composites (cloth, rope, tires). ~hundreds of lines, no dependencies.
+- **License:** MIT (LICENSE file, Sub Protocol).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** The minimal cloth/rope primitive: hanging chains, banners, net curtains, rope physics for Bannon ring ropes without pulling in a full engine. Trivial to audit and port — ideal for understanding verlet before adopting the three.js Cloth example wholesale.
+
