@@ -120,3 +120,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The most game-ready true-fracture option found for three.js — shatter-on-impact for windows, bottles, crates with no pre-baking. CC0 means zero licensing friction. Pair with cannon-es: fracture chunks become rigid bodies. Watch chunk counts on mobile (convex hulls are cheap, draw calls are not).
 
+## industrial-mesh-swap-destruction
+- **URL:** https://github.com/alexvirtualworld/industrial-mesh-swap-destruction
+- **What:** Chaos-engine-style destruction for three.js + Cannon: BSP pre-fracturing, seamless mesh-swap (pristine mesh until impact frame, fragments injected on stress trigger), kinetic-energy fracture thresholds, shard collision-layer masking (O(N) not O(N²)), material-instance pooling.
+- **License:** MIT (per GitHub license detection).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** The architecture reference for large-scale AshLane destruction (collapsing scaffolding, wall breaches): pre-fracture everything at load, swap on impact, mask shard-vs-shard collisions. The perf techniques (layer masking, material pooling, RAM-cached fragments) are directly portable even if we reimplement the pipeline.
+
