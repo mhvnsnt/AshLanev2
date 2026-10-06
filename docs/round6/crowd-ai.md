@@ -31,3 +31,10 @@
 - **License:** MIT (repo page license field, LICENSE file at root)
 - **Verdict:** commercial-safe
 - **Notes:** The simplest three.js-native option when the navmesh is baked offline. Good for scripted NPC routes, arena staff, and vendors with fixed patrol loops. One zone per district keeps queries cheap.
+
+## PathFinding.js
+- **URL:** https://github.com/qiao/PathFinding.js
+- **What:** Grid-based pathfinding library: A*, bi-directional A*, Best-First, BFS, Dijkstra, Jump Point Search, Trace, IDA*. Browser + node.
+- **License:** MIT (license section in the user guide)
+- **Verdict:** commercial-safe
+- **Notes:** For district-level street routing on a coarse grid (blocks, alleys, plazas) where a full 3D navmesh is overkill. Jump Point Search is the fast pick for long pedestrian routes. Use for macro routes, then Yuka steering for local movement.
