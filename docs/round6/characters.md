@@ -84,3 +84,13 @@
 
 ---
 
+## 9. Daz3D (+ Diffeomorphic importer)
+
+- **URL:** https://www.daz3d.com | Importer: https://bitbucket.org/Diffeomorphic/import_daz (Blender)
+- **What:** Daz Studio + Genesis 8/9 figure platform: huge catalog of photoreal humans, clothing, hair, morphs. The Diffeomorphic importer brings native `.duf`/`.dsf` figures into Blender with rigs, morphs, materials, and HD morphs.
+- **License:** **Daz EULA — proprietary.** Renders/video/sprites may ship in a sold game (you own the 2D output). **3D data (mesh, rig, morphs, textures, any FBX/glTF export) may NOT go into a build without a paid Interactive License** (~$50/product): never in native formats, must be extraction-protected, Daz's written consent needed for in-game resale/cloud delivery. The importer add-on's own license is irrelevant — the CONTENT license is the blocker.
+- **Verdict:** ❌ PROTOTYPE-ONLY for 3D. Excellent reference/previs source (generate renders, study anatomy, block out proportions) and 2D sprite/card art is shippable — but no Daz-derived mesh may ship in the game without the Interactive License. Never commit Daz content to the repo.
+- **Notes:** Honest position: Daz is the fastest way to prototype a fighter's look (dress a Genesis 9 figure, render turnarounds as concept art per the concept-imagery rule — then rebuild the look on our own mesh). Keep Daz content out of AI training stages too (their terms don't permit it).
+
+---
+
