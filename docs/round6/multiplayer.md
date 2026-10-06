@@ -167,3 +167,21 @@ Research date: 2026-10-06.
   arena. Revisit when CCU or cheat pressure demands dedicated servers.
 
 ---
+## 10. openskill.js — ranked ratings (TrueSkill without the patent)
+- **URL:** https://github.com/philihp/openskill.js (npm: `openskill`)
+- **What:** JavaScript implementation of the Weng-Lin Bayesian rating system — the
+  open-license TrueSkill alternative (TrueSkill itself is Microsoft-patented).
+  Tracks μ (skill) + σ (uncertainty) per player; `ordinal()` (μ−3σ) for
+  leaderboard display; handles 1v1, teams, asymmetric teams, free-for-alls, ties,
+  and raw scores. Plackett-Luce default, Bradley-Terry/Thurstone-Mosteller
+  models available. ~20× faster than TrueSkill.
+- **License:** **MIT** (GitHub repo license field + LICENSE file, verified live
+  2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** The ranked-mode rating engine: store (μ,σ) in Nakama storage,
+  `rate()` after each ranked match, display `ordinal()`. Handles future
+  2v2/crew-battle modes natively (ELO doesn't). `predictWin`/`predictDraw` give
+  match-quality estimates for the matchmaker. Zero deps, runs in the Nakama TS
+  runtime or a Colyseus room.
+
+---
