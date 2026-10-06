@@ -61,3 +61,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **Apache-2.0** (LICENSE file) — verified.
 - **Verdict:** **commercial-safe** (tool). Same checkpoint caveat as diffusers: pair it with Apache-2.0 checkpoints (FLUX.1-schnell) for shippable art; RAIL-M checkpoints stay prototype-only.
 - **Notes:** AshLane use: the canvas/inpainting workflow is the fix for "almost-right" character art — generate a fighter portrait, brush-mask the broken hand, regenerate just that region. Also the friendliest UI to hand the owner for art direction ("paint what you want changed"). Heavier than A1111 but purpose-built for iterative production art.
+
+## Pollinations.ai (free image-gen API)
+
+- **URL:** https://pollinations.ai · API docs in https://github.com/pollinations/pollinations
+- **What:** Free, no-signup image generation API — a GET request with the prompt in the URL returns a JPEG/PNG (`https://image.pollinations.ai/prompt/{prompt}?width=1280&height=720&seed=42&model=flux&nologo=true`). Also text and audio endpoints. No API key for the anonymous tier; rate-limited, queue-based.
+- **License:** Service ToS (from their repo `terms.md`, read 2026-10-06): "You retain ownership and responsibility for the content you generate… Content produced through our services can be utilized for commercial purposes within the bounds of legality and ethical standards." **BUT** they explicitly add: "We encourage you to review the licenses of the open-source models used in the creation process." Underlying models include FLUX (Apache-2.0 weights for schnell) and SD-family (RAIL-M).
+- **Verdict:** **prototype-only for shipped art** — the ToS allows commercial use, but the underlying-model-license caveat plus the owner's murky-training-data rule keeps generated art in the concept/mockup tier until the model is verified (use `model=flux` and treat schnell outputs as the commercial-safe lane).
+- **Notes:** AshLane use: zero-setup concept art — agents and scripts can pull draft art with curl, no GPU, no keys, no cost. Perfect for rapid iteration ("20 graffiti wall concepts by breakfast") and for the owner's own experimentation. Anonymous tier is slow at peak; fine for batch/offline work, not for runtime game use. `private=true` keeps prompts out of the public feed.
