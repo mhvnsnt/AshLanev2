@@ -428,6 +428,9 @@ window.__renderAt = function (t) {
   camera.position.copy(s.pos);
   camera.lookAt(s.look);
   lights(t);
+  // Fresh bone matrices before render: the shadow pass runs inside
+  // renderer.render and would otherwise use stale matrices (defect 3 fix).
+  scene.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.update(); });
   renderer.render(scene, camera);
   return true;
 };

@@ -166,6 +166,10 @@ function poseAt(t) {
 
 window.__renderAt = function (t) {
   poseAt(t);
+  // Force skeleton bone matrices fresh BEFORE render: the shadow pass runs
+  // inside renderer.render and would otherwise use stale (bind-pose) matrices,
+  // producing garbage shadows on models with imperfect weights.
+  root.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.update(); });
   renderer.render(scene, camera);
   return true;
 };

@@ -18,7 +18,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { loadMotionBanks, bakeClipRole } from './faction-motion.js';
 import { CharacterStaging } from './staging.js';
-import { repairSkinWeights, NEEDS_RESKIN } from './reskin.js';
+import { repairSkinWeights, cleanStrayWeights, autoSkinByDistance, NEEDS_RESKIN } from './reskin.js';
 
 // C4D wrestling rigs -> canonical (Mixamo-style) bone names, so the mocap
 // bake path stays family-agnostic.
@@ -49,14 +49,14 @@ scene.fog = new THREE.Fog(0x0a0a0c, 18, 40);
 const camera = new THREE.PerspectiveCamera(42, 960 / 540, 0.1, 100);
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setSize(960, 540);
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = params.get('noshadow') !== '1';
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 scene.add(new THREE.HemisphereLight(0xbfd0e0, 0x1a1c22, 0.85));
 const key = new THREE.DirectionalLight(0xfff2e0, 2.0);
 key.position.set(4, 7, 3);
-key.castShadow = true;
+key.castShadow = params.get('noshadow') !== '1';
 key.shadow.mapSize.set(2048, 2048);
 key.shadow.camera.left = -8; key.shadow.camera.right = 8;
 key.shadow.camera.top = 8; key.shadow.camera.bottom = -8;
@@ -107,6 +107,14 @@ if (params.get('fix') === '1') {
   root.traverse((o) => { if (o.isSkinnedMesh) repairSkinWeights(o, 12); });
   console.log('[diag-clip] repairSkinWeights applied (12 passes)');
 }
+if (params.get('clean') === '1') {
+  root.updateWorldMatrix(true, true);
+  root.traverse((o) => { if (o.isSkinnedMesh) console.log('[diag-clip] cleanStrayWeights:', JSON.stringify(cleanStrayWeights(o))); });
+}
+if (params.get('autoskin') === '1') {
+  root.updateWorldMatrix(true, true);
+  root.traverse((o) => { if (o.isSkinnedMesh) console.log('[diag-clip] autoSkinByDistance:', JSON.stringify(autoSkinByDistance(o))); });
+}
 
 // Normalize rogue scales to ~1.85m BEFORE staging (C4D wrestling rips are
 // giants; the engine does this via per-character scale metadata).
@@ -141,7 +149,17 @@ const travelDir = WALK_TO.clone().sub(WALK_FROM).setY(0).normalize();
 staging.face(travelDir);
 scene.add(travelArrow(WALK_FROM, WALK_TO));
 
-root.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
+root.traverse((o) => { if (o.isMesh) { o.castShadow = params.get('nocast') !== '1'; o.receiveShadow = false; } });
+if (params.get('skeleton') === '1') {
+  root.traverse((o) => {
+    if (o.isSkinnedMesh) {
+      const helper = new THREE.SkeletonHelper(o);
+      helper.material.linewidth = 2;
+      scene.add(helper);
+    }
+    if (o.isMesh) o.material = new THREE.MeshBasicMaterial({ wireframe: true, transparent: true, opacity: 0.25 });
+  });
+}
 
 if (DIR === 'across') {
   camera.position.set(0, 1.6, 8.5);
@@ -154,7 +172,18 @@ if (DIR === 'across') {
 // Real mocap walk (CMU), looped; root motion from the staging track.
 const banks = await loadMotionBanks();
 const baked = bakeClipRole(banks.cmu[CLIP] || banks.bank[CLIP], 'atk', rest);
+const ONLYBONE = params.get('onlybone') || null;
+const NOCLIP = params.get('noclip') === '1';
+const NOROOT = params.get('noroot') === '1';
 function poseAt(t) {
+  if (NOCLIP) {
+    if (!NOROOT) {
+      const k = Math.min(1, Math.max(0, t / DUR));
+      const p = WALK_FROM.clone().lerp(WALK_TO, k);
+      staging.place(p.x, 0, p.z);
+    }
+    return;
+  }
   const tt = ((t % baked.dur) + baked.dur) % baked.dur;
   const times = baked.times;
   let i = 0;
@@ -163,18 +192,125 @@ function poseAt(t) {
   for (const [bn, qs] of Object.entries(baked.bones)) {
     const bone = bones[bn];
     if (!bone) continue;
+    if (ONLYBONE && bn !== ONLYBONE) continue;
     // baked quats already include the rest pose (rest * clipDelta)
     bone.quaternion.copy(qs[i]).slerp(qs[i + 1], Math.min(1, Math.max(0, f)));
   }
-  const k = Math.min(1, Math.max(0, t / DUR));
-  const p = WALK_FROM.clone().lerp(WALK_TO, k);
-  staging.place(p.x, 0, p.z);
+  if (!NOROOT) {
+    const k = Math.min(1, Math.max(0, t / DUR));
+    const p = WALK_FROM.clone().lerp(WALK_TO, k);
+    staging.place(p.x, 0, p.z);
+  }
 }
 
 window.__renderAt = function (t) {
   poseAt(t);
+  if (params.get('hidemesh') === '1') {
+    root.traverse((o) => { if (o.isSkinnedMesh) o.visible = false; });
+  }
+  root.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.update(); });
   renderer.render(scene, camera);
   return true;
+};
+window.__vertDebug = function () {
+  const out = {};
+  root.traverse((o) => {
+    if (!o.isSkinnedMesh) return;
+    const sk = o.skeleton;
+    out.boneInversesLen = sk.boneInverses.length;
+    out.bonesLen = sk.bones.length;
+    // check first inverse
+    out.inv0 = sk.boneInverses[0] ? sk.boneInverses[0].elements.slice(0,4) : null;
+    // bind pose check: at current pose, compute boneMatrix for Hips
+    const hi = sk.bones.findIndex((b) => (C4D_TO_CANON[b.name] || canonName(b.name)) === 'Hips');
+    sk.bones[hi].updateWorldMatrix(true, false);
+    const m = new THREE.Matrix4().multiplyMatrices(sk.bones[hi].matrixWorld, sk.boneInverses[hi]);
+    // determinant of rotation part (should be ~1 for rigid)
+    const e = m.elements;
+    const det = e[0]*(e[5]*e[10]-e[6]*e[9]) - e[4]*(e[1]*e[10]-e[2]*e[9]) + e[8]*(e[1]*e[6]-e[2]*e[5]);
+    out.hipsBoneMatrixDet = +det.toFixed(4);
+    out.hipsBoneMatrixTrans = [e[12], e[13], e[14]].map((x) => +x.toFixed(3));
+  });
+  return out;
+};
+window.__vertMotion = function () {
+  // for each vert, distance between rest pose and current pose; report top movers' bones
+  const out = [];
+  root.traverse((o) => {
+    if (!o.isSkinnedMesh) return;
+    const g = o.geometry, pos = g.attributes.position;
+    const n = pos.count;
+    // capture current (posed) positions by rendering to a temp attribute? Instead use skeleton math:
+    // posedPos = sum w * boneMatrix * restPos. Compute manually.
+    const sk = o.skeleton;
+    const bm = [];
+    for (let b = 0; b < sk.bones.length; b++) {
+      sk.bones[b].updateWorldMatrix(true, false);
+      bm.push(new THREE.Matrix4().multiplyMatrices(sk.bones[b].matrixWorld, sk.boneInverses[b]));
+    }
+    const sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+    const v = new THREE.Vector3(), pv = new THREE.Vector3();
+    const movers = [];
+    for (let i = 0; i < n; i++) {
+      v.fromBufferAttribute(pos, i);
+      pv.set(0, 0, 0);
+      const tmp = new THREE.Vector3();
+      for (let k = 0; k < 4; k++) {
+        const w = [sw.getX(i), sw.getY(i), sw.getZ(i), sw.getW(i)][k];
+        if (w < 1e-6) continue;
+        const b = [sj.getX(i), sj.getY(i), sj.getZ(i), sj.getW(i)][k];
+        tmp.copy(v).applyMatrix4(bm[b]);
+        pv.addScaledVector(tmp, w);
+      }
+      // compare in mesh-local space: transform pv back by mesh.matrixWorld inverse, compare to v
+      const inv = new THREE.Matrix4().copy(o.matrixWorld).invert();
+      const pl = pv.clone().applyMatrix4(inv);
+      const d = pl.distanceTo(v);
+      if (d > 0.3) {
+        const bn = sk.bones[sj.getX(i)] ? sk.bones[sj.getX(i)].name.replace('mixamorig','') : '?';
+        movers.push({ d: +d.toFixed(3), y: +v.y.toFixed(3), bone: bn, w: +sw.getX(i).toFixed(2) });
+      }
+    }
+    movers.sort((a, b) => b.d - a.d);
+    out.push({ mesh: o.name, bigMovers: movers.length, top: movers.slice(0, 12) });
+  });
+  return out;
+};
+window.__skelCheck = function () {
+  const out = {};
+  root.traverse((o) => {
+    if (!o.isSkinnedMesh) return;
+    const sk = o.skeleton;
+    out.mesh = o.name;
+    out.nBones = sk.bones.length;
+    // are traversed bones the same objects as skeleton.bones?
+    const travBones = [];
+    root.traverse((x) => { if (x.isBone) travBones.push(x); });
+    out.travCount = travBones.length;
+    out.sameObjects = travBones.every((tb) => sk.bones.includes(tb));
+    // Hips boneMatrix
+    const hi = sk.bones.findIndex((b) => (C4D_TO_CANON[b.name] || canonName(b.name)) === 'Hips');
+    out.hipsIndex = hi;
+    if (hi >= 0) {
+      sk.bones[hi].updateWorldMatrix(true, false);
+      const m = new THREE.Matrix4().multiplyMatrices(sk.bones[hi].matrixWorld, sk.boneInverses[hi]);
+      out.hipsBoneMatrix = m.elements.map((x) => +x.toFixed(4));
+      out.hipsInverse = sk.boneInverses[hi].elements.map((x) => +x.toFixed(4));
+    }
+  });
+  return out;
+};
+window.__boneWorld = function (wantName) {
+  let found = null;
+  root.traverse((o) => {
+    if (o.isBone && (C4D_TO_CANON[o.name] || canonName(o.name)) === wantName) found = o;
+  });
+  if (!found) return null;
+  root.updateWorldMatrix(true, true);
+  const p = new THREE.Vector3(), q = new THREE.Quaternion();
+  found.getWorldPosition(p); found.getWorldQuaternion(q);
+  return { pos: p.toArray().map((x) => +x.toFixed(4)),
+           quat: [q.x, q.y, q.z, q.w].map((x) => +x.toFixed(4)) };
 };
 window.__forwardInfo = function () {
   return { method: staging.forwardMethod, forward: staging.modelForward.toArray().map((v) => +v.toFixed(3)) };
