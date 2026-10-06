@@ -45,3 +45,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** Pixabay Content License — free for commercial and non-commercial use, NO attribution required. Prohibited: selling unaltered copies, redistributing clips on other stock platforms, implying endorsement by depicted subjects/brands.
 - **Verdict:** Commercial-safe for rendered videos (don't resell raw clips or run a competing stock service). Terms prohibit permanent hotlinking — download and rehost.
 - **Notes:** Biggest free library, but community-contributed = quality varies. One-stop for clip + music + SFX sourcing. Free API key at pixabay.com/api/docs/.
+## Pexels Videos
+- **URL:** https://www.pexels.com/license/
+- **What:** Millions of free HD/4K stock videos and photos; strong curated library, instant previews, orientation/resolution filters. Free API (200 req/hr, key at pexels.com/api).
+- **License:** Pexels License — free for personal AND commercial use, NO attribution required. Prohibited: selling unaltered copies, portraying people offensively, implying endorsement.
+- **Verdict:** Commercial-safe (no standalone redistribution — clips only inside rendered videos, which is our use).
+- **Notes:** API: `curl -H "Authorization: $PEXELS_KEY" "https://api.pexels.com/videos/search?query=...&per_page=15"` → `video_files[]` with per-resolution MP4 links. Curated quality is higher than Pixabay on average — good for hero B-roll plates.
