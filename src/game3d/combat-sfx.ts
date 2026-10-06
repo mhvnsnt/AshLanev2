@@ -10,7 +10,12 @@
  *  - snap/crack: filtered noise burst
  *  - whoosh: band-passed noise sweep
  *  - crowd bed: looped filtered noise with slow LFO
+ *
+ * Round 3 audio: ZzFX recipes (zzfx-sfx.ts, MIT-licensed ZzFX by Frank Force)
+ * augment these voices. setSfxEngine('classic' | 'zzfx' | 'both') selects the
+ * engine — default 'both' layers ZzFX under the classic synth.
  */
+import { zxPunch, zxKick, zxBlock, zxWhoosh, zxKnockdown } from "./zzfx-sfx";
 
 let ctx: AudioContext | null = null;
 let enabled = true;
@@ -31,6 +36,26 @@ function ac(): AudioContext | null {
 export function setCombatSfxEnabled(on: boolean): void {
   enabled = on;
   if (!on) stopCrowd();
+}
+
+/** Which synthesis engine backs the combat voices. Default 'both'. */
+export type SfxEngine = 'classic' | 'zzfx' | 'both';
+let sfxEngine: SfxEngine = 'both';
+export function setSfxEngine(engine: SfxEngine): void {
+  sfxEngine = engine;
+}
+export function getSfxEngine(): SfxEngine {
+  return sfxEngine;
+}
+
+/** Route a ZzFX recipe through the engine switch and the enabled flag. */
+function zxRoute(fn: () => void): void {
+  if (!enabled || sfxEngine === 'classic') return;
+  try {
+    fn();
+  } catch {
+    /* audio unavailable — stay silent */
+  }
 }
 
 /** Short low thump: the "body" of a punch/kick. */
@@ -64,6 +89,8 @@ function snap(t: number, amp: number, freq = 2800, dur = 0.07, type: BiquadFilte
 
 /** Punch impact: snap + thump. `heavy` for haymakers/finishers. */
 export function sfxPunch(heavy = false): void {
+  zxRoute(() => zxPunch(heavy));
+  if (sfxEngine === 'zzfx') return;
   const c = ac(); if (!c) return;
   const t = c.currentTime;
   snap(t, heavy ? 0.5 : 0.32, heavy ? 2200 : 2800, heavy ? 0.1 : 0.07);
@@ -72,6 +99,8 @@ export function sfxPunch(heavy = false): void {
 
 /** Kick impact: deeper thump, duller snap. */
 export function sfxKick(heavy = false): void {
+  zxRoute(() => zxKick(heavy));
+  if (sfxEngine === 'zzfx') return;
   const c = ac(); if (!c) return;
   const t = c.currentTime;
   snap(t, heavy ? 0.4 : 0.26, 1400, 0.09, 'lowpass');
@@ -80,6 +109,8 @@ export function sfxKick(heavy = false): void {
 
 /** Blocked hit: woody knock, less body. */
 export function sfxBlock(): void {
+  zxRoute(zxBlock);
+  if (sfxEngine === 'zzfx') return;
   const c = ac(); if (!c) return;
   const t = c.currentTime;
   snap(t, 0.3, 900, 0.06, 'bandpass');
@@ -88,6 +119,8 @@ export function sfxBlock(): void {
 
 /** Swing whoosh: band-passed noise sweep. */
 export function sfxWhoosh(big = false): void {
+  zxRoute(zxWhoosh);
+  if (sfxEngine === 'zzfx') return;
   const c = ac(); if (!c) return;
   const t = c.currentTime;
   const dur = big ? 0.22 : 0.13;
@@ -109,6 +142,8 @@ export function sfxWhoosh(big = false): void {
 
 /** Body hitting the ground: low boom + grit. */
 export function sfxBodyFall(): void {
+  zxRoute(zxKnockdown);
+  if (sfxEngine === 'zzfx') return;
   const c = ac(); if (!c) return;
   const t = c.currentTime;
   thump(t, 0.5, 100, 36, 0.28);
@@ -118,6 +153,8 @@ export function sfxBodyFall(): void {
 /** Knockout bell + impact. */
 export function sfxKnockout(): void {
   sfxPunch(true);
+  zxRoute(zxKnockdown);
+  if (sfxEngine === 'zzfx') return;
   const c = ac(); if (!c) return;
   const t = c.currentTime + 0.05;
   // fight bell: metallic FM-ish ping

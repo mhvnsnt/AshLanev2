@@ -1,0 +1,28 @@
+# tools/nakama/data.yml — Nakama server config for AshLane.
+# Mounted read-only at /nakama/data/data.yml by docker-compose.yml.
+# Full reference: https://heroiclabs.com/docs/nakama/server-configuration/
+
+name: ashlane
+database:
+  # user:password@host:port/db — matches the postgres service in docker-compose.yml
+  address:
+    - "nakama:nakama@postgres:5432/nakama?sslmode=disable"
+
+# Public API the game client talks to (nakama-js defaults).
+socket:
+  server_key: "defaultkey"   # must match the client config in src/game3d/nakama-client.ts
+  port: 7349
+  max_message_size_bytes: 4096
+
+# Admin console (http://127.0.0.1:7351).
+console:
+  port: 7351
+  username: "admin"
+  password: "password"
+
+# Sessions issued by device-ID auth (src/game3d/nakama-client.ts `connect()`).
+session:
+  token_expiry_sec: 7200
+
+logger:
+  level: "info"

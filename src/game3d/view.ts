@@ -29,6 +29,10 @@ import {
 } from "./malakor";
 import { buildSky, applySkyLights, type BuiltSky, type DistrictId } from "./sky";
 import { assetUrl } from "./asset-base";
+// Round 3 visuals: post-processing chain, GPU impact particles, arena crowd.
+import { PostFx, graphics } from "./postfx";
+import { ImpactParticles } from "./impact-particles";
+import { ArenaCrowd } from "./arena-crowd";
 
 type Fighter = {
   id: number;
@@ -139,6 +143,14 @@ export function createView(canvas: HTMLCanvasElement) {
   applyMalakorGrade(renderer);
   const malakor = new MalakorLayer(scene, { mobile: phone });
   addMalakorVignette(canvas);
+
+  // Round 3 visuals: post-processing chain (bloom + vignette), GPU impact
+  // particles, and the tiered-stands arena crowd (pit stage).
+  const postfx = new PostFx(renderer, scene, camera, { phone });
+  const particles = new ImpactParticles();
+  scene.add(particles.points);
+  const crowd = new ArenaCrowd({ center: { x: 0, z: 0 }, baseRadius: 5.4 });
+  scene.add(crowd.group);
 
   const groundMat = new THREE.MeshPhongMaterial({ map: groundTex(), color: 0xffffff, shininess: 22, specular: 0x3d5166 });
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(180, 180), groundMat);
@@ -363,6 +375,8 @@ export function createView(canvas: HTMLCanvasElement) {
   function applyStage(id: string) {
     if (id === stageId) return;
     stageId = id;
+    // Round 3 visuals: arena crowd only shows on arena stages (pit).
+    crowd.setStage(id);
     // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
     // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
     // horizon glow, light rig, and Malakor accents where defined.
@@ -402,6 +416,7 @@ export function createView(canvas: HTMLCanvasElement) {
     const w = canvas.clientWidth || 1;
     const h = canvas.clientHeight || 1;
     renderer.setSize(w, h, false);
+    postfx.setSize(w, h);
     camera.aspect = w / Math.max(1, h);
     camera.updateProjectionMatrix();
   }
@@ -1077,11 +1092,18 @@ export function createView(canvas: HTMLCanvasElement) {
     }
     // Malakor atmosphere: slow neon pulse (skipped cheaply at intensity 0).
     if (!sim.reduced) malakor.tick(sim.time);
-    renderer.render(scene, camera);
+    // Round 3 visuals: combat impact particles + arena crowd, then the
+    // post-processed frame (bloom + vignette when graphics.postFx is on).
+    particles.update(dt * beat);
+    crowd.update(dt, sim.time, camera.position, sim.reduced);
+    postfx.render();
   }
 
   function dispose() {
     malakor.dispose();
+    particles.dispose();
+    crowd.dispose();
+    postfx.dispose();
     renderer.dispose();
     scene.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
@@ -1093,7 +1115,13 @@ export function createView(canvas: HTMLCanvasElement) {
   }
 
   resize();
-  return { render, resize, dispose };
+  return {
+    render,
+    resize,
+    dispose,
+    // Round 3 visuals — mount.ts hooks combat SFX + crowd reactions here.
+    fx: { particles, crowd, postFx: postfx, graphics },
+  };
 }
 
 function placeCamera(

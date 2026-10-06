@@ -1,0 +1,74 @@
+name: Asset validation
+
+# Lints every GLB in the repo against the glTF 2.0 spec (Khronos gltf-validator,
+# Apache-2.0) and enforces per-file + total asset budgets so the mobile build
+# never silently bloats.
+#
+# Budgets (tune in the env block):
+#   MAX_GLB_MB  — single GLB hard fail
+#   MAX_MODELS_MB — total public/models budget (warn only)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ash-lane-assets-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MAX_GLB_MB: 25
+  MAX_MODELS_MB: 1200
+
+jobs:
+  glb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Validate GLBs (spec errors fail, warnings pass)
+        run: |
+          FILES=$(find public/models -type f -name '*.glb' | sort)
+          COUNT=$(echo "$FILES" | grep -c . || true)
+          echo "Found $COUNT GLB files"
+          FAILED=0
+          for f in $FILES; do
+            OUT=$(npx -y gltf-validator "$f" 2>&1) || true
+            ERRORS=$(echo "$OUT" | grep -o '"numErrors":[0-9]*' | head -1 | grep -o '[0-9]*')
+            if [ "${ERRORS:-0}" != "0" ]; then
+              echo "❌ SPEC ERRORS in $f"
+              echo "$OUT" | head -30
+              FAILED=1
+            fi
+          done
+          exit $FAILED
+
+      - name: Per-file size gate
+        run: |
+          OVER=$(find public/models -type f -name '*.glb' -size +${{ env.MAX_GLB_MB }}M)
+          if [ -n "$OVER" ]; then
+            echo "❌ GLB files over ${{ env.MAX_GLB_MB }}MB:"
+            echo "$OVER"
+            exit 1
+          fi
+          echo "✅ all GLBs under ${{ env.MAX_GLB_MB }}MB"
+
+      - name: Total models budget (warn)
+        run: |
+          TOTAL_MB=$(du -sm public/models | cut -f1)
+          echo "public/models total: ${TOTAL_MB}MB (budget ${{ env.MAX_MODELS_MB }}MB)"
+          if [ "$TOTAL_MB" -gt "${{ env.MAX_MODELS_MB }}" ]; then
+            echo "⚠️ models folder exceeds budget — consider LOD/decimation pass"
+          fi

@@ -7,6 +7,8 @@ import { applyFighter, applyMartial, applyStance, loadFighter, saveFighter } fro
 import { fighterById } from "./roster";
 import { getMusic } from "./music";
 import { sfxPunch, sfxKick, sfxKnockout, startCrowd, stopCrowd } from "./combat-sfx";
+import type { ImpactKind } from "./impact-particles";
+import type { CrowdReaction } from "./arena-crowd";
 
 export type Handle = {
   start: (mode: Mode) => void;
@@ -23,6 +25,7 @@ export type Handle = {
   setAttire: (file: string) => void;
   setStance: (id: string) => void;
   setStage: (id: string) => void;
+  setPostFx: (enabled: boolean) => void;
   startBout: (kind: "exhibit" | "practice", stage: string) => void;
   startStory: (index: number) => void;
   quit: () => void;
@@ -178,14 +181,27 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       // Route through the new procedural combat SFX module first,
       // fall back to the legacy blip() synth if needed.
       try {
-        if (name === "hit" || name === "hurt") { sfxPunch(name === "hit"); continue; }
-        if (name === "kick") { sfxKick(); continue; }
-        if (name === "ko" || name === "knockout") { sfxKnockout(); continue; }
+        if (name === "hit" || name === "hurt") { sfxPunch(name === "hit"); hitFx("punch", "hit"); continue; }
+        if (name === "kick") { sfxKick(); hitFx("kick", "hit"); continue; }
+        if (name === "ko" || name === "knockout") { sfxKnockout(); hitFx("knockdown", "ko"); continue; }
+        if (name === "slam" || name === "crumple") hitFx("dust", "knockdown");
       } catch {}
       if (!audio || audio.state !== "running") continue;
       blip(audio, name);
       if (heard.size > 3) break;
     }
+  }
+
+  // Round 3 visuals: fire a GPU impact-particle burst at the point of contact
+  // and spike the arena crowd's excitement, alongside the combat SFX.
+  function hitFx(kind: ImpactKind, react: CrowdReaction) {
+    const a = sim.bodies[0];
+    const b = sim.bodies[1];
+    const p = a && b
+      ? { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 + 1.1, z: (a.z + b.z) / 2 }
+      : { x: a?.x ?? b?.x ?? 0, y: (a?.y ?? b?.y ?? 0) + 1.1, z: a?.z ?? b?.z ?? 0 };
+    view.fx.particles.spawnImpactBurst(p, kind);
+    view.fx.crowd.crowdReact(react);
   }
 
   return {
@@ -281,6 +297,10 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       sim.stage = id;
       push(snapshot(sim));
     },
+    setPostFx(enabled) {
+      view.fx.postFx.setEnabled(enabled);
+      push(snapshot(sim));
+    },
     startBout(kind, stage) {
       unlock();
       bootBout(sim, kind, stage);
@@ -289,6 +309,7 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
         music.start();
         music.setIntensity("hype");
         startCrowd(0.6);
+        view.fx.crowd.crowdReact("round");
       } catch {}
       push(snapshot(sim));
     },
@@ -300,6 +321,7 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
         music.start();
         music.setIntensity("tense");
         startCrowd(0.4);
+        view.fx.crowd.crowdReact("round");
       } catch {}
       push(snapshot(sim));
     },

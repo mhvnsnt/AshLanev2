@@ -24,6 +24,8 @@
  *   urban-mayhem/melee-weapons-> sim Weapon mapping (meleeToSim)
  *   urban-mayhem/npc-ai       -> tickSimServices (ambient npc brains)
  *   attention.ts              -> tickSimServices (report/update/encounters)
+ *   nakama-client.ts          -> GameServices.backend (optional device-ID auth,
+ *                                wallet + arcade leaderboard; soft-offline)
  */
 
 import type { Sim, FrameInput, Body } from "./sim";
@@ -75,6 +77,10 @@ import { assignStyle, getStyle, type StyleProfile } from "./urban-mayhem/discipl
 import { movesForStyle, type MoveDef } from "./urban-mayhem/movesets";
 import { MELEE_WEAPONS, type MeleeWeaponId } from "./urban-mayhem/melee-weapons";
 import { makeNpc, type NpcState } from "./urban-mayhem/npc-ai";
+import {
+  createNakamaBackend, type NakamaBackend, type NakamaStatus,
+  type LeaderboardEntry,
+} from "./nakama-client";
 
 // ---------------------------------------------------------------------------
 // Sim weapon mapping (urban-mayhem -> sim Weapon union)
@@ -144,6 +150,12 @@ export interface GameServices {
   lastCombo: number;
   /** quest step index whose brief was already shown */
   briefStep: number;
+  /**
+   * Optional Nakama backend (device-ID auth, street-cash wallet, arcade
+   * leaderboard). Never auto-connects; call connectBackend() explicitly.
+   * The game works fully offline when the server is unreachable.
+   */
+  backend: NakamaBackend;
 }
 
 export function createServices(): GameServices {
@@ -189,6 +201,7 @@ export function createServices(): GameServices {
     lastFoeCount: -1,
     lastCombo: 0,
     briefStep: -1,
+    backend: createNakamaBackend(),
   };
 }
 
@@ -394,6 +407,54 @@ export function alarmPeds(s: GameServices, x: number, z: number, radius = 18): n
   const screamers = pedAlarm(s.peds, x, z, radius);
   scatterFlock(s.flock);
   return screamers;
+}
+
+// ---------------------------------------------------------------------------
+// Nakama backend helpers (nakama-client.ts) — all soft-offline
+// ---------------------------------------------------------------------------
+
+/**
+ * Connect to the Nakama server (device-ID auth, account created on first
+ * run). Safe to call at boot or on the main menu; resolves to "offline" when
+ * the server is unreachable and the game keeps working. Never throws.
+ */
+export function connectBackend(s: GameServices): Promise<NakamaStatus> {
+  return s.backend.connect();
+}
+
+/** Current backend state for HUD/debug ("disconnected"|"connecting"|"online"|"offline"). */
+export function backendStatus(s: GameServices): NakamaStatus {
+  return s.backend.status;
+}
+
+/**
+ * Street-cash balance. Online: synced from the server. Offline: local cache.
+ * Never throws.
+ */
+export function backendWallet(s: GameServices): Promise<number> {
+  return s.backend.getWallet();
+}
+
+/**
+ * Add (or remove, with a negative delta) street cash. Applies locally even
+ * offline, syncs to the server when online. Returns the new balance.
+ * Example: `await awardPaper(services, 50)` on mission complete.
+ */
+export function awardPaper(s: GameServices, amount: number): Promise<number> {
+  return s.backend.updateWallet(amount);
+}
+
+/** Top arcade scores from the `arcade_high_scores` leaderboard. Offline: []. */
+export function backendLeaderboard(s: GameServices, limit = 10): Promise<LeaderboardEntry[]> {
+  return s.backend.getLeaderboard(limit);
+}
+
+/**
+ * Submit an arcade-run score. No-op (returns false) when offline.
+ * Example: `await backendSubmitScore(services, finalScore)` on run end.
+ */
+export function backendSubmitScore(s: GameServices, score: number): Promise<boolean> {
+  return s.backend.submitScore(score);
 }
 
 // ---------------------------------------------------------------------------

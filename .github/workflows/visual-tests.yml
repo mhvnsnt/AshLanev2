@@ -1,0 +1,51 @@
+name: Visual regression tests
+
+# Playwright screenshot diffs against committed baselines.
+# Baselines live in tests/visual/__snapshots__/ and must be generated on
+# Linux (same OS as this runner) to avoid GPU raster flake.
+# Regenerate: npx playwright test --config tests/visual/playwright.config.ts --update-snapshots
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ash-lane-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: PAGES_BUILD=1 npm run build
+        env:
+          PAGES_BUILD: "1"
+
+      - name: Install Playwright chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Run visual tests
+        run: npx playwright test --config tests/visual/playwright.config.ts
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-test-report
+          path: |
+            playwright-report/
+            test-results/

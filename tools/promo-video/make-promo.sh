@@ -15,12 +15,8 @@ FRAMES="$WORK/frames"; TITLES="$WORK/titles"; THEME="$WORK/theme.wav"
 mkdir -p "$FRAMES" "$TITLES" "$(dirname "$OUT")"
 export NODE_PATH="/home/hatch/workspace/glb-renders/renderer/node_modules"
 
-echo "=== [1/4] rendering 1200 frames (50s @ 24fps) ==="
-if [ -n "$EXTRA" ]; then
-  node "$HERE/render-frames.cjs" --model "$MODEL" --out "$FRAMES" --start 0 --end 50 --fps 24 --extra "$EXTRA"
-else
-  node "$HERE/render-frames.cjs" --model "$MODEL" --out "$FRAMES" --start 0 --end 50 --fps 24
-fi
+echo "=== [1/4] rendering 1200 frames (50s @ 24fps, crash-resistant chunks) ==="
+bash "$HERE/render-chunks.sh" "$MODEL" "$FRAMES" 24 "$EXTRA"
 
 echo "=== [2/4] procedural entrance theme ==="
 python3 "$HERE/make-music.py" --out "$THEME" --dur 50
