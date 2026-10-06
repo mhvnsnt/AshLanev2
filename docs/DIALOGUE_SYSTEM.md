@@ -120,7 +120,56 @@ const brief = missionBriefing("static", missionIndex);
 
 ## Adding a character
 
-1. Add a `VoiceBible` to `voice-bibles.ts` (ground it in bio/faction — no invented casting). Add `streetVoice` if the corner register differs from the ring.
+1. Add a `VoiceBible` to `voice-bibles.ts` (ground it in bio/faction — no invented casting). Add `streetVoice` if the corner register differs from the ring. Set `wrestlingCanon: true` ONLY for wrestling-industry characters by "Off The Top Rope" book canon (El Toro de Oro, Static, Hollow, and other wrestling-industry characters) — their wrestling voice stays AND bleeds into street talk.
 2. Add line banks to `BANKS` (wrestling situations) and/or `STREET_BANKS` (street situations) in `generator.ts`.
 3. Add 1–2 hand-written pieces to `SAMPLE_PACK` in `samples.ts`.
 4. They work everywhere immediately — generator, promos, pause beats, backstage, street.
+
+## Book port (Bannon repo → AshLane, owner directive 2026-10-06)
+
+Character dialogue, personalities, and bios were pulled from `mhvnsnt/Bannon` — the
+"Off The Top Rope" cast doc (bios, OTR personas, finishers) and Books 1–7 (verbatim
+voice). The transform rule:
+
+- **Default: wrestling-framed → street-framed.** Bios/personalities come over mostly
+  intact (who they ARE doesn't change); dialogue situations get street conversion.
+- **Exception: wrestling-canon characters keep their wrestling voice** (El Toro de Oro,
+  Static, Hollow, Cipher, Echo, Edwin Kennedy, Stan Combs, Onyx). Their wrestling
+  dialogue is authentic — don't flatten them into street talk. It also bleeds into
+  their street lines as flavor (a wrestler talks like a wrestler even on a corner).
+
+Ported book material (all grounded, zero invented casting):
+- **Maime** — book-verbatim liturgy: "There is no return. There is only Bannon. And Bannon
+  is Control." / "There is no Justice. There is only Consequence." Face-painted unhinged
+  alter-ego, raw high-pitched whining/crying voice (Book 1).
+- **Stick-Up** — REVEREND STICK UP sermon mode (Book 1, p.185): purple robes, pulpit,
+  Isaiah 55:8, "I am the vessel!", "the Leap of Faith". Plus Cyborg Project weapon
+  backstory (machine precision + conspiracy rants).
+- **Edwin J. Kennedy** — OTR "Paralyzed Perfectionist" (classical history, Greek Tragedy,
+  legacy); LP 33/6; finisher The Indefinite Suspension. Wrestling-canon.
+- **Stan "Honey" Combs** — OTR "Avid Collector" (watches, classic cars, cold efficiency);
+  JPCW Owner; Cyborg Project mastermind. Wrestling-canon.
+- **Cain Elias** — OTR contrast "Dedicated Caregiver" (anonymous community-center volunteer)
+  vs The Executioner; finisher The Final Verdict. Street conversion.
+- **El Toro de Oro** — El Grito de la Bestia, El Cuerno Dorado; fiercely protective of
+  partners. Wrestling-canon.
+- **Sombra Negra** — La Trampa de Plata, El Robo de la Sombra; book: tempts Bannon back
+  toward corporate control. Street conversion.
+- **Onyx** — Book 7 entity: omniscient, detached, tries to corrupt code; green hair, white
+  face paint; public face of the gang (Bill/Theory lead in secret); Club Onyx (Miami).
+- **Triple X** — Administration enforcer, cold corporate violence.
+- **Cipher / Echo / Static** — book: teamed with Onyx (Painted); Static = "Signal in the Static".
+
+## Wrestling/street ratio (owner law)
+
+Wrestling-flavored dialogue ≈ 5–10% of total; 90–95% street. Flavor-based accounting
+(situation ≠ flavor — the 5 non-canon fighters' promo/callout/victory banks are
+street-flavored):
+
+- **Street-flavored:** all STREET_BANKS + street-fighter BANKS + street archetype
+  fallbacks + street samples.
+- **Wrestling-flavored:** canon wrestlers' wrestling BANKS (authentic, untouchable) +
+  archetype promo/victory/defeat fallbacks (arena minimums) + wrestling samples.
+- Current: ~85% street / ~15% wrestling. The remaining wrestling content is either
+  canon-authentic voice or functional arena minimums — cutting further would strip
+  the wrestlers (forbidden) or break arena features. New content defaults to street.

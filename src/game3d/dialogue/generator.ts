@@ -218,10 +218,13 @@ const BANKS: Record<string, Bank> = {
   },
   toro: {
     promo: [
+      "El Cuerno Dorado has ended careers. El Grito de la Bestia has ended ERAS. {opponent} — choose which one you want to be remembered by.",
+      "The mask doesn't come off. The honor doesn't bend. The bull doesn't LOSE.",
       "¡El toro no se arrodilla! {opponent}, you face not a man — you face the herd's pride.",
       "Oro en la sangre. Fuego en los cuernos. At {place}, the bull runs THROUGH you.",
     ],
     callout: [
+      "{opponent}: the plaza, the people, the pride. Bring your best — the bull eats BESTS.",
       "{opponent}: I challenge you with honor. Refuse, and keep your cowardice. Accept, and keep your scars.",
     ],
     victory: [
@@ -251,10 +254,14 @@ const BANKS: Record<string, Bank> = {
   },
   edwin: {
     promo: [
+      "You call this a RIVALRY? I've read the classics, my guy — this isn't a rivalry, it's a TRAGEDY. And you're not the hero. You're the WARNING.",
+      "They'll write about this one. They always do. The only question is whether you're the triumph or the FOOTNOTE.",
+      "My legacy isn't built on matches — it's built on ERASURES. You're next on the syllabus.",
       "EDWIN... KENNEDY! ...You're welcome, {place}.",
       "{opponent} gets to share a ring with a SUPERSTAR tonight. Tell your grandkids.",
     ],
     callout: [
+      "{opponent} — I've studied your career the way historians study RUINS. Thoroughly. And with pity.",
       "{opponent} — the mic drops itself when I'm done with you. Which will be... soon.",
     ],
     victory: [
@@ -281,10 +288,13 @@ const BANKS: Record<string, Bank> = {
   },
   stan: {
     promo: [
+      "I've restored watches worth more than your career. Precision, patience, pressure — that's how you take apart a MAN.",
+      "The Cyborg Project taught me: everything breaks on schedule. Your schedule just came up.",
       "I've ended tougher, kid. {opponent} — talk's over.",
       "You don't want this smoke. Last chance to walk, {opponent}.",
     ],
     callout: [
+      "{opponent} — you're not an opponent. You're an ASSET. And assets get... liquidated.",
       "{opponent}. Old school. One lesson. Free of charge.",
     ],
     victory: [
@@ -418,6 +428,8 @@ const STREET_BANKS: Record<string, Bank> = {
   },
   stickup: {
     confront: [
+      "I have stared into the face of death — SEVEN TIMES — and the Lord used that chaos to forge me! You think YOU forge fear in ME?",
+      "He wants a bridge back to safety! But I tell you, I AM the bridge — and the toll is PAID IN FULL.",
       "{place}. My block. You already know what it is — so why you still standin' here?",
       "The system made me. The streets kept me. You? The streets about to forget you.",
       "You got five seconds to explain why you're breathin' my air. Four. Three—",
@@ -426,6 +438,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "I beat the system. You think YOU scare me? On MY block?",
     ],
     parley: [
+      "The so-called peacemakers! They preach of deals and truces! But I say to you — a deal without HONOR is the Devil's first, most seductive lie!",
+      "'My thoughts are not your thoughts' — Isaiah 55:8. Your terms are YOUR thoughts. My corner runs on HIGHER thoughts. Adjust.",
       "Talk. I'll listen. Then I'll decide. That's the whole meeting.",
       "No long talk. State your terms or state your last words.",
       "You got till my patience runs out. It's runnin'.",
@@ -433,6 +447,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "We talk now so we don't bleed later. Your call which one's cheaper.",
     ],
     hustle: [
+      "The product is BLESSED, my guy — no, don't laugh. Everything I touch is... inventory. Sanctified inventory.",
+      "Count it. The Lord loves a cheerful giver — and I love a PRECISE counter.",
       "The package is what I said it is. The price is what I said it is. The only variable here is YOUR manners.",
       "You want to renegotiate? Renegotiate with the door. It's closer and it hits back less.",
       "Count it. Take it. And understand — the Ashes remember every serial number.",
@@ -440,6 +456,7 @@ const STREET_BANKS: Record<string, Bank> = {
       "I don't do discounts and I don't do drama. Pick one to not do either.",
     ],
     claim: [
+      "I am the only way out of the pit of your doubt — and this block? This block just found its WAY OUT. Through ME.",
       "This corner's under new management. The old management is... unavailable.",
       "The Ashes don't ask for blocks. We collect them.",
       "The Ashes plant flags. This one's ours. Water it with respect or watch it burn.",
@@ -453,6 +470,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "You been here twenty years? Then you know the drill. Inside. Now.",
     ],
     loyalty: [
+      "The Lord made me a vessel — and vessels don't LEAK. You leak, you're not a vessel. You're a PUDDLE.",
+      "I am the bridge! The only way out of the pit! You cross with me or you stay IN the pit. Choose.",
       "Loyalty ain't a word. It's a record. And I keep records.",
       "You stood with me when the system came callin'? Then you stand WITH me. Forever.",
       "The system tried to break me. The streets made me. The crew KEEPS me. In that order.",
@@ -460,6 +479,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "Betrayal's a debt. And I'm EXCELLENT at collections.",
     ],
     heat: [
+      "Officer! The Lord watches over this corner — and so do I! We're... co-watchmen! Very legal!",
+      "Seven times I've stared down death, officer — your handcuffs are just... jewelry. Shiny, but jewelry.",
       "Officer. We got an understanding, you and me. Let's keep understandin'.",
       "Nothin' to see. Just men standin' on a corner they built.",
       "Officer. Same corner, same me, same nothin'-to-see. We good?",
@@ -467,6 +488,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "You want the block quiet? So do we. Give us ten minutes and it'll be library-quiet.",
     ],
     shakedown: [
+      "The church needs TITHES, my guy — and this block is my CONGREGATION. Pay up. Hallelujah.",
+      "Sacrificing the structure of the wicked — that's what the envelope PREVENTS. You're welcome. Pay.",
       "The Ashes provide security. Security costs. You're lookin' at the invoice.",
       "Every Friday. Same envelope. Don't make me come back on a Saturday — Saturdays I'm less polite.",
       "This ain't a shakedown, it's a SUBSCRIPTION. Premium tier. Includes: your windows, unbroken.",
@@ -474,12 +497,15 @@ const STREET_BANKS: Record<string, Bank> = {
       "You eat because this block is safe. This block is safe because of US. Do the math.",
     ],
     recruit: [
+      "The chaos you see in my life — that is not sloppy, it is DIVINE WILL! The Lord made me a vessel — you want to be a vessel too? Then FOLLOW.",
       "You want to be somebody? The Ashes make somebodies. But first you gotta be NOBODY for a while.",
       "I see the hunger. Hunger's good. Hunger plus discipline? That's a SOLDIER.",
       "The system threw me away. The streets picked me up. Which one are you waitin' on?",
       "Prove you can take orders before you dream about givin' 'em.",
     ],
     mourning: [
+      "We lost a soldier. The Lord giveth, the street taketh away — and the street's about to GIVE BACK. With interest.",
+      "He stared down death with me. Now he's... with the Lord. The LEAP OF FAITH finally landed.",
       "We lost a soldier. The block flies low tonight. Tomorrow we fly AT somebody.",
       "He stood on this corner. This corner stands for HIM now.",
       "No tears on the block. We save those for the people who did it — right before.",
@@ -586,6 +612,9 @@ const STREET_BANKS: Record<string, Bank> = {
   },
   maime: {
     confront: [
+      "There is no return. There is only Bannon. And Bannon is CONTROL — and this corner? This corner is BANNON'S.",
+      "Your mommy can't save you! Nobody saves us! You have to feel the pain, you have to CONFESS!",
+      "They took your voice, your name — the street took MINE. So I took the STREET.",
       "You don't know me. You know the version that SURVIVED. The other one's been waitin' on this corner all night.",
       "This block? I don't claim it. I HAUNT it. There's a difference. You'll learn.",
       "The other one's been waitin' — the one that don't TALK, just collects. You woke him.",
@@ -594,30 +623,40 @@ const STREET_BANKS: Record<string, Bank> = {
       "This corner ain't claimed, it's CURSED. And I'm the curse with legs.",
     ],
     hustle: [
+      "The deal... the deal's FINE. But you're sloppy! That's how they take everything! Count it AGAIN. Perfectly.",
+      "Weak. So soft. They lied to you about the price. The REAL price is... this.",
       "The deal? THE DEAL? The other one handles deals. I handle... consequences. Which do you want?",
       "Count it fast. My patience has TEETH and it's been a long night.",
       "You short me, I don't call the cops. I BECOME the thing cops warn about.",
       "Product, price, pain — pick two. The third picks YOU.",
     ],
     claim: [
+      "This block? The mask is the new skin of {place}. It's the only skin they can't steal.",
+      "I don't claim blocks. I HAUNT them. {place} is haunted now. Boo.",
       "Burn it down and dance in it. That's not a threat, {place} — that's a renovation plan.",
       "This block's got a new ghost. ME. Boo.",
       "{place} — I'm not claimin' it, I'm INFECTIN' it. There's a difference. You'll feel it.",
       "Every corner needs a monster. Congratulations — you found yours.",
     ],
     civilian: [
+      "Run, lady. RUN. The nice one's counting your change and I'm counting your TEETH.",
+      "Kid — KID. The street's about to get ME. And I'm already HERE.",
       "Run. RUN. The nice one's asleep and I'm AWAKE.",
       "Lady — LADY. Inside. NOW. The street's about to get... me.",
       "Kid, you don't want to meet me. Nobody wants to meet me. That's the POINT. Go home.",
       "Shhh... quiet now. The loud part's coming, and you don't want front-row.",
     ],
     loyalty: [
+      "I built relationships! I built loyalty! I gave my freedom for partners who wouldn't even give a STATEMENT!",
+      "There is no Justice. There is only Consequence. You want justice? The line's that way. You want CONSEQUENCE? Stay.",
       "Marquis had friends. I have WITNESSES. You want to be a friend or a witness?",
       "Loyalty? The other one believes in loyalty. I believe in LEFTOVERS. Don't be leftovers.",
       "You stood by HIM when he was weak. Now he's STRONG. Funny how that works. Stay.",
       "Betray us and I'll introduce you to the basement. The basement introduces itself... permanently.",
     ],
     heat: [
+      "Officer... you want to take me in? TAKE ME. The basement's been waiting for company.",
+      "Arrest me? The paperwork would need THERAPY. The cells would need EXORCISMS.",
       "Officer... the badge. The UNIFORM. You look like every rule I ever broke. Come here.",
       "Officer... the UNIFORM. Shiny. Official. You look like RULES. I EAT rules.",
       "Arrest me? ARREST ME? The paperwork alone would need THERAPY.",
@@ -625,11 +664,13 @@ const STREET_BANKS: Record<string, Bank> = {
       "Cuffs? CUTE. The other one wore cuffs once. Then he didn't. Then the cuffs... disappeared.",
     ],
     informant: [
+      "Control? You only control the ones who haven't hurt you yet. TALK — before you hurt me.",
       "You HEARD something? Whisper it. The dark likes whispers. So do I.",
       "Information... tasty. Give it. And if it's stale, I'll know — I can SMELL stale.",
       "Who told you? Tell ME. The basement has... questions. Just questions. Mostly.",
     ],
     mourning: [
+      "They took him. They take EVERYTHING. There is no return — there is only... remembering. And Bannon. And Bannon is Control.",
       "He's GONE? ...The other one's crying. I'm not. I'm just... rearranging the furniture. With faces.",
       "The block lost one. The basement gained one. We'll visit. OFTEN.",
       "Pour one out. Then pour BLOOD out. Somebody's paying for the empty chair.",
@@ -645,6 +686,10 @@ const STREET_BANKS: Record<string, Bank> = {
       "You have ten seconds. I've already counted them.",
     ],
     parley: [
+      "Talk? TALK? The nice ones talk. Then they EXPOSE you. Then they take your work. So talk FAST.",
+      "He's lying! Partnership is a lie! He wants to control me too! ...What were we discussing?",
+      "The Combine pays better than the street. I've done the math — I ALWAYS do the math. Consider... an upgrade.",
+      "You fight for corners. I fight for CONTRACTS. One of us is thinking bigger. It's me. Join the bigger thinking.",
       "State your terms. I bill by the minute, and you're already invoiced.",
       "Negocios son negocios. Talk — but understand I've already read the ending.",
       "Speak quickly. My rate just went up.",
@@ -659,6 +704,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "Name the problem. I'll make it a RUMOR. Rumors don't testify.",
     ],
     hustle: [
+      "The merchandise is premium. The price is firm. My reputation is... non-negotiable.",
+      "You want a sample? The sample is my RESUME. Read it. Then pay.",
       "The deal is simple: you pay, I deliver, nobody remembers. Complicate it and I deliver something else.",
       "The exchange happens once. Clean. Anyone improvises, I invoice the funeral.",
       "You bring the money. I bring the merchandise. We both leave with what we came for — breathing.",
@@ -666,24 +713,31 @@ const STREET_BANKS: Record<string, Bank> = {
       "The price is the price. Professionals don't haggle; amateurs don't survive.",
     ],
     claim: [
+      "This territory is now under contract. The contract is ME. Terms: mine.",
+      "New management. The transition was silent — the way I like everything. {place} is mine.",
       "This territory has a new manager. Me. The transition will be quiet — if you're smart.",
       "This block is under new management. The old management has been... retired.",
       "{place}. Mine. The paperwork's already filed — in blood, but filed.",
       "Territory is just a contract with violence as the signature. I've signed.",
     ],
     heat: [
+      "Officer. I'm a... consultant. My clients value discretion. You value... going home on time. Let's trade.",
+      "No trouble. Just a businesswoman, conducting business. The business is none of yours.",
       "Officer. I was never here. Check your cameras — I'll wait.",
       "We're both professionals. You enforce the law. I enforce... contracts. Let's not overlap.",
       "No trouble. I'm a consultant. Consulting... elsewhere. Now.",
       "Your badge is noted. My retainer is bigger. Walk away rich in wisdom.",
     ],
     informant: [
+      "I trade in secrets the way the Combine trades in futures. Yours just... appreciated in value.",
       "Information has a price. Yours just went up — because now I know you HAVE it.",
       "Tell me everything. Leave nothing out. Especially the parts that scare you.",
       "Sources are assets. Assets get protected. Liabilities get... liquidated. Which are you?",
       "I pay in cash and discretion. Both are real. Both are final.",
     ],
     shakedown: [
+      "You need steel. They are weak, but I am the truth. The envelope — or I take it out in CONSEQUENCE.",
+      "They took your voice, your name — now I take your MONEY. The basement has... overhead.",
       "Your protection contract is due. I'm the contract.",
       "Pay on time, stay unharmed. It's the simplest arrangement you'll ever sign.",
       "The envelope. Now. Consider it a retainer against... me.",
@@ -729,6 +783,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "The Painted provide ATMOSPHERE. Atmosphere isn't free, darling. Nothing beautiful is.",
     ],
     recruit: [
+      "See? They all leave you. You need STEEL. The crew? The crew's steel. Be steel.",
+      "They will be nice, and then they will expose you. But WE — heh — we're already exposed. Nothing left to steal. Join.",
       "You have SUCH a face, darling — it would look DIVINE in paint. Join us?",
       "The Painted are always casting, sweetie — and you're AUDITIONING right now. Don't blow it.",
       "Talent! Hunger! A little madness! You'd fit RIGHT in. The paint's already mixed.",
@@ -796,6 +852,7 @@ const STREET_BANKS: Record<string, Bank> = {
       "Sign the arrangement. Everyone who signs prospers. Everyone who doesn't — well. That's why I'm here.",
     ],
     confront: [
+      "Your file's already closed. But the community center stays OPEN — so let's settle this AWAY from the block. For THEIR sake. Not yours.",
       "You're interfering with a Combine operation. That's a federal hobby with local consequences.",
       "I don't brawl, I PROCESS. And you are about to be processed.",
       "Violence is inefficient. But I am VERY good at inefficiency when required.",
@@ -809,6 +866,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "A peaceful resolution is cheaper for everyone. I'm the expensive part.",
     ],
     claim: [
+      "This block is now a... community zone. Under my supervision. The supervision is thorough.",
+      "{place} — restructured. The community center model, applied to the streets. You're welcome.",
       "Effective immediately, this block is a compliance zone. Tribute schedules will be posted. Non-compliance will be processed.",
       "Effective immediately, {place} operates under Combine oversight. Resistance will be... streamlined.",
       "This block has been REZONED. Commercial: ours. Residential: also ours.",
@@ -816,6 +875,7 @@ const STREET_BANKS: Record<string, Bank> = {
       "Consider this an acquisition. Hostile is just the FILING status.",
     ],
     heat: [
+      "Officer — I volunteer with your youth outreach. Ask Sergeant Miller. We're... colleagues. In a sense.",
       "Officer. My paperwork is in order — is yours? I'd hate to file a complaint about the complaint.",
       "We're both in enforcement, you and I. The difference is my jurisdiction is... broader.",
       "Officer, my credentials outrank your curiosity. But I admire the... initiative.",
@@ -823,6 +883,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "Arrest me and you'll spend the next year in depositions. Your call, officer.",
     ],
     shakedown: [
+      "The center runs on donations. The block runs on... contributions. You're contributing. Weekly.",
+      "Your tribute keeps the peace. The peace keeps the CENTER open. Think of it as charity. With consequences.",
       "The Combine provides stability. Stability has a FEE SCHEDULE. You're on it.",
       "Your tribute is due. Late fees are... physical.",
       "Think of it as taxes. The Combine is the government that actually COLLECTS.",
@@ -872,6 +934,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "You want the Kennedy brand protecting your shop? The brand costs. Everything costs.",
     ],
     recruit: [
+      "You want to serve? Good. I serve — the Combine, the center, the block. Service is service. Start by carrying this.",
+      "The youth program needs mentors. The block needs soldiers. Funny — same application. Fill it out.",
       "You! Kid! You got the LOOK! The Kennedy camp is always scouting — interested in GREATNESS?",
       "I'm building an ENTOURAGE. Requirements: loyalty, hustle, and the ability to say my name LOUD.",
       "Stick with me and you'll learn from the BEST. That's me. I'm the best. Any questions?",
@@ -886,6 +950,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "The Combine doesn't buy blocks, it buys FUTURES. Yours just got... discounted.",
     ],
     parley: [
+      "Let's negotiate. I'll start: you agree. Your turn — and choose wisely, I've modeled your options.",
+      "Every word you say, I've already anticipated. But please — continue. I enjoy the... theater.",
       "Every move you've made brought you here. That was the design. Now — your terms, so I can decline them properly.",
       "It's not personal. It's just... the game. And you are several moves behind.",
       "Speak. I've already anticipated your terms — but I enjoy watching people discover that.",
@@ -893,23 +959,29 @@ const STREET_BANKS: Record<string, Bank> = {
       "I'll accept your surrender in whatever format you prefer. Verbal is fastest.",
     ],
     claim: [
+      "This block is now under Administration. Cold, corporate, PERMANENT. Resistance will be... filed.",
       "This territory was mine before you arrived. You simply hadn't been informed. Consider yourself informed.",
       "{place} was always going to be mine. The only variable was WHEN you noticed.",
       "This acquisition was decided three moves ago. You're just now seeing the board.",
       "New ownership. The transition is complete. Your awareness is... pending.",
     ],
     heat: [
+      "Officer. The Administration has an arrangement with your precinct. Check with your captain. I'll wait.",
+      "This encounter is... documented. How it's filed depends on your next sentence.",
       "Officer. My legal team has a file on this precinct. Shall we compare files?",
       "We're both strategists, you and I. Mine just has better FUNDING. Walk away.",
       "This encounter is already documented. How it ENDS is up to you.",
     ],
     informant: [
+      "Information. The Administration pays premium for premium intel. Yours is... adequate. Talk.",
+      "Your sources are now Administration assets. That's not a request — it's a MERGER. Speak.",
       "Information is the only currency that matters. I'm buying. You're selling. Don't haggle — I know the market.",
       "Tell me what you know. I'll know if it's incomplete — I always know.",
       "Your sources are my sources now. That's not a request, it's a MERGER.",
       "Speak freely. Everything you say is already... accounted for.",
     ],
     shakedown: [
+      "The Administration provides order. Order has a FEE. You're looking at the invoice. Pay it.",
       "The Combine's protection portfolio includes your establishment. Premiums are due. Weekly.",
       "Consider this a STRATEGIC PARTNERSHIP. You provide capital. We provide... continuity.",
       "Non-payment is just a slower form of payment. With interest. Compounding.",
@@ -917,6 +989,8 @@ const STREET_BANKS: Record<string, Bank> = {
   },
   stan: {
     confront: [
+      "I'm not here to fight you. I'm here to ADMINISTER you. There's a difference. You'll feel it.",
+      "The Administration doesn't do standoffs. It does COMPLIANCE. Comply.",
       "Kid. I've ended tougher on this exact corner. Walk.",
       "You don't want this smoke. Not here, not where your grandmother shops. Last chance.",
       "Son, I've forgotten more about this corner than you'll ever learn. Walk — while you still can.",
@@ -925,6 +999,7 @@ const STREET_BANKS: Record<string, Bank> = {
       "I've buried tougher than you on cheaper corners. Don't make this one expensive.",
     ],
     loyalty: [
+      "I serve. That's what I do — the center, the Combine, the block. Service is service. Betray it and I... reassign you.",
       "I taught half this block how to stand. You don't turn on family — and out here, the block IS family.",
       "Loyalty's earned in years and lost in seconds. I've got years on all of you. Act accordingly.",
       "The block raised me, the game paid me, the CREW kept me. In that order. Don't mix the order.",
@@ -938,6 +1013,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "No trouble. Just an old man telling war stories. The kids listen. It's... community service.",
     ],
     civilian: [
+      "Ma'am — inside. Quickly. ...You run the shop? Then you're under my protection. I volunteer at the community center Tuesdays. This is... the same thing. Go.",
+      "Sir, take your family in. The block stays SAFE — that's not a threat, it's a PROMISE. I keep promises. Ask anyone at the center.",
       "Inside, ma'am. I've seen this movie — you're not in the cast, and that's a GOOD thing.",
       "Son, take your family in. The street's about to have a disagreement. It'll be over soon.",
       "You run the shop? Then you're FAMILY. And family doesn't get caught in the crossfire. Go on.",
@@ -949,6 +1026,8 @@ const STREET_BANKS: Record<string, Bank> = {
       "Stick with me, do what I say, keep your mouth shut — and in ten years you'll THANK me. Or you'll be gone. Fifty-fifty.",
     ],
     mourning: [
+      "We lost one. The center will hold a vigil. The block will hold... a different kind of service.",
+      "He volunteered Tuesdays. Now the center's short-handed. And I'm short-tempered. Pray for whoever did this.",
       "Lost another one. This block's got more ghosts than residents some days.",
       "I knew him when he was running packages. Now he's... gone. Pour one out. Then get BACK TO WORK — he'd want that.",
       "The young ones think they're immortal. The block teaches different. Rest easy, kid.",

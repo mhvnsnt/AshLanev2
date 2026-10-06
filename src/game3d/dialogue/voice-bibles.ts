@@ -128,6 +128,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Bus scuffle with Brian Cage's guy",
       "One-on-one sit-downs: Edwin Kennedy, Triple X, Stan Combs",
       "Fought for everything, never a pushover",
+      "Book: 'Signal in the Static' (Books 2-7); teamed with Onyx",
     ],
     streetVoice:
       "On the corner he's the same mouth but the audience changed — he's not performing " +
@@ -213,6 +214,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Mimics opponents' catchphrases back at them, twisted",
       "The tank, the green hair, the beautiful violence",
       "Nobody knows if she's laughing with you or at you",
+      "Book: teamed with Onyx (Books 1-7)",
     ],
     streetVoice:
       "Same chaos, smaller stage. On the street she's the girl who'll fight you for your bike " +
@@ -225,7 +227,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     name: "Stick-Up",
     basedOn: "GMG JackBoy (street inspiration)",
     faction: "ashes",
-    archetype: "The system's weapon turned rebel — measured street general",
+    archetype: "The system's weapon turned rebel — measured street general with a Reverend's fire",
     speech: {
       pace: "measured",
       register: "Americus GA street — direct, economical, no wasted words",
@@ -233,6 +235,8 @@ export const VOICE_BIBLES: VoiceBible[] = [
         "The system made me. The streets kept me.",
         "You already know what it is.",
         "Talk is cheap. Hands ain't.",
+        "I am the vessel!",
+        "Control is the Devil's first, most seductive lie.",
       ],
       vocab: [
         "system", "block", "ward", "respect", "loyalty", "enigma",
@@ -248,10 +252,17 @@ export const VOICE_BIBLES: VoiceBible[] = [
     },
     attitude:
       "The Enigmatic Gangster / The Flamboyant Flexer — contradiction as armor. " +
-      "Fought his way out of being the system's weapon and now the system wants him back. " +
-      "Every word sounds like it's already been decided.",
+      "Book canon: the Government Weapon / failed experiment — Stan's Cyborg Project made him a " +
+      "machine-precision weapon 'punctuated by conspiracy rants,' defeated by Marquis's logic (Book 1, Ch. 28). " +
+      "Book 1 also gives him the REVEREND STICK UP mode: gaudy purple robes, pulpit, Bible slammed down, " +
+      "quoting Isaiah 55:8 — 'I am the vessel! The Architect is just a scribbler of flawed paper!' " +
+      "On the street the Reverend fire lives under the measured general: scripture cadence, conspiracy " +
+      "certainty, seven-times-stared-down-death conviction. Fought his way out of being the system's " +
+      "weapon and now the system wants him back.",
     hooks: [
       "Turned weapon of the system, now its problem",
+      "Book: Stan's Cyborg Project weapon — machine precision + conspiracy rants",
+      "Book: REVEREND STICK UP — purple robes, pulpit sermon, Isaiah 55:8, 'I am the vessel!'",
       "Americus GA roots",
       "Cyborg form is a separate canon entity — never confuse them",
       "Finisher lore: Twisted Faith",
@@ -266,18 +277,21 @@ export const VOICE_BIBLES: VoiceBible[] = [
     name: "Maime",
     basedOn: undefined,
     faction: "hollows",
-    archetype: "Marquis's chaotic alter-ego — raw, unchecked, self-destructive momentum",
+    archetype: "Marquis's unhinged alter-ego — face-painted, raw high-pitched whining/crying voice; the id with a liturgy of Control",
     speech: {
       pace: "erratic",
       register: "Beautiful ugly poetry — street philosopher mid-meltdown",
       signaturePhrases: [
+        "There is no return. There is only Bannon. And Bannon is Control.",
+        "There is no Justice. There is only Consequence.",
+        "Your mommy can't save you! Nobody saves us!",
         "You don't know me. You know the version that survived.",
         "I'm the part he locks in the basement.",
-        "Burn it down and dance in it.",
       ],
       vocab: [
         "chaos", "basement", "mirror", "ashes", "hunger", "static",
         "unleashed", "no leash", "feral", "truth hurts",
+        "control", "consequence", "justice", "confess", "steel", "lies",
       ],
       neverSays: [
         "apologies", "restraint", "planning ahead", "asking permission",
@@ -288,11 +302,16 @@ export const VOICE_BIBLES: VoiceBible[] = [
         "or threats. Sounds like three arguments happening in one skull.",
     },
     attitude:
-      "Pure id with a microphone. The version of Marquis with no brakes and no apologies. " +
-      "Doesn't want to win — wants to feel everything at once, and take you with him.",
+      "Pure id with a microphone. Book 1: alternates with the controlled Bannon persona — " +
+      "the unhinged, face-painted Maime, raw high-pitched whining/crying voice. Preaches a liturgy " +
+      "of Control and Consequence: 'They took your voice, your name. You need an identity that " +
+      "cannot be stripped, controlled, or copyrighted.' Doesn't want to win — wants to feel " +
+      "everything at once, and take you with him.",
     hooks: [
       "The alter-ego Marquis keeps locked down",
-      "Three-back-to-back jacketed original (when it returns)",
+      "Book-verbatim liturgy: 'There is no return. There is only Bannon. And Bannon is Control.'",
+      "Face-painted unhinged alter-ego (Book 1) — 'There is no Justice. There is only Consequence.'",
+      "'An identity that cannot be stripped, controlled, or copyrighted'",
       "Self-destruction as performance art",
     ],
     streetVoice:
@@ -467,7 +486,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     basedOn: "Mr. Kennedy (Ken Anderson) — mic-intro cadence",
     faction: "combine",
     wrestlingCanon: true,
-    archetype: "The arrogant showman — every introduction is a coronation",
+    archetype: "The arrogant showman — every introduction is a coronation; book canon: AWE Owner/CEO, the Final Boss",
     speech: {
       pace: "booming",
       register: "Self-announcing showman, mic-drop cadence",
@@ -775,7 +794,7 @@ export const VOICE_BIBLES: VoiceBible[] = [
     hooks: [
       "Appears in menus, loading, narration, commentary",
       "Talks to the player, not the character",
-      "Voice = Bill $aber's voice — owner may record; confirm before AI",
+      "Voice = Bill $aber's voice — AI-performed (owner-confirmed 2026-10-06)",
     ],
   },
   {

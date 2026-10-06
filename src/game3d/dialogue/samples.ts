@@ -639,6 +639,150 @@ export const SAMPLE_PACK: DialogueSample[] = [
       "Pour one out. Say his name. And remember — the corner he stood on is STILL OURS. Certified. Forever.",
     ],
   },
+  // ================== WAVE 3 — Bannon repo / book port ==================
+  {
+    fighter: "Maime",
+    fighterId: "maime",
+    situation: "confront",
+    context: "Book-verbatim liturgy on the street — the face-painted alter-ego holds a corner",
+    lines: [
+      "There is no return. There is only Bannon. And Bannon is CONTROL — and this corner? This corner is BANNON'S.",
+      "They took your voice, your name. They exposed you. You need an identity that cannot be stripped, controlled, or copyrighted. I AM that identity.",
+      "Your mommy can't save you! Nobody saves us! You have to feel the pain, you have to CONFESS! I know what it's like to be lied to! I HATE THE LIES!",
+    ],
+  },
+  {
+    fighter: "Stick-Up",
+    fighterId: "stickup",
+    situation: "parley",
+    context: "The Reverend mode surfaces mid-negotiation — sermon cadence, Isaiah 55:8",
+    lines: [
+      "The so-called peacemakers! They preach of deals and truces! But I say to you — a deal without HONOR is the Devil's first, most seductive lie!",
+      "'My thoughts are not your thoughts, neither are your ways my ways, declares the Lord.' Your terms are YOUR thoughts. My corner runs on HIGHER thoughts.",
+      "I have stared into the face of death — seven times! — and the Lord used that chaos to forge me! I am the vessel! So talk — but talk TRUE.",
+    ],
+  },
+  {
+    fighter: "Cain Elias",
+    fighterId: "cain",
+    situation: "civilian",
+    context: "The caregiver contrast — the Executioner shielding a shopkeeper, and meaning it",
+    lines: [
+      "Ma'am — inside. Quickly. You run the shop? Then you're under my protection.",
+      "I volunteer at the community center Tuesdays. Anonymous. Nobody knows. This — right here — is the same thing. The block stays SAFE. That's not a threat, it's a PROMISE.",
+      "Go. Lock the door. What happens next is... administrative. You don't need to see administration.",
+    ],
+  },
+  {
+    fighter: "Edwin Kennedy",
+    fighterId: "edwin",
+    situation: "promo",
+    context: "Book-voiced wrestling promo — the Paralyzed Perfectionist frames the match as Greek Tragedy",
+    lines: [
+      "EDWIN... KENNEDY! ...You call this a RIVALRY? I've read the classics — this isn't a rivalry, it's a TRAGEDY. And you're not the hero. You're the WARNING.",
+      "My legacy isn't built on matches — it's built on ERASURES. Ask the historians. Actually — don't. They work for ME.",
+      "They'll write about this one. They always do. The only question, my guy, is whether you're the triumph... or the FOOTNOTE.",
+    ],
+  },
+  {
+    fighter: "Stan Combs",
+    fighterId: "stan",
+    situation: "promo",
+    context: "Book-voiced wrestling promo — the Avid Collector applies watchmaker precision to violence",
+    lines: [
+      "I've restored watches worth more than your career. Precision. Patience. Pressure. That's how you take apart a MAN.",
+      "The Cyborg Project taught me everything breaks on schedule. Gears. Men. Empires. Your schedule just came up.",
+      "You don't want this smoke, kid. Not from me. I don't do smoke — I do MECHANISMS. And you're already inside one.",
+    ],
+  },
+  {
+    fighter: "Sombra Negra",
+    fighterId: "sombra_negra",
+    situation: "parley",
+    context: "The mercenary tempts a street crew toward corporate control — book canon",
+    lines: [
+      "The Combine pays better than the street. I've done the math — I ALWAYS do the math. Consider... an upgrade.",
+      "You fight for corners. I fight for CONTRACTS. One of us is thinking bigger. It's me.",
+      "Negocios son negocios. The street is a business with bad margins. Let me introduce you to better margins.",
+    ],
+  },
+  {
+    fighter: "Maime",
+    fighterId: "maime",
+    situation: "shakedown",
+    context: "The basement collects — book-verbatim liturgy as tax policy",
+    lines: [
+      "You need steel. They are weak, but I am the truth. The envelope — or I take it out in CONSEQUENCE.",
+      "They took your voice, your name — now I take your MONEY. The basement has... overhead.",
+      "There is no Justice. There is only Consequence. You want justice? Call the cops. You want CONSEQUENCE? Pay.",
+    ],
+  },
+  {
+    fighter: "Stick-Up",
+    fighterId: "stickup",
+    situation: "loyalty",
+    context: "Vessels don't leak — the Reverend tests the crew's faith",
+    lines: [
+      "The Lord made me a vessel — and vessels don't LEAK. You leak, you're not a vessel. You're a PUDDLE.",
+      "I am the bridge! The only way out of the pit of your doubt! You cross with me or you stay IN the pit.",
+      "Seven times I've stared down death — and every time, the crew was BESIDE me. That's not loyalty, that's SCRIPTURE.",
+    ],
+  },
+  {
+    fighter: "Cain Elias",
+    fighterId: "cain",
+    situation: "shakedown",
+    context: "Contributions — the caregiver's tax code",
+    lines: [
+      "The center runs on donations. The block runs on... contributions. You're contributing. Weekly.",
+      "Your tribute keeps the peace. The peace keeps the CENTER open. Think of it as charity. With consequences.",
+      "I volunteer Tuesdays. Anonymous. This — this is me volunteering RIGHT NOW. You're welcome.",
+    ],
+  },
+  {
+    fighter: "Maime",
+    fighterId: "maime",
+    situation: "parley",
+    context: "A negotiation with the alter-ego — talk fast",
+    lines: [
+      "Talk? TALK? The nice ones talk. Then they EXPOSE you. Then they take your work. So talk FAST.",
+      "He's lying! Partnership is a lie! He wants to control me too! ...What were we discussing? Oh. Terms. STATE THEM.",
+      "Control? You only control the ones who haven't hurt you yet. Talk — before you hurt me.",
+    ],
+  },
+  {
+    fighter: "Stick-Up",
+    fighterId: "stickup",
+    situation: "mourning",
+    context: "The Reverend buries a soldier — the leap of faith, landed",
+    lines: [
+      "We lost a soldier. The Lord giveth, the street taketh away — and the street's about to GIVE BACK. With interest.",
+      "He stared down death with me. Now he's... with the Lord. The LEAP OF FAITH finally landed.",
+      "No tears. Vessels don't leak — remember? We remember him LOUD, and we answer LOUDER.",
+    ],
+  },
+  {
+    fighter: "Cain Elias",
+    fighterId: "cain",
+    situation: "recruit",
+    context: "The application — youth mentor by day, Combine enforcer by night",
+    lines: [
+      "You want to serve? Good. I serve — the Combine, the center, the block. Service is service. Start by carrying this.",
+      "The youth program needs mentors. The block needs soldiers. Funny — same application. Fill it out.",
+      "Tuesdays I teach kids to read. The other six days I teach the block to OBEY. Both are... nurturing.",
+    ],
+  },
+  {
+    fighter: "Triple X",
+    fighterId: "triplex",
+    situation: "heat",
+    context: "The Administration encounters the badge — documented",
+    lines: [
+      "Officer. The Administration has an arrangement with your precinct. Check with your captain. I'll wait.",
+      "This encounter is... documented. How it's filed depends on your next sentence. Choose the sentence carefully.",
+      "We're both in enforcement, you and I. Mine just has better FUNDING. Walk away documented as cooperative.",
+    ],
+  },
 
 ];
 
