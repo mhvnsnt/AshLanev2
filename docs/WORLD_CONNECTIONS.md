@@ -1,4 +1,16 @@
-# WORLD CONNECTIONS — How Stages Connect to the Open World
+# WORLD CONNECTIONS
+
+## Art Direction
+
+**CRITICAL:** Each district has its own visual identity. See
+[DISTRICT_ART_DIRECTION.md](./DISTRICT_ART_DIRECTION.md) before dressing any stage.
+
+The green/purple/blue neon palette belongs to the **Downtown Rooftop District only**.
+Other districts: Marquee Mile (magenta/cyan), Industrial (rust/gray daylight),
+Waterfront (cold blue fog), Projects (sodium orange dusk), Underground
+(fluorescent green-white), Outskirts (dust brown), Suburbs (too-clean daylight).
+
+--- — How Stages Connect to the Open World
 
 **Vision:** Urban Reign-style stage select for quick fights. But in story/open-world
 mode, every stage is a physical place in one continuous city you travel between.
