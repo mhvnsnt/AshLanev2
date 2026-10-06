@@ -133,3 +133,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The foundation under the tutorial/tooltip layer: move-list tooltips, control-remap popovers, and driver.js (#17) highlight popovers all need collision-aware anchoring — Floating UI is the standard engine. Style the tooltip chrome in Concrete Jungle (torn-paper clip-path, hazard-stripe border) while Floating UI handles placement. Works with the R4 remappable-controls data (show the *bound* key per action).
 - **AshLane use:** Tooltip/popover positioning engine — move-list tooltips, remap-screen popovers, tutorial callouts.
+
+## 17. driver.js
+- **URL:** https://github.com/kamranahmedse/driver.js · https://driverjs.com
+- **What:** Lightweight (~5KB, zero-dependency, vanilla TypeScript) guided-tour / focus engine: highlight any element with a dimmed overlay, step-by-step tours, popovers, focus shifters. Keyboard-controllable.
+- **License:** **MIT** — "MIT © Kamran Ahmed", stated in README license section. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The tutorial system for onboarding: first-launch tour (menu → character select → first fight), contextual coach marks in move lab. Theme the popover/hole-overlay in Concrete Jungle. ⚠️ Do NOT substitute **intro.js** — the other popular tour library is **AGPL-licensed** (copyleft; commercial use requires a paid license). driver.js is the safe pick.
+- **AshLane use:** First-launch onboarding tour, move-lab coach marks, contextual help overlays.
