@@ -94,3 +94,10 @@
 - **License:** MIT (repo page license field, LICENSE file at root)
 - **Verdict:** commercial-safe
 - **Notes:** The NPC perception backbone: line-of-sight checks for Yuka vision components, "can this pedestrian see the fight", awareness raycasts against district geometry. Without it, per-NPC raycasts against city meshes don't scale. Also accelerates hit detection against crowds.
+
+## SUMO (Simulation of Urban MObility)
+- **URL:** https://eclipse.dev/sumo/about/
+- **What:** Eclipse Foundation microscopic traffic simulation suite (German Aerospace Center, since 2001): vehicles, pedestrians, public transport, traffic lights, OSM network import, route generation, TraCI socket API for live control. Handles very large networks.
+- **License:** Eclipse Public License 2.0 (weak copyleft — NOT in the permissive list)
+- **Verdict:** prototype-only — build-time tool, never ship its code
+- **Notes:** Offline use only: import an OSM district → simulate rush-hour traffic and pedestrian flows → export vehicle/pedestrian timelines → bake them as waypoint schedules the game replays. Tool output is not infected by EPL; the simulator itself never ships in the game.
