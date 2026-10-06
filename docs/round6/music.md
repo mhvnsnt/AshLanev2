@@ -69,3 +69,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ⚠️ **Prototype-only for default-licensed tracks** (old BY-NC-SA = non-commercial, never ship). Ship-safe ONLY for tracks where the artist explicitly permits commercial use — get it in writing / screenshot the license setting per track.
 - **Notes:** Great scouting ground for unique fight music, but licensing is artist-by-artist — treat as leads, not a library. For shipped tracks, prefer CC-BY sources above.
 
+## 10. Demucs (Meta) — stem separation
+- **URL:** https://github.com/facebookresearch/demucs
+- **What:** State-of-the-art music source separation (htdemucs / htdemucs_ft / htdemucs_6s: vocals, drums, bass, other, + guitar/piano in 6s). PyTorch; ~44.1kHz output. Weights auto-download (~200MB).
+- **License:** **MIT** — code AND official pretrained weights (verified in the upstream LICENSE: "Copyright (c) Meta Platforms").
+- **Verdict:** ✅ Commercial-safe (MIT) as a **build-time tool** — never ship Demucs itself in the game client.
+- **Notes:** KEY pipeline tool: split any CC0/CC-BY track into stems (drums, bass, vocals, other) at build time → layer stems in-game for adaptive fight music (e.g. drums-only at low heat, full mix at high heat; mute vocals during dialogue). Also: strip vocals from tracks for ambience beds. Only process audio we have rights to (separating a copyrighted track we don't own is still infringement of the source).
+
