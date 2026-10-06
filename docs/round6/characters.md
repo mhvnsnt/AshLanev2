@@ -44,3 +44,13 @@
 
 ---
 
+## 5. SMPL / SMPL-X (Max Planck)
+
+- **URL:** http://smpl.is.tue.mpg.de | SMPL-X: http://smpl-x.is.tue.mpg.de | commercial: https://meshcapade.com
+- **What:** The industry-standard learned parametric body models (SMPL, SMPL-X with hands+face, STAR, SUPR, SMIL). Trained on 10,000+ body scans; differentiable; enormous ecosystem (AMASS mocap, HMR pose estimators). The "cleanest" body tech on paper.
+- **License:** **Custom non-commercial research license** (Model License: academic/research use only; prohibits commercial use and redistribution; US patent US10395411B2 "Skinned multi-person linear model"). Commercial licensing via Meshcapade (acquired by Epic, Feb 2026) — no public pricing, rumored ~6 figures/year. Nuance: the CC-BY-4.0 "SMPL-X Body" covers *meshes generated with the model* (attribution required), NOT the model weights/software — those stay non-commercial.
+- **Verdict:** ❌ LICENSE-TRAPPED — research/previs only. Do not put SMPL weights or SMPL-derived retarget code in the commercial build path. GVHMR/WHAM and other video-to-3D estimators that load SMPL weights are cross-checks at most.
+- **Notes:** The blocker is the redistribution clause, not just NC: serving weights to a browser client is distribution. Replacements that cover the same job: **Anny** (entry 6, Apache-2.0) for the parametric model, MakeHuman/MPFB2 (entry 1) for CC0 body shapes.
+
+---
+
