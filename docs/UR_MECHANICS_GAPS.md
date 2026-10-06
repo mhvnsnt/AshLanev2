@@ -145,3 +145,271 @@
 - Up to **4 players** (multitap), battle modes; **co-op story** via code (camera follows P1 — a known limitation). Tandem grapples work human+human.
 
 ---
+
+## PART 2 — Gap Analysis vs AshLane (`src/game3d/sim.ts`, verified 2026-10-06)
+
+Status key: **HAVE** (in code, working) · **PARTIAL** (exists but incomplete) · **MISSING** (not in code) · **IN-PROGRESS** (a worker is on it — don't re-spec) · **DONE** (landed this week).
+
+### Defense
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Timed evade (no block button) | PARTIAL | `dodgeChain` timed evade exists (sim.ts:1106-1182); chained clean evades slip behind attacker. AshLane also has guard/block — UR's evade is the *option* layer |
+| Dodge-chain → auto-grab push-aside + initiative | MISSING | UR escalates consecutive dodges into an automatic grab-and-shove |
+| Reversal (up/down+evade at the right moment) | IN-PROGRESS | Direction-pick reversal worker active |
+| 3-level defend (high/mid/low matched) | PARTIAL | `guard` + `lowGuard` exist; not wired to attack-level matching |
+| Grapple reversal (guess the region) | MISSING | No region-guess counter on grapples |
+| Defense builds meter / drains opponent's | MISSING | Meter builds on hits only (sim.ts:1214,1433,1951,1986) — not on successful defense |
+| SUPER DEFLECT → counter | PARTIAL | Just-frame parry via `federated/counters.ts` exists; no deflect-chain escalation |
+| Break out of stagger/combo via special | MISSING | No metered breakout mechanic |
+
+### Meter & specials
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Special Arts meter | HAVE | `meter` 0-100, `SPEC.meterCost` (sim.ts:3347) |
+| Meter builds on: strikes, taking damage, dodging | PARTIAL | Builds on strikes dealt (1433, 1951, 1986, 2958, 3106) — taking-damage and dodge build MISSING |
+| Specials uncounterable except by another special | MISSING | No special-vs-special cancel |
+| Special invulnerable frames | MISSING | No i-frames on specials |
+| Specials buffered | PARTIAL | Input buffering status unverified |
+
+### Offense
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Variable hit-stop (jabs ~5f, big counters 12f) | DONE | Commit 2471e45 |
+| Body-zone targeting (head/body/legs via stick) | DONE | Commit 9e02999 |
+| Region breakdown states (dizzy/winded/crumple) | PARTIAL | Zones exist; region-specific *states* need wiring |
+| 3-hit-into-juggle grammar | PARTIAL | `launch` state exists; formal juggle rules (gravity, scaling, one-extension) unverified |
+| Contextual animations (stick + enemy count) | MISSING | Animation picks don't vary by surroundings |
+| Running attacks (running strikes/grapples) | PARTIAL | `dash` state exists; running-grapple variants unverified |
+
+### Grapples
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Low vs high grapple selection | PARTIAL | `grapple-system.ts` has ground context; region selection unverified |
+| Air grapples (catch juggled opponents) | MISSING | Paired playback exists for ground/standing; no air-grapple path |
+| Grapple counters / recounters | MISSING | No counter-grapple chains |
+| Restrain (hold + beat on) | MISSING | |
+| Ground grapples (straddle, piledriver) | PARTIAL | Ground context exists in grapple-system (line 83, 158); straddle/piledriver variants unverified |
+| Tandem team-up grapples (2v1) | MISSING | Lieutenants system exists; no tandem-grapple mechanic |
+| Running grapples | MISSING | |
+
+### Ground game
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Pounce on downed enemy | MISSING | `down` state exists; no pounce move |
+| Kicks on downed enemy | PARTIAL | `stomp` exists in hitGrunts (low tag); needs verification as a real move |
+| Straddle + face punches | MISSING | |
+
+### Wall / environment
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Wall slams | IN-PROGRESS | `wallSlam()` exists (sim.ts:1968); worker extending |
+| Wall-run / wall-vault attacks | MISSING | No wall-run |
+| Environmental bonus damage (cars, shelves, railings) | PARTIAL | Props + hitProps exist; wall/prop *bonus* damage unverified |
+| Cheap shot from behind (telegraphed) | IN-PROGRESS | Worker active |
+
+### Weapons
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Weapon pickup / discard | PARTIAL | Pickup prompt status unclear — verify |
+| Weapon durability | MISSING | No durability meter |
+| Throw weapon to stun | MISSING | |
+| Disarm (knock out of hand, steal) | MISSING | No disarm mechanic |
+| Wielder-scaled weapons | MISSING | |
+| 30-weapon variety | PARTIAL | Quaternius medieval weapons wired (prior research); street weapons (bats, pipes, bottles) need audit |
+
+### Partners
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| AI partner fights autonomously | PARTIAL | Lieutenants exist; autonomy depth unverified |
+| Partner commands (help / double-team / give weapon) | MISSING | No command menu |
+| Partner KO ≠ mission fail | PARTIAL | Verify mission-fail rules in campaign.ts |
+| Double-team tandem attacks | MISSING | (same as tandem grapples above) |
+
+### Enemies / AI
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Symmetric health/moves (fair, not stat-cheats) | PARTIAL | Verify grunt scaling |
+| AI archetypes (deflectors, grapplers, special-users) | PARTIAL | `opponent-brain.ts` exists; archetype variety unverified |
+| Lurker → rusher | HAVE | `AI_BEHAVIOR_TEARDOWN.md` §1 specced; verify wired |
+| Bosses change behavior at HP thresholds | MISSING | No phase-change bosses |
+| Bosses punish specific approaches | MISSING | |
+
+### Progression
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| 1–3 stat points per mission → 9 regional stats | MISSING | No post-mission stat spend; char-gen stats exist but static |
+| Move unlocks over missions | MISSING | Kit doesn't grow |
+| Roster unlocks through story | PARTIAL | Roster exists; unlock gating unverified |
+| Free Mode (replay with any fighter) | PARTIAL | Exhibition exists; story-mission replay unverified |
+
+### Modes / HUD / camera / sound
+| UR mechanic | AshLane status | Notes |
+|---|---|---|
+| Tutorial / Practice (unlimited HP) | PARTIAL | Practice mode exists per playtest; tutorial unverified |
+| Fighter Files (profiles) | MISSING | |
+| Per-target stamina bar | MISSING | HUD shows own HP; targeted enemy region wear not shown |
+| Special gauge always visible | HAVE | `meter` in HUD (sim.ts:3961) |
+| R1 lock-on + stick target-switch | HAVE | Per prior research |
+| Camera reset / zoom | PARTIAL | Verify |
+| Rock/metal soundtrack + impact SFX | PARTIAL | `music.ts`, `combat-sfx.ts` exist; direction/audit needed |
+| Separate music/voice/SE volume | MISSING | Verify audio settings |
+| Taunt (risk/reward) | MISSING | No taunt mechanic at all |
+| 4-player multiplayer | PARTIAL | `nakama-client.ts` exists; 4-player brawl unverified |
+| 5 difficulty levels | MISSING | Verify difficulty settings |
+
+---
+
+## PART 3 — Open-Source Fills (concrete, licensed, wire-in path)
+
+**Honest framing:** UR's combat mechanics are *design patterns*, not library code — the right "fill" for most rows is implementing the pattern in `sim.ts`, informed by the teardown. The open-source pulls that genuinely accelerate this work are: animation clips, state-machine frameworks, audio, and test harnesses. Every item below was chosen for a specific gap row.
+
+### P1 — Combat-critical (implement now)
+
+**G1. Dodge-chain escalation → auto-grab push-aside**
+- *Fill:* design port into `sim.ts` dodgeChain (already tracked at :1127-1182). No library needed — ~30 lines.
+- *Test asset:* none needed.
+
+**G2. Grapple reversal guessing game (region match)**
+- *Fill:* design port into `grapple-system.ts` — on grapple connect, open a ~300ms window where defender's region input (up/neutral/down) vs attacker's region decides reversal.
+- *Animation:* needs reversal clips per region — CC0 mocap (see clip sources below).
+
+**G3. Meter economy: defense builds, specials have i-frames, special-vs-special cancel**
+- *Fill:* design port — meter gain on successful evade/parry (+10), on damage taken (+5), i-frames on special startup (~6f), special-cancel rule.
+- *No library.*
+
+**G4. Air grapples**
+- *Fill:* extend `playPairedGrapple` with an airborne context (`grapple-system.ts` already switches on `context_`; add `"air"` alongside `"ground"`).
+- *Animation clips (CC0):* CMU Motion Capture Database (free, already in pipeline) — jump-grab / aerial-takedown clips; Mixamo (free with account) jumping packs. License: CMU free for research/use; Mixamo free with account, no raw redistribution — bake into our bank (pipeline already does this).
+
+**G5. Weapon durability + throw-to-stun + disarm**
+- *Fill:* design port — `durability` int on held weapons, decrement per hit, break at 0 (debris via existing `impact-particles.ts`); throw = projectile with stun; disarm = grapple move vs armed opponent drops weapon.
+- *No library.*
+
+**G6. Wall-run / wall-vault attacks**
+- *Fill:* design port — wall proximity check (wallSlam infra exists) → wall-run state (~1.2s, stick steers) → vault attack. Agile styles only (style flag in char-gen).
+- *Animation:* Mixamo "Parkour" pack (free with account) has wall-run/vault; CMU has climbing clips.
+
+**G7. Tandem team-up grapples (2v1)**
+- *Fill:* extend paired playback to 3 participants — attacker + partner + victim. The sync system (`playPairedGrapple`) is the foundation; add a third track.
+- *Depends on:* partner command menu (G8).
+
+**G8. Partner commands (help / double-team / give weapon)**
+- *Fill:* design port — D-pad command menu → lieutenant AI orders. Lieutenants system exists; add the command layer + double-team trigger (calls G7).
+- *No library.*
+
+**G9. 3-level defense matching (high/mid/low)**
+- *Fill:* design port — `guard`/`lowGuard` already exist; add high-guard, match evade direction to incoming attack level.
+- *No library.*
+
+**G10. Stagger/combo breakout via special (metered escape)**
+- *Fill:* design port — during hitstun, if meter ≥ cost, special input breaks out (costs full bar — UR's "never a death sentence" rule).
+- *No library.*
+
+### P2 — High value (next)
+
+**G11. Boss HP-threshold phase changes + approach punishes**
+- *Fill:* design port in `opponent-brain.ts` — boss archetype with 2–3 phases keyed to HP%, each phase changes move preferences and adds one punish (anti-air, anti-turtle).
+- *No library.*
+
+**G12. AI archetypes (deflector / grappler / special-user)**
+- *Fill:* design port — parameterize `opponent-brain.ts` with archetype profiles (deflect chance, grapple preference, special usage). UR's Jose/Miguel/Jake/Chris are the templates.
+- *No library.*
+
+**G13. Per-target stamina bar + region wear HUD**
+- *Fill:* design port — HUD element showing locked target's region damage (zones already tracked per 9e02999).
+- *No library.*
+
+**G14. Post-mission stat spend (1–3 pts → regional stats)**
+- *Fill:* design port — mission-complete screen → points → 9 regional stats. char-gen has stats; add the spend flow in campaign.ts.
+- *No library.*
+
+**G15. Move unlocks over missions (kit growth)**
+- *Fill:* design port — mission-gated move unlocks; mission mode as tutorial-in-disguise.
+- *Animation:* gate existing bank clips behind unlocks — zero new assets needed.
+
+**G16. Ground pounce + straddle**
+- *Fill:* design port — pounce move vs `down` state; straddle = grapple on downed opponent → face-punch loop.
+- *Animation:* CMU/Mixamo ground-and-pound clips (Mixamo ground packs have mount punches).
+
+**G17. Taunt (risk/reward)**
+- *Fill:* design port — taunt button: brief meter gain + *vulnerability window* (UR's bait design, not free meter).
+- *Animation:* 1 taunt clip per archetype — Mixamo has taunt/idle-variation clips.
+
+**G18. Contextual animation variation (stick + enemy count)**
+- *Fill:* animation-system.ts — pick strike variants by stick direction and nearby enemy count (UR's "choreographed movie" feel). Needs 2–3 variants per strike.
+- *Animation clips:* multiply via existing bank; new variants from Mixamo strike packs.
+
+### P3 — Infrastructure & content
+
+**G19. State-machine framework for combat states**
+- *Fill:* the combat sub-state machine is being built (`COMBAT_SUBSTATES.md` parallel worker, 3/6 committed). If a framework is wanted instead of hand-rolled: **XState** (MIT) — the standard open-source hierarchical state machine, battle-tested, serializable, visualizable. Wire-in: model fighter states in XState, drive sim.ts from it. License: MIT ✓.
+- *Alternative:* hand-rolled (current path) — fine at this scale; XState pays off if states exceed ~40.
+
+**G20. Dialogue/substory engine (mission flavor)**
+- *Fill:* **YarnSpinner** (MIT) — already on the wiring list from prior research. For mission briefings, partner barks, Fighter Files text.
+
+**G21. Impact SFX + soundtrack direction**
+- *Fill:* **freesound.org** — CC0/CC-BY impact sounds (punches, slams, breaks). License: filter CC0 only for zero-attribution; CC-BY with attribution file if needed.
+- *Music:* owner directive 2026-10-06 — hybrid: open-source loops/samples + code synthesis. Sources: **Looperman** (free loops, check per-loop license), **Free Music Archive** (CC mixes). Wire-in: `music.ts` stem mixer.
+
+**G22. 4-player multiplayer test harness**
+- *Fill:* `nakama-client.ts` exists. For *testing* 4-player brawls without 4 humans: **bot clients** — scripted headless players via the existing playtest harness pattern. No library needed.
+
+**G23. Godot brawler references (research only until license verified)**
+- *Candidates from prior research:* `xkwn/BeatEmUp-Godot`, `Jadebravo6/kulunakiller`, `Jetss3/Beat-Em-UP-Godot-3.4` — all UNVERIFIED licenses. Action: verify license (need MIT/Apache/CC0/BSD); if clean, port camera/targeting/AI patterns. If GPL — research only, do not merge.
+
+**G24. Motion-matching evaluation**
+- *Fill:* the animation-harvest worker (active) is evaluating open-source motion-matching. If it lands, locomotion (walk/run/dash/wall-run) gets AAA-grade naturalism from the existing 220-clip library. Watch that workstream — don't duplicate.
+
+### License manifest (this doc's pulls)
+| Source | License | Use |
+|---|---|---|
+| CMU Motion Capture Database | Free (research/use) | Grapple/air/ground/taunt clips |
+| Mixamo | Free with account (no raw redistribution) | Vault, strike-variant, taunt clips — baked into our bank |
+| XState | MIT | Optional combat state machine |
+| YarnSpinner | MIT | Dialogue/briefings |
+| freesound.org | CC0 (filtered) | Impact SFX |
+| Looperman / Free Music Archive | Per-item (verify) | Music stems |
+| Godot brawler repos | UNVERIFIED — check first | Research/patterns only until verified |
+
+**Quarantine note:** no GPL/AGPL code is pulled by this plan. The Godot repos stay research-only until their licenses are verified.
+
+---
+
+## PART 4 — Master Build List (prioritized by gameplay impact)
+
+### Tier 1 — the UR feel (do first)
+1. G3 — meter economy (defense builds, i-frames, special-cancel) + G10 (metered breakout) — *defense becomes a resource engine*
+2. G1 — dodge-chain escalation — *rewards defensive streaks*
+3. G2 — grapple reversal guessing — *grapples become mind games*
+4. G9 — 3-level defense matching — *completes the defense triangle*
+
+### Tier 2 — the brawler depth
+5. G5 — weapon durability/throw/disarm — *weapons become resources*
+6. G4 — air grapples — *juggles become interactive*
+7. G7 + G8 — tandem grapples + partner commands — *the UR signature*
+8. G6 — wall-run/vault — *agile styles earn their identity*
+9. G16 — ground pounce/straddle — *ground game stops being dead time*
+
+### Tier 3 — the campaign layer
+10. G14 — post-mission stat spend — *progression loop*
+11. G15 — move unlocks — *kit growth*
+12. G11 + G12 — boss phases + AI archetypes — *enemies stop feeling samey*
+13. G13 — target stamina/region HUD — *see the damage you're doing*
+
+### Tier 4 — presentation & flavor
+14. G17 — taunt (risk/reward)
+15. G18 — contextual animation variation
+16. G21 — SFX/music direction pass
+17. G20 — YarnSpinner for briefings/Fighter Files
+
+### Already covered elsewhere (don't duplicate)
+- Variable hit-stop (DONE 2471e45), body-zone targeting (DONE 9e02999)
+- Reversals, wall-slams, cheap-shots (IN-PROGRESS workers)
+- Combat sub-states (COMBAT_SUBSTATES.md parallel worker — 3/6 committed, builds on this doc's §1)
+- Motion matching / auto-rig (animation-harvest worker)
+- AI behavior (AI_BEHAVIOR_TEARDOWN.md), missions→open-world (WORLD_STORY_DESIGN.md)
+
+---
+
+*End of gap analysis. Mechanics described as design principles for original implementation; no copyrighted assets, code, or text reproduced.*
