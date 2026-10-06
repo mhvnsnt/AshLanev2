@@ -254,3 +254,21 @@ structure, numerology engine, OTR personas), `canon/godwithin/the Flame (backgro
 `docs/the Flame (background lore)_mode.md` (roam-mode lineage: MDickie × Skyrim × Devil Within),
 `docs/design/THE-BASTARD-GOD-WITHIN-MODE-INTEGRATION.md` (mode-nesting design
 law). Nothing ported — everything paralleled.*
+
+## Narrative Secrets — The Painted Leadership (PLOT TWIST — never shown in-game)
+
+The Painted (Onyx's gang) has SECRET leaders behind the scenes:
+
+- **Buffalo Bill is the secret leader.** Publicly he's his own boss, industry-adjacent, not directly tied to the gang. Secretly he runs the whole operation. This is a late-story reveal.
+- **Theory is another secret leader.** She operates alongside/behind Onyx. Her model is already generated (owner).
+
+**The Robed Council:** The inner circle wears different colored robes (SWMG-inspired but NOT called Shadow Wizard Money Gang — proprietary name TBD):
+- Buffalo Bill: scarlet red
+- Onyx: green (sometimes)
+- Theory: [color TBD]
+- Others: [colors TBD]
+
+Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang' in-game — that's the visual inspiration, not the name.
+
+**These secrets must NEVER appear in:** menus, roster UI, HUD, character select, or any player-facing text. Writers and story scripts only.
+
