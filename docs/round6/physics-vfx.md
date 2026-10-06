@@ -43,3 +43,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The fire/smoke specialist: purpose-built emitter presets for flames, smoke plumes and sparks with shader-side turbulence — exactly the trash-can fires, barrel explosions and tire-smoke AshLane needs. Lighter-weight to integrate than three-nebula; evaluate both head-to-head in a prototype shootout.
 
+## three-bvh-csg
+- **URL:** https://github.com/gkjohnson/three-bvh-csg
+- **What:** Fast constructive solid geometry (boolean union/subtraction/intersection) on three.js meshes, accelerated by three-mesh-bvh. Cuts holes, slices objects, merges geometry at runtime.
+- **License:** MIT (LICENSE file, Garrett Johnson).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Runtime boolean = destructible walls, bullet-hole punching in doors, slicing tables in half mid-fight. BVH acceleration makes it fast enough to do live (not just pre-baked). Pair with cannon-es: CSG-sliced halves become physics bodies.
+
