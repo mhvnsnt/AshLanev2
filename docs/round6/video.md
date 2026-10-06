@@ -69,3 +69,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** MIXED per clip — Videvo Attribution License or Creative Commons 3.0 (attribution required, commercial OK) on free clips; royalty-free tier (no attribution) on some; premium paid plans remove attribution.
 - **Verdict:** Commercial-safe with attribution for free clips; check EACH clip's license badge before use. Premium tier available if attribution-free is required.
 - **Notes:** Motion-graphics templates are the standout vs Pixabay/Pexels. Verify license per clip — the free/premium mix is the main trap.
+## ffmpeg cinematic filter recipes (film-look filtergraph)
+- **URL:** https://github.com/damionrashford/media-os/blob/HEAD/skills/ffmpeg-lut-grade/SKILL.md and https://github.com/galbaz1/video-research-mcp/blob/HEAD/skills/ffmpeg-production/SKILL.md
+- **What:** Proven filtergraph recipes for broadcast-style grading inside the promo pipeline: `lut3d=file='look.cube':interp=tetrahedral`, `haldclut` (grade a Hald identity PNG in Photoshop/GIMP, re-apply — no re-encode between iterations), `noise=alls=6:allf=t+u` (film grain, LAST before encode), `vignette`, `curves`/`eq`/`colorbalance`/`selectivecolor` for zone tints, `unsharp`, `hqdn3d`, letterbox crop for 2.35:1.
+- **License:** ffmpeg is LGPL-2.1+ or GPL depending on build. Recipes are usage snippets — no licensing issue. Policy: keep ffmpeg as a build-time pipeline tool; never bundle libx264/x265 into the game client.
+- **Verdict:** Commercial-safe as build-time tooling.
+- **Notes:** CORRECT FILTER ORDER (physical constraint): temporal denoise → scale → sharpen → LUT grade → curves/EQ → film grain LAST → encode with `libx265 -crf 18 -preset slow -tune grain`. Grain before denoise destroys it; interpolation after grain tears it.
