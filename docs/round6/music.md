@@ -13,3 +13,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe **with attribution** — CC-BY tracks only, credit per track on the credits screen. Non-commercial tracks = prototype-only.
 - **Notes:** FMA API exists for scripted search/download; a `music-puller.py`-style puller for FMA's CC-BY/commercial subset would be a round-7 build task. Great pool for combat BGM, menu music, district ambience.
 
+## 2. ccMixter (+ dig.ccmixter.org)
+- **URL:** https://ccmixter.org · discovery: http://dig.ccmixter.org
+- **What:** Remix-culture community music site — 10,000+ samples, remixes, a cappellas, curated collections. dig.ccmixter.org has a curated "game music" section aimed at game developers.
+- **License:** **Mixed — check per track.** The curated dig.ccmixter game-music collections are CC-BY; many community uploads are CC-BY-NC; some curated mixes (e.g. "ccMixter beats vol.1/2") explicitly forbid unlicensed commercial use. Individual uploads can also be under retired Sampling licenses.
+- **Verdict:** ⚠️ **Mixed** — CC-BY tracks (e.g. dig.ccmixter.org game collection) are commercial-safe WITH attribution; NC/unclear tracks = prototype-only. Per-track license check is mandatory.
+- **Notes:** Good for remixed hip-hop/electronic fight music and vocal a cappellas (crowd chants, hype shouts). Record license name + version per track in a manifest.
+
