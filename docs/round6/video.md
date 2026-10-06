@@ -75,3 +75,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** ffmpeg is LGPL-2.1+ or GPL depending on build. Recipes are usage snippets — no licensing issue. Policy: keep ffmpeg as a build-time pipeline tool; never bundle libx264/x265 into the game client.
 - **Verdict:** Commercial-safe as build-time tooling.
 - **Notes:** CORRECT FILTER ORDER (physical constraint): temporal denoise → scale → sharpen → LUT grade → curves/EQ → film grain LAST → encode with `libx265 -crf 18 -preset slow -tune grain`. Grain before denoise destroys it; interpolation after grain tears it.
+## color-grade-ai (MIT LUT generator)
+- **URL:** https://github.com/isaacrowntree/color-grade-ai
+- **What:** AI-assisted generator of industry-standard 33x33x33 `.cube` 3D LUTs for color correction — ships with a `correction_luts/` directory of ready LUTs, analysis scripts (frame analysis, auto-grade, match-grade), and presets. Works in ffmpeg via `lut3d`, in DaVinci Resolve, and in Premiere Pro (Lumetri).
+- **License:** MIT.
+- **Verdict:** Commercial-safe (MIT, code + bundled LUTs).
+- **Notes:** Solves the "free LUT pack with murky license" problem — we generate our own LUTs from reference frames (e.g. match the El Toro de Oro grade) instead of downloading commercially-licensed packs. Agent-operable via its SKILL.md.
