@@ -6,10 +6,12 @@ a single JSON report to stdout (parse it, don't eyeball it).
 ## Install
 
 ```bash
-pip install trimesh numpy pygltflib fast-simplification networkx
-# (trimesh/numpy/pygltflib were preinstalled on this box;
-#  fast-simplification + networkx added 2026-10-06)
+# System pip is PEP-668 blocked on this box — use a venv (verified 2026-10-06):
+python3 -m venv /tmp/meshenv
+/tmp/meshenv/bin/pip install trimesh pygltflib fast-simplification networkx
+/tmp/meshenv/bin/python mesh_ops.py info --in model.glb
 ```
+`decimate` needs `fast-simplification`; `fill-holes` needs `networkx`.
 
 ## Ops
 
