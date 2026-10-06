@@ -183,3 +183,12 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 | Rokoko Studio Live Blender | LGPL-3.0 retarget engine (Mesh2Motion NOTICE.md) | commercial-safe (tool) |
 | Rigify / Mr Mannequins / Auto-Rig Pro | GPL / GPL / proprietary paid (~$40) | commercial-safe (tools) |
 | Bandai Namco dataset | CC BY-NC-ND 4.0 (license audits) | prototype-only |
+| HDM05 | CC BY-SA 3.0, research-framed terms (site copyright line) | prototype-only |
+| orangeduck/Motion-Matching | MIT code / CC BY-NC-ND 4.0 demo data (README) | commercial-safe (code) |
+| godot-motion-matching | MIT (LICENSE.md, repo page) | commercial-safe |
+| PlayCanvas AnimStateGraph | MIT (playcanvas/engine) | commercial-safe |
+| fullik / THREE.IK | THREE.IK MIT (verified); fullik license unverified | commercial-safe (THREE.IK) |
+| Assimp | BSD 3-Clause (repo LICENSE) | commercial-safe |
+| FBX2glTF / ufbx | BSD-3 (FBX SDK caveat) / MIT | commercial-safe (tools) |
+| FreeMoCap | AGPL-3.0 (repo README); recorded data is yours | commercial-safe (tool, sidecar) |
+| Cascadeur Basic | free, commercial <$100k/yr + credit (cascadeur.com) | commercial-safe (tool) |
