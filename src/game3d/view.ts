@@ -6,6 +6,11 @@ import type { Body, Box, Sim } from "./sim";
 import { HAND_SLOT, PROP_MESH, TARGET_HEIGHT, adoptRig, castMoveset, clipForMoveset, slotFor } from "./rig-pipeline";
 import { forgeCar, forgeStreet, poseCar } from "./forge";
 import { bakeMotion, loadMotionBank, motionNames, retargetUal, setUalSources } from "./motion-bank";
+import {
+  createFighterAnim, playState, forceState, playPairedGrapple, isPairedGrapple,
+  slotToState, stateIsLocked, resolveClip as resolveAnimClip,
+  type FighterAnim,
+} from "./animation-system";
 // Wired modules (services.ts hub): weather drives sun/fog/rain, boids drive
 // bird meshes, streaming ticks the chunk state machine, springbones step
 // secondary motion, universal-retarget remaps template clips per model.
@@ -34,6 +39,7 @@ type Fighter = {
   mats: THREE.Material[];
   mixer: THREE.AnimationMixer | null;
   actions: Record<string, THREE.AnimationAction>;
+  anim: FighterAnim | null;
   clip: string;
   gear: THREE.Mesh | null;
   moveset: string;
@@ -988,7 +994,7 @@ export function createView(canvas: HTMLCanvasElement) {
     }
     fighters.forEach((f, i) => {
       const b = sim.bodies[i];
-      poseFighter(f, b, sim, camera, dt);
+      poseFighter(f, b, sim, camera, dt, fighters);
     });
     for (let i = 0; i < pool.length; i++) {
       const bit = sim.particles[i];
@@ -1186,10 +1192,77 @@ function makeFighter(
   armR.add(aR);
   group.add(hipL, hipR, torso, head, vis, armL, armR);
   const bar = new THREE.Mesh(shared.bar, new THREE.MeshBasicMaterial({ color: pal.visor }));
-  return { id: 0, group, armL, armR, bar, mats: [cloth, skin, dark, visor, bar.material as THREE.Material], mixer: null, actions: {}, clip: "", gear: null, moveset: "knight", baseY: 0, lockL: null, lockR: null };
+  return { id: 0, group, armL, armR, bar, mats: [cloth, skin, dark, visor, bar.material as THREE.Material], mixer: null, actions: {}, anim: null, clip: "", gear: null, moveset: "knight", baseY: 0, lockL: null, lockR: null };
 }
 
-function poseFighter(f: Fighter, b: Body, sim: Sim, camera: THREE.PerspectiveCamera, dt: number) {
+/**
+ * Sync the animation-system state machine with the sim state.
+ * Uses real-clip locks for committed attacks/grapples and paired
+ * grapple synchronization. Called after the legacy resolveClip/playClip
+ * so the animation system tracks and enforces the current state.
+ */
+function syncAnimSystem(f: Fighter, b: Body, sim: Sim, fighters: Fighter[]) {
+  if (!f.anim || !f.mixer) return;
+  const fa = f.anim;
+  const now = performance.now() / 1000;
+
+  // Paired grapple: synchronize attacker + victim on the same timeline
+  if (sim.pair && sim.pairAtk >= 0 && sim.pairT > 0) {
+    const attacker = fighters.find((x) => x.id === sim.pairAtk);
+    const victim = fighters.find((x) => x.id === sim.pairVic);
+    if (attacker?.anim && victim?.anim && b.id === sim.pairAtk) {
+      // Only trigger once per grapple — check if already paired
+      if (attacker.anim.pairedWith !== victim.anim) {
+        const grappleState = isPairedGrapple(sim.pair) ? sim.pair : "takedown";
+        playPairedGrapple(attacker.anim, victim.anim, grappleState);
+      }
+      return;
+    }
+    if (b.id === sim.pairVic) return; // victim handled by playPairedGrapple
+  } else if (fa.pairedWith) {
+    // Grapple ended — clear pairing
+    fa.pairedWith = null; fa.pairRole = null; fa.lockUntil = 0;
+  }
+
+  // Map sim state to animation state
+  const asked = slotFor(b);
+  const hurt = b.hp !== undefined && b.hp < 30; // low HP = hurt animations
+  let state = slotToState(asked.slot, {
+    armed: b.weapon !== "fist",
+    swing: b.swing,
+    hurt,
+  });
+
+  // Override for specific sim states
+  if (b.state === "hit" || b.state === "launch") {
+    // Hit reactions interrupt attacks (forceState breaks locks)
+    state = "hit_body";
+    if (now < fa.lockUntil) {
+      forceState(fa, state, { blendTime: 0.08 });
+      f.clip = fa.current;
+      return;
+    }
+  }
+  if (!b.alive || b.state === "out") {
+    state = "ko_defeat";
+  } else if (b.state === "down") {
+    state = "knockdown";
+  }
+
+  // Don't interrupt locked states (committed attacks, grapples, KOs)
+  if (now < fa.lockUntil && fa.currentState !== state) {
+    return;
+  }
+
+  // Play the state (locks automatically for committed states)
+  if (fa.currentState !== state || !fa.current) {
+    if (playState(fa, state)) {
+      f.clip = fa.current;
+    }
+  }
+}
+
+function poseFighter(f: Fighter, b: Body, sim: Sim, camera: THREE.PerspectiveCamera, dt: number, fighters?: Fighter[]) {
   const sink = b.alive ? 1 : 0.55;
   const bulk = b.kind === "player" ? 1 : b.arch === "brute" ? 1.16 : b.arch === "runner" ? 0.92 : b.arch === "hood" ? 0.98 : b.arch === "hex" ? 1.04 : 1;
   f.group.visible = b.alive || b.y > -0.7;
@@ -1204,6 +1277,10 @@ function poseFighter(f: Fighter, b: Body, sim: Sim, camera: THREE.PerspectiveCam
   if (f.mixer) {
     const want = resolveClip(f, b, sim);
     playClip(f, want.name, want.loop);
+    // Animation system: real-clip locks + paired grapple sync
+    if (fighters) {
+      syncAnimSystem(f, b, sim, fighters);
+    }
     const speed = Math.hypot(b.vx, b.vz);
     const action = f.actions[f.clip];
     if (action && b.grounded && b.state === "free" && speed > 0.45 && !motionNames().has(f.clip)) {
@@ -1351,6 +1428,7 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
     mats: [bar.material as THREE.Material, gear.material as THREE.Material, ...dyed],
     mixer,
     actions,
+    anim: createFighterAnim(mixer, actions),
     clip: "",
     gear,
     moveset,
