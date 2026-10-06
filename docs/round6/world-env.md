@@ -183,3 +183,16 @@ Prelinger.
   graffiti-adjacent signage, posters, and worn storefront decals. Combine with
   the Google Fonts graffiti typefaces (already wired, round 2) rendered to canvas
   textures for custom faction tags.
+
+## three.js DecalGeometry
+- **URL:** https://threejs.org
+- **What:** `three/addons/geometries/DecalGeometry.js` — projects a decal mesh
+  onto arbitrary scene geometry (walls, ground, vehicles). The engine-side half
+  of the graffiti/decal system: takes a position, orientation, size, and source
+  mesh, and generates a clipped decal mesh that hugs the surface.
+- **License:** MIT (part of three.js).
+- **Verdict:** commercial-safe
+- **Notes:** Core tech for the graffiti system: spray tags (canvas-rendered with
+  Rock Salt / Rubik Spray Paint fonts), bullet holes, blood splatter, worn
+  posters, faction turf markings — all as decals on the procedural buildings.
+  Zero downloads, already inside AshLane's three.js dependency.
