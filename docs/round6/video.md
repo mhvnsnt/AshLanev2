@@ -111,3 +111,27 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** VMAF: BSD-2-Clause (Netflix). ffmpeg filters: LGPL-2.1+/GPL per build — build-time QA only.
 - **Verdict:** Commercial-safe as build-time QA tooling.
 - **Notes:** Gives the "broadcast quality" demand a number: score each promo against the El Toro de Oro reference cut, gate releases on VMAF + no signalstats violations. Script: compare → fail the render if below threshold.
+## License ledger
+
+| Project | License | Verdict |
+|---|---|---|
+| Internet Archive Feature Films | PD (verify per title) | Commercial-safe if verified per title |
+| NARA motion pictures | PD federal works (17 USC 105; verify per item) | Commercial-safe for federal works |
+| LOC National Screening Room | Mixed — check Rights Advisory per title | Commercial-safe only for PD/no-restrictions titles |
+| NASA Image and Video Library | US-federal, not copyrighted in US (+ guidelines) | Commercial-safe with guidelines (no logos/endorsement) |
+| FedFlix | Public domain | Commercial-safe |
+| Wikimedia Commons video | CC0 / CC BY / CC BY-SA per file | Commercial-safe for CC0/CC BY; avoid CC BY-SA |
+| Pixabay Videos | Pixabay Content License | Commercial-safe (no standalone redistribution) |
+| Pexels Videos | Pexels License | Commercial-safe (no standalone redistribution) |
+| Coverr | Coverr license | Commercial-safe (no resale/bundling in tools) |
+| Mixkit | Free License / Restricted License per asset | Commercial-safe for Free-License assets only |
+| Videvo | Videvo Attribution / CC 3.0 / royalty-free per clip | Commercial-safe with attribution; check per clip |
+| ffmpeg cinematic filter recipes | LGPL/GPL (build-time tool) | Commercial-safe as build tool |
+| color-grade-ai | MIT | Commercial-safe |
+| HyperFrames | Apache 2.0 | Commercial-safe |
+| Auto-Editor | MIT | Commercial-safe |
+| faster-whisper | MIT | Commercial-safe |
+| Aegisub | BSD-3-Clause (source) | Commercial-safe from source |
+| VMAF + ffmpeg QA | BSD-2-Clause / LGPL-GPL (build-time) | Commercial-safe as QA tooling |
+
+**Pipeline fit:** PD archives (Feature Films, NARA, LOC, NASA, FedFlix, Wikimedia) feed in-game TV screens and promo B-roll; stock sites (Pixabay, Pexels, Coverr, Mixkit, Videvo) supply background plates and texture footage; ffmpeg recipes + color-grade-ai + HyperFrames form the grading/motion-graphics chain; Auto-Editor rough-cuts; faster-whisper + Aegisub caption; VMAF gates broadcast quality. All wired as build-time tools — nothing ships inside the game client except PD/CC0/CC-BY (attributed) media.
