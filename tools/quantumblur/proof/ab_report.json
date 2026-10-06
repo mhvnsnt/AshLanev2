@@ -1,0 +1,58 @@
+{
+  "baseline_smoothness": 0.18002836577217457,
+  "quantum": [
+    {
+      "smoothness_laplacian": 0.17070937179845158,
+      "detail_corr": 0.9998782440680901,
+      "richness_entropy_bits": 6.897122216453545,
+      "terracing_flat_frac": 0.0005040322580645161,
+      "xi": 0.05,
+      "wall_s": 0.1
+    },
+    {
+      "smoothness_laplacian": 0.1478948735819222,
+      "detail_corr": 0.9981453985315399,
+      "richness_entropy_bits": 6.930328489223402,
+      "terracing_flat_frac": 0.0,
+      "xi": 0.1,
+      "wall_s": 0.03
+    },
+    {
+      "smoothness_laplacian": 0.13013289967251923,
+      "detail_corr": 0.9761823925704048,
+      "richness_entropy_bits": 6.910371423598621,
+      "terracing_flat_frac": 0.0,
+      "xi": 0.2,
+      "wall_s": 0.06
+    }
+  ],
+  "classical": [
+    {
+      "smoothness_laplacian": 0.1707567953225983,
+      "detail_corr": 0.9999302321924682,
+      "richness_entropy_bits": 6.892573147004143,
+      "terracing_flat_frac": 0.0010080645161290322,
+      "sigma": 0.343,
+      "matched_xi": 0.05,
+      "wall_s": 0.0003
+    },
+    {
+      "smoothness_laplacian": 0.14828654555198909,
+      "detail_corr": 0.9991143759636324,
+      "richness_entropy_bits": 6.899041472219118,
+      "terracing_flat_frac": 0.0005040322580645161,
+      "sigma": 0.417,
+      "matched_xi": 0.1,
+      "wall_s": 0.0034
+    },
+    {
+      "smoothness_laplacian": 0.130024046441289,
+      "detail_corr": 0.997613255332666,
+      "richness_entropy_bits": 6.882121826204086,
+      "terracing_flat_frac": 0.0,
+      "sigma": 0.468,
+      "matched_xi": 0.2,
+      "wall_s": 0.0003
+    }
+  ]
+}

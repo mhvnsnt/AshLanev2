@@ -21,6 +21,9 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+# Build-time quantum seed service: disk-cached pool + manifest stamping.
+sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..", "..")))
+from qrng_seed import SeedPool, stamp_manifest  # noqa: E402
 
 from seeds import SeedPack  # noqa: E402
 
@@ -146,11 +149,23 @@ def main():
     os.makedirs(proof_dir, exist_ok=True)
 
     print("== AshLane quantum crowd-variant demo ==")
-    pack = SeedPack.new(nbytes=64, sources=("anu",), name=name)
+    # PILOT (QUANTUM-v2): bytes now come from the build-time seed service
+    # (tools/qrng_seed.py) — disk-cached pool with per-batch provenance,
+    # instead of a direct one-shot ANU call. The pool refills itself when
+    # low; the draw_info carries qrng_source/seed/timestamp for the manifest.
+    pool = SeedPool()  # tools/qrng_seed_pool.json (default)
+    qbytes, draw_info = pool.draw(64)
+    pack = SeedPack(qbytes, draw_info["provenance"], name=name)
     print(f"quantum bytes ({len(pack.qbytes)}): {pack.qbytes.hex()[:64]}...")
     print(f"provenance: {pack.provenance}\n")
 
     variant = generate_crowd_variant(pack)
+    # Stamp the build manifest: qrng_source / seed / timestamp make this
+    # variant's "quantum-seeded" claim auditable and reproducible.
+    stamp_manifest(variant, draw_info["qrng_source"], draw_info["seed"],
+                   draw_info["seed_hex"], draw_info["provenance"],
+                   timestamp=draw_info["timestamp"],
+                   extra={"pool_batch_ids": draw_info["pool_batch_ids"]})
     json_path = os.path.join(proof_dir, f"{name}_crowd.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(variant, f, indent=2)

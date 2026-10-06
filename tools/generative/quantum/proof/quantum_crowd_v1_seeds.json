@@ -1,37 +1,37 @@
 {
   "name": "quantum_crowd_v1",
-  "quantum_bytes_hex": "ff02ac739f83c9d86cd13e06893ab05b977d07b6b81c75bed84f148a7a418437479b5761376c79528d6edde813d731e2deb8faaca7e96ef937d2d2fe8175763a",
+  "quantum_bytes_hex": "6866dad2f61d062b8811e3472c45ae4da1ed064585814f094b53a6288755f21f56f41e2817b0dbeec7dc04fcf5a942de9da17ff6295067f8f893a94e18778f79",
   "quantum_bytes_len": 64,
-  "provenance": "anu-qrng: REAL photonic quantum hardware via qrng.anu.edu.au (Australian National University, free public API, no signup). True unpredictability from quantum vacuum-fluctuation measurement.",
+  "provenance": "seed-pool: bytes drawn from the disk-cached pool (/home/hatch/workspace/game-sweep/AshLanev2/tools/qrng_seed_pool.json); per-batch sources: anu-qrng",
   "arena": {
-    "layout": 2028830309045948430,
-    "props": 6029950338772724982,
-    "textures": 8364234797508817680,
-    "lighting": 1737677877359699925,
-    "graffiti": 18165328236067934625,
-    "audio": 3882910805372476557
+    "layout": 2155886073147765361,
+    "props": 5061955528482031290,
+    "textures": 17868457166057417983,
+    "lighting": 10405870886944417306,
+    "graffiti": 12726251416054714661,
+    "audio": 13552145759998050465
   },
   "crowd": {
-    "section_a": 9050800603407452651,
-    "section_b": 13964313226580756815,
-    "section_c": 4140137449107999704,
-    "section_d": 18387848132380375581,
-    "section_e": 16845069986497565645,
-    "section_f": 11288179847908833461,
-    "variation": 16620256670062016955
+    "section_a": 2550296057310362803,
+    "section_b": 15091353300174599177,
+    "section_c": 1985728873053971564,
+    "section_d": 724905429007521592,
+    "section_e": 1293874999761506539,
+    "section_f": 17211635106796284437,
+    "variation": 6384122222207012816
   },
   "textures": {
-    "wall": 7207841874710747155,
-    "ground": 11828708428550495887,
-    "decal": 8406270666611092920,
-    "accent": 12026127669277088625,
-    "wear": 17368830878045826421
+    "wall": 3384306955790542106,
+    "ground": 9333005583741647414,
+    "decal": 9817695400375543817,
+    "accent": 14204688831923353281,
+    "wear": 16534305400138756455
   },
   "props": {
-    "barrier": 2057721489893072212,
-    "trash": 12055874376244014552,
-    "signage": 12587134374441354313,
-    "vehicle": 2835186113102526021,
-    "fixture": 8296666642964792311
+    "barrier": 17456679176911579291,
+    "trash": 18112709343656944723,
+    "signage": 4709227377533050984,
+    "vehicle": 4080966519836974805,
+    "fixture": 10505537704409715656
   }
 }

@@ -67,6 +67,12 @@ class Glb:
             raise ValueError(f"{path}: not a GLB")
         self.json_len = struct.unpack("<I", data[12:16])[0]
         self.js = json.loads(data[20:20 + self.json_len])
+        # Fuzz-found (AFL++, 2026-10-06): a JSON chunk that decodes to a
+        # non-object (e.g. `5` or `[1,2]`) used to crash every downstream
+        # .get()/[] access with AttributeError/TypeError. Reject it here
+        # with a clean error instead.
+        if not isinstance(self.js, dict):
+            raise ValueError(f"{path}: GLB JSON chunk is not an object")
         off = 20 + self.json_len
         self.bin = b""
         if off + 8 <= len(data):

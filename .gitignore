@@ -9,6 +9,7 @@ tools/free-apis/.piper/
 # Voice likeness reference clips — NEVER commit (local only, see tools/voice/REFERENCE_LEDGER.md)
 tools/voice/refs/
 tools/quantum/.venv/
+tools/verify/.venv/
 
 # Quantum seed pool — build cache (refill with: python3 tools/qrng_seed.py refill)
 tools/qrng_seed_pool.json
