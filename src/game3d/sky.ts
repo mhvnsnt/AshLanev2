@@ -194,6 +194,7 @@ void main() {
   float day = smoothstep(0.08, 0.62, uDay);
   col *= mix(0.35, 1.0, max(day, 0.25));
   gl_FragColor = vec4(col, 1.0);
+  #include <colorspace_fragment>
 }`;
 
 export interface BuiltSky {
@@ -270,9 +271,20 @@ export function buildSky(id: DistrictId): BuiltSky {
     orb.position.set(...def.orbPos);
     orb.renderOrder = -8;
     group.add(orb);
-    // soft glow sprite behind orb
+    // soft glow sprite behind orb (radial gradient so the sprite has no visible square edge)
+    const glowCanvas = document.createElement("canvas");
+    glowCanvas.width = glowCanvas.height = 128;
+    const gg = glowCanvas.getContext("2d")!;
+    const grad = gg.createRadialGradient(64, 64, 4, 64, 64, 64);
+    const orbCss = "#" + def.orb.toString(16).padStart(6, "0");
+    grad.addColorStop(0, orbCss);
+    grad.addColorStop(0.4, orbCss + "55");
+    grad.addColorStop(1, orbCss + "00");
+    gg.fillStyle = grad;
+    gg.fillRect(0, 0, 128, 128);
+    const glowTex = new THREE.CanvasTexture(glowCanvas);
     const glowMat = new THREE.SpriteMaterial({
-      color: def.orb, transparent: true, opacity: 0.25,
+      map: glowTex, transparent: true, opacity: 0.6,
       fog: false, depthWrite: false, blending: THREE.AdditiveBlending,
     });
     const glow = new THREE.Sprite(glowMat);

@@ -1,0 +1,97 @@
+{
+  "pack_id": "ashlane-vol1",
+  "pack_version": 1,
+  "generated_by": "Qwen/Qwen2.5-0.5B-Instruct (Apache-2.0), local CPU via tools/free-apis/llm-dialogue-gen.py",
+  "generated_on": "2026-10-06",
+  "license": "CC0",
+  "review_notes": "Human-curated from 5 generation runs (~21 raw lines, ~60% keeper rate). Cut: gibberish artifacts (KOINNOR, COUGH), one suggestive line, weak fillers. Lines are verbatim model output after mechanical cleanup only.",
+  "events": {
+    "fight_start": {
+      "cooldown_sec": 25,
+      "lines": [
+        {
+          "text": "Come on, take a look at us now – this could change everything. You'll never forget it.",
+          "voice": "announcer"
+        },
+        {
+          "text": "Knock out! Everybody's watching this fight start!",
+          "voice": "announcer"
+        }
+      ]
+    },
+    "ko": {
+      "cooldown_sec": 8,
+      "lines": [
+        {
+          "text": "HE'S DOWN! ONE CLEAN SHOT AND THE BLOCK JUST GAVE UP!",
+          "voice": "announcer"
+        },
+        {
+          "text": "Knockout! We've got you covered; your time as a city dweller is numbered!",
+          "voice": "announcer"
+        }
+      ]
+    },
+    "knockdown": {
+      "cooldown_sec": 10,
+      "lines": [
+        {
+          "text": "He's down, one shot wins. Check the road to see who comes first!",
+          "voice": "announcer"
+        }
+      ]
+    },
+    "comeback": {
+      "cooldown_sec": 20,
+      "lines": [
+        {
+          "text": "He's down, but let's not give up yet! Let's get this show started!",
+          "voice": "announcer"
+        }
+      ]
+    },
+    "crowd_hype": {
+      "cooldown_sec": 20,
+      "lines": [
+        {
+          "text": "Knockout! Everybody knows this is coming soon – let's give them all a taste of what they've been missing out on...",
+          "voice": "announcer"
+        }
+      ]
+    },
+    "fight_end": {
+      "cooldown_sec": 30,
+      "lines": [
+        {
+          "text": "It's over! The crowd has been here all night, now we're ready to take out the big guys!",
+          "voice": "announcer"
+        },
+        {
+          "text": "It’s over, get your gear ready because we’re going home!",
+          "voice": "announcer"
+        },
+        {
+          "text": "It’s over! The crowd is here, getting excited about every drop. We’ve gotta show 'em how much we mean it when we say ‘we’re fighting’!",
+          "voice": "announcer"
+        }
+      ]
+    },
+    "taunt": {
+      "cooldown_sec": 15,
+      "lines": [
+        {
+          "text": "Cool, let's give them some headbuttin'!",
+          "voice": "Cipher"
+        },
+        {
+          "text": "I'm not going down now! My buddy’s got a plan!",
+          "voice": "Onyx"
+        },
+        {
+          "text": "Sure thing! I'll be your personal security guard!",
+          "voice": "Onyx"
+        }
+      ]
+    }
+  }
+}

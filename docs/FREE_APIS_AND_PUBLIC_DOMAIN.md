@@ -379,7 +379,7 @@ Both tested and working. No API keys needed.
 - **AshLane use:** background city geometry, district backdrops, stage surroundings. Seedable = reproducible.
 
 ## 26. Mobile Pipeline — LODs + Texture Variants ⭐ WIRE IN NOW
-- **What:** `tools/free-apis/mobile-pipeline.py` — wraps @gltf-transform/cli (Apache-2.0).
+- **What:** `tools/free-apis/mobile-lod-pipeline.py` — wraps @gltf-transform/cli (Apache-2.0).
 - **Does:** generates LOD levels (50%/25% via meshopt simplify) + optional WebP texture variant + JSON size report.
 - **Status:** ✅ TESTED on STICKUP.glb: 18,000 → 8,970 → 4,492 tris; LOD files 49%/41% of source size. WebP texture step warns-and-skips on models with unreadable textures (KTX2 needs the external `ktx` binary — documented in script).
 - **AshLane use:** run on every character/stage GLB at build time; serve LODs by device tier / distance.
@@ -401,7 +401,7 @@ Both tested and working. No API keys needed.
 | Path | What | License | Status |
 |---|---|---|---|
 | `free-apis/piper-voice.py` | Offline TTS, character presets | MIT | ✅ tested |
-| `free-apis/mobile-pipeline.py` | LOD + texture variants | Apache-2.0 (tool) | ✅ tested |
+| `free-apis/mobile-lod-pipeline.py` | LOD + texture variants | Apache-2.0 (tool) | ✅ tested |
 | `worldgen/building-gen.py` | Procedural city blocks → GLB | MIT (new) | ✅ tested |
 | `physics/rapier-proof/rapier-proof.mjs` | Physics determinism proof | Apache-2.0 | ✅ PASS |
 | `accessibility/accessibility.ts` | Colorblind palettes + remappable controls | MIT (new) | ✅ 8/8 tests |
@@ -699,3 +699,11 @@ Branches: `round3/nakama`, `round3/visuals`, `round3/audio`, `round3/content`
 | `src/game3d/arena-crowd.ts` | instanced arena crowd | `round3/visuals` |
 | `src/game3d/stage-dressing.ts` | asphalt overlay + Prelinger TVs | `round3/content` |
 | `src/game3d/nakama-client.ts` | Nakama auth/wallet/leaderboard | `round3/nakama` |
+
+## 29. LLM Dialogue / Commentary Generation ⭐ BATCH PIPELINE
+- **Script:** `tools/free-apis/llm-dialogue-gen.py` — `--kind trashtalk|announcer|quest --character NAME --count N`; backends `hf` (needs free `HF_TOKEN`) / `local` (CPU, offline). Fails gracefully, never fabricates output.
+- **Models (Apache-2.0, licenses verified live 2026-10-05):** `Qwen/Qwen2.5-0.5B-Instruct` (recommended — coherent at temp 0.7, ~8 min/120 tokens on CPU, ~60% keeper rate after human review); `HuggingFaceTB/SmolLM2-360M-Instruct` (faster, low quality — degenerate ALL-CAPS rambling rejected).
+- **Design:** `tools/free-apis/LLM_COMMENTARY.md` — offline batch → human review → commentary-pack JSON → event/cooldown line picker (zero runtime LLM calls). Sample: `samples/commentary-pack.json` (13 curated lines, 7 events, CC0).
+- **HF Inference findings (verified live):** legacy `api-inference.huggingface.co` endpoint dead (empty reply); new `router.huggingface.co` 401s without token — free token required even on free tier.
+- **Free-tier verdicts:** Groq free tier = best quality batch option (no card, no training on data, commercial OK, needs free key); Google AI Studio free tier usable but prompts may train Google models; Pollinations.ai broken (HTTP 500); public Gradio Spaces unreliable. **Never call an LLM during a match — batch/offline only.**
+- **Companion:** `tools/free-apis/dialogue-gen.py` (TTS track) writes curated per-character line packs as JSON ready to feed into `piper-voice.py` — LLM drafts → human review → curated packs → WAVs.

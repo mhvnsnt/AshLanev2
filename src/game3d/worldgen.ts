@@ -199,6 +199,10 @@ export interface GenerateOpts {
   blocks?: number;
   /** include territory storytelling (default true) */
   storytelling?: boolean;
+  /** attach the per-district sky dome (default true).
+   *  Set false when the caller manages a shared sky (e.g. the open city,
+   *  where 9 overlapping domes would z-fight) — see city/city-sky.ts. */
+  sky?: boolean;
 }
 
 const DEFAULT_SEEDS: Record<DistrictId, number> = {
@@ -245,7 +249,8 @@ export function generateDistrict(
   group.userData.fog = { color: def.fogColor, near: def.fogNear, far: def.fogFar };
 
   // -- Per-district sky: dome, stars, sun/moon, clouds, Malakor washes --
-  const sky = attachSkyToDistrict(group, def);
+  // (skipped when the caller manages a shared sky, e.g. the open city)
+  const sky = opts.sky === false ? null : attachSkyToDistrict(group, def);
 
   // -- Street grid --
   for (let bx = 0; bx < blocks; bx++) {
@@ -343,7 +348,7 @@ export function generateDistrict(
 
   // -- Per-frame tick (flicker, flame dance, sky) --
   const tick = (t: number, _dt: number) => {
-    sky.tick(t);
+    sky?.tick(t);
     for (const f of flickers) {
       // fluorescent stutter + fire dance
       const base = f.userData.baseIntensity ?? f.intensity;
@@ -357,7 +362,7 @@ export function generateDistrict(
   };
 
   const dispose = () => {
-    sky.dispose();
+    sky?.dispose();
     group.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (mesh.isMesh) {
