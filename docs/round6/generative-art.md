@@ -21,3 +21,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** Real-ESRGAN repo **BSD-3-Clause** (LICENSE file). ncnn-vulkan code **MIT** (LICENSE file bundles MIT for Real-ESRGAN + MIT for nihui's realsr-ncnn-vulkan + ncnn's BSD-3-Clause). Pretrained weights (RealESRGAN_x4plus etc.) are released by xinntao under **BSD-3-Clause with attribution** — keep the credit line. Nuance: DIV2K training data restricts *dataset* use to academic research; prevailing practice (and the author's choice) treats the *weights* as BSD-3-Clause artifacts. **Excluded:** GFPGAN face-enhance weights (embed NVIDIA StyleGAN2 non-commercial + DFDNet CC-BY-NC-SA) — do NOT bundle those.
 - **Verdict:** **commercial-safe** (BSD-3-Clause/MIT, attribution kept). Ship upscaled art freely; keep a THIRD_PARTY_LICENSES note.
 - **Notes:** The pipeline's resolution ladder: generate small/fast (512px SD drafts) → upscale 4× to 2048px for menu art, character cards, posters, promo-video title plates. AshLane use: upscale AI-generated graffiti pieces, faction logos, and crowd-variety portraits. Anime-6B model is the right pick for cel-shaded/stylized art; x4plus for photoreal textures.
+
+## chaiNNer
+
+- **URL:** https://github.com/chaiNNer-org/chaiNNer
+- **What:** Node-based GUI for chaining image-processing models — upscale (Real-ESRGAN/SwinIR), inpaint, background removal, NCNN/PyTorch/ONNX runtimes — with a visual workflow you can save, share, and run headless via its CLI. The practical "art department workstation" for non-coders (the owner can run saved chains himself).
+- **License:** **GPL-3.0** (LICENSE file).
+- **Verdict:** **prototype-only as a tool** — GPL-3.0 is fine for *build-time* art processing (GPL governs the program, not images it outputs), but never bundle chaiNNer itself into the game or a shipped tool. Output PNGs are ours.
+- **Notes:** AshLane use: build saved chains like "concept art → 4× upscale → background-remove → export PNG" and hand the owner one-click workflows. Pairs with Real-ESRGAN (entry above) and rembg. The node graph maps 1:1 onto a future headless batch script when volume grows.
