@@ -74,3 +74,13 @@
 
 ---
 
+## 8. Ready Player Me
+
+- **URL:** https://readyplayer.me | docs: https://docs.readyplayer.me
+- **What:** Hosted avatar platform: web-based character creator + REST API that returns rigged GLB avatars (full-body, Mixamo-compatible skeleton). Used by many web games for player avatars.
+- **License:** **Avatars are CC BY-NC 4.0 for non-commercial use; commercial games require signing up as a Ready Player Me developer** under their Developer Terms (platform agreement, not an open license). Avatars are fetched from RPM's hosted service — you don't own the asset pipeline, and use is tied to their terms/service availability.
+- **Verdict:** ⚠️ PLATFORM-TIED / prototype-only for our purposes. Terms-based commercial use is possible via a developer agreement, but it's not an open asset source: no offline generation, no ownership of the pipeline, and 30+ distinct NPC fighters would all depend on RPM's service + art style. Fine for a player-avatar feature later; not a character-source strategy.
+- **Notes:** Rejected for the same reason as in the opengym3d survey: hosted service, app-tied. The GLB output IS Mixamo-rig compatible, so any RPM avatar can flow through our existing retarget pipeline — but only under their terms.
+
+---
+
