@@ -122,3 +122,17 @@ Prelinger.
   Sky addon at dusk to this starfield at night. The "Suburban" preset fits
   AshLane's urban night (light-polluted, faint Milky Way); "Fantasy" for SWMG
   cosmic set-pieces.
+
+## procedural-clouds-threejs (CK42BB)
+- **URL:** https://github.com/CK42BB/procedural-clouds-threejs
+- **What:** Third skill in the CK42BB teaching series: procedural three.js clouds —
+  WebGPU raymarching with WebGL2 billboard/mesh fallbacks. Henyey-Greenstein phase
+  scattering, Beer-Lambert + powder shading, silver linings, self-shadowing, and
+  time-of-day palettes (peach dawn → purple twilight). Cloud genera reference:
+  cumulus, stratus, cumulonimbus, cirrus, etc.
+- **License:** MIT ("MIT — use freely in your projects").
+- **Verdict:** commercial-safe
+- **Notes:** Sky-dome cloud layer that reacts to the day/night cycle and weather
+  state machine — storm clouds for the storm state, wispy cirrus for clear days.
+  Gives AshLane's skyline depth without HDRI downloads (Poly Haven HDRIs are a
+  skipped/covered source).
