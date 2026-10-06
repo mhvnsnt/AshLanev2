@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reference Lab — Side-by-Side Animation Comparison</title>
+<style>
+  body { margin:0; background:#111; color:#eee; font-family:system-ui; }
+  #bar { padding:10px; background:#1a1a1a; display:flex; gap:12px; align-items:center; }
+  #panels { display:flex; height: calc(100vh - 120px); }
+  .panel { flex:1; position:relative; border:1px solid #333; }
+  .panel canvas { width:100%; height:100%; display:block; }
+  .label { position:absolute; top:8px; left:8px; background:rgba(0,0,0,.7); padding:4px 10px; font-size:13px; }
+  #notes { padding:10px; background:#1a1a1a; font-size:13px; max-height:70px; overflow:auto; }
+  select, button { background:#333; color:#eee; border:1px solid #555; padding:4px 8px; }
+</style>
+</head>
+<body>
+<div id="bar">
+  <b>REFERENCE LAB</b>
+  <label>Reference anim:
+    <select id="refSel">
+      <option value="tutorStance.json">Tutor Stance (idle)</option>
+      <option value="abigailPunch.json">Abigail Punch (attack)</option>
+      <option value="tutorIntro.json">Tutor Intro</option>
+      <option value="crouchingPunch2.json">Crouching Punch</option>
+      <option value="flyingKick.json">Flying Kick</option>
+    </select>
+  </label>
+  <label>Our model: <select id="ourSel"><option value="">(pick a GLB)</option></select></label>
+  <label>Our clip: <select id="clipSel"><option value="">(from bank)</option></select></label>
+  <button id="play">Play/Pause</button>
+  <span id="status">loading…</span>
+</div>
+<div id="panels">
+  <div class="panel"><div class="label">REFERENCE — Schwarzerblitz (all-rights-reserved, compare only)</div><canvas id="refCanvas"></canvas></div>
+  <div class="panel"><div class="label">OURS — AshLane</div><canvas id="ourCanvas"></canvas></div>
+</div>
+<div id="notes"><b>Comparison notes:</b> <span id="noteText">Watch both panels. Check: feet on ground? Facing = travel? Natural joint motion or stiff/procedural? Note defects here.</span></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// ---------- Reference skeleton player (stick figure from JSON) ----------
+const refRenderer = new THREE.WebGLRenderer({canvas: document.getElementById('refCanvas')});
+const refScene = new THREE.Scene(); refScene.background = new THREE.Color(0x141418);
+const refCam = new THREE.PerspectiveCamera(45, 2, 0.1, 100); refCam.position.set(2.5, 1.6, 3.2); refCam.lookAt(0, 0.9, 0);
+refScene.add(new THREE.GridHelper(6, 12, 0x334455, 0x223344));
+refScene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.2));
+
+let refBones = {};   // name -> Object3D
+let refTracks = null, refTps = 30, refDur = 1, refT = 0, playing = true;
+
+function buildRefSkeleton(data) {
+  for (const k in refBones) refScene.remove(refBones[k]);
+  refBones = {};
+  refTracks = data.tracks; refTps = data.ticks_per_second || 30;
+  refDur = data.duration_ticks / refTps;
+  const mat = new THREE.LineBasicMaterial({color: 0x66ff99});
+  const jmat = new THREE.MeshBasicMaterial({color: 0x66ff99});
+  const jgeo = new THREE.SphereGeometry(0.02, 8, 8);
+  for (const name of data.bones) {
+    const o = new THREE.Object3D(); o.name = name;
+    const j = new THREE.Mesh(jgeo, jmat); o.add(j);
+    refBones[name] = o;
+  }
+  for (const name of data.bones) {
+    const parent = data.hierarchy[name];
+    if (parent && refBones[parent]) refBones[parent].add(refBones[name]);
+    else refScene.add(refBones[name]);
+  }
+  // bone lines
+  window._refLines = [];
+  for (const name of data.bones) {
+    const parent = data.hierarchy[name];
+    if (parent && refBones[parent]) {
+      const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0,0.1,0)]);
+      const l = new THREE.Line(g, mat); refBones[name].add(l); window._refLines.push(l);
+    }
+  }
+  document.getElementById('status').textContent = `ref: ${data.bones.length} bones, ${refDur.toFixed(1)}s`;
+}
+
+function sampleTrack(track, t) {
+  const times = track.times, n = times.length;
+  if (!n) return null;
+  let i = 0;
+  while (i < n - 2 && times[i+1] < t) i++;
+  const t0 = times[i], t1 = times[i+1], f = t1 > t0 ? Math.min(1, Math.max(0, (t - t0)/(t1 - t0))) : 0;
+  const lerp3 = (a,b) => [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f];
+  const qa = new THREE.Quaternion(...track.rot[i]), qb = new THREE.Quaternion(...track.rot[i+1]);
+  qa.slerp(qb, f);
+  return { pos: lerp3(track.pos[i], track.pos[Math.min(i+1,n-1)]), quat: qa };
+}
+
+function poseRef(t) {
+  const tt = (t % refDur + refDur) % refDur * refTps / refTps; // ticks->sec already via refTps
+  const sec = (t % refDur + refDur) % refDur;
+  const tick = sec * refTps;
+  for (const name in refTracks) {
+    const s = sampleTrack(refTracks[name], tick);
+    const o = refBones[name];
+    if (!s || !o) continue;
+    o.position.set(...s.pos);
+    o.quaternion.copy(s.quat);
+  }
+}
+
+async function loadRef(name) {
+  const data = await (await fetch('ref-anims/' + name)).json();
+  buildRefSkeleton(data);
+}
+
+// ---------- Our model player ----------
+const ourRenderer = new THREE.WebGLRenderer({canvas: document.getElementById('ourCanvas')});
+const ourScene = new THREE.Scene(); ourScene.background = new THREE.Color(0x181410);
+const ourCam = new THREE.PerspectiveCamera(45, 2, 0.1, 100); ourCam.position.set(2.5, 1.6, 3.2); ourCam.lookAt(0, 0.9, 0);
+ourScene.add(new THREE.GridHelper(6, 12, 0x554433, 0x443322));
+ourScene.add(new THREE.HemisphereLight(0xffffff, 0x554433, 1.2));
+let ourMixer = null, ourClips = [];
+
+async function loadOurModel(url) {
+  const gltf = await new GLTFLoader().loadAsync(url);
+  ourScene.add(gltf.scene);
+  ourMixer = new THREE.AnimationMixer(gltf.scene);
+  ourClips = gltf.animations;
+  const sel = document.getElementById('clipSel');
+  sel.innerHTML = ourClips.map((c,i)=>`<option value="${i}">${c.name}</option>`).join('');
+  if (ourClips[0]) ourMixer.clipAction(ourClips[0]).play();
+  document.getElementById('status').textContent += ` | ours: ${ourClips.length} clips`;
+}
+
+// ---------- UI ----------
+document.getElementById('refSel').onchange = e => loadRef(e.target.value);
+document.getElementById('play').onclick = () => playing = !playing;
+document.getElementById('clipSel').onchange = e => {
+  if (!ourMixer) return;
+  ourMixer.stopAllAction();
+  ourMixer.clipAction(ourClips[+e.target.value]).play();
+};
+// our model picker: list a few known GLBs (edit as needed)
+const KNOWN = [
+  '/models/ONYX_street.glb',
+  '/models/EL_TORO_DE_ORO.glb',
+  '/models/STATIC.glb',
+];
+const ourSel = document.getElementById('ourSel');
+KNOWN.forEach(u => { const o = document.createElement('option'); o.value = u; o.textContent = u; ourSel.appendChild(o); });
+ourSel.onchange = e => e.target.value && loadOurModel(e.target.value);
+
+function resize() {
+  for (const [r, c] of [[refRenderer, refCam],[ourRenderer, ourCam]]) {
+    const w = r.domElement.parentElement.clientWidth, h = r.domElement.parentElement.clientHeight;
+    r.setSize(w, h, false); c.aspect = w/h; c.updateProjectionMatrix();
+  }
+}
+window.addEventListener('resize', resize); resize();
+
+// ---------- loop ----------
+const clock = new THREE.Clock();
+function loop() {
+  requestAnimationFrame(loop);
+  const dt = Math.min(clock.getDelta(), 0.1);
+  if (playing && refTracks) { refT += dt; poseRef(refT); }
+  if (playing && ourMixer) ourMixer.update(dt);
+  refRenderer.render(refScene, refCam);
+  ourRenderer.render(ourScene, ourCam);
+}
+loadRef('tutorStance.json').then(loop);
+</script>
+</body>
+</html>
