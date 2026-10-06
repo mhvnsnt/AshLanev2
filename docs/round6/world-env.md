@@ -223,3 +223,19 @@ Prelinger.
   Sketchfab channel already documented in round 2 (free account + OAuth token).
   Verify the CC-BY license on the page at download time — Sketchfab licenses are
   per-model.
+
+## OpenGameArt Medieval Tavern Props Pack (System G6 / Qoma)
+- **URL:** https://OpenGameart.org/content/medieval-tavern-props-pack
+- **What:** 19 bar/tavern props (tables, mugs, barrels, etc.), 12–374 tris each,
+  256×256–1024×1024 PNG textures, packed in a single .blend. Medieval styling,
+  but the prop types (bar counter dressing, tankards, barrels, tables) transfer
+  to a dive-bar interior with a texture pass.
+- **License:** Unclear — no formal license on the page; author writes "You don't
+  need to credit me, but if you like you can mention me as System G6 or Qoma."
+  Treat as author-permission, not a standard license.
+- **Verdict:** prototype-only (no standard license on file — re-verify with the
+  author before ship)
+- **Notes:** Interior props are the thinnest CC0 category found this round (bar/
+  gym/club packs are overwhelmingly paid: CGTrader, Fab, ArtStation). This pack
+  is a workable dive-bar dresser for prototypes. Harvest gap flagged: a proper
+  CC0 modern bar/gym/club interior kit is still wanted.
