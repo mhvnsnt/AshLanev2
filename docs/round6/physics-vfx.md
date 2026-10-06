@@ -36,3 +36,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Candidate upgrade path from our hand-rolled `impact-particles.ts` for smoke columns, dust kicks, muzzle flash and weather — GPU path keeps it viable on mobile. API surface is large; wrap behind our own emitter interface if adopted.
 
+## ShaderParticleEngine (SPE)
+- **URL:** https://github.com/squarefeet/ShaderParticleEngine
+- **What:** Shader-based particle engine for three.js. Millions of GPU-driven particles; typed emitter groups (smoke, fire, sparks, rain); pool-based so zero per-frame allocation.
+- **License:** MIT (LICENSE file, squarefeet).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** The fire/smoke specialist: purpose-built emitter presets for flames, smoke plumes and sparks with shader-side turbulence — exactly the trash-can fires, barrel explosions and tire-smoke AshLane needs. Lighter-weight to integrate than three-nebula; evaluate both head-to-head in a prototype shootout.
+
