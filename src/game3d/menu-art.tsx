@@ -45,7 +45,7 @@ const FACTION_ART: Record<FactionId, string> = {
   combine: "menu/faction-combine.webp",
   hollows: "menu/faction-hollows.webp",
   unaffiliated: "menu/faction-unaffiliated.webp",
-  painted: "menu/faction-painted.webp",
+  onyx_gang: "menu/faction-onyx-gang.webp",
   authority: "menu/faction-authority.webp",
 };
 
