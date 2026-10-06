@@ -890,3 +890,43 @@
   height: auto;
   display: block;
 }
+
+/* ============================================================
+   EMBLEM PICKER — player-selectable faction emblems
+   ============================================================ */
+.al-emblem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.al-emblem-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: rgba(20, 13, 8, 0.6);
+  border: 1px solid rgba(240, 180, 41, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.al-emblem-btn:hover {
+  border-color: rgba(240, 180, 41, 0.5);
+  transform: translateY(-1px);
+}
+.al-emblem-btn[data-on="1"] {
+  border-color: #f0b429;
+  background: rgba(240, 180, 41, 0.12);
+  box-shadow: 0 0 12px rgba(240, 180, 41, 0.25);
+}
+.al-emblem-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cream-dim, #a89880);
+}
+.al-emblem-btn[data-on="1"] .al-emblem-label {
+  color: #f0b429;
+}
