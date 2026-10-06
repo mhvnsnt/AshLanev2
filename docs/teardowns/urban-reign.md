@@ -88,7 +88,29 @@ Green Harbor's gang war is a **layered power structure**: street gangs fight eac
 
 Sources: [Wikipedia plot summary](https://en.wikipedia.org/wiki/Urban_Reign) · [Eurogamer Apr 2005 preview](https://www.eurogamer.net/news270405tekkenurban) · [Shinkai](https://villains.fandom.com/wiki/Shinkai) · [Golem](https://villains.fandom.com/wiki/Golem_(Urban_Reign)) · [All The Tropes plot breakdown](https://allthetropes.org/wiki/Urban_Reign) · [digitpress fan review (mission/faction detail)](https://forum.digitpress.com/forum/showthread.php?71009-urban-reign-VERSUS-beatdown-fists-of-vengeance)
 
+## 3b. Factions & Groups — exhaustive
+
+> **Method:** every one of the 60 playable fighters was mapped to a faction from the characters' **in-game bios** (GameFAQs guide/walkthrough by KDKM0506, v2.7), cross-checked against Wikipedia, the Tekken Wiki (Fandom), and the Villains Wiki. Paraphrased throughout — bios are summarized, not quoted.
+>
+> **Two corrections to earlier sections and press-summary lore:**
+> - *The "Zanetti gang" is not in Urban Reign.* The drug-kingpin Zanetti family of Las Sombras belongs to Capcom's **Beat Down: Fists of Vengeance** (2005), a different brawler whose wiki text leaked into the Cubevice Urban Reign page. No Zanetti appears in Urban Reign's 60-fighter roster. The §3 "Zanetti gang" row is superseded.
+> - *There is no separately named "skinhead gang" in the roster.* Press summaries describe "muscle-bound, tattooed skinhead ex-cons" — that visual description maps onto **the Outlaws** (ex-convicts, Mighty physiques, prison ink), not a distinct faction. All 60 fighters are accounted for below with no skinhead gang left over.
+> - *The "Cuban Americans"* are the in-game faction **the Outsiders** (Miguel Estevez et al.).
+> - *Green Hill* yields exactly one playable fighter (Alex Steiner) — kept as a micro-faction row.
+>
+> **Roster reconciliation (60/60):** Triad 2 · Tin-Jiao 5 · Zaps 9 · Hell's Legions 4 · Kadonashi Dojo 4 · Outsiders 4 · Westside Gym 5 · Mushin-Kai 5 · Shadow Platoon 5 · Outlaws 5 · Green Hill 1 · Bordin's machine 1 · Unaffiliated 9 · Guests counted inside Unaffiliated (Law, Paul) = **60**.
+
+| Faction | Leader | Members (n) | Visual identifiers | Turf | Story role | Fighting identity |
+|---|---|---|---|---|---|---|
+| **Shun Ying Lee's Chinese Triad** | Shun Ying Lee (24; inherited Chinatown from her father) | Shun Ying Lee, Lilian Evans (2) | Chinese kung fu dress; **Shun Ying's Chinese sword carried visibly as identity object**; Lilian trains to emulate her "older sister." Restaurant front as cover | Chinatown, Green Harbor; the triad's restaurant | Hires Brad Hawk to find the kidnapped KG and clear her name; at war with the Zaps over a kidnapping she didn't order; split when brother Lin Fong leaves to form Tin-Jiao (he is suspected of murdering their father) | Kung Fu / Chinese sword (Shun Ying); Kung Fu (Lilian) |
+| **Tin-Jiao** (Lin Fong's splinter gang) | Lin Fong Lee (22; Shun Ying's younger brother) | Lin Fong Lee, Ye Wei Cheng, Sha Ying Lai, Yan Jun Kwan, Golem (5) | Same visual family as the triad — Chinese kung fu dress — which is the point: the betrayal reads visually because they *used* to be the same org. Lin Fong's **Chinese broadsword/saber**; Ye Wei Cheng / Sha Ying Lai / Yan Jun Kwan met at their father's dojo; **Golem's 207 cm / 158 kg monster frame** as the gang's "muscle" | Chinatown fringe; recruits from their father's old dojo circle | Succession war against Shun Ying — Lin Fong left town "displeased that his sister was chosen to lead"; employs Golem as bodyguard/assassin against her; suspected patricide | Kung Fu / Chinese broadsword (Lin Fong); Kung Fu ×3; Mighty (Golem) |
+| **The Zaps** | Dwayne Davis (32; orphaned young, fiercely loyal to his "homeboys") | Dwayne Davis, Busta, Spider, Pain Killah, KG, Nas-Tiii, Em Cee, Real Deal, Ty (9) | **Hooded and masked** (the gang's signature); **Dwayne's cornrows**; in-game bios euphemize them as the city's **"'color' gang"** — gang colors worn as trim/accents, never full uniforms; B-boy/hip-hop streetwear (Nas-Tiii is "a true B-boy") | Ragtown street blocks — the neighborhood gang | **The inciting incident:** member KG is kidnapped (ambushed, beaten nearly to death); Dwayne blames Shun Ying's triad and starts the gang war; hires Hell's Legions as muscle and Jake Hudson as a freelancer. Recruited to Brad's side by defeat | Rush (Dwayne, Busta, Spider, Pain Killah, KG); Street (Nas-Tiii, Em Cee, Ty); Power (Real Deal) |
+| **Hell's Legions** (bikers) | Glen Kluger (41; "a thorough biker gang stereotype") | Glen Kluger, Torque, Rod, Seth (4) | **Tattooed heshers**: denim vests, leather, long metalhead hair; Glen is "utterly obsessed with 60's culture" (psychedelic 60s biker accents); **Torque is Glen's "inseparable friend"** — loyalty reads as the club's real uniform | Biker bar hangout (Glen's men gather around his car; bar brawls) | Hired by Dwayne and the Zaps as muscle against Brad and Shun Ying; beaten into alliance — later appear as protectable allies (the defeat-means-friendship engine) | Power (Glen, Torque, Seth); Street (Rod) |
+
+_Tables continue in the same section below — committed in batches._
+
 ## 4. Faction visual distinction — the subtle-identifier system
+
 
 **There are no matching uniforms anywhere in Urban Reign.** Factions read through *subcultural dress codes and physical markers*, never team jerseys. Wikipedia's character-design summary is the key document:
 
