@@ -57,3 +57,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** Coverr license — free for commercial and non-commercial use, no attribution required. Prohibited: reselling, offering clips as part of services or stock sites, trademark/logo misuse.
 - **Verdict:** Commercial-safe for rendered promos. Note the "can't offer as part of services" clause — fine for us (final MP4s, not a clip library), but don't bundle raw Coverr clips into any downloadable tool.
 - **Notes:** Best use: atmospheric background plates and looping textures behind title cards. Quality-over-quantity alternative to Pixabay.
+## Mixkit (Envato)
+- **URL:** https://mixkit.co/license/
+- **What:** Free curated stock video, music, SFX, and Premiere Pro / After Effects templates. No sign-up, no watermark, instant download.
+- **License:** TWO tiers per asset — Mixkit Free License (most assets): commercial use OK, no attribution; Mixkit Restricted License (some clips): personal/educational ONLY, no ads/company social/commercial YouTube. CHECK THE LICENSE ON EACH DOWNLOAD.
+- **Verdict:** Commercial-safe for Free-License assets only. Restricted-license clips are prototype/personal only.
+- **Notes:** Also supplies free title/lower-third templates (Premiere + AE; no Resolve/FCP templates). Music license excludes games/broadcast — use only in the promo videos, not the game.
