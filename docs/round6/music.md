@@ -34,3 +34,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe, no attribution needed.
 - **Notes:** ⚠️ Site shut down late 2025 — source from the GitHub mirrors or Internet Archive; verify the CC0 banner via Wayback if audited. Do NOT confuse with incompetech.com (MacLeod's main catalog is CC-BY, not PD). Menu/combat BGM without any credit-line obligation.
 
+## 5. Musopen
+- **URL:** https://musopen.org
+- **What:** Non-profit library of public-domain sheet music and classical recordings (Beethoven, Brahms, Tchaikovsky symphonies recorded by Czech Philharmonic, commissioned for public-domain release). Also hosts contributed recordings.
+- **License:** **Per-recording — check the license icon on the exact recording.** Many recordings carry Public Domain Mark 1.0 (PDM); some contributed recordings are CC-BY or CC-BY-NC-SA. Composition being PD does NOT make the recording PD — verify the recording's own license.
+- **Verdict:** ⚠️ **Mixed** — PDM 1.0-marked recordings are commercial-safe (no attribution); CC-BY recordings are commercial-safe WITH attribution; CC-BY-NC-SA recordings = prototype-only, never ship.
+- **Notes:** Classical/orchestral for dramatic entrances (Bannon wrestling entrances!), cinematic stingers, menu elegance. Keep a per-track provenance record (recording + license URL). Musopen's ToS boilerplate disclaims warranty of PD status — the per-recording icon is the authority.
+
