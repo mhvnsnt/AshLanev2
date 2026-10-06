@@ -63,3 +63,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** TWO tiers per asset — Mixkit Free License (most assets): commercial use OK, no attribution; Mixkit Restricted License (some clips): personal/educational ONLY, no ads/company social/commercial YouTube. CHECK THE LICENSE ON EACH DOWNLOAD.
 - **Verdict:** Commercial-safe for Free-License assets only. Restricted-license clips are prototype/personal only.
 - **Notes:** Also supplies free title/lower-third templates (Premiere + AE; no Resolve/FCP templates). Music license excludes games/broadcast — use only in the promo videos, not the game.
+## Videvo
+- **URL:** https://videvo.net (now redirects to Magnific's video section)
+- **What:** Large free+premium library of HD/4K stock footage, motion graphics, and video templates; free music/SFX section. Rare free source of AE/Premiere motion-graphic templates.
+- **License:** MIXED per clip — Videvo Attribution License or Creative Commons 3.0 (attribution required, commercial OK) on free clips; royalty-free tier (no attribution) on some; premium paid plans remove attribution.
+- **Verdict:** Commercial-safe with attribution for free clips; check EACH clip's license badge before use. Premium tier available if attribution-free is required.
+- **Notes:** Motion-graphics templates are the standout vs Pixabay/Pexels. Verify license per clip — the free/premium mix is the main trap.
