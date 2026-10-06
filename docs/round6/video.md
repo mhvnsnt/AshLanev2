@@ -93,3 +93,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** MIT.
 - **Verdict:** Commercial-safe (MIT).
 - **Notes:** Automates the rough-cut stage of the 50-second promos: drop in the staged capture, get a tight cut on speech/motion beats, then hand the EDL to the grading pipeline. Companion option: `kiy0ni/auto-video-editor` (newer rewrite with Whisper word-timestamps + caption export) — evaluate both.
+## faster-whisper (MIT) — caption/subtitle generation
+- **URL:** https://github.com/SYSTRAN/faster-whisper
+- **What:** Fast CTranslate2-based reimplementation of OpenAI Whisper — transcription with word-level timestamps, VAD, translation. 4x faster than stock Whisper with less memory.
+- **License:** MIT (code; Systran's CTranslate2 model conversions also MIT; underlying OpenAI Whisper MIT).
+- **Verdict:** Commercial-safe (MIT).
+- **Notes:** The caption engine for promos: transcribe narration/dialogue → word timestamps → burn styled captions via ffmpeg `subtitles` filter. Pair with `stable-ts` (MIT) for word-alignment refinement. Local, no API keys, GPU-optional.
