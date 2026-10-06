@@ -14962,6 +14962,302 @@ var Material = class extends EventDispatcher {
 		if (value === true) this.version++;
 	}
 };
+/**
+* A material for rendering instances of {@link Sprite}.
+*
+* ```js
+* const map = new THREE.TextureLoader().load( 'textures/sprite.png' );
+* const material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+*
+* const sprite = new THREE.Sprite( material );
+* sprite.scale.set(200, 200, 1)
+* scene.add( sprite );
+* ```
+*
+* @augments Material
+*/
+var SpriteMaterial = class extends Material {
+	/**
+	* Constructs a new sprite material.
+	*
+	* @param {Object} [parameters] - An object with one or more properties
+	* defining the material's appearance. Any property of the material
+	* (including any property from inherited materials) can be passed
+	* in here. Color values can be passed any type of value accepted
+	* by {@link Color#set}.
+	*/
+	constructor(parameters) {
+		super();
+		/**
+		* This flag can be used for type testing.
+		*
+		* @type {boolean}
+		* @readonly
+		* @default true
+		*/
+		this.isSpriteMaterial = true;
+		this.type = "SpriteMaterial";
+		/**
+		* Color of the material.
+		*
+		* @type {Color}
+		* @default (1,1,1)
+		*/
+		this.color = new Color(16777215);
+		/**
+		* The color map. May optionally include an alpha channel, typically combined
+		* with {@link Material#transparent} or {@link Material#alphaTest}. The texture map
+		* color is modulated by the diffuse `color`.
+		*
+		* `map` represents color data, and the texture must be assigned a
+		* {@link Texture#colorSpace}. Most `map` textures set
+		* `texture.colorSpace = SRGBColorSpace`.
+		*
+		* @type {?Texture}
+		* @default null
+		*/
+		this.map = null;
+		/**
+		* The alpha map is a grayscale texture that controls the opacity across the
+		* surface (black: fully transparent; white: fully opaque).
+		*
+		* Only the color of the texture is used, ignoring the alpha channel if one
+		* exists. For RGB and RGBA textures, the renderer will use the green channel
+		* when sampling this texture due to the extra bit of precision provided for
+		* green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and
+		* luminance/alpha textures will also still work as expected.
+		*
+		* `alphaMap` represents non-color data. Any texture assigned must have
+		* `texture.colorSpace = NoColorSpace` (default).
+		*
+		* @type {?Texture}
+		* @default null
+		*/
+		this.alphaMap = null;
+		/**
+		* The rotation of the sprite in radians.
+		*
+		* @type {number}
+		* @default 0
+		*/
+		this.rotation = 0;
+		/**
+		* Specifies whether size of the sprite is attenuated by the camera depth (perspective camera only).
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.sizeAttenuation = true;
+		/**
+		* Overwritten since sprite materials are transparent
+		* by default.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.transparent = true;
+		/**
+		* Whether the material is affected by fog or not.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.fog = true;
+		this.setValues(parameters);
+	}
+	copy(source) {
+		super.copy(source);
+		this.color.copy(source.color);
+		this.map = source.map;
+		this.alphaMap = source.alphaMap;
+		this.rotation = source.rotation;
+		this.sizeAttenuation = source.sizeAttenuation;
+		this.fog = source.fog;
+		return this;
+	}
+};
+var _geometry$1;
+var _intersectPoint = /*@__PURE__*/ new Vector3();
+var _worldScale = /*@__PURE__*/ new Vector3();
+var _mvPosition = /*@__PURE__*/ new Vector3();
+var _alignedPosition = /*@__PURE__*/ new Vector2();
+var _rotatedPosition = /*@__PURE__*/ new Vector2();
+var _viewWorldMatrix = /*@__PURE__*/ new Matrix4();
+var _vA$1 = /*@__PURE__*/ new Vector3();
+var _vB$1 = /*@__PURE__*/ new Vector3();
+var _vC$1 = /*@__PURE__*/ new Vector3();
+var _uvA = /*@__PURE__*/ new Vector2();
+var _uvB = /*@__PURE__*/ new Vector2();
+var _uvC = /*@__PURE__*/ new Vector2();
+/**
+* A sprite is a plane that always faces towards the camera, generally with a
+* partially transparent texture applied.
+*
+* Sprites do not cast shadows, setting {@link Object3D#castShadow} to `true` will
+* have no effect.
+*
+* ```js
+* const map = new THREE.TextureLoader().load( 'sprite.png' );
+* const material = new THREE.SpriteMaterial( { map: map } );
+*
+* const sprite = new THREE.Sprite( material );
+* scene.add( sprite );
+* ```
+*
+* @augments Object3D
+*/
+var Sprite = class extends Object3D {
+	/**
+	* Constructs a new sprite.
+	*
+	* @param {(SpriteMaterial|SpriteNodeMaterial)} [material] - The sprite material.
+	*/
+	constructor(material = new SpriteMaterial()) {
+		super();
+		/**
+		* This flag can be used for type testing.
+		*
+		* @type {boolean}
+		* @readonly
+		* @default true
+		*/
+		this.isSprite = true;
+		this.type = "Sprite";
+		if (_geometry$1 === void 0) {
+			_geometry$1 = new BufferGeometry();
+			const interleavedBuffer = new InterleavedBuffer(new Float32Array([
+				-.5,
+				-.5,
+				0,
+				0,
+				0,
+				.5,
+				-.5,
+				0,
+				1,
+				0,
+				.5,
+				.5,
+				0,
+				1,
+				1,
+				-.5,
+				.5,
+				0,
+				0,
+				1
+			]), 5);
+			_geometry$1.setIndex([
+				0,
+				1,
+				2,
+				0,
+				2,
+				3
+			]);
+			_geometry$1.setAttribute("position", new InterleavedBufferAttribute(interleavedBuffer, 3, 0, false));
+			_geometry$1.setAttribute("uv", new InterleavedBufferAttribute(interleavedBuffer, 2, 3, false));
+		}
+		/**
+		* The sprite geometry.
+		*
+		* @type {BufferGeometry}
+		*/
+		this.geometry = _geometry$1;
+		/**
+		* The sprite material.
+		*
+		* @type {(SpriteMaterial|SpriteNodeMaterial)}
+		*/
+		this.material = material;
+		/**
+		* The sprite's anchor point, and the point around which the sprite rotates.
+		* A value of `(0.5, 0.5)` corresponds to the midpoint of the sprite. A value
+		* of `(0, 0)` corresponds to the lower left corner of the sprite.
+		*
+		* @type {Vector2}
+		* @default (0.5,0.5)
+		*/
+		this.center = new Vector2(.5, .5);
+		/**
+		* The number of instances of this sprite.
+		* Can only be used with {@link WebGPURenderer}.
+		*
+		* @type {number}
+		* @default 1
+		*/
+		this.count = 1;
+	}
+	/**
+	* Returns `true` if this sprite intersects the given frustum.
+	*
+	* @param {Frustum|FrustumArray} frustum - The frustum to test.
+	* @return {boolean} Whether this sprite intersects the given frustum or not.
+	*/
+	intersectsFrustum(frustum) {
+		return frustum.intersectsSprite(this);
+	}
+	/**
+	* Computes intersection points between a casted ray and this sprite.
+	*
+	* @param {Raycaster} raycaster - The raycaster.
+	* @param {Array<Object>} intersects - The target array that holds the intersection points.
+	*/
+	raycast(raycaster, intersects) {
+		if (raycaster.camera === null) error("Sprite: \"Raycaster.camera\" needs to be set in order to raycast against sprites.");
+		_worldScale.setFromMatrixScale(this.matrixWorld);
+		_viewWorldMatrix.copy(raycaster.camera.matrixWorld);
+		this.modelViewMatrix.multiplyMatrices(raycaster.camera.matrixWorldInverse, this.matrixWorld);
+		_mvPosition.setFromMatrixPosition(this.modelViewMatrix);
+		if (raycaster.camera.isPerspectiveCamera && this.material.sizeAttenuation === false) _worldScale.multiplyScalar(-_mvPosition.z);
+		const rotation = this.material.rotation;
+		let sin, cos;
+		if (rotation !== 0) {
+			cos = Math.cos(rotation);
+			sin = Math.sin(rotation);
+		}
+		const center = this.center;
+		transformVertex(_vA$1.set(-.5, -.5, 0), _mvPosition, center, _worldScale, sin, cos);
+		transformVertex(_vB$1.set(.5, -.5, 0), _mvPosition, center, _worldScale, sin, cos);
+		transformVertex(_vC$1.set(.5, .5, 0), _mvPosition, center, _worldScale, sin, cos);
+		_uvA.set(0, 0);
+		_uvB.set(1, 0);
+		_uvC.set(1, 1);
+		let intersect = raycaster.ray.intersectTriangle(_vA$1, _vB$1, _vC$1, false, _intersectPoint);
+		if (intersect === null) {
+			transformVertex(_vB$1.set(-.5, .5, 0), _mvPosition, center, _worldScale, sin, cos);
+			_uvB.set(0, 1);
+			intersect = raycaster.ray.intersectTriangle(_vA$1, _vC$1, _vB$1, false, _intersectPoint);
+			if (intersect === null) return;
+		}
+		const distance = raycaster.ray.origin.distanceTo(_intersectPoint);
+		if (distance < raycaster.near || distance > raycaster.far) return;
+		intersects.push({
+			distance,
+			point: _intersectPoint.clone(),
+			uv: Triangle.getInterpolation(_intersectPoint, _vA$1, _vB$1, _vC$1, _uvA, _uvB, _uvC, new Vector2()),
+			face: null,
+			object: this
+		});
+	}
+	copy(source, recursive) {
+		super.copy(source, recursive);
+		if (source.center !== void 0) this.center.copy(source.center);
+		this.material = source.material;
+		return this;
+	}
+};
+function transformVertex(vertexPosition, mvPosition, center, scale, sin, cos) {
+	_alignedPosition.subVectors(vertexPosition, center).addScalar(.5).multiply(scale);
+	if (sin !== void 0) {
+		_rotatedPosition.x = cos * _alignedPosition.x - sin * _alignedPosition.y;
+		_rotatedPosition.y = sin * _alignedPosition.x + cos * _alignedPosition.y;
+	} else _rotatedPosition.copy(_alignedPosition);
+	vertexPosition.copy(mvPosition);
+	vertexPosition.x += _rotatedPosition.x;
+	vertexPosition.y += _rotatedPosition.y;
+	vertexPosition.applyMatrix4(_viewWorldMatrix);
+}
 var _vector$7 = /*@__PURE__*/ new Vector3();
 var _segCenter = /*@__PURE__*/ new Vector3();
 var _segDir = /*@__PURE__*/ new Vector3();
@@ -18008,6 +18304,139 @@ var BoxGeometry = class BoxGeometry extends BufferGeometry {
 	}
 };
 /**
+* A geometry class for representing a capsule.
+*
+* ```js
+* const geometry = new THREE.CapsuleGeometry( 1, 1, 4, 8, 1 );
+* const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+* const capsule = new THREE.Mesh( geometry, material );
+* scene.add( capsule );
+* ```
+*
+* @augments BufferGeometry
+* @demo scenes/geometry-browser.html#CapsuleGeometry
+*/
+var CapsuleGeometry = class CapsuleGeometry extends BufferGeometry {
+	/**
+	* Constructs a new capsule geometry.
+	*
+	* @param {number} [radius=1] - Radius of the capsule.
+	* @param {number} [height=1] - Height of the middle section.
+	* @param {number} [capSegments=4] - Number of curve segments used to build each cap.
+	* @param {number} [radialSegments=8] - Number of segmented faces around the circumference of the capsule. Must be an integer >= 3.
+	* @param {number} [heightSegments=1] - Number of rows of faces along the height of the middle section. Must be an integer >= 1.
+	*/
+	constructor(radius = 1, height = 1, capSegments = 4, radialSegments = 8, heightSegments = 1) {
+		super();
+		this.type = "CapsuleGeometry";
+		/**
+		* Holds the constructor parameters that have been
+		* used to generate the geometry. Any modification
+		* after instantiation does not change the geometry.
+		*
+		* @type {Object}
+		*/
+		this.parameters = {
+			radius,
+			height,
+			capSegments,
+			radialSegments,
+			heightSegments
+		};
+		height = Math.max(0, height);
+		capSegments = Math.max(1, Math.floor(capSegments));
+		radialSegments = Math.max(3, Math.floor(radialSegments));
+		heightSegments = Math.max(1, Math.floor(heightSegments));
+		const indices = [];
+		const vertices = [];
+		const normals = [];
+		const uvs = [];
+		const halfHeight = height / 2;
+		const capArcLength = Math.PI / 2 * radius;
+		const cylinderPartLength = height;
+		const totalArcLength = 2 * capArcLength + cylinderPartLength;
+		const numVerticalSegments = capSegments * 2 + heightSegments;
+		const verticesPerRow = radialSegments + 1;
+		const normal = new Vector3();
+		const vertex = new Vector3();
+		for (let iy = 0; iy <= numVerticalSegments; iy++) {
+			let currentArcLength = 0;
+			let profileY = 0;
+			let profileRadius = 0;
+			let normalYComponent = 0;
+			if (iy <= capSegments) {
+				const segmentProgress = iy / capSegments;
+				const angle = segmentProgress * Math.PI / 2;
+				profileY = -halfHeight - radius * Math.cos(angle);
+				profileRadius = radius * Math.sin(angle);
+				normalYComponent = -radius * Math.cos(angle);
+				currentArcLength = segmentProgress * capArcLength;
+			} else if (iy <= capSegments + heightSegments) {
+				const segmentProgress = (iy - capSegments) / heightSegments;
+				profileY = -halfHeight + segmentProgress * height;
+				profileRadius = radius;
+				normalYComponent = 0;
+				currentArcLength = capArcLength + segmentProgress * cylinderPartLength;
+			} else {
+				const segmentProgress = (iy - capSegments - heightSegments) / capSegments;
+				const angle = segmentProgress * Math.PI / 2;
+				profileY = halfHeight + radius * Math.sin(angle);
+				profileRadius = radius * Math.cos(angle);
+				normalYComponent = radius * Math.sin(angle);
+				currentArcLength = capArcLength + cylinderPartLength + segmentProgress * capArcLength;
+			}
+			const v = Math.max(0, Math.min(1, currentArcLength / totalArcLength));
+			let uOffset = 0;
+			if (iy === 0) uOffset = .5 / radialSegments;
+			else if (iy === numVerticalSegments) uOffset = -.5 / radialSegments;
+			for (let ix = 0; ix <= radialSegments; ix++) {
+				const u = ix / radialSegments;
+				const theta = u * Math.PI * 2;
+				const sinTheta = Math.sin(theta);
+				const cosTheta = Math.cos(theta);
+				vertex.x = -profileRadius * cosTheta;
+				vertex.y = profileY;
+				vertex.z = profileRadius * sinTheta;
+				vertices.push(vertex.x, vertex.y, vertex.z);
+				normal.set(-profileRadius * cosTheta, normalYComponent, profileRadius * sinTheta);
+				normal.normalize();
+				normals.push(normal.x, normal.y, normal.z);
+				uvs.push(u + uOffset, v);
+			}
+			if (iy > 0) {
+				const prevIndexRow = (iy - 1) * verticesPerRow;
+				for (let ix = 0; ix < radialSegments; ix++) {
+					const i1 = prevIndexRow + ix;
+					const i2 = prevIndexRow + ix + 1;
+					const i3 = iy * verticesPerRow + ix;
+					const i4 = iy * verticesPerRow + ix + 1;
+					indices.push(i1, i2, i3);
+					indices.push(i2, i4, i3);
+				}
+			}
+		}
+		this.setIndex(indices);
+		this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+		this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+		this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+	}
+	copy(source) {
+		super.copy(source);
+		this.parameters = Object.assign({}, source.parameters);
+		return this;
+	}
+	/**
+	* Factory method for creating an instance of this class from the given
+	* JSON object.
+	*
+	* @param {Object} data - A JSON object representing the serialized geometry.
+	* @return {CapsuleGeometry} A new instance.
+	*/
+	static fromJSON(data) {
+		return new CapsuleGeometry(data.radius, data.height, data.capSegments, data.radialSegments, data.heightSegments);
+	}
+};
+/**
 * A simple shape of Euclidean geometry. It is constructed from a
 * number of triangular segments that are oriented around a central point and
 * extend as far out as a given radius. It is built counter-clockwise from a
@@ -18255,6 +18684,520 @@ var CylinderGeometry = class CylinderGeometry extends BufferGeometry {
 	*/
 	static fromJSON(data) {
 		return new CylinderGeometry(data.radiusTop, data.radiusBottom, data.height, data.radialSegments, data.heightSegments, data.openEnded, data.thetaStart, data.thetaLength);
+	}
+};
+/**
+* A geometry class for representing a cone.
+*
+* ```js
+* const geometry = new THREE.ConeGeometry( 5, 20, 32 );
+* const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+* const cone = new THREE.Mesh(geometry, material );
+* scene.add( cone );
+* ```
+*
+* @augments CylinderGeometry
+* @demo scenes/geometry-browser.html#ConeGeometry
+*/
+var ConeGeometry = class ConeGeometry extends CylinderGeometry {
+	/**
+	* Constructs a new cone geometry.
+	*
+	* @param {number} [radius=1] - Radius of the cone base.
+	* @param {number} [height=1] - Height of the cone.
+	* @param {number} [radialSegments=32] - Number of segmented faces around the circumference of the cone.
+	* @param {number} [heightSegments=1] - Number of rows of faces along the height of the cone.
+	* @param {boolean} [openEnded=false] - Whether the base of the cone is open or capped.
+	* @param {number} [thetaStart=0] - Start angle for first segment, in radians.
+	* @param {number} [thetaLength=Math.PI*2] - The central angle, often called theta, of the circular sector, in radians.
+	* The default value results in a complete cone.
+	*/
+	constructor(radius = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2) {
+		super(0, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
+		this.type = "ConeGeometry";
+		/**
+		* Holds the constructor parameters that have been
+		* used to generate the geometry. Any modification
+		* after instantiation does not change the geometry.
+		*
+		* @type {Object}
+		*/
+		this.parameters = {
+			radius,
+			height,
+			radialSegments,
+			heightSegments,
+			openEnded,
+			thetaStart,
+			thetaLength
+		};
+	}
+	/**
+	* Factory method for creating an instance of this class from the given
+	* JSON object.
+	*
+	* @param {Object} data - A JSON object representing the serialized geometry.
+	* @return {ConeGeometry} A new instance.
+	*/
+	static fromJSON(data) {
+		return new ConeGeometry(data.radius, data.height, data.radialSegments, data.heightSegments, data.openEnded, data.thetaStart, data.thetaLength);
+	}
+};
+/**
+* A polyhedron is a solid in three dimensions with flat faces. This class
+* will take an array of vertices, project them onto a sphere, and then
+* divide them up to the desired level of detail.
+*
+* @augments BufferGeometry
+*/
+var PolyhedronGeometry = class PolyhedronGeometry extends BufferGeometry {
+	/**
+	* Constructs a new polyhedron geometry.
+	*
+	* @param {Array<number>} [vertices] - A flat array of vertices describing the base shape.
+	* @param {Array<number>} [indices] - A flat array of indices describing the base shape.
+	* @param {number} [radius=1] - The radius of the shape.
+	* @param {number} [detail=0] - How many levels to subdivide the geometry. The more detail, the smoother the shape.
+	*/
+	constructor(vertices = [], indices = [], radius = 1, detail = 0) {
+		super();
+		this.type = "PolyhedronGeometry";
+		/**
+		* Holds the constructor parameters that have been
+		* used to generate the geometry. Any modification
+		* after instantiation does not change the geometry.
+		*
+		* @type {Object}
+		*/
+		this.parameters = {
+			vertices,
+			indices,
+			radius,
+			detail
+		};
+		const vertexBuffer = [];
+		const uvBuffer = [];
+		subdivide(detail);
+		applyRadius(radius);
+		generateUVs();
+		this.setAttribute("position", new Float32BufferAttribute(vertexBuffer, 3));
+		this.setAttribute("normal", new Float32BufferAttribute(vertexBuffer.slice(), 3));
+		this.setAttribute("uv", new Float32BufferAttribute(uvBuffer, 2));
+		if (detail === 0) this.computeVertexNormals();
+		else this.normalizeNormals();
+		function subdivide(detail) {
+			const a = new Vector3();
+			const b = new Vector3();
+			const c = new Vector3();
+			for (let i = 0; i < indices.length; i += 3) {
+				getVertexByIndex(indices[i + 0], a);
+				getVertexByIndex(indices[i + 1], b);
+				getVertexByIndex(indices[i + 2], c);
+				subdivideFace(a, b, c, detail);
+			}
+		}
+		function subdivideFace(a, b, c, detail) {
+			const cols = detail + 1;
+			const v = [];
+			for (let i = 0; i <= cols; i++) {
+				v[i] = [];
+				const aj = a.clone().lerp(c, i / cols);
+				const bj = b.clone().lerp(c, i / cols);
+				const rows = cols - i;
+				for (let j = 0; j <= rows; j++) if (j === 0 && i === cols) v[i][j] = aj;
+				else v[i][j] = aj.clone().lerp(bj, j / rows);
+			}
+			for (let i = 0; i < cols; i++) for (let j = 0; j < 2 * (cols - i) - 1; j++) {
+				const k = Math.floor(j / 2);
+				if (j % 2 === 0) {
+					pushVertex(v[i][k + 1]);
+					pushVertex(v[i + 1][k]);
+					pushVertex(v[i][k]);
+				} else {
+					pushVertex(v[i][k + 1]);
+					pushVertex(v[i + 1][k + 1]);
+					pushVertex(v[i + 1][k]);
+				}
+			}
+		}
+		function applyRadius(radius) {
+			const vertex = new Vector3();
+			for (let i = 0; i < vertexBuffer.length; i += 3) {
+				vertex.x = vertexBuffer[i + 0];
+				vertex.y = vertexBuffer[i + 1];
+				vertex.z = vertexBuffer[i + 2];
+				vertex.normalize().multiplyScalar(radius);
+				vertexBuffer[i + 0] = vertex.x;
+				vertexBuffer[i + 1] = vertex.y;
+				vertexBuffer[i + 2] = vertex.z;
+			}
+		}
+		function generateUVs() {
+			const vertex = new Vector3();
+			for (let i = 0; i < vertexBuffer.length; i += 3) {
+				vertex.x = vertexBuffer[i + 0];
+				vertex.y = vertexBuffer[i + 1];
+				vertex.z = vertexBuffer[i + 2];
+				const u = azimuth(vertex) / 2 / Math.PI + .5;
+				const v = inclination(vertex) / Math.PI + .5;
+				uvBuffer.push(u, 1 - v);
+			}
+			correctUVs();
+			correctSeam();
+		}
+		function correctSeam() {
+			for (let i = 0; i < uvBuffer.length; i += 6) {
+				const x0 = uvBuffer[i + 0];
+				const x1 = uvBuffer[i + 2];
+				const x2 = uvBuffer[i + 4];
+				if (Math.max(x0, x1, x2) > .9 && Math.min(x0, x1, x2) < .1) {
+					if (x0 < .2) uvBuffer[i + 0] += 1;
+					if (x1 < .2) uvBuffer[i + 2] += 1;
+					if (x2 < .2) uvBuffer[i + 4] += 1;
+				}
+			}
+		}
+		function pushVertex(vertex) {
+			vertexBuffer.push(vertex.x, vertex.y, vertex.z);
+		}
+		function getVertexByIndex(index, vertex) {
+			const stride = index * 3;
+			vertex.x = vertices[stride + 0];
+			vertex.y = vertices[stride + 1];
+			vertex.z = vertices[stride + 2];
+		}
+		function correctUVs() {
+			const a = new Vector3();
+			const b = new Vector3();
+			const c = new Vector3();
+			const centroid = new Vector3();
+			const uvA = new Vector2();
+			const uvB = new Vector2();
+			const uvC = new Vector2();
+			for (let i = 0, j = 0; i < vertexBuffer.length; i += 9, j += 6) {
+				a.set(vertexBuffer[i + 0], vertexBuffer[i + 1], vertexBuffer[i + 2]);
+				b.set(vertexBuffer[i + 3], vertexBuffer[i + 4], vertexBuffer[i + 5]);
+				c.set(vertexBuffer[i + 6], vertexBuffer[i + 7], vertexBuffer[i + 8]);
+				uvA.set(uvBuffer[j + 0], uvBuffer[j + 1]);
+				uvB.set(uvBuffer[j + 2], uvBuffer[j + 3]);
+				uvC.set(uvBuffer[j + 4], uvBuffer[j + 5]);
+				centroid.copy(a).add(b).add(c).divideScalar(3);
+				const azi = azimuth(centroid);
+				correctUV(uvA, j + 0, a, azi);
+				correctUV(uvB, j + 2, b, azi);
+				correctUV(uvC, j + 4, c, azi);
+			}
+		}
+		function correctUV(uv, stride, vector, azimuth) {
+			if (azimuth < 0 && uv.x === 1) uvBuffer[stride] = uv.x - 1;
+			if (vector.x === 0 && vector.z === 0) uvBuffer[stride] = azimuth / 2 / Math.PI + .5;
+		}
+		function azimuth(vector) {
+			return Math.atan2(vector.z, -vector.x);
+		}
+		function inclination(vector) {
+			return Math.atan2(-vector.y, Math.sqrt(vector.x * vector.x + vector.z * vector.z));
+		}
+	}
+	copy(source) {
+		super.copy(source);
+		this.parameters = Object.assign({}, source.parameters);
+		return this;
+	}
+	/**
+	* Factory method for creating an instance of this class from the given
+	* JSON object.
+	*
+	* @param {Object} data - A JSON object representing the serialized geometry.
+	* @return {PolyhedronGeometry} A new instance.
+	*/
+	static fromJSON(data) {
+		return new PolyhedronGeometry(data.vertices, data.indices, data.radius, data.detail);
+	}
+};
+/**
+* A geometry class for representing an icosahedron.
+*
+* ```js
+* const geometry = new THREE.IcosahedronGeometry();
+* const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+* const icosahedron = new THREE.Mesh( geometry, material );
+* scene.add( icosahedron );
+* ```
+*
+* @augments PolyhedronGeometry
+* @demo scenes/geometry-browser.html#IcosahedronGeometry
+*/
+var IcosahedronGeometry = class IcosahedronGeometry extends PolyhedronGeometry {
+	/**
+	* Constructs a new icosahedron geometry.
+	*
+	* @param {number} [radius=1] - Radius of the icosahedron.
+	* @param {number} [detail=0] - Setting this to a value greater than `0` adds vertices making it no longer a icosahedron.
+	*/
+	constructor(radius = 1, detail = 0) {
+		const t = (1 + Math.sqrt(5)) / 2;
+		const vertices = [
+			-1,
+			t,
+			0,
+			1,
+			t,
+			0,
+			-1,
+			-t,
+			0,
+			1,
+			-t,
+			0,
+			0,
+			-1,
+			t,
+			0,
+			1,
+			t,
+			0,
+			-1,
+			-t,
+			0,
+			1,
+			-t,
+			t,
+			0,
+			-1,
+			t,
+			0,
+			1,
+			-t,
+			0,
+			-1,
+			-t,
+			0,
+			1
+		];
+		super(vertices, [
+			0,
+			11,
+			5,
+			0,
+			5,
+			1,
+			0,
+			1,
+			7,
+			0,
+			7,
+			10,
+			0,
+			10,
+			11,
+			1,
+			5,
+			9,
+			5,
+			11,
+			4,
+			11,
+			10,
+			2,
+			10,
+			7,
+			6,
+			7,
+			1,
+			8,
+			3,
+			9,
+			4,
+			3,
+			4,
+			2,
+			3,
+			2,
+			6,
+			3,
+			6,
+			8,
+			3,
+			8,
+			9,
+			4,
+			9,
+			5,
+			2,
+			4,
+			11,
+			6,
+			2,
+			10,
+			8,
+			6,
+			7,
+			9,
+			8,
+			1
+		], radius, detail);
+		this.type = "IcosahedronGeometry";
+		/**
+		* Holds the constructor parameters that have been
+		* used to generate the geometry. Any modification
+		* after instantiation does not change the geometry.
+		*
+		* @type {Object}
+		*/
+		this.parameters = {
+			radius,
+			detail
+		};
+	}
+	/**
+	* Factory method for creating an instance of this class from the given
+	* JSON object.
+	*
+	* @param {Object} data - A JSON object representing the serialized geometry.
+	* @return {IcosahedronGeometry} A new instance.
+	*/
+	static fromJSON(data) {
+		return new IcosahedronGeometry(data.radius, data.detail);
+	}
+};
+/**
+* Creates meshes with axial symmetry like vases. The lathe rotates around the Y axis.
+*
+* ```js
+* const points = [];
+* for ( let i = 0; i < 10; i ++ ) {
+* 	points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+* }
+* const geometry = new THREE.LatheGeometry( points );
+* const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+* const lathe = new THREE.Mesh( geometry, material );
+* scene.add( lathe );
+* ```
+*
+* @augments BufferGeometry
+* @demo scenes/geometry-browser.html#LatheGeometry
+*/
+var LatheGeometry = class LatheGeometry extends BufferGeometry {
+	/**
+	* Constructs a new lathe geometry.
+	*
+	* @param {Array<Vector2|Vector3>} [points] - An array of points in 2D space. The x-coordinate of each point
+	* must be greater than zero.
+	* @param {number} [segments=12] - The number of circumference segments to generate.
+	* @param {number} [phiStart=0] - The starting angle in radians.
+	* @param {number} [phiLength=Math.PI*2] - The radian (0 to 2PI) range of the lathed section 2PI is a
+	* closed lathe, less than 2PI is a portion.
+	*/
+	constructor(points = [
+		new Vector2(0, -.5),
+		new Vector2(.5, 0),
+		new Vector2(0, .5)
+	], segments = 12, phiStart = 0, phiLength = Math.PI * 2) {
+		super();
+		this.type = "LatheGeometry";
+		/**
+		* Holds the constructor parameters that have been
+		* used to generate the geometry. Any modification
+		* after instantiation does not change the geometry.
+		*
+		* @type {Object}
+		*/
+		this.parameters = {
+			points,
+			segments,
+			phiStart,
+			phiLength
+		};
+		segments = Math.floor(segments);
+		phiLength = clamp(phiLength, 0, Math.PI * 2);
+		const indices = [];
+		const vertices = [];
+		const uvs = [];
+		const initNormals = [];
+		const normals = [];
+		const inverseSegments = 1 / segments;
+		const vertex = new Vector3();
+		const uv = new Vector2();
+		const normal = new Vector3();
+		const curNormal = new Vector3();
+		const prevNormal = new Vector3();
+		let dx = 0;
+		let dy = 0;
+		for (let j = 0; j <= points.length - 1; j++) switch (j) {
+			case 0:
+				dx = points[j + 1].x - points[j].x;
+				dy = points[j + 1].y - points[j].y;
+				normal.x = dy * 1;
+				normal.y = -dx;
+				normal.z = dy * 0;
+				prevNormal.copy(normal);
+				normal.normalize();
+				initNormals.push(normal.x, normal.y, normal.z);
+				break;
+			case points.length - 1:
+				initNormals.push(prevNormal.x, prevNormal.y, prevNormal.z);
+				break;
+			default:
+				dx = points[j + 1].x - points[j].x;
+				dy = points[j + 1].y - points[j].y;
+				normal.x = dy * 1;
+				normal.y = -dx;
+				normal.z = dy * 0;
+				curNormal.copy(normal);
+				normal.x += prevNormal.x;
+				normal.y += prevNormal.y;
+				normal.z += prevNormal.z;
+				normal.normalize();
+				initNormals.push(normal.x, normal.y, normal.z);
+				prevNormal.copy(curNormal);
+		}
+		for (let i = 0; i <= segments; i++) {
+			const phi = phiStart + i * inverseSegments * phiLength;
+			const sin = Math.sin(phi);
+			const cos = Math.cos(phi);
+			for (let j = 0; j <= points.length - 1; j++) {
+				vertex.x = points[j].x * sin;
+				vertex.y = points[j].y;
+				vertex.z = points[j].x * cos;
+				vertices.push(vertex.x, vertex.y, vertex.z);
+				uv.x = i / segments;
+				uv.y = j / (points.length - 1);
+				uvs.push(uv.x, uv.y);
+				const x = initNormals[3 * j + 0] * sin;
+				const y = initNormals[3 * j + 1];
+				const z = initNormals[3 * j + 0] * cos;
+				normals.push(x, y, z);
+			}
+		}
+		for (let i = 0; i < segments; i++) for (let j = 0; j < points.length - 1; j++) {
+			const base = j + i * points.length;
+			const a = base;
+			const b = base + points.length;
+			const c = base + points.length + 1;
+			const d = base + 1;
+			indices.push(a, b, d);
+			indices.push(c, d, b);
+		}
+		this.setIndex(indices);
+		this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+		this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+		this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+	}
+	copy(source) {
+		super.copy(source);
+		this.parameters = Object.assign({}, source.parameters);
+		return this;
+	}
+	/**
+	* Factory method for creating an instance of this class from the given
+	* JSON object.
+	*
+	* @param {Object} data - A JSON object representing the serialized geometry.
+	* @return {LatheGeometry} A new instance.
+	*/
+	static fromJSON(data) {
+		return new LatheGeometry(data.points, data.segments, data.phiStart, data.phiLength);
 	}
 };
 /**
@@ -24840,6 +25783,133 @@ var ArrayCamera = class extends PerspectiveCamera {
 	}
 };
 /**
+* This class is an alternative to {@link Clock} with a different API design and behavior.
+* The goal is to avoid the conceptual flaws that became apparent in `Clock` over time.
+*
+* - `Timer` has an `update()` method that updates its internal state. That makes it possible to
+* call `getDelta()` and `getElapsed()` multiple times per simulation step without getting different values.
+* - The class can make use of the Page Visibility API to avoid large time delta values when the app
+* is inactive (e.g. tab switched or browser hidden).
+*
+* ```js
+* const timer = new Timer();
+* timer.connect( document ); // use Page Visibility API
+* ```
+*/
+var Timer = class {
+	/**
+	* Constructs a new timer.
+	*/
+	constructor() {
+		this._previousTime = 0;
+		this._currentTime = 0;
+		this._startTime = performance.now();
+		this._delta = 0;
+		this._elapsed = 0;
+		this._timescale = 1;
+		this._document = null;
+		this._pageVisibilityHandler = null;
+	}
+	/**
+	* Connect the timer to the given document.Calling this method is not mandatory to
+	* use the timer but enables the usage of the Page Visibility API to avoid large time
+	* delta values.
+	*
+	* @param {Document} document - The document.
+	*/
+	connect(document) {
+		this._document = document;
+		if (document.hidden !== void 0) {
+			this._pageVisibilityHandler = handleVisibilityChange.bind(this);
+			document.addEventListener("visibilitychange", this._pageVisibilityHandler, false);
+		}
+	}
+	/**
+	* Disconnects the timer from the DOM and also disables the usage of the Page Visibility API.
+	*/
+	disconnect() {
+		if (this._pageVisibilityHandler !== null) {
+			this._document.removeEventListener("visibilitychange", this._pageVisibilityHandler);
+			this._pageVisibilityHandler = null;
+		}
+		this._document = null;
+	}
+	/**
+	* Returns the time delta in seconds.
+	*
+	* @return {number} The time delta in second.
+	*/
+	getDelta() {
+		return this._delta / 1e3;
+	}
+	/**
+	* Returns the elapsed time in seconds.
+	*
+	* @return {number} The elapsed time in second.
+	*/
+	getElapsed() {
+		return this._elapsed / 1e3;
+	}
+	/**
+	* Returns the timescale.
+	*
+	* @return {number} The timescale.
+	*/
+	getTimescale() {
+		return this._timescale;
+	}
+	/**
+	* Sets the given timescale which scale the time delta computation
+	* in `update()`.
+	*
+	* @param {number} timescale - The timescale to set.
+	* @return {Timer} A reference to this timer.
+	*/
+	setTimescale(timescale) {
+		this._timescale = timescale;
+		return this;
+	}
+	/**
+	* Resets the time computation for the current simulation step.
+	*
+	* @return {Timer} A reference to this timer.
+	*/
+	reset() {
+		this._currentTime = performance.now() - this._startTime;
+		return this;
+	}
+	/**
+	* Can be used to free all internal resources. Usually called when
+	* the timer instance isn't required anymore.
+	*/
+	dispose() {
+		this.disconnect();
+	}
+	/**
+	* Updates the internal state of the timer. This method should be called
+	* once per simulation step and before you perform queries against the timer
+	* (e.g. via `getDelta()`).
+	*
+	* @param {number} timestamp - The current time in milliseconds. Can be obtained
+	* from the `requestAnimationFrame` callback argument. If not provided, the current
+	* time will be determined with `performance.now`.
+	* @return {Timer} A reference to this timer.
+	*/
+	update(timestamp) {
+		if (this._pageVisibilityHandler !== null && this._document.hidden === true) this._delta = 0;
+		else {
+			this._previousTime = this._currentTime;
+			this._currentTime = (timestamp !== void 0 ? timestamp : performance.now()) - this._startTime;
+			this._delta = (this._currentTime - this._previousTime) * this._timescale;
+			this._elapsed += this._delta;
+		}
+		return this;
+	}
+};
+function handleVisibilityChange() {
+	if (this._document.hidden === false) this.reset();
+}
+/**
 * Buffered scene graph property that allows weighted accumulation; used internally.
 */
 var PropertyMixer = class {
@@ -26583,7 +27653,7 @@ if (typeof window !== "undefined") {
 	else window.__THREE__ = "186";
 }
 //#endregion
-//#region node_modules/three/build/three.module.js
+//#region ../game-sweep/AshLanev2/node_modules/three/build/three.module.js
 /**
 * @license
 * Copyright 2010-2026 Three.js Authors
@@ -37512,7 +38582,157 @@ var WebGLRenderer = class {
 	}
 };
 //#endregion
-//#region node_modules/three/examples/jsm/utils/BufferGeometryUtils.js
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/utils/BufferGeometryUtils.js
+/**
+* Merges a set of geometries into a single instance. All geometries must have compatible attributes.
+*
+* @param {Array<BufferGeometry>} geometries - The geometries to merge.
+* @param {boolean} [useGroups=false] - Whether to use groups or not.
+* @return {?BufferGeometry} The merged geometry. Returns `null` if the merge does not succeed.
+*/
+function mergeGeometries(geometries, useGroups = false) {
+	const isIndexed = geometries[0].index !== null;
+	const attributesUsed = new Set(Object.keys(geometries[0].attributes));
+	const morphAttributesUsed = new Set(Object.keys(geometries[0].morphAttributes));
+	const attributes = {};
+	const morphAttributes = {};
+	const morphTargetsRelative = geometries[0].morphTargetsRelative;
+	const mergedGeometry = new BufferGeometry();
+	let offset = 0;
+	for (let i = 0; i < geometries.length; ++i) {
+		const geometry = geometries[i];
+		let attributesCount = 0;
+		if (isIndexed !== (geometry.index !== null)) {
+			console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index " + i + ". All geometries must have compatible attributes; make sure index attribute exists among all geometries, or in none of them.");
+			return null;
+		}
+		for (const name in geometry.attributes) {
+			if (!attributesUsed.has(name)) {
+				console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index " + i + ". All geometries must have compatible attributes; make sure \"" + name + "\" attribute exists among all geometries, or in none of them.");
+				return null;
+			}
+			if (attributes[name] === void 0) attributes[name] = [];
+			attributes[name].push(geometry.attributes[name]);
+			attributesCount++;
+		}
+		if (attributesCount !== attributesUsed.size) {
+			console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index " + i + ". Make sure all geometries have the same number of attributes.");
+			return null;
+		}
+		if (morphTargetsRelative !== geometry.morphTargetsRelative) {
+			console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index " + i + ". .morphTargetsRelative must be consistent throughout all geometries.");
+			return null;
+		}
+		for (const name in geometry.morphAttributes) {
+			if (!morphAttributesUsed.has(name)) {
+				console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index " + i + ".  .morphAttributes must be consistent throughout all geometries.");
+				return null;
+			}
+			if (morphAttributes[name] === void 0) morphAttributes[name] = [];
+			morphAttributes[name].push(geometry.morphAttributes[name]);
+		}
+		if (useGroups) {
+			let count;
+			if (isIndexed) count = geometry.index.count;
+			else if (geometry.attributes.position !== void 0) count = geometry.attributes.position.count;
+			else {
+				console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index " + i + ". The geometry must have either an index or a position attribute");
+				return null;
+			}
+			mergedGeometry.addGroup(offset, count, i);
+			offset += count;
+		}
+	}
+	if (isIndexed) {
+		let indexOffset = 0;
+		const mergedIndex = [];
+		for (let i = 0; i < geometries.length; ++i) {
+			const index = geometries[i].index;
+			for (let j = 0; j < index.count; ++j) mergedIndex.push(index.getX(j) + indexOffset);
+			indexOffset += geometries[i].attributes.position.count;
+		}
+		mergedGeometry.setIndex(mergedIndex);
+	}
+	for (const name in attributes) {
+		const mergedAttribute = mergeAttributes(attributes[name]);
+		if (!mergedAttribute) {
+			console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed while trying to merge the " + name + " attribute.");
+			return null;
+		}
+		mergedGeometry.setAttribute(name, mergedAttribute);
+	}
+	for (const name in morphAttributes) {
+		const numMorphTargets = morphAttributes[name][0].length;
+		if (numMorphTargets === 0) continue;
+		mergedGeometry.morphAttributes = mergedGeometry.morphAttributes || {};
+		mergedGeometry.morphAttributes[name] = [];
+		for (let i = 0; i < numMorphTargets; ++i) {
+			const morphAttributesToMerge = [];
+			for (let j = 0; j < morphAttributes[name].length; ++j) morphAttributesToMerge.push(morphAttributes[name][j][i]);
+			const mergedMorphAttribute = mergeAttributes(morphAttributesToMerge);
+			if (!mergedMorphAttribute) {
+				console.error("THREE.BufferGeometryUtils: .mergeGeometries() failed while trying to merge the " + name + " morphAttribute.");
+				return null;
+			}
+			mergedGeometry.morphAttributes[name].push(mergedMorphAttribute);
+		}
+	}
+	return mergedGeometry;
+}
+/**
+* Merges a set of attributes into a single instance. All attributes must have compatible properties and types.
+* Instances of {@link InterleavedBufferAttribute} are not supported.
+*
+* @param {Array<BufferAttribute>} attributes - The attributes to merge.
+* @return {?BufferAttribute} The merged attribute. Returns `null` if the merge does not succeed.
+*/
+function mergeAttributes(attributes) {
+	let TypedArray;
+	let itemSize;
+	let normalized;
+	let gpuType = -1;
+	let arrayLength = 0;
+	for (let i = 0; i < attributes.length; ++i) {
+		const attribute = attributes[i];
+		if (TypedArray === void 0) TypedArray = attribute.array.constructor;
+		if (TypedArray !== attribute.array.constructor) {
+			console.error("THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.array must be of consistent array types across matching attributes.");
+			return null;
+		}
+		if (itemSize === void 0) itemSize = attribute.itemSize;
+		if (itemSize !== attribute.itemSize) {
+			console.error("THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.itemSize must be consistent across matching attributes.");
+			return null;
+		}
+		if (normalized === void 0) normalized = attribute.normalized;
+		if (normalized !== attribute.normalized) {
+			console.error("THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.normalized must be consistent across matching attributes.");
+			return null;
+		}
+		if (gpuType === -1) gpuType = attribute.gpuType;
+		if (gpuType !== attribute.gpuType) {
+			console.error("THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.gpuType must be consistent across matching attributes.");
+			return null;
+		}
+		arrayLength += attribute.count * itemSize;
+	}
+	const array = new TypedArray(arrayLength);
+	const result = new BufferAttribute(array, itemSize, normalized);
+	let offset = 0;
+	for (let i = 0; i < attributes.length; ++i) {
+		const attribute = attributes[i];
+		if (attribute.isInterleavedBufferAttribute) {
+			const tupleOffset = offset / itemSize;
+			for (let j = 0, l = attribute.count; j < l; j++) for (let c = 0; c < itemSize; c++) {
+				const value = attribute.getComponent(j, c);
+				result.setComponent(j + tupleOffset, c, value);
+			}
+		} else array.set(attribute.array, offset);
+		offset += attribute.count * itemSize;
+	}
+	if (gpuType !== void 0) result.gpuType = gpuType;
+	return result;
+}
 /**
 * Converts the given geometry to the `TrianglesDrawMode` draw mode, which
 * corresponds to the `gl.TRIANGLES` primitive in WebGL. The conversion only
@@ -37567,7 +38787,7 @@ function toTrianglesDrawMode(geometry, drawMode) {
 	}
 }
 //#endregion
-//#region node_modules/three/examples/jsm/utils/SkeletonUtils.js
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/utils/SkeletonUtils.js
 /**
 * Clones the given 3D object and its descendants, ensuring that any `SkinnedMesh` instances are
 * correctly associated with their bones. Bones are also cloned, and must be descendants of the
@@ -37603,7 +38823,7 @@ function parallelTraverse(a, b, callback) {
 	for (let i = 0; i < a.children.length; i++) parallelTraverse(a.children[i], b.children[i], callback);
 }
 //#endregion
-//#region node_modules/three/examples/jsm/loaders/GLTFLoader.js
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/loaders/GLTFLoader.js
 /**
 * A loader for the glTF 2.0 format.
 *
@@ -40087,7 +41307,7 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
 	});
 }
 //#endregion
-//#region node_modules/three/examples/jsm/libs/meshopt_decoder.module.js
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/libs/meshopt_decoder.module.js
 var MeshoptDecoder = (function() {
 	var wasm_base = "b9H79Tebbbe8Fv9Gbb9Gvuuuuueu9Giuuub9Geueu9Giuuueuixkbeeeddddillviebeoweuecj:Gdkr;Neqo9TW9T9VV95dbH9F9F939H79T9F9J9H229F9Jt9VV7bb8A9TW79O9V9Wt9F9KW9J9V9KW9wWVtW949c919M9MWVbeY9TW79O9V9Wt9F9KW9J9V9KW69U9KW949c919M9MWVbdE9TW79O9V9Wt9F9KW9J9V9KW69U9KW949tWG91W9U9JWbiL9TW79O9V9Wt9F9KW9J9V9KWS9P2tWV9p9JtblK9TW79O9V9Wt9F9KW9J9V9KWS9P2tWV9r919HtbvL9TW79O9V9Wt9F9KW9J9V9KWS9P2tWVT949WboY9TW79O9V9Wt9F9KW9J9V9KWS9P2tWVJ9V29VVbrl79IV9Rbwq:VZkdbk:XYi5ud9:du8Jjjjjbcj;kb9Rgv8Kjjjjbc9:hodnalTmbcuhoaiRbbgrc;WeGc:Ge9hmbarcsGgwce0mbc9:hoalcufadcd4cbawEgDadfgrcKcaawEgqaraq0Egk6mbaicefhxcj;abad9Uc;WFbGcjdadca0EhmaialfgPar9Rgoadfhsavaoadz:jjjjbgzceVhHcbhOdndninaeaO9nmeaPax9RaD6mdamaeaO9RaOamfgoae6EgAcsfglc9WGhCabaOad2fhXaAcethQaxaDfhiaOaeaoaeao6E9RhLalcl4cifcd4hKazcj;cbfaAfhYcbh8AazcjdfhEaHh3incbh5dnawTmbaxa8Acd4fRbbh5kcbh8Eazcj;cbfhqinaih8Fdndndndna5a8Ecet4ciGgoc9:fPdebdkaPa8F9RaA6mrazcj;cbfa8EaA2fa8FaAz:jjjjb8Aa8FaAfhixdkazcj;cbfa8EaA2fcbaAz:kjjjb8Aa8FhixekaPa8F9RaK6mva8FaKfhidnaCTmbaPai9RcK6mbaocdtc:q:G:cjbfcj:G:cjbawEhaczhrcbhlinargoc9Wfghaqfhrdndndndndndnaaa8Fahco4fRbbalcoG4ciGcdtfydbPDbedvivvvlvkar9cb83bwar9cb83bbxlkarcbaiRbdai8Xbb9c:c:qj:bw9:9c:q;c1:I1e:d9c:b:c:e1z9:gg9cjjjjjz:dg8J9qE86bbaqaofgrcGfcbaicdfa8J9c8N1:NfghRbbag9cjjjjjw:dg8J9qE86bbarcVfcbaha8J9c8M1:NfghRbbag9cjjjjjl:dg8J9qE86bbarc7fcbaha8J9c8L1:NfghRbbag9cjjjjjd:dg8J9qE86bbarctfcbaha8J9c8K1:NfghRbbag9cjjjjje:dg8J9qE86bbarc91fcbaha8J9c8J1:NfghRbbag9cjjjj;ab:dg8J9qE86bbarc4fcbaha8J9cg1:NfghRbbag9cjjjja:dg8J9qE86bbarc93fcbaha8J9ch1:NfghRbbag9cjjjjz:dgg9qE86bbarc94fcbahag9ca1:NfghRbbai8Xbe9c:c:qj:bw9:9c:q;c1:I1e:d9c:b:c:e1z9:gg9cjjjjjz:dg8J9qE86bbarc95fcbaha8J9c8N1:NfgiRbbag9cjjjjjw:dg8J9qE86bbarc96fcbaia8J9c8M1:NfgiRbbag9cjjjjjl:dg8J9qE86bbarc97fcbaia8J9c8L1:NfgiRbbag9cjjjjjd:dg8J9qE86bbarc98fcbaia8J9c8K1:NfgiRbbag9cjjjjje:dg8J9qE86bbarc99fcbaia8J9c8J1:NfgiRbbag9cjjjj;ab:dg8J9qE86bbarc9:fcbaia8J9cg1:NfgiRbbag9cjjjja:dg8J9qE86bbarcufcbaia8J9ch1:NfgiRbbag9cjjjjz:dgg9qE86bbaiag9ca1:NfhixikaraiRblaiRbbghco4g8Ka8KciSg8KE86bbaqaofgrcGfaiclfa8Kfg8KRbbahcl4ciGg8La8LciSg8LE86bbarcVfa8Ka8Lfg8KRbbahcd4ciGg8La8LciSg8LE86bbarc7fa8Ka8Lfg8KRbbahciGghahciSghE86bbarctfa8Kahfg8KRbbaiRbeghco4g8La8LciSg8LE86bbarc91fa8Ka8Lfg8KRbbahcl4ciGg8La8LciSg8LE86bbarc4fa8Ka8Lfg8KRbbahcd4ciGg8La8LciSg8LE86bbarc93fa8Ka8Lfg8KRbbahciGghahciSghE86bbarc94fa8Kahfg8KRbbaiRbdghco4g8La8LciSg8LE86bbarc95fa8Ka8Lfg8KRbbahcl4ciGg8La8LciSg8LE86bbarc96fa8Ka8Lfg8KRbbahcd4ciGg8La8LciSg8LE86bbarc97fa8Ka8Lfg8KRbbahciGghahciSghE86bbarc98fa8KahfghRbbaiRbigico4g8Ka8KciSg8KE86bbarc99faha8KfghRbbaicl4ciGg8Ka8KciSg8KE86bbarc9:faha8KfghRbbaicd4ciGg8Ka8KciSg8KE86bbarcufaha8KfgrRbbaiciGgiaiciSgiE86bbaraifhixdkaraiRbwaiRbbghcl4g8Ka8KcsSg8KE86bbaqaofgrcGfaicwfa8Kfg8KRbbahcsGghahcsSghE86bbarcVfa8KahfghRbbaiRbeg8Kcl4g8La8LcsSg8LE86bbarc7faha8LfghRbba8KcsGg8Ka8KcsSg8KE86bbarctfaha8KfghRbbaiRbdg8Kcl4g8La8LcsSg8LE86bbarc91faha8LfghRbba8KcsGg8Ka8KcsSg8KE86bbarc4faha8KfghRbbaiRbig8Kcl4g8La8LcsSg8LE86bbarc93faha8LfghRbba8KcsGg8Ka8KcsSg8KE86bbarc94faha8KfghRbbaiRblg8Kcl4g8La8LcsSg8LE86bbarc95faha8LfghRbba8KcsGg8Ka8KcsSg8KE86bbarc96faha8KfghRbbaiRbvg8Kcl4g8La8LcsSg8LE86bbarc97faha8LfghRbba8KcsGg8Ka8KcsSg8KE86bbarc98faha8KfghRbbaiRbog8Kcl4g8La8LcsSg8LE86bbarc99faha8LfghRbba8KcsGg8Ka8KcsSg8KE86bbarc9:faha8KfghRbbaiRbrgicl4g8Ka8KcsSg8KE86bbarcufaha8KfgrRbbaicsGgiaicsSgiE86bbaraifhixekarai8Pbw83bwarai8Pbb83bbaiczfhikdnaoaC9pmbalcdfhlaoczfhraPai9RcL0mekkaoaC6moaimexokaCmva8FTmvkaqaAfhqa8Ecefg8Ecl9hmbkdndndndnawTmbasa8Acd4fRbbgociGPlbedrbkaATmdaza8Afh8Fazcj;cbfhhcbh8EaEhaina8FRbbhraahocbhlinaoahalfRbbgqce4cbaqceG9R7arfgr86bbaoadfhoaAalcefgl9hmbkaacefhaa8Fcefh8FahaAfhha8Ecefg8Ecl9hmbxikkaATmeaza8Afhaazcj;cbfhhcbhoceh8EaYh8FinaEaofhlaa8Vbbhrcbhoinala8FaofRbbcwtahaofRbbgqVc;:FiGce4cbaqceG9R7arfgr87bbaladfhlaLaocefgofmbka8FaQfh8FcdhoaacdfhaahaQfhha8EceGhlcbh8EalmbxdkkaATmbaocl4h8Eaza8AfRbbhqcwhoa3hlinalRbbaotaqVhqalcefhlaocwfgoca9hmbkcbhhaEh8FaYhainazcj;cbfahfRbbhrcwhoaahlinalRbbaotarVhralaAfhlaocwfgoca9hmbkara8E94aq7hqcbhoa8Fhlinalaqao486bbalcefhlaocwfgoca9hmbka8Fadfh8FaacefhaahcefghaA9hmbkkaEclfhEa3clfh3a8Aclfg8Aad6mbkaXazcjdfaAad2z:jjjjb8AazazcjdfaAcufad2fadz:jjjjb8AaAaOfhOaihxaimbkc9:hoxdkcbc99aPax9RakSEhoxekc9:hokavcj;kbf8Kjjjjbaok:ysezu8Jjjjjbc;ae9Rgv8Kjjjjbc9:hodnalaeci9UgrcHf6mbcuhoaiRbbgwc;WeGc;Ge9hmbawcsGgDce0mbavc;abfcFecjez:kjjjb8Aav9cu83iUav9cu83i8Wav9cu83iyav9cu83iaav9cu83iKav9cu83izav9cu83iwav9cu83ibaialfc9WfhqaicefgwarfhldnaeTmbcmcsaDceSEhkcbhxcbhmcbhrcbhicbhoindnalaq9nmbc9:hoxikdndnawRbbgDc;Ve0mbavc;abfaoaDcu7gPcl4fcsGcitfgsydlhzasydbhHdndnaDcsGgsak9pmbavaiaPfcsGcdtfydbaxasEhDaxasTgOfhxxekdndnascsSmbcehOasc987asamffcefhDxekalcefhDal8SbbgscFeGhPdndnascu9mmbaDhlxekalcvfhlaPcFbGhPcrhsdninaD8SbbgOcFbGastaPVhPaOcu9kmeaDcefhDascrfgsc8J9hmbxdkkaDcefhlkcehOaPce4cbaPceG9R7amfhDkaDhmkavc;abfaocitfgsaDBdbasazBdlavaicdtfaDBdbavc;abfaocefcsGcitfgsaHBdbasaDBdlaocdfhoaOaifhidnadcd9hmbabarcetfgsaH87ebasclfaD87ebascdfaz87ebxdkabarcdtfgsaHBdbascwfaDBdbasclfazBdbxekdnaDcpe0mbavaiaqaDcsGfRbbgscl4gP9RcsGcdtfydbaxcefgOaPEhDavaias9RcsGcdtfydbaOaPTgzfgOascsGgPEhsaPThPdndnadcd9hmbabarcetfgHax87ebaHclfas87ebaHcdfaD87ebxekabarcdtfgHaxBdbaHcwfasBdbaHclfaDBdbkavaicdtfaxBdbavc;abfaocitfgHaDBdbaHaxBdlavaicefgicsGcdtfaDBdbavc;abfaocefcsGcitfgHasBdbaHaDBdlavaiazfgicsGcdtfasBdbavc;abfaocdfcsGcitfgDaxBdbaDasBdlaocifhoaiaPfhiaOaPfhxxekaxcbalRbbgsEgHaDc;:eSgDfhOascsGhAdndnascl4gCmbaOcefhzxekaOhzavaiaC9RcsGcdtfydbhOkdndnaAmbazcefhxxekazhxavaias9RcsGcdtfydbhzkdndnaDTmbalcefhDxekalcdfhDal8SbegPcFeGhsdnaPcu9kmbalcofhHascFbGhscrhldninaD8SbbgPcFbGaltasVhsaPcu9kmeaDcefhDalcrfglc8J9hmbkaHhDxekaDcefhDkasce4cbasceG9R7amfgmhHkdndnaCcsSmbaDhsxekaDcefhsaD8SbbglcFeGhPdnalcu9kmbaDcvfhOaPcFbGhPcrhldninas8SbbgDcFbGaltaPVhPaDcu9kmeascefhsalcrfglc8J9hmbkaOhsxekascefhskaPce4cbaPceG9R7amfgmhOkdndnaAcsSmbashlxekascefhlas8SbbgDcFeGhPdnaDcu9kmbascvfhzaPcFbGhPcrhDdninal8SbbgscFbGaDtaPVhPascu9kmealcefhlaDcrfgDc8J9hmbkazhlxekalcefhlkaPce4cbaPceG9R7amfgmhzkdndnadcd9hmbabarcetfgDaH87ebaDclfaz87ebaDcdfaO87ebxekabarcdtfgDaHBdbaDcwfazBdbaDclfaOBdbkavc;abfaocitfgDaOBdbaDaHBdlavaicdtfaHBdbavc;abfaocefcsGcitfgDazBdbaDaOBdlavaicefgicsGcdtfaOBdbavc;abfaocdfcsGcitfgDaHBdbaDazBdlavaiaCTaCcsSVfgicsGcdtfazBdbaiaATaAcsSVfhiaocifhokawcefhwaocsGhoaicsGhiarcifgrae6mbkkcbc99alaqSEhokavc;aef8Kjjjjbaok:clevu8Jjjjjbcz9Rhvdnalaecvf9pmbc9:skdnaiRbbc;:eGc;qeSmbcuskav9cb83iwaicefhoaialfc98fhrdnaeTmbdnadcdSmbcbhwindnaoar6mbc9:skaocefhlao8SbbgicFeGhddndnaicu9mmbalhoxekaocvfhoadcFbGhdcrhidninal8SbbgDcFbGaitadVhdaDcu9kmealcefhlaicrfgic8J9hmbxdkkalcefhokabawcdtfadc8Etc8F91adcd47avcwfadceGcdtVglydbfgiBdbalaiBdbawcefgwae9hmbxdkkcbhwindnaoar6mbc9:skaocefhlao8SbbgicFeGhddndnaicu9mmbalhoxekaocvfhoadcFbGhdcrhidninal8SbbgDcFbGaitadVhdaDcu9kmealcefhlaicrfgic8J9hmbxdkkalcefhokabawcetfadc8Etc8F91adcd47avcwfadceGcdtVglydbfgi87ebalaiBdbawcefgwae9hmbkkcbc99aoarSEk:Lvoeue99dud99eud99dndnadcl9hmbaeTmeindndnabcdfgd8Sbb:Yab8Sbbgi:Ygl:l:tabcefgv8Sbbgo:Ygr:l:tgwJbb;:9cawawNJbbbbawawJbbbb9GgDEgq:mgkaqaicb9iEalMgwawNakaqaocb9iEarMgqaqNMM:r:vglNJbbbZJbbb:;aDEMgr:lJbbb9p9DTmbar:Ohixekcjjjj94hikadai86bbdndnaqalNJbbbZJbbb:;aqJbbbb9GEMgq:lJbbb9p9DTmbaq:Ohdxekcjjjj94hdkavad86bbdndnawalNJbbbZJbbb:;awJbbbb9GEMgw:lJbbb9p9DTmbaw:Ohdxekcjjjj94hdkabad86bbabclfhbaecufgembxdkkaeTmbindndnabclfgd8Ueb:Yab8Uebgi:Ygl:l:tabcdfgv8Uebgo:Ygr:l:tgwJb;:FSawawNJbbbbawawJbbbb9GgDEgq:mgkaqaicb9iEalMgwawNakaqaocb9iEarMgqaqNMM:r:vglNJbbbZJbbb:;aDEMgr:lJbbb9p9DTmbar:Ohixekcjjjj94hikadai87ebdndnaqalNJbbbZJbbb:;aqJbbbb9GEMgq:lJbbb9p9DTmbaq:Ohdxekcjjjj94hdkavad87ebdndnawalNJbbbZJbbb:;awJbbbb9GEMgw:lJbbb9p9DTmbaw:Ohdxekcjjjj94hdkabad87ebabcwfhbaecufgembkkk:4ioiue99dud99dud99dnaeTmbcbhiabhlindndnal8Uebgv:YgoJ:ji:1Salcof8UebgrciVgw:Y:vgDNJbbbZJbbb:;avcu9kEMgq:lJbbb9p9DTmbaq:Ohkxekcjjjj94hkkalclf8Uebhvalcdf8UebhxalarcefciGcetfak87ebdndnax:YgqaDNJbbbZJbbb:;axcu9kEMgm:lJbbb9p9DTmbam:Ohxxekcjjjj94hxkabaiarciGgkfcd7cetfax87ebdndnav:YgmaDNJbbbZJbbb:;avcu9kEMgP:lJbbb9p9DTmbaP:Ohvxekcjjjj94hvkalarcufciGcetfav87ebdndnawaw2:ZgPaPMaoaoN:taqaqN:tamamN:tgoJbbbbaoJbbbb9GE:raDNJbbbZMgD:lJbbb9p9DTmbaD:Ohrxekcjjjj94hrkalakcetfar87ebalcwfhlaiclfhiaecufgembkkk9mbdnadcd4ae2gdTmbinababydbgecwtcw91:Yaece91cjjj98Gcjjj;8if::NUdbabclfhbadcufgdmbkkk:Tvirud99eudndnadcl9hmbaeTmeindndnabRbbgiabcefgl8Sbbgvabcdfgo8Sbbgrf9R:YJbbuJabcifgwRbbgdce4adVgDcd4aDVgDcl4aDVgD:Z:vgqNJbbbZMgk:lJbbb9p9DTmbak:Ohxxekcjjjj94hxkaoax86bbdndnaraif:YaqNJbbbZMgk:lJbbb9p9DTmbak:Ohoxekcjjjj94hokalao86bbdndnavaifar9R:YaqNJbbbZMgk:lJbbb9p9DTmbak:Ohixekcjjjj94hikabai86bbdndnaDadcetGadceGV:ZaqNJbbbZMgq:lJbbb9p9DTmbaq:Ohdxekcjjjj94hdkawad86bbabclfhbaecufgembxdkkaeTmbindndnab8Vebgiabcdfgl8Uebgvabclfgo8Uebgrf9R:YJbFu9habcofgw8Vebgdce4adVgDcd4aDVgDcl4aDVgDcw4aDVgD:Z:vgqNJbbbZMgk:lJbbb9p9DTmbak:Ohxxekcjjjj94hxkaoax87ebdndnaraif:YaqNJbbbZMgk:lJbbb9p9DTmbak:Ohoxekcjjjj94hokalao87ebdndnavaifar9R:YaqNJbbbZMgk:lJbbb9p9DTmbak:Ohixekcjjjj94hikabai87ebdndnaDadcetGadceGV:ZaqNJbbbZMgq:lJbbb9p9DTmbaq:Ohdxekcjjjj94hdkawad87ebabcwfhbaecufgembkkk9teiucbcbyd:K:G:cjbgeabcifc98GfgbBd:K:G:cjbdndnabZbcztgd9nmbcuhiabad9RcFFifcz4nbcuSmekaehikaik;LeeeudndnaeabVciGTmbabhixekdndnadcz9pmbabhixekabhiinaiaeydbBdbaiclfaeclfydbBdbaicwfaecwfydbBdbaicxfaecxfydbBdbaeczfheaiczfhiadc9Wfgdcs0mbkkadcl6mbinaiaeydbBdbaeclfheaiclfhiadc98fgdci0mbkkdnadTmbinaiaeRbb86bbaicefhiaecefheadcufgdmbkkabk;aeedudndnabciGTmbabhixekaecFeGc:b:c:ew2hldndnadcz9pmbabhixekabhiinaialBdbaicxfalBdbaicwfalBdbaiclfalBdbaiczfhiadc9Wfgdcs0mbkkadcl6mbinaialBdbaiclfhiadc98fgdci0mbkkdnadTmbinaiae86bbaicefhiadcufgdmbkkabkk83dbcj:Gdk8Kbbbbdbbblbbbwbbbbbbbebbbdbbblbbbwbbbbc:K:Gdkl8W:qbb";
 	var wasm_simd = "b9H79TebbbeKl9Gbb9Gvuuuuueu9Giuuub9Geueuixkbbebeeddddilve9Weeeviebeoweuecj:Gdkr;Neqo9TW9T9VV95dbH9F9F939H79T9F9J9H229F9Jt9VV7bb8A9TW79O9V9Wt9F9KW9J9V9KW9wWVtW949c919M9MWVbdY9TW79O9V9Wt9F9KW9J9V9KW69U9KW949c919M9MWVblE9TW79O9V9Wt9F9KW9J9V9KW69U9KW949tWG91W9U9JWbvL9TW79O9V9Wt9F9KW9J9V9KWS9P2tWV9p9JtboK9TW79O9V9Wt9F9KW9J9V9KWS9P2tWV9r919HtbrL9TW79O9V9Wt9F9KW9J9V9KWS9P2tWVT949WbwY9TW79O9V9Wt9F9KW9J9V9KWS9P2tWVJ9V29VVbDl79IV9Rbqq:W9Dklbzik94evu8Jjjjjbcz9Rhbcbheincbhdcbhiinabcwfadfaicjuaead4ceGglE86bbaialfhiadcefgdcw9hmbkaeai86b:q:W:cjbaecitab8Piw83i:q:G:cjbaecefgecjd9hmbkk:JBl8Aud97dur978Jjjjjbcj;kb9Rgv8Kjjjjbc9:hodnalTmbcuhoaiRbbgrc;WeGc:Ge9hmbarcsGgwce0mbc9:hoalcufadcd4cbawEgDadfgrcKcaawEgqaraq0Egk6mbaialfgxar9RhodnadTgmmbavaoad;8qbbkaicefhPcj;abad9Uc;WFbGcjdadca0EhsdndndnadTmbaoadfhzcbhHinaeaH9nmdaxaP9RaD6miabaHad2fhOaPaDfhAasaeaH9RaHasfae6EgCcsfgocl4cifcd4hXavcj;cbfaoc9WGgQcetfhLavcj;cbfaQci2fhKavcj;cbfaQfhYcbh8Aaoc;ab6hEincbh3dnawTmbaPa8Acd4fRbbh3kcbh5avcj;cbfh8Eindndndndna3a5cet4ciGgoc9:fPdebdkaxaA9RaQ6mwdnaQTmbavcj;cbfa5aQ2faAaQ;8qbbkaAaCfhAxdkaQTmeavcj;cbfa5aQ2fcbaQ;8kbxekaxaA9RaX6moaoclVcbawEhraAaXfhocbhidnaEmbaxao9Rc;Gb6mbcbhlina8EalfhidndndndndndnaAalco4fRbbgqciGarfPDbedibledibkaipxbbbbbbbbbbbbbbbbpklbxlkaiaopbblaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLg8Fcdp:mea8FpmbzeHdOiAlCvXoQrLpxiiiiiiiiiiiiiiiip9ogapxiiiiiiiiiiiiiiiip8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbahaoclffagRb:q:W:cjbfhoxikaiaopbbwaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLpxssssssssssssssssp9ogapxssssssssssssssssp8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbahaocwffagRb:q:W:cjbfhoxdkaiaopbbbpklbaoczfhoxekaiaopbbdaoRbbghcitpbi:q:G:cjbahRb:q:W:cjbghpsaoRbeggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPpklbahaocdffagRb:q:W:cjbfhokdndndndndndnaqcd4ciGarfPDbedibledibkaiczfpxbbbbbbbbbbbbbbbbpklbxlkaiczfaopbblaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLg8Fcdp:mea8FpmbzeHdOiAlCvXoQrLpxiiiiiiiiiiiiiiiip9ogapxiiiiiiiiiiiiiiiip8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbahaoclffagRb:q:W:cjbfhoxikaiczfaopbbwaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLpxssssssssssssssssp9ogapxssssssssssssssssp8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbahaocwffagRb:q:W:cjbfhoxdkaiczfaopbbbpklbaoczfhoxekaiczfaopbbdaoRbbghcitpbi:q:G:cjbahRb:q:W:cjbghpsaoRbeggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPpklbahaocdffagRb:q:W:cjbfhokdndndndndndnaqcl4ciGarfPDbedibledibkaicafpxbbbbbbbbbbbbbbbbpklbxlkaicafaopbblaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLg8Fcdp:mea8FpmbzeHdOiAlCvXoQrLpxiiiiiiiiiiiiiiiip9ogapxiiiiiiiiiiiiiiiip8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbahaoclffagRb:q:W:cjbfhoxikaicafaopbbwaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLpxssssssssssssssssp9ogapxssssssssssssssssp8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbahaocwffagRb:q:W:cjbfhoxdkaicafaopbbbpklbaoczfhoxekaicafaopbbdaoRbbghcitpbi:q:G:cjbahRb:q:W:cjbghpsaoRbeggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPpklbahaocdffagRb:q:W:cjbfhokdndndndndndnaqco4arfPDbedibledibkaic8Wfpxbbbbbbbbbbbbbbbbpklbxlkaic8Wfaopbblaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLg8Fcdp:mea8FpmbzeHdOiAlCvXoQrLpxiiiiiiiiiiiiiiiip9ogapxiiiiiiiiiiiiiiiip8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Ngicitpbi:q:G:cjbaiRb:q:W:cjbgipsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Ngqcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbaiaoclffaqRb:q:W:cjbfhoxikaic8Wfaopbbwaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLpxssssssssssssssssp9ogapxssssssssssssssssp8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Ngicitpbi:q:G:cjbaiRb:q:W:cjbgipsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Ngqcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spklbaiaocwffaqRb:q:W:cjbfhoxdkaic8Wfaopbbbpklbaoczfhoxekaic8WfaopbbdaoRbbgicitpbi:q:G:cjbaiRb:q:W:cjbgipsaoRbegqcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPpklbaiaocdffaqRb:q:W:cjbfhokalc;abfhialcjefaQ0meaihlaxao9Rc;Fb0mbkkdnaiaQ9pmbaici4hlinaxao9RcK6mwa8EaifhqdndndndndndnaAaico4fRbbalcoG4ciGarfPDbedibledibkaqpxbbbbbbbbbbbbbbbbpkbbxlkaqaopbblaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLg8Fcdp:mea8FpmbzeHdOiAlCvXoQrLpxiiiiiiiiiiiiiiiip9ogapxiiiiiiiiiiiiiiiip8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spkbbahaoclffagRb:q:W:cjbfhoxikaqaopbbwaopbbbg8Fclp:mea8FpmbzeHdOiAlCvXoQrLpxssssssssssssssssp9ogapxssssssssssssssssp8Jg8Fp5b9cjF;8;4;W;G;ab9:9cU1:Nghcitpbi:q:G:cjbahRb:q:W:cjbghpsa8Fp5e9cjF;8;4;W;G;ab9:9cU1:Nggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPaaa8Fp9spkbbahaocwffagRb:q:W:cjbfhoxdkaqaopbbbpkbbaoczfhoxekaqaopbbdaoRbbghcitpbi:q:G:cjbahRb:q:W:cjbghpsaoRbeggcitpbi:q:G:cjbp9UpmbedilvorzHOACXQLpPpkbbahaocdffagRb:q:W:cjbfhokalcdfhlaiczfgiaQ6mbkkaohAaoTmoka8EaQfh8Ea5cefg5cl9hmbkdndndndnawTmbaza8Acd4fRbbglciGPlbedwbkaQTmdavcjdfa8Afhlava8Afpbdbh8Jcbhoinalavcj;cbfaofpblbg8KaYaofpblbg8LpmbzeHdOiAlCvXoQrLg8MaLaofpblbg8NaKaofpblbgypmbzeHdOiAlCvXoQrLg8PpmbezHdiOAlvCXorQLg8Fcep9Ta8Fpxeeeeeeeeeeeeeeeegap9op9Hp9rg8Fa8Jp9Ug8Jp9Abbbaladfgla8Ja8Fa8Fpmlvorlvorlvorlvorp9Ug8Jp9Abbbaladfgla8Ja8Fa8FpmwDqkwDqkwDqkwDqkp9Ug8Jp9Abbbaladfgla8Ja8Fa8FpmxmPsxmPsxmPsxmPsp9Ug8Jp9Abbbaladfgla8Ja8Ma8PpmwDKYqk8AExm35Ps8E8Fg8Fcep9Ta8Faap9op9Hp9rg8Fp9Ug8Jp9Abbbaladfgla8Ja8Fa8Fpmlvorlvorlvorlvorp9Ug8Jp9Abbbaladfgla8Ja8Fa8FpmwDqkwDqkwDqkwDqkp9Ug8Jp9Abbbaladfgla8Ja8Fa8FpmxmPsxmPsxmPsxmPsp9Ug8Jp9Abbbaladfgla8Ja8Ka8LpmwKDYq8AkEx3m5P8Es8Fg8Ka8NaypmwKDYq8AkEx3m5P8Es8Fg8LpmbezHdiOAlvCXorQLg8Fcep9Ta8Faap9op9Hp9rg8Fp9Ug8Jp9Abbbaladfgla8Ja8Fa8Fpmlvorlvorlvorlvorp9Ug8Jp9Abbbaladfgla8Ja8Fa8FpmwDqkwDqkwDqkwDqkp9Ug8Jp9Abbbaladfgla8Ja8Fa8FpmxmPsxmPsxmPsxmPsp9Ug8Jp9Abbbaladfgla8Ja8Ka8LpmwDKYqk8AExm35Ps8E8Fg8Fcep9Ta8Faap9op9Hp9rg8Fp9Ugap9Abbbaladfglaaa8Fa8Fpmlvorlvorlvorlvorp9Ugap9Abbbaladfglaaa8Fa8FpmwDqkwDqkwDqkwDqkp9Ugap9Abbbaladfglaaa8Fa8FpmxmPsxmPsxmPsxmPsp9Ug8Jp9AbbbaladfhlaoczfgoaQ6mbxikkaQTmeavcjdfa8Afhlava8Afpbdbh8Jcbhoinalavcj;cbfaofpblbg8KaYaofpblbg8LpmbzeHdOiAlCvXoQrLg8MaLaofpblbg8NaKaofpblbgypmbzeHdOiAlCvXoQrLg8PpmbezHdiOAlvCXorQLg8Fcep:nea8Fpxebebebebebebebebgap9op:bep9rg8Fa8Jp:oeg8Jp9Abbbaladfgla8Ja8Fa8Fpmlvorlvorlvorlvorp:oeg8Jp9Abbbaladfgla8Ja8Fa8FpmwDqkwDqkwDqkwDqkp:oeg8Jp9Abbbaladfgla8Ja8Fa8FpmxmPsxmPsxmPsxmPsp:oeg8Jp9Abbbaladfgla8Ja8Ma8PpmwDKYqk8AExm35Ps8E8Fg8Fcep:nea8Faap9op:bep9rg8Fp:oeg8Jp9Abbbaladfgla8Ja8Fa8Fpmlvorlvorlvorlvorp:oeg8Jp9Abbbaladfgla8Ja8Fa8FpmwDqkwDqkwDqkwDqkp:oeg8Jp9Abbbaladfgla8Ja8Fa8FpmxmPsxmPsxmPsxmPsp:oeg8Jp9Abbbaladfgla8Ja8Ka8LpmwKDYq8AkEx3m5P8Es8Fg8Ka8NaypmwKDYq8AkEx3m5P8Es8Fg8LpmbezHdiOAlvCXorQLg8Fcep:nea8Faap9op:bep9rg8Fp:oeg8Jp9Abbbaladfgla8Ja8Fa8Fpmlvorlvorlvorlvorp:oeg8Jp9Abbbaladfgla8Ja8Fa8FpmwDqkwDqkwDqkwDqkp:oeg8Jp9Abbbaladfgla8Ja8Fa8FpmxmPsxmPsxmPsxmPsp:oeg8Jp9Abbbaladfgla8Ja8Ka8LpmwDKYqk8AExm35Ps8E8Fg8Fcep:nea8Faap9op:bep9rg8Fp:oegap9Abbbaladfglaaa8Fa8Fpmlvorlvorlvorlvorp:oegap9Abbbaladfglaaa8Fa8FpmwDqkwDqkwDqkwDqkp:oegap9Abbbaladfglaaa8Fa8FpmxmPsxmPsxmPsxmPsp:oeg8Jp9AbbbaladfhlaoczfgoaQ6mbxdkkaQTmbcbhocbalcl4gl9Rc8FGhiavcjdfa8Afhrava8Afpbdbhainaravcj;cbfaofpblbg8JaYaofpblbg8KpmbzeHdOiAlCvXoQrLg8LaLaofpblbg8MaKaofpblbg8NpmbzeHdOiAlCvXoQrLgypmbezHdiOAlvCXorQLg8Faip:Rea8Falp:Tep9qg8Faap9rgap9Abbbaradfgraaa8Fa8Fpmlvorlvorlvorlvorp9rgap9Abbbaradfgraaa8Fa8FpmwDqkwDqkwDqkwDqkp9rgap9Abbbaradfgraaa8Fa8FpmxmPsxmPsxmPsxmPsp9rgap9Abbbaradfgraaa8LaypmwDKYqk8AExm35Ps8E8Fg8Faip:Rea8Falp:Tep9qg8Fp9rgap9Abbbaradfgraaa8Fa8Fpmlvorlvorlvorlvorp9rgap9Abbbaradfgraaa8Fa8FpmwDqkwDqkwDqkwDqkp9rgap9Abbbaradfgraaa8Fa8FpmxmPsxmPsxmPsxmPsp9rgap9Abbbaradfgraaa8Ja8KpmwKDYq8AkEx3m5P8Es8Fg8Ja8Ma8NpmwKDYq8AkEx3m5P8Es8Fg8KpmbezHdiOAlvCXorQLg8Faip:Rea8Falp:Tep9qg8Fp9rgap9Abbbaradfgraaa8Fa8Fpmlvorlvorlvorlvorp9rgap9Abbbaradfgraaa8Fa8FpmwDqkwDqkwDqkwDqkp9rgap9Abbbaradfgraaa8Fa8FpmxmPsxmPsxmPsxmPsp9rgap9Abbbaradfgraaa8Ja8KpmwDKYqk8AExm35Ps8E8Fg8Faip:Rea8Falp:Tep9qg8Fp9rgap9Abbbaradfgraaa8Fa8Fpmlvorlvorlvorlvorp9rgap9Abbbaradfgraaa8Fa8FpmwDqkwDqkwDqkwDqkp9rgap9Abbbaradfgraaa8Fa8FpmxmPsxmPsxmPsxmPsp9rgap9AbbbaradfhraoczfgoaQ6mbkka8Aclfg8Aad6mbkdnaCad2goTmbaOavcjdfao;8qbbkdnammbavavcjdfaCcufad2fad;8qbbkaCaHfhHc9:hoaAhPaAmbxlkkaeTmbaDalfhrcbhocuhlinaralaD9RglfaD6mdasaeao9Raoasfae6Eaofgoae6mbkaial9RhPkcbc99axaP9RakSEhoxekc9:hokavcj;kbf8Kjjjjbaokwbz:bjjjbkNsezu8Jjjjjbc;ae9Rgv8Kjjjjbc9:hodnalaeci9UgrcHf6mbcuhoaiRbbgwc;WeGc;Ge9hmbawcsGgDce0mbavc;abfcFecje;8kbav9cu83iUav9cu83i8Wav9cu83iyav9cu83iaav9cu83iKav9cu83izav9cu83iwav9cu83ibaialfc9WfhqaicefgwarfhldnaeTmbcmcsaDceSEhkcbhxcbhmcbhrcbhicbhoindnalaq9nmbc9:hoxikdndnawRbbgDc;Ve0mbavc;abfaoaDcu7gPcl4fcsGcitfgsydlhzasydbhHdndnaDcsGgsak9pmbavaiaPfcsGcdtfydbaxasEhDaxasTgOfhxxekdndnascsSmbcehOasc987asamffcefhDxekalcefhDal8SbbgscFeGhPdndnascu9mmbaDhlxekalcvfhlaPcFbGhPcrhsdninaD8SbbgOcFbGastaPVhPaOcu9kmeaDcefhDascrfgsc8J9hmbxdkkaDcefhlkcehOaPce4cbaPceG9R7amfhDkaDhmkavc;abfaocitfgsaDBdbasazBdlavaicdtfaDBdbavc;abfaocefcsGcitfgsaHBdbasaDBdlaocdfhoaOaifhidnadcd9hmbabarcetfgsaH87ebasclfaD87ebascdfaz87ebxdkabarcdtfgsaHBdbascwfaDBdbasclfazBdbxekdnaDcpe0mbavaiaqaDcsGfRbbgscl4gP9RcsGcdtfydbaxcefgOaPEhDavaias9RcsGcdtfydbaOaPTgzfgOascsGgPEhsaPThPdndnadcd9hmbabarcetfgHax87ebaHclfas87ebaHcdfaD87ebxekabarcdtfgHaxBdbaHcwfasBdbaHclfaDBdbkavaicdtfaxBdbavc;abfaocitfgHaDBdbaHaxBdlavaicefgicsGcdtfaDBdbavc;abfaocefcsGcitfgHasBdbaHaDBdlavaiazfgicsGcdtfasBdbavc;abfaocdfcsGcitfgDaxBdbaDasBdlaocifhoaiaPfhiaOaPfhxxekaxcbalRbbgsEgHaDc;:eSgDfhOascsGhAdndnascl4gCmbaOcefhzxekaOhzavaiaC9RcsGcdtfydbhOkdndnaAmbazcefhxxekazhxavaias9RcsGcdtfydbhzkdndnaDTmbalcefhDxekalcdfhDal8SbegPcFeGhsdnaPcu9kmbalcofhHascFbGhscrhldninaD8SbbgPcFbGaltasVhsaPcu9kmeaDcefhDalcrfglc8J9hmbkaHhDxekaDcefhDkasce4cbasceG9R7amfgmhHkdndnaCcsSmbaDhsxekaDcefhsaD8SbbglcFeGhPdnalcu9kmbaDcvfhOaPcFbGhPcrhldninas8SbbgDcFbGaltaPVhPaDcu9kmeascefhsalcrfglc8J9hmbkaOhsxekascefhskaPce4cbaPceG9R7amfgmhOkdndnaAcsSmbashlxekascefhlas8SbbgDcFeGhPdnaDcu9kmbascvfhzaPcFbGhPcrhDdninal8SbbgscFbGaDtaPVhPascu9kmealcefhlaDcrfgDc8J9hmbkazhlxekalcefhlkaPce4cbaPceG9R7amfgmhzkdndnadcd9hmbabarcetfgDaH87ebaDclfaz87ebaDcdfaO87ebxekabarcdtfgDaHBdbaDcwfazBdbaDclfaOBdbkavc;abfaocitfgDaOBdbaDaHBdlavaicdtfaHBdbavc;abfaocefcsGcitfgDazBdbaDaOBdlavaicefgicsGcdtfaOBdbavc;abfaocdfcsGcitfgDaHBdbaDazBdlavaiaCTaCcsSVfgicsGcdtfazBdbaiaATaAcsSVfhiaocifhokawcefhwaocsGhoaicsGhiarcifgrae6mbkkcbc99alaqSEhokavc;aef8Kjjjjbaok:clevu8Jjjjjbcz9Rhvdnalaecvf9pmbc9:skdnaiRbbc;:eGc;qeSmbcuskav9cb83iwaicefhoaialfc98fhrdnaeTmbdnadcdSmbcbhwindnaoar6mbc9:skaocefhlao8SbbgicFeGhddndnaicu9mmbalhoxekaocvfhoadcFbGhdcrhidninal8SbbgDcFbGaitadVhdaDcu9kmealcefhlaicrfgic8J9hmbxdkkalcefhokabawcdtfadc8Etc8F91adcd47avcwfadceGcdtVglydbfgiBdbalaiBdbawcefgwae9hmbxdkkcbhwindnaoar6mbc9:skaocefhlao8SbbgicFeGhddndnaicu9mmbalhoxekaocvfhoadcFbGhdcrhidninal8SbbgDcFbGaitadVhdaDcu9kmealcefhlaicrfgic8J9hmbxdkkalcefhokabawcetfadc8Etc8F91adcd47avcwfadceGcdtVglydbfgi87ebalaiBdbawcefgwae9hmbkkcbc99aoarSEk;Toio97eue97aec98Ghedndnadcl9hmbaeTmecbhdinababpbbbgicKp:RecKp:Sep;6eglaicwp:RecKp:Sep;6ealp;Geaiczp:RecKp:Sep;6egvp;Gep;Kep;Legopxbbbbbbbbbbbbbbbbp:2egralpxbbbjbbbjbbbjbbbjgwp9op9rp;Keglpxbb;:9cbb;:9cbb;:9cbb;:9calalp;Meaoaop;Meavaravawp9op9rp;Keglalp;Mep;Kep;Kep;Jep;Negvp;Mepxbbn0bbn0bbn0bbn0grp;KepxFbbbFbbbFbbbFbbbp9oaipxbbbFbbbFbbbFbbbFp9op9qalavp;Mearp;Kecwp:RepxbFbbbFbbbFbbbFbbp9op9qaoavp;Mearp;Keczp:RepxbbFbbbFbbbFbbbFbp9op9qpkbbabczfhbadclfgdae6mbxdkkaeTmbcbhdinabczfgDaDpbbbgipxbbbbbbFFbbbbbbFFgwp9oabpbbbgoaipmbediwDqkzHOAKY8AEgvczp:Reczp:Sep;6eglaoaipmlvorxmPsCXQL358E8FpxFubbFubbFubbFubbp9op;6eavczp:Sep;6egvp;Gealp;Gep;Kep;Legipxbbbbbbbbbbbbbbbbp:2egralpxbbbjbbbjbbbjbbbjgqp9op9rp;Keglpxb;:FSb;:FSb;:FSb;:FSalalp;Meaiaip;Meavaravaqp9op9rp;Keglalp;Mep;Kep;Kep;Jep;Negvp;Mepxbbn0bbn0bbn0bbn0grp;KepxFFbbFFbbFFbbFFbbp9oaiavp;Mearp;Keczp:Rep9qgialavp;Mearp;KepxFFbbFFbbFFbbFFbbp9oglpmwDKYqk8AExm35Ps8E8Fp9qpkbbabaoawp9oaialpmbezHdiOAlvCXorQLp9qpkbbabcafhbadclfgdae6mbkkk;2ileue97euo97dnaec98GgiTmbcbheinabcKfpx:ji:1S:ji:1S:ji:1S:ji:1SabpbbbglabczfgvpbbbgopmlvorxmPsCXQL358E8Fgrczp:Segwpxibbbibbbibbbibbbp9qp;6egDp;NegqaDaDp;MegDaDp;KealaopmbediwDqkzHOAKY8AEgDczp:Reczp:Sep;6eglalp;MeaDczp:Sep;6egoaop;Mearczp:Reczp:Sep;6egrarp;Mep;Kep;Kep;Lepxbbbbbbbbbbbbbbbbp:4ep;Jep;Mepxbbn0bbn0bbn0bbn0gDp;KepxFFbbFFbbFFbbFFbbgkp9oaqaop;MeaDp;Keczp:Rep9qgoaqalp;MeaDp;Keakp9oaqarp;MeaDp;Keczp:Rep9qgDpmwDKYqk8AExm35Ps8E8Fglp5eawclp:RegqpEi:T:j83ibavalp5baqpEd:T:j83ibabcwfaoaDpmbezHdiOAlvCXorQLgDp5eaqpEe:T:j83ibabaDp5baqpEb:T:j83ibabcafhbaeclfgeai6mbkkkuee97dnadcd4ae2c98GgeTmbcbhdinababpbbbgicwp:Recwp:Sep;6eaicep:SepxbbjFbbjFbbjFbbjFp9opxbbjZbbjZbbjZbbjZp:Uep;Mepkbbabczfhbadclfgdae6mbkkk:Sodw97euaec98Ghedndnadcl9hmbaeTmecbhdinabpxbbuJbbuJbbuJbbuJabpbbbgicKp:TeglaicYp:Tep9qgvcdp:Teavp9qgvclp:Teavp9qgop;6ep;Negvaicwp:RecKp:SegraipxFbbbFbbbFbbbFbbbgwp9ogDp:Uep;6ep;Mepxbbn0bbn0bbn0bbn0gqp;Kecwp:RepxbFbbbFbbbFbbbFbbp9oavaDarp:Xeaiczp:RecKp:Segip:Uep;6ep;Meaqp;Keawp9op9qavaDaraip:Uep:Xep;6ep;Meaqp;Keczp:RepxbbFbbbFbbbFbbbFbp9op9qavaoalcep:Rep9oalpxebbbebbbebbbebbbp9op9qp;6ep;Meaqp;KecKp:Rep9qpkbbabczfhbadclfgdae6mbxdkkaeTmbcbhdinabczfgkpxbFu9hbFu9hbFu9hbFu9habpbbbglakpbbbgrpmlvorxmPsCXQL358E8Fgvczp:TegqavcHp:Tep9qgicdp:Teaip9qgiclp:Teaip9qgicwp:Teaip9qgop;6ep;NegialarpmbediwDqkzHOAKY8AEgDpxFFbbFFbbFFbbFFbbglp9ograDczp:Segwp:Ueavczp:Reczp:SegDp:Xep;6ep;Mepxbbn0bbn0bbn0bbn0gvp;Kealp9oaiarawaDp:Uep:Xep;6ep;Meavp;Keczp:Rep9qgwaiaoaqcep:Rep9oaqpxebbbebbbebbbebbbp9op9qp;6ep;Meavp;Keczp:ReaiaDarp:Uep;6ep;Meavp;Kealp9op9qgipmwDKYqk8AExm35Ps8E8FpkbbabawaipmbezHdiOAlvCXorQLpkbbabcafhbadclfgdae6mbkkk9teiucbcbydj:G:cjbgeabcifc98GfgbBdj:G:cjbdndnabZbcztgd9nmbcuhiabad9RcFFifcz4nbcuSmekaehikaikkxebcj:Gdklz:zbb";
@@ -40346,4 +41566,1507 @@ var MeshoptDecoder = (function() {
 	};
 })();
 //#endregion
-export { PointLight as A, TextureLoader as B, Mesh as C, MeshStandardMaterial as D, MeshPhongMaterial as E, RepeatWrapping as F, Vector3 as H, SRGBColorSpace as I, Scene as L, PointsMaterial as M, Quaternion as N, PerspectiveCamera as O, QuaternionKeyframeTrack as P, ShaderMaterial as R, LoopRepeat as S, MeshLambertMaterial as T, TorusGeometry as V, Group as _, AnimationClip as a, LineSegments as b, BoxGeometry as c, CanvasTexture as d, CircleGeometry as f, Fog as g, DirectionalLight as h, WebGLRenderer as i, Points as j, PlaneGeometry as k, BufferAttribute as l, CylinderGeometry as m, GLTFLoader as n, AnimationMixer as o, Color as p, clone as r, Box3 as s, MeshoptDecoder as t, BufferGeometry as u, HemisphereLight as v, MeshBasicMaterial as w, LoopOnce as x, LineBasicMaterial as y, SphereGeometry as z };
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/shaders/CopyShader.js
+/**
+* @module CopyShader
+* @three_import import { CopyShader } from 'three/addons/shaders/CopyShader.js';
+*/
+/**
+* Full-screen copy shader pass.
+*
+* @constant
+* @type {ShaderMaterial~Shader}
+*/
+var CopyShader = {
+	name: "CopyShader",
+	uniforms: {
+		"tDiffuse": { value: null },
+		"opacity": { value: 1 }
+	},
+	vertexShader: `
+
+		varying vec2 vUv;
+
+		void main() {
+
+			vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+		}`,
+	fragmentShader: `
+
+		uniform float opacity;
+
+		uniform sampler2D tDiffuse;
+
+		varying vec2 vUv;
+
+		void main() {
+
+			vec4 texel = texture2D( tDiffuse, vUv );
+			gl_FragColor = opacity * texel;
+
+
+		}`
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/Pass.js
+/**
+* Abstract base class for all post processing passes.
+*
+* This module is only relevant for post processing with {@link WebGLRenderer}.
+*
+* @abstract
+* @three_import import { Pass } from 'three/addons/postprocessing/Pass.js';
+*/
+var Pass = class {
+	/**
+	* Constructs a new pass.
+	*/
+	constructor() {
+		/**
+		* This flag can be used for type testing.
+		*
+		* @type {boolean}
+		* @readonly
+		* @default true
+		*/
+		this.isPass = true;
+		/**
+		* If set to `true`, the pass is processed by the composer.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.enabled = true;
+		/**
+		* If set to `true`, the pass indicates to swap read and write buffer after rendering.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.needsSwap = true;
+		/**
+		* If set to `true`, the pass clears its buffer before rendering
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.clear = false;
+		/**
+		* If set to `true`, the result of the pass is rendered to screen. The last pass in the composers
+		* pass chain gets automatically rendered to screen, no matter how this property is configured.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.renderToScreen = false;
+	}
+	/**
+	* Sets the size of the pass.
+	*
+	* @abstract
+	* @param {number} width - The width to set.
+	* @param {number} height - The height to set.
+	*/
+	setSize() {}
+	/**
+	* This method holds the render logic of a pass. It must be implemented in all derived classes.
+	*
+	* @abstract
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render() {
+		console.error("THREE.Pass: .render() must be implemented in derived pass.");
+	}
+	/**
+	* Frees the GPU-related resources allocated by this instance. Call this
+	* method whenever the pass is no longer used in your app.
+	*
+	* @abstract
+	*/
+	dispose() {}
+};
+var _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+var FullscreenTriangleGeometry = class extends BufferGeometry {
+	constructor() {
+		super();
+		this.setAttribute("position", new Float32BufferAttribute([
+			-1,
+			3,
+			0,
+			-1,
+			-1,
+			0,
+			3,
+			-1,
+			0
+		], 3));
+		this.setAttribute("uv", new Float32BufferAttribute([
+			0,
+			2,
+			0,
+			0,
+			2,
+			0
+		], 2));
+	}
+};
+var _geometry = new FullscreenTriangleGeometry();
+/**
+* This module is a helper for passes which need to render a full
+* screen effect which is quite common in context of post processing.
+*
+* The intended usage is to reuse a single full screen quad for rendering
+* subsequent passes by just reassigning the `material` reference.
+*
+* This module can only be used with {@link WebGLRenderer}.
+*
+* @augments Mesh
+* @three_import import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
+*/
+var FullScreenQuad = class {
+	/**
+	* Constructs a new full screen quad.
+	*
+	* @param {?Material} material - The material to render te full screen quad with.
+	*/
+	constructor(material) {
+		this._mesh = new Mesh(_geometry, material);
+	}
+	/**
+	* Frees the GPU-related resources allocated by this instance. Call this
+	* method whenever the instance is no longer used in your app.
+	*/
+	dispose() {
+		this._mesh.geometry.dispose();
+	}
+	/**
+	* Renders the full screen quad.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	*/
+	render(renderer) {
+		renderer.render(this._mesh, _camera);
+	}
+	/**
+	* The quad's material.
+	*
+	* @type {?Material}
+	*/
+	get material() {
+		return this._mesh.material;
+	}
+	set material(value) {
+		this._mesh.material = value;
+	}
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/ShaderPass.js
+/**
+* This pass can be used to create a post processing effect
+* with a raw GLSL shader object. Useful for implementing custom
+* effects.
+*
+* ```js
+* const fxaaPass = new ShaderPass( FXAAShader );
+* composer.addPass( fxaaPass );
+* ```
+*
+* @augments Pass
+* @three_import import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+*/
+var ShaderPass = class extends Pass {
+	/**
+	* Constructs a new shader pass.
+	*
+	* @param {Object|ShaderMaterial} [shader] - A shader object holding vertex and fragment shader as well as
+	* defines and uniforms. It's also valid to pass a custom shader material.
+	* @param {string} [textureID='tDiffuse'] - The name of the texture uniform that should sample
+	* the read buffer.
+	*/
+	constructor(shader, textureID = "tDiffuse") {
+		super();
+		/**
+		* The name of the texture uniform that should sample the read buffer.
+		*
+		* @type {string}
+		* @default 'tDiffuse'
+		*/
+		this.textureID = textureID;
+		/**
+		* The pass uniforms.
+		*
+		* @type {?Object}
+		*/
+		this.uniforms = null;
+		/**
+		* The pass material.
+		*
+		* @type {?ShaderMaterial}
+		*/
+		this.material = null;
+		if (shader instanceof ShaderMaterial) {
+			this.uniforms = shader.uniforms;
+			this.material = shader;
+		} else if (shader) {
+			this.uniforms = UniformsUtils.clone(shader.uniforms);
+			this.material = new ShaderMaterial({
+				name: shader.name !== void 0 ? shader.name : "unspecified",
+				defines: Object.assign({}, shader.defines),
+				uniforms: this.uniforms,
+				vertexShader: shader.vertexShader,
+				fragmentShader: shader.fragmentShader
+			});
+		}
+		this._fsQuad = new FullScreenQuad(this.material);
+	}
+	/**
+	* Performs the shader pass.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render(renderer, writeBuffer, readBuffer) {
+		if (this.uniforms[this.textureID]) this.uniforms[this.textureID].value = readBuffer.texture;
+		this._fsQuad.material = this.material;
+		if (this.renderToScreen) {
+			renderer.setRenderTarget(null);
+			this._fsQuad.render(renderer);
+		} else {
+			renderer.setRenderTarget(writeBuffer);
+			if (this.clear) renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+			this._fsQuad.render(renderer);
+		}
+	}
+	/**
+	* Frees the GPU-related resources allocated by this instance. Call this
+	* method whenever the pass is no longer used in your app.
+	*/
+	dispose() {
+		this.material.dispose();
+		this._fsQuad.dispose();
+	}
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/MaskPass.js
+/**
+* This pass can be used to define a mask during post processing.
+* Meaning only areas of subsequent post processing are affected
+* which lie in the masking area of this pass. Internally, the masking
+* is implemented with the stencil buffer.
+*
+* ```js
+* const maskPass = new MaskPass( scene, camera );
+* composer.addPass( maskPass );
+* ```
+*
+* @augments Pass
+* @three_import import { MaskPass } from 'three/addons/postprocessing/MaskPass.js';
+*/
+var MaskPass = class extends Pass {
+	/**
+	* Constructs a new mask pass.
+	*
+	* @param {Scene} scene - The 3D objects in this scene will define the mask.
+	* @param {Camera} camera - The camera.
+	*/
+	constructor(scene, camera) {
+		super();
+		/**
+		* The scene that defines the mask.
+		*
+		* @type {Scene}
+		*/
+		this.scene = scene;
+		/**
+		* The camera.
+		*
+		* @type {Camera}
+		*/
+		this.camera = camera;
+		/**
+		* Overwritten to perform a clear operation by default.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.clear = true;
+		/**
+		* Overwritten to disable the swap.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.needsSwap = false;
+		/**
+		* Whether to inverse the mask or not.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.inverse = false;
+	}
+	/**
+	* Performs a mask pass with the configured scene and camera.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render(renderer, writeBuffer, readBuffer) {
+		const context = renderer.getContext();
+		const state = renderer.state;
+		state.buffers.color.setMask(false);
+		state.buffers.depth.setMask(false);
+		state.buffers.color.setLocked(true);
+		state.buffers.depth.setLocked(true);
+		let writeValue, clearValue;
+		if (this.inverse) {
+			writeValue = 0;
+			clearValue = 1;
+		} else {
+			writeValue = 1;
+			clearValue = 0;
+		}
+		state.buffers.stencil.setTest(true);
+		state.buffers.stencil.setOp(context.REPLACE, context.REPLACE, context.REPLACE);
+		state.buffers.stencil.setFunc(context.ALWAYS, writeValue, 4294967295);
+		state.buffers.stencil.setClear(clearValue);
+		state.buffers.stencil.setLocked(true);
+		renderer.setRenderTarget(readBuffer);
+		if (this.clear) renderer.clear();
+		renderer.render(this.scene, this.camera);
+		renderer.setRenderTarget(writeBuffer);
+		if (this.clear) renderer.clear();
+		renderer.render(this.scene, this.camera);
+		state.buffers.color.setLocked(false);
+		state.buffers.depth.setLocked(false);
+		state.buffers.color.setMask(true);
+		state.buffers.depth.setMask(true);
+		state.buffers.stencil.setLocked(false);
+		state.buffers.stencil.setFunc(context.EQUAL, 1, 4294967295);
+		state.buffers.stencil.setOp(context.KEEP, context.KEEP, context.KEEP);
+		state.buffers.stencil.setLocked(true);
+	}
+};
+/**
+* This pass can be used to clear a mask previously defined with {@link MaskPass}.
+*
+* ```js
+* const clearPass = new ClearMaskPass();
+* composer.addPass( clearPass );
+* ```
+*
+* @augments Pass
+*/
+var ClearMaskPass = class extends Pass {
+	/**
+	* Constructs a new clear mask pass.
+	*/
+	constructor() {
+		super();
+		/**
+		* Overwritten to disable the swap.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.needsSwap = false;
+	}
+	/**
+	* Performs the clear of the currently defined mask.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render(renderer) {
+		renderer.state.buffers.stencil.setLocked(false);
+		renderer.state.buffers.stencil.setTest(false);
+	}
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/EffectComposer.js
+/**
+* Used to implement post-processing effects in three.js.
+* The class manages a chain of post-processing passes to produce the final visual result.
+* Post-processing passes are executed in order of their addition/insertion.
+* The last pass is automatically rendered to screen.
+*
+* This module can only be used with {@link WebGLRenderer}.
+*
+* ```js
+* const composer = new EffectComposer( renderer );
+*
+* // adding some passes
+* const renderPass = new RenderPass( scene, camera );
+* composer.addPass( renderPass );
+*
+* const glitchPass = new GlitchPass();
+* composer.addPass( glitchPass );
+*
+* const outputPass = new OutputPass()
+* composer.addPass( outputPass );
+*
+* function animate() {
+*
+* 	composer.render(); // instead of renderer.render()
+*
+* }
+* ```
+*
+* @three_import import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+*/
+var EffectComposer = class {
+	/**
+	* Constructs a new effect composer.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} [renderTarget] - This render target and a clone will
+	* be used as the internal read and write buffers. If not given, the composer creates
+	* the buffers automatically.
+	*/
+	constructor(renderer, renderTarget) {
+		/**
+		* The renderer.
+		*
+		* @type {WebGLRenderer}
+		*/
+		this.renderer = renderer;
+		this._pixelRatio = renderer.getPixelRatio();
+		if (renderTarget === void 0) {
+			const size = renderer.getSize(new Vector2());
+			this._width = size.width;
+			this._height = size.height;
+			renderTarget = new WebGLRenderTarget(this._width * this._pixelRatio, this._height * this._pixelRatio, { type: HalfFloatType });
+			renderTarget.texture.name = "EffectComposer.rt1";
+		} else {
+			this._width = renderTarget.width;
+			this._height = renderTarget.height;
+		}
+		this.renderTarget1 = renderTarget;
+		this.renderTarget2 = renderTarget.clone();
+		this.renderTarget2.texture.name = "EffectComposer.rt2";
+		/**
+		* A reference to the internal write buffer. Passes usually write
+		* their result into this buffer.
+		*
+		* @type {WebGLRenderTarget}
+		*/
+		this.writeBuffer = this.renderTarget1;
+		/**
+		* A reference to the internal read buffer. Passes usually read
+		* the previous render result from this buffer.
+		*
+		* @type {WebGLRenderTarget}
+		*/
+		this.readBuffer = this.renderTarget2;
+		/**
+		* Whether the final pass is rendered to the screen (default framebuffer) or not.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.renderToScreen = true;
+		/**
+		* An array representing the (ordered) chain of post-processing passes.
+		*
+		* @type {Array<Pass>}
+		*/
+		this.passes = [];
+		/**
+		* A copy pass used for internal swap operations.
+		*
+		* @private
+		* @type {ShaderPass}
+		*/
+		this.copyPass = new ShaderPass(CopyShader);
+		this.copyPass.material.blending = 0;
+		/**
+		* The internal timer for managing time data.
+		*
+		* @private
+		* @type {Timer}
+		*/
+		this.timer = new Timer();
+	}
+	/**
+	* Swaps the internal read/write buffers.
+	*/
+	swapBuffers() {
+		const tmp = this.readBuffer;
+		this.readBuffer = this.writeBuffer;
+		this.writeBuffer = tmp;
+	}
+	/**
+	* Adds the given pass to the pass chain.
+	*
+	* @param {Pass} pass - The pass to add.
+	*/
+	addPass(pass) {
+		this.passes.push(pass);
+		pass.setSize(this._width * this._pixelRatio, this._height * this._pixelRatio);
+	}
+	/**
+	* Inserts the given pass at a given index.
+	*
+	* @param {Pass} pass - The pass to insert.
+	* @param {number} index - The index into the pass chain.
+	*/
+	insertPass(pass, index) {
+		this.passes.splice(index, 0, pass);
+		pass.setSize(this._width * this._pixelRatio, this._height * this._pixelRatio);
+	}
+	/**
+	* Removes the given pass from the pass chain.
+	*
+	* @param {Pass} pass - The pass to remove.
+	*/
+	removePass(pass) {
+		const index = this.passes.indexOf(pass);
+		if (index !== -1) this.passes.splice(index, 1);
+	}
+	/**
+	* Returns `true` if the pass for the given index is the last enabled pass in the pass chain.
+	*
+	* @param {number} passIndex - The pass index.
+	* @return {boolean} Whether the pass for the given index is the last pass in the pass chain.
+	*/
+	isLastEnabledPass(passIndex) {
+		for (let i = passIndex + 1; i < this.passes.length; i++) if (this.passes[i].enabled) return false;
+		return true;
+	}
+	/**
+	* Executes all enabled post-processing passes in order to produce the final frame.
+	*
+	* @param {number} deltaTime - The delta time in seconds. If not given, the composer computes
+	* its own time delta value.
+	*/
+	render(deltaTime) {
+		this.timer.update();
+		if (deltaTime === void 0) deltaTime = this.timer.getDelta();
+		const currentRenderTarget = this.renderer.getRenderTarget();
+		let maskActive = false;
+		for (let i = 0, il = this.passes.length; i < il; i++) {
+			const pass = this.passes[i];
+			if (pass.enabled === false) continue;
+			pass.renderToScreen = this.renderToScreen && this.isLastEnabledPass(i);
+			pass.render(this.renderer, this.writeBuffer, this.readBuffer, deltaTime, maskActive);
+			if (pass.needsSwap) {
+				if (maskActive) {
+					const context = this.renderer.getContext();
+					const stencil = this.renderer.state.buffers.stencil;
+					stencil.setFunc(context.NOTEQUAL, 1, 4294967295);
+					this.copyPass.render(this.renderer, this.writeBuffer, this.readBuffer, deltaTime);
+					stencil.setFunc(context.EQUAL, 1, 4294967295);
+				}
+				this.swapBuffers();
+			}
+			if (MaskPass !== void 0) {
+				if (pass instanceof MaskPass) maskActive = true;
+				else if (pass instanceof ClearMaskPass) maskActive = false;
+			}
+		}
+		this.renderer.setRenderTarget(currentRenderTarget);
+	}
+	/**
+	* Resets the internal state of the EffectComposer.
+	*
+	* @param {WebGLRenderTarget} [renderTarget] - This render target has the same purpose like
+	* the one from the constructor. If set, it is used to setup the read and write buffers.
+	*/
+	reset(renderTarget) {
+		if (renderTarget === void 0) {
+			const size = this.renderer.getSize(new Vector2());
+			this._pixelRatio = this.renderer.getPixelRatio();
+			this._width = size.width;
+			this._height = size.height;
+			renderTarget = this.renderTarget1.clone();
+			renderTarget.setSize(this._width * this._pixelRatio, this._height * this._pixelRatio);
+		}
+		this.renderTarget1.dispose();
+		this.renderTarget2.dispose();
+		this.renderTarget1 = renderTarget;
+		this.renderTarget2 = renderTarget.clone();
+		this.writeBuffer = this.renderTarget1;
+		this.readBuffer = this.renderTarget2;
+	}
+	/**
+	* Resizes the internal read and write buffers as well as all passes. Similar to {@link WebGLRenderer#setSize},
+	* this method honors the current pixel ration.
+	*
+	* @param {number} width - The width in logical pixels.
+	* @param {number} height - The height in logical pixels.
+	*/
+	setSize(width, height) {
+		this._width = width;
+		this._height = height;
+		const effectiveWidth = this._width * this._pixelRatio;
+		const effectiveHeight = this._height * this._pixelRatio;
+		this.renderTarget1.setSize(effectiveWidth, effectiveHeight);
+		this.renderTarget2.setSize(effectiveWidth, effectiveHeight);
+		for (let i = 0; i < this.passes.length; i++) this.passes[i].setSize(effectiveWidth, effectiveHeight);
+	}
+	/**
+	* Sets device pixel ratio. This is usually used for HiDPI device to prevent blurring output.
+	* Setting the pixel ratio will automatically resize the composer.
+	*
+	* @param {number} pixelRatio - The pixel ratio to set.
+	*/
+	setPixelRatio(pixelRatio) {
+		this._pixelRatio = pixelRatio;
+		this.setSize(this._width, this._height);
+	}
+	/**
+	* Frees the GPU-related resources allocated by this instance. Call this
+	* method whenever the composer is no longer used in your app.
+	*/
+	dispose() {
+		this.renderTarget1.dispose();
+		this.renderTarget2.dispose();
+		this.copyPass.dispose();
+	}
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/RenderPass.js
+/**
+* This class represents a render pass. It takes a camera and a scene and produces
+* a beauty pass for subsequent post processing effects.
+*
+* ```js
+* const renderPass = new RenderPass( scene, camera );
+* composer.addPass( renderPass );
+* ```
+*
+* @augments Pass
+* @three_import import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+*/
+var RenderPass = class extends Pass {
+	/**
+	* Constructs a new render pass.
+	*
+	* @param {Scene} scene - The scene to render.
+	* @param {Camera} camera - The camera.
+	* @param {?Material} [overrideMaterial=null] - The override material. If set, this material is used
+	* for all objects in the scene.
+	* @param {?(number|Color|string)} [clearColor=null] - The clear color of the render pass.
+	* @param {?number} [clearAlpha=null] - The clear alpha of the render pass.
+	*/
+	constructor(scene, camera, overrideMaterial = null, clearColor = null, clearAlpha = null) {
+		super();
+		/**
+		* The scene to render.
+		*
+		* @type {Scene}
+		*/
+		this.scene = scene;
+		/**
+		* The camera.
+		*
+		* @type {Camera}
+		*/
+		this.camera = camera;
+		/**
+		* The override material. If set, this material is used
+		* for all objects in the scene.
+		*
+		* @type {?Material}
+		* @default null
+		*/
+		this.overrideMaterial = overrideMaterial;
+		/**
+		* The clear color of the render pass.
+		*
+		* @type {?(number|Color|string)}
+		* @default null
+		*/
+		this.clearColor = clearColor;
+		/**
+		* The clear alpha of the render pass.
+		*
+		* @type {?number}
+		* @default null
+		*/
+		this.clearAlpha = clearAlpha;
+		/**
+		* Overwritten to perform a clear operation by default.
+		*
+		* @type {boolean}
+		* @default true
+		*/
+		this.clear = true;
+		/**
+		* If set to `true`, only the depth can be cleared when `clear` is to `false`.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.clearDepth = false;
+		/**
+		* Overwritten to disable the swap.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.needsSwap = false;
+		/**
+		* This flag indicates that this pass renders the scene itself.
+		*
+		* @type {boolean}
+		* @readonly
+		* @default true
+		*/
+		this.isRenderPass = true;
+		this._oldClearColor = new Color();
+	}
+	/**
+	* Performs a beauty pass with the configured scene and camera.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render(renderer, writeBuffer, readBuffer) {
+		const oldAutoClear = renderer.autoClear;
+		renderer.autoClear = false;
+		let oldClearAlpha, oldOverrideMaterial;
+		if (this.overrideMaterial !== null) {
+			oldOverrideMaterial = this.scene.overrideMaterial;
+			this.scene.overrideMaterial = this.overrideMaterial;
+		}
+		if (this.clearColor !== null) {
+			renderer.getClearColor(this._oldClearColor);
+			renderer.setClearColor(this.clearColor, renderer.getClearAlpha());
+		}
+		if (this.clearAlpha !== null) {
+			oldClearAlpha = renderer.getClearAlpha();
+			renderer.setClearAlpha(this.clearAlpha);
+		}
+		if (this.clearDepth == true) renderer.clearDepth();
+		renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
+		if (this.clear === true) renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+		renderer.render(this.scene, this.camera);
+		if (this.clearColor !== null) renderer.setClearColor(this._oldClearColor);
+		if (this.clearAlpha !== null) renderer.setClearAlpha(oldClearAlpha);
+		if (this.overrideMaterial !== null) this.scene.overrideMaterial = oldOverrideMaterial;
+		renderer.autoClear = oldAutoClear;
+	}
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/shaders/LuminosityHighPassShader.js
+/**
+* @module LuminosityHighPassShader
+* @three_import import { LuminosityHighPassShader } from 'three/addons/shaders/LuminosityHighPassShader.js';
+*/
+/**
+* Luminosity high pass shader.
+*
+* @constant
+* @type {ShaderMaterial~Shader}
+*/
+var LuminosityHighPassShader = {
+	name: "LuminosityHighPassShader",
+	uniforms: {
+		"tDiffuse": { value: null },
+		"luminosityThreshold": { value: 1 },
+		"smoothWidth": { value: 1 },
+		"defaultColor": { value: new Color(0) },
+		"defaultOpacity": { value: 0 }
+	},
+	vertexShader: `
+
+		varying vec2 vUv;
+
+		void main() {
+
+			vUv = uv;
+
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+		}`,
+	fragmentShader: `
+
+		uniform sampler2D tDiffuse;
+		uniform vec3 defaultColor;
+		uniform float defaultOpacity;
+		uniform float luminosityThreshold;
+		uniform float smoothWidth;
+
+		varying vec2 vUv;
+
+		void main() {
+
+			vec4 texel = texture2D( tDiffuse, vUv );
+
+			float v = luminance( texel.xyz );
+
+			vec4 outputColor = vec4( defaultColor.rgb, defaultOpacity );
+
+			float alpha = smoothstep( luminosityThreshold, luminosityThreshold + smoothWidth, v );
+
+			gl_FragColor = mix( outputColor, texel, alpha );
+
+		}`
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/UnrealBloomPass.js
+/**
+* This pass is inspired by the bloom pass of Unreal Engine. It creates a
+* mip map chain of bloom textures and blurs them with different radii. Because
+* of the weighted combination of mips, and because larger blurs are done on
+* higher mips, this effect provides good quality and performance.
+*
+* When using this pass, tone mapping must be enabled in the renderer settings.
+*
+* Reference:
+* - [Bloom in Unreal Engine](https://docs.unrealengine.com/latest/INT/Engine/Rendering/PostProcessEffects/Bloom/)
+*
+* ```js
+* const resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
+* const bloomPass = new UnrealBloomPass( resolution, 1.5, 0.4, 0.85 );
+* composer.addPass( bloomPass );
+* ```
+*
+* @augments Pass
+* @three_import import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+*/
+var UnrealBloomPass = class UnrealBloomPass extends Pass {
+	/**
+	* Constructs a new Unreal Bloom pass.
+	*
+	* @param {Vector2} [resolution] - The effect's resolution.
+	* @param {number} [strength=1] - The Bloom strength.
+	* @param {number} radius - The Bloom radius.
+	* @param {number} threshold - The luminance threshold limits which bright areas contribute to the Bloom effect.
+	*/
+	constructor(resolution, strength = 1, radius, threshold) {
+		super();
+		/**
+		* The Bloom strength.
+		*
+		* @type {number}
+		* @default 1
+		*/
+		this.strength = strength;
+		/**
+		* The Bloom radius. Must be in the range `[0,1]`.
+		*
+		* @type {number}
+		*/
+		this.radius = radius;
+		/**
+		* The luminance threshold limits which bright areas contribute to the Bloom effect.
+		*
+		* @type {number}
+		*/
+		this.threshold = threshold;
+		/**
+		* The effect's resolution.
+		*
+		* @type {Vector2}
+		* @default (256,256)
+		*/
+		this.resolution = resolution !== void 0 ? new Vector2(resolution.x, resolution.y) : new Vector2(256, 256);
+		/**
+		* The effect's clear color
+		*
+		* @type {Color}
+		* @default (0,0,0)
+		*/
+		this.clearColor = new Color(0, 0, 0);
+		/**
+		* Overwritten to disable the swap.
+		*
+		* @type {boolean}
+		* @default false
+		*/
+		this.needsSwap = false;
+		this.renderTargetsHorizontal = [];
+		this.renderTargetsVertical = [];
+		this.nMips = 5;
+		let resx = Math.round(this.resolution.x / 2);
+		let resy = Math.round(this.resolution.y / 2);
+		this.renderTargetBright = new WebGLRenderTarget(resx, resy, {
+			type: HalfFloatType,
+			depthBuffer: false
+		});
+		this.renderTargetBright.texture.name = "UnrealBloomPass.bright";
+		this.renderTargetBright.texture.generateMipmaps = false;
+		for (let i = 0; i < this.nMips; i++) {
+			const renderTargetHorizontal = new WebGLRenderTarget(resx, resy, {
+				type: HalfFloatType,
+				depthBuffer: false
+			});
+			renderTargetHorizontal.texture.name = "UnrealBloomPass.h" + i;
+			renderTargetHorizontal.texture.generateMipmaps = false;
+			this.renderTargetsHorizontal.push(renderTargetHorizontal);
+			const renderTargetVertical = new WebGLRenderTarget(resx, resy, {
+				type: HalfFloatType,
+				depthBuffer: false
+			});
+			renderTargetVertical.texture.name = "UnrealBloomPass.v" + i;
+			renderTargetVertical.texture.generateMipmaps = false;
+			this.renderTargetsVertical.push(renderTargetVertical);
+			resx = Math.round(resx / 2);
+			resy = Math.round(resy / 2);
+		}
+		const highPassShader = LuminosityHighPassShader;
+		this.highPassUniforms = UniformsUtils.clone(highPassShader.uniforms);
+		this.highPassUniforms["luminosityThreshold"].value = threshold;
+		this.highPassUniforms["smoothWidth"].value = .01;
+		this.materialHighPassFilter = new ShaderMaterial({
+			uniforms: this.highPassUniforms,
+			vertexShader: highPassShader.vertexShader,
+			fragmentShader: highPassShader.fragmentShader
+		});
+		this.separableBlurMaterials = [];
+		const kernelSizeArray = [
+			6,
+			10,
+			14,
+			18,
+			22
+		];
+		resx = Math.round(this.resolution.x / 2);
+		resy = Math.round(this.resolution.y / 2);
+		for (let i = 0; i < this.nMips; i++) {
+			this.separableBlurMaterials.push(this._getSeparableBlurMaterial(kernelSizeArray[i]));
+			this.separableBlurMaterials[i].uniforms["invSize"].value = new Vector2(1 / resx, 1 / resy);
+			resx = Math.round(resx / 2);
+			resy = Math.round(resy / 2);
+		}
+		this.compositeMaterial = this._getCompositeMaterial(this.nMips);
+		this.compositeMaterial.uniforms["blurTexture1"].value = this.renderTargetsVertical[0].texture;
+		this.compositeMaterial.uniforms["blurTexture2"].value = this.renderTargetsVertical[1].texture;
+		this.compositeMaterial.uniforms["blurTexture3"].value = this.renderTargetsVertical[2].texture;
+		this.compositeMaterial.uniforms["blurTexture4"].value = this.renderTargetsVertical[3].texture;
+		this.compositeMaterial.uniforms["blurTexture5"].value = this.renderTargetsVertical[4].texture;
+		this.compositeMaterial.uniforms["bloomStrength"].value = strength;
+		this.compositeMaterial.uniforms["bloomRadius"].value = .1;
+		const bloomFactors = [
+			1,
+			.8,
+			.6,
+			.4,
+			.2
+		];
+		this.compositeMaterial.uniforms["bloomFactors"].value = bloomFactors;
+		this.bloomTintColors = [
+			new Vector3(1, 1, 1),
+			new Vector3(1, 1, 1),
+			new Vector3(1, 1, 1),
+			new Vector3(1, 1, 1),
+			new Vector3(1, 1, 1)
+		];
+		this.compositeMaterial.uniforms["bloomTintColors"].value = this.bloomTintColors;
+		this.copyUniforms = UniformsUtils.clone(CopyShader.uniforms);
+		this.blendMaterial = new ShaderMaterial({
+			uniforms: this.copyUniforms,
+			vertexShader: CopyShader.vertexShader,
+			fragmentShader: CopyShader.fragmentShader,
+			premultipliedAlpha: true,
+			blending: 2,
+			depthTest: false,
+			depthWrite: false,
+			transparent: true
+		});
+		this._oldClearColor = new Color();
+		this._oldClearAlpha = 1;
+		this._basic = new MeshBasicMaterial();
+		this._fsQuad = new FullScreenQuad(null);
+	}
+	/**
+	* Frees the GPU-related resources allocated by this instance. Call this
+	* method whenever the pass is no longer used in your app.
+	*/
+	dispose() {
+		for (let i = 0; i < this.renderTargetsHorizontal.length; i++) this.renderTargetsHorizontal[i].dispose();
+		for (let i = 0; i < this.renderTargetsVertical.length; i++) this.renderTargetsVertical[i].dispose();
+		this.renderTargetBright.dispose();
+		for (let i = 0; i < this.separableBlurMaterials.length; i++) this.separableBlurMaterials[i].dispose();
+		this.compositeMaterial.dispose();
+		this.blendMaterial.dispose();
+		this._basic.dispose();
+		this._fsQuad.dispose();
+	}
+	/**
+	* Sets the size of the pass.
+	*
+	* @param {number} width - The width to set.
+	* @param {number} height - The height to set.
+	*/
+	setSize(width, height) {
+		let resx = Math.round(width / 2);
+		let resy = Math.round(height / 2);
+		this.renderTargetBright.setSize(resx, resy);
+		for (let i = 0; i < this.nMips; i++) {
+			this.renderTargetsHorizontal[i].setSize(resx, resy);
+			this.renderTargetsVertical[i].setSize(resx, resy);
+			this.separableBlurMaterials[i].uniforms["invSize"].value = new Vector2(1 / resx, 1 / resy);
+			resx = Math.round(resx / 2);
+			resy = Math.round(resy / 2);
+		}
+	}
+	/**
+	* Performs the Bloom pass.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
+		renderer.getClearColor(this._oldClearColor);
+		this._oldClearAlpha = renderer.getClearAlpha();
+		const oldAutoClear = renderer.autoClear;
+		renderer.autoClear = false;
+		renderer.setClearColor(this.clearColor, 0);
+		if (maskActive) renderer.state.buffers.stencil.setTest(false);
+		if (this.renderToScreen) {
+			this._fsQuad.material = this._basic;
+			this._basic.map = readBuffer.texture;
+			renderer.setRenderTarget(null);
+			renderer.clear();
+			this._fsQuad.render(renderer);
+		}
+		this.highPassUniforms["tDiffuse"].value = readBuffer.texture;
+		this.highPassUniforms["luminosityThreshold"].value = this.threshold;
+		this._fsQuad.material = this.materialHighPassFilter;
+		renderer.setRenderTarget(this.renderTargetBright);
+		renderer.clear();
+		this._fsQuad.render(renderer);
+		let inputRenderTarget = this.renderTargetBright;
+		for (let i = 0; i < this.nMips; i++) {
+			this._fsQuad.material = this.separableBlurMaterials[i];
+			this.separableBlurMaterials[i].uniforms["colorTexture"].value = inputRenderTarget.texture;
+			this.separableBlurMaterials[i].uniforms["direction"].value = UnrealBloomPass.BlurDirectionX;
+			renderer.setRenderTarget(this.renderTargetsHorizontal[i]);
+			renderer.clear();
+			this._fsQuad.render(renderer);
+			this.separableBlurMaterials[i].uniforms["colorTexture"].value = this.renderTargetsHorizontal[i].texture;
+			this.separableBlurMaterials[i].uniforms["direction"].value = UnrealBloomPass.BlurDirectionY;
+			renderer.setRenderTarget(this.renderTargetsVertical[i]);
+			renderer.clear();
+			this._fsQuad.render(renderer);
+			inputRenderTarget = this.renderTargetsVertical[i];
+		}
+		this._fsQuad.material = this.compositeMaterial;
+		this.compositeMaterial.uniforms["bloomStrength"].value = this.strength;
+		this.compositeMaterial.uniforms["bloomRadius"].value = this.radius;
+		this.compositeMaterial.uniforms["bloomTintColors"].value = this.bloomTintColors;
+		renderer.setRenderTarget(this.renderTargetsHorizontal[0]);
+		renderer.clear();
+		this._fsQuad.render(renderer);
+		this._fsQuad.material = this.blendMaterial;
+		this.copyUniforms["tDiffuse"].value = this.renderTargetsHorizontal[0].texture;
+		if (maskActive) renderer.state.buffers.stencil.setTest(true);
+		if (this.renderToScreen) {
+			renderer.setRenderTarget(null);
+			this._fsQuad.render(renderer);
+		} else {
+			renderer.setRenderTarget(readBuffer);
+			this._fsQuad.render(renderer);
+		}
+		renderer.setClearColor(this._oldClearColor, this._oldClearAlpha);
+		renderer.autoClear = oldAutoClear;
+	}
+	_getSeparableBlurMaterial(kernelRadius) {
+		const coefficients = [];
+		const sigma = kernelRadius / 3;
+		for (let i = 0; i < kernelRadius; i++) coefficients.push(.39894 * Math.exp(-.5 * i * i / (sigma * sigma)) / sigma);
+		const offsets = [];
+		const weights = [];
+		for (let i = 1; i < kernelRadius; i += 2) {
+			const wa = coefficients[i];
+			const wb = i + 1 < kernelRadius ? coefficients[i + 1] : 0;
+			const w = wa + wb;
+			offsets.push((i * wa + (i + 1) * wb) / w);
+			weights.push(w);
+		}
+		return new ShaderMaterial({
+			defines: { "KERNEL_PAIRS": offsets.length },
+			uniforms: {
+				"colorTexture": { value: null },
+				"invSize": { value: new Vector2(.5, .5) },
+				"direction": { value: new Vector2(.5, .5) },
+				"centerWeight": { value: coefficients[0] },
+				"gaussianOffsets": { value: offsets },
+				"gaussianWeights": { value: weights }
+			},
+			vertexShader: `
+
+				varying vec2 vUv;
+
+				void main() {
+
+					vUv = uv;
+					gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+				}`,
+			fragmentShader: `
+
+				#include <common>
+
+				varying vec2 vUv;
+
+				uniform sampler2D colorTexture;
+				uniform vec2 invSize;
+				uniform vec2 direction;
+				uniform float centerWeight;
+				uniform float gaussianOffsets[KERNEL_PAIRS];
+				uniform float gaussianWeights[KERNEL_PAIRS];
+
+				void main() {
+
+					vec3 diffuseSum = texture2D( colorTexture, vUv ).rgb * centerWeight;
+
+					for ( int i = 0; i < KERNEL_PAIRS; i ++ ) {
+
+						vec2 uvOffset = direction * invSize * gaussianOffsets[ i ];
+						vec3 sample1 = texture2D( colorTexture, vUv + uvOffset ).rgb;
+						vec3 sample2 = texture2D( colorTexture, vUv - uvOffset ).rgb;
+						diffuseSum += ( sample1 + sample2 ) * gaussianWeights[ i ];
+
+					}
+
+					gl_FragColor = vec4( diffuseSum, 1.0 );
+
+				}`
+		});
+	}
+	_getCompositeMaterial(nMips) {
+		return new ShaderMaterial({
+			defines: { "NUM_MIPS": nMips },
+			uniforms: {
+				"blurTexture1": { value: null },
+				"blurTexture2": { value: null },
+				"blurTexture3": { value: null },
+				"blurTexture4": { value: null },
+				"blurTexture5": { value: null },
+				"bloomStrength": { value: 1 },
+				"bloomFactors": { value: null },
+				"bloomTintColors": { value: null },
+				"bloomRadius": { value: 0 }
+			},
+			vertexShader: `
+
+				varying vec2 vUv;
+
+				void main() {
+
+					vUv = uv;
+					gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+				}`,
+			fragmentShader: `
+
+				varying vec2 vUv;
+
+				uniform sampler2D blurTexture1;
+				uniform sampler2D blurTexture2;
+				uniform sampler2D blurTexture3;
+				uniform sampler2D blurTexture4;
+				uniform sampler2D blurTexture5;
+				uniform float bloomStrength;
+				uniform float bloomRadius;
+				uniform float bloomFactors[NUM_MIPS];
+				uniform vec3 bloomTintColors[NUM_MIPS];
+
+				float lerpBloomFactor( const in float factor ) {
+
+					float mirrorFactor = 1.2 - factor;
+					return mix( factor, mirrorFactor, bloomRadius );
+
+				}
+
+				void main() {
+
+					// 3.0 for backwards compatibility with previous alpha-based intensity
+					vec3 bloom = 3.0 * bloomStrength * (
+						lerpBloomFactor( bloomFactors[ 0 ] ) * bloomTintColors[ 0 ] * texture2D( blurTexture1, vUv ).rgb +
+						lerpBloomFactor( bloomFactors[ 1 ] ) * bloomTintColors[ 1 ] * texture2D( blurTexture2, vUv ).rgb +
+						lerpBloomFactor( bloomFactors[ 2 ] ) * bloomTintColors[ 2 ] * texture2D( blurTexture3, vUv ).rgb +
+						lerpBloomFactor( bloomFactors[ 3 ] ) * bloomTintColors[ 3 ] * texture2D( blurTexture4, vUv ).rgb +
+						lerpBloomFactor( bloomFactors[ 4 ] ) * bloomTintColors[ 4 ] * texture2D( blurTexture5, vUv ).rgb
+					);
+
+					float bloomAlpha = max( bloom.r, max( bloom.g, bloom.b ) );
+					gl_FragColor = vec4( bloom, bloomAlpha );
+
+				}`
+		});
+	}
+};
+UnrealBloomPass.BlurDirectionX = new Vector2(1, 0);
+UnrealBloomPass.BlurDirectionY = new Vector2(0, 1);
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/shaders/OutputShader.js
+/**
+* @module OutputShader
+* @three_import import { OutputShader } from 'three/addons/shaders/OutputShader.js';
+*/
+/**
+* Performs tone mapping and color space conversion for
+* FX workflows.
+*
+* Used by {@link OutputPass}.
+*
+* @constant
+* @type {ShaderMaterial~Shader}
+*/
+var OutputShader = {
+	name: "OutputShader",
+	uniforms: {
+		"tDiffuse": { value: null },
+		"toneMappingExposure": { value: 1 }
+	},
+	vertexShader: `
+		precision highp float;
+
+		uniform mat4 modelViewMatrix;
+		uniform mat4 projectionMatrix;
+
+		attribute vec3 position;
+		attribute vec2 uv;
+
+		varying vec2 vUv;
+
+		void main() {
+
+			vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+		}`,
+	fragmentShader: `
+
+		precision highp float;
+
+		uniform sampler2D tDiffuse;
+
+		#include <tonemapping_pars_fragment>
+		#include <colorspace_pars_fragment>
+
+		varying vec2 vUv;
+
+		void main() {
+
+			gl_FragColor = texture2D( tDiffuse, vUv );
+
+			// tone mapping
+
+			#ifdef LINEAR_TONE_MAPPING
+
+				gl_FragColor.rgb = LinearToneMapping( gl_FragColor.rgb );
+
+			#elif defined( REINHARD_TONE_MAPPING )
+
+				gl_FragColor.rgb = ReinhardToneMapping( gl_FragColor.rgb );
+
+			#elif defined( CINEON_TONE_MAPPING )
+
+				gl_FragColor.rgb = CineonToneMapping( gl_FragColor.rgb );
+
+			#elif defined( ACES_FILMIC_TONE_MAPPING )
+
+				gl_FragColor.rgb = ACESFilmicToneMapping( gl_FragColor.rgb );
+
+			#elif defined( AGX_TONE_MAPPING )
+
+				gl_FragColor.rgb = AgXToneMapping( gl_FragColor.rgb );
+
+			#elif defined( NEUTRAL_TONE_MAPPING )
+
+				gl_FragColor.rgb = NeutralToneMapping( gl_FragColor.rgb );
+
+			#elif defined( CUSTOM_TONE_MAPPING )
+
+				gl_FragColor.rgb = CustomToneMapping( gl_FragColor.rgb );
+
+			#endif
+
+			// color space
+
+			#ifdef SRGB_TRANSFER
+
+				gl_FragColor = sRGBTransferOETF( gl_FragColor );
+
+			#endif
+
+		}`
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/postprocessing/OutputPass.js
+/**
+* This pass is responsible for including tone mapping and color space conversion
+* into your pass chain. In most cases, this pass should be included at the end
+* of each pass chain. If a pass requires sRGB input (e.g. like FXAA), the pass
+* must follow `OutputPass` in the pass chain.
+*
+* The tone mapping and color space settings are extracted from the renderer.
+*
+* ```js
+* const outputPass = new OutputPass();
+* composer.addPass( outputPass );
+* ```
+*
+* @augments Pass
+* @three_import import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+*/
+var OutputPass = class extends Pass {
+	/**
+	* Constructs a new output pass.
+	*/
+	constructor() {
+		super();
+		/**
+		* This flag indicates that this is an output pass.
+		*
+		* @type {boolean}
+		* @readonly
+		* @default true
+		*/
+		this.isOutputPass = true;
+		/**
+		* The pass uniforms.
+		*
+		* @type {Object}
+		*/
+		this.uniforms = UniformsUtils.clone(OutputShader.uniforms);
+		/**
+		* The pass material.
+		*
+		* @type {RawShaderMaterial}
+		*/
+		this.material = new RawShaderMaterial({
+			name: OutputShader.name,
+			uniforms: this.uniforms,
+			vertexShader: OutputShader.vertexShader,
+			fragmentShader: OutputShader.fragmentShader
+		});
+		this._fsQuad = new FullScreenQuad(this.material);
+		this._outputColorSpace = null;
+		this._toneMapping = null;
+	}
+	/**
+	* Performs the output pass.
+	*
+	* @param {WebGLRenderer} renderer - The renderer.
+	* @param {WebGLRenderTarget} writeBuffer - The write buffer. This buffer is intended as the rendering
+	* destination for the pass.
+	* @param {WebGLRenderTarget} readBuffer - The read buffer. The pass can access the result from the
+	* previous pass from this buffer.
+	* @param {number} deltaTime - The delta time in seconds.
+	* @param {boolean} maskActive - Whether masking is active or not.
+	*/
+	render(renderer, writeBuffer, readBuffer) {
+		this.uniforms["tDiffuse"].value = readBuffer.texture;
+		this.uniforms["toneMappingExposure"].value = renderer.toneMappingExposure;
+		if (this._outputColorSpace !== renderer.outputColorSpace || this._toneMapping !== renderer.toneMapping) {
+			this._outputColorSpace = renderer.outputColorSpace;
+			this._toneMapping = renderer.toneMapping;
+			this.material.defines = {};
+			if (ColorManagement.getTransfer(this._outputColorSpace) === "srgb") this.material.defines.SRGB_TRANSFER = "";
+			if (this._toneMapping === 1) this.material.defines.LINEAR_TONE_MAPPING = "";
+			else if (this._toneMapping === 2) this.material.defines.REINHARD_TONE_MAPPING = "";
+			else if (this._toneMapping === 3) this.material.defines.CINEON_TONE_MAPPING = "";
+			else if (this._toneMapping === 4) this.material.defines.ACES_FILMIC_TONE_MAPPING = "";
+			else if (this._toneMapping === 6) this.material.defines.AGX_TONE_MAPPING = "";
+			else if (this._toneMapping === 7) this.material.defines.NEUTRAL_TONE_MAPPING = "";
+			else if (this._toneMapping === 5) this.material.defines.CUSTOM_TONE_MAPPING = "";
+			this.material.needsUpdate = true;
+		}
+		if (this.renderToScreen === true) {
+			renderer.setRenderTarget(null);
+			this._fsQuad.render(renderer);
+		} else {
+			renderer.setRenderTarget(writeBuffer);
+			if (this.clear) renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+			this._fsQuad.render(renderer);
+		}
+	}
+	/**
+	* Frees the GPU-related resources allocated by this instance. Call this
+	* method whenever the pass is no longer used in your app.
+	*/
+	dispose() {
+		this.material.dispose();
+		this._fsQuad.dispose();
+	}
+};
+//#endregion
+//#region ../game-sweep/AshLanev2/node_modules/three/examples/jsm/shaders/VignetteShader.js
+/**
+* @module VignetteShader
+* @three_import import { VignetteShader } from 'three/addons/shaders/VignetteShader.js';
+*/
+/**
+* Based on [PaintEffect postprocess from ro.me](https://github.com/dataarts/3-dreams-of-black/blob/master/deploy/js/effects/PaintEffect.js).
+*
+* @constant
+* @type {ShaderMaterial~Shader}
+*/
+var VignetteShader = {
+	name: "VignetteShader",
+	uniforms: {
+		"tDiffuse": { value: null },
+		"offset": { value: 1 },
+		"darkness": { value: 1 }
+	},
+	vertexShader: `
+
+		varying vec2 vUv;
+
+		void main() {
+
+			vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+		}`,
+	fragmentShader: `
+
+		uniform float offset;
+		uniform float darkness;
+
+		uniform sampler2D tDiffuse;
+
+		varying vec2 vUv;
+
+		void main() {
+
+			// Eskil's vignette
+
+			vec4 texel = texture2D( tDiffuse, vUv );
+			vec2 uv = ( vUv - vec2( 0.5 ) ) * vec2( offset );
+			gl_FragColor = vec4( mix( texel.rgb, vec3( 1.0 - darkness ), dot( uv, uv ) ), texel.a );
+
+		}`
+};
+//#endregion
+export { SRGBColorSpace as $, HemisphereLight as A, Mesh as B, ConeGeometry as C, Fog as D, Euler as E, LineSegments as F, PerspectiveCamera as G, MeshLambertMaterial as H, LoopOnce as I, Points as J, PlaneGeometry as K, LoopRepeat as L, InstancedMesh as M, LatheGeometry as N, Group as O, LineBasicMaterial as P, RepeatWrapping as Q, MathUtils as R, Color as S, DirectionalLight as T, MeshPhongMaterial as U, MeshBasicMaterial as V, MeshStandardMaterial as W, Quaternion as X, PointsMaterial as Y, QuaternionKeyframeTrack as Z, BufferGeometry as _, EffectComposer as a, SpriteMaterial as at, CircleGeometry as b, GLTFLoader as c, Vector2 as ct, WebGLRenderer as d, WebGLRenderTarget as dt, Scene as et, AnimationClip as f, BufferAttribute as g, BoxGeometry as h, RenderPass as i, Sprite as it, IcosahedronGeometry as j, HalfFloatType as k, clone as l, Vector3 as lt, Box3 as m, OutputPass as n, Sphere as nt, ShaderPass as o, TextureLoader as ot, AnimationMixer as p, PointLight as q, UnrealBloomPass as r, SphereGeometry as rt, MeshoptDecoder as s, TorusGeometry as st, VignetteShader as t, ShaderMaterial as tt, mergeGeometries as u, VectorKeyframeTrack as ut, CanvasTexture as v, CylinderGeometry as w, ClampToEdgeWrapping as x, CapsuleGeometry as y, Matrix4 as z };

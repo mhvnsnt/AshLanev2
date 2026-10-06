@@ -47,8 +47,8 @@ export function StreetScene({ seed = 7, className = "" }: { seed?: number; class
             <stop offset="1" stopColor="#1a1420" />
           </linearGradient>
           <linearGradient id={`v4wall-${seed}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#241d18" />
-            <stop offset="1" stopColor="#17120e" />
+            <stop offset="0" stopColor="#3a2e24" />
+            <stop offset="1" stopColor="#241b14" />
           </linearGradient>
           <linearGradient id={`v4asphalt-${seed}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#1c1917" />
@@ -64,11 +64,11 @@ export function StreetScene({ seed = 7, className = "" }: { seed?: number; class
           </radialGradient>
           <pattern id={`v4brick-${seed}`} width="64" height="32" patternUnits="userSpaceOnUse">
             <rect width="64" height="32" fill="none" />
-            <rect x="1" y="1" width="30" height="14" fill="#2b211b" opacity="0.9" />
-            <rect x="33" y="1" width="30" height="14" fill="#271e18" opacity="0.9" />
-            <rect x="-15" y="17" width="30" height="14" fill="#2b211b" opacity="0.9" />
-            <rect x="17" y="17" width="30" height="14" fill="#241c16" opacity="0.9" />
-            <rect x="49" y="17" width="30" height="14" fill="#2b211b" opacity="0.9" />
+            <rect x="1" y="1" width="30" height="14" fill="#4a3a2c" opacity="0.95" />
+            <rect x="33" y="1" width="30" height="14" fill="#423322" opacity="0.95" />
+            <rect x="-15" y="17" width="30" height="14" fill="#4a3a2c" opacity="0.95" />
+            <rect x="17" y="17" width="30" height="14" fill="#3d2f22" opacity="0.95" />
+            <rect x="49" y="17" width="30" height="14" fill="#4a3a2c" opacity="0.95" />
           </pattern>
           <pattern id={`v4chain-${seed}`} width="18" height="18" patternUnits="userSpaceOnUse">
             <path d="M0 18 L18 0 M-4 4 L4 -4 M14 22 L22 14" stroke="#3a3f45" strokeWidth="1.6" opacity="0.85" />
@@ -78,12 +78,12 @@ export function StreetScene({ seed = 7, className = "" }: { seed?: number; class
 
         {/* sky + distant blocks */}
         <rect width="800" height="620" fill={`url(#v4sky-${seed})`} />
-        <g opacity="0.8">
-          <rect x="40" y="60" width="90" height="200" fill="#0d0b12" />
-          <rect x="150" y="30" width="70" height="230" fill="#0e0c14" />
-          <rect x="620" y="50" width="110" height="210" fill="#0d0b12" />
-          <rect x="540" y="90" width="60" height="170" fill="#0e0c14" />
-          {Array.from({ length: 14 }).map((_, i) => (
+        <g opacity="0.9">
+          <rect x="40" y="60" width="90" height="200" fill="#161222" />
+          <rect x="150" y="30" width="70" height="230" fill="#181426" />
+          <rect x="620" y="50" width="110" height="210" fill="#161222" />
+          <rect x="540" y="90" width="60" height="170" fill="#181426" />
+          {Array.from({ length: 18 }).map((_, i) => (
             <rect
               key={i}
               x={45 + rnd(i + 10) * 680}
@@ -91,16 +91,19 @@ export function StreetScene({ seed = 7, className = "" }: { seed?: number; class
               width="7"
               height="10"
               fill={rnd(i + 70) > 0.6 ? "#d4af37" : "#7b2ff7"}
-              opacity={0.25 + rnd(i + 90) * 0.5}
+              opacity={0.4 + rnd(i + 90) * 0.5}
             />
           ))}
+          {/* antenna beacons */}
+          <circle cx="185" cy="24" r="3" fill="#c1121f" opacity="0.9" />
+          <circle cx="675" cy="44" r="3" fill="#c1121f" opacity="0.9" />
         </g>
         <ellipse cx="180" cy="150" rx="220" ry="120" fill={`url(#v4neon-p-${seed})`} />
         <ellipse cx="640" cy="200" rx="200" ry="110" fill={`url(#v4neon-g-${seed})`} />
 
         {/* brick wall */}
         <rect x="0" y="180" width="800" height="300" fill={`url(#v4wall-${seed})`} />
-        <rect x="0" y="180" width="800" height="300" fill={`url(#v4brick-${seed})`} opacity="0.55" />
+        <rect x="0" y="180" width="800" height="300" fill={`url(#v4brick-${seed})`} opacity="0.75" />
         {/* grime + cracks */}
         <g opacity="0.5">
           <path d="M120 180 q10 60 -8 120 q-6 80 4 180" stroke="#0d0a08" strokeWidth="14" fill="none" opacity="0.6" />

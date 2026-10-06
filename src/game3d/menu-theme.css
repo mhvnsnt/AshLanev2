@@ -1464,10 +1464,12 @@
   position: relative;
   display: block;
   padding: 10px 10px 12px;
+  margin-top: -30px; /* overlap covers the name plaque baked into portrait art */
   background:
     linear-gradient(180deg, rgba(193, 18, 31, 0.14), transparent 40%),
     #1b1512;
   border-top: 2px solid #c1121f;
+  box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.55);
 }
 .v4-fcard-name {
   display: block;
