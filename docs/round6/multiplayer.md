@@ -237,3 +237,21 @@ Research date: 2026-10-06.
   per-viewer egress.
 
 ---
+## 14. lichess (lila) — REFERENCE ONLY: spectator TV, ratings, seeks
+- **URL:** https://github.com/lichess-org/lila
+- **What:** The gold-standard open online game server (millions of games/day):
+  "TV" spectator channels (top games auto-broadcast), seek/lobby system,
+  Glicko-2 ratings with RD decay, tournaments (Arena/Swiss), relays/broadcasts,
+  simul mode. Study the architecture, not the code: how they do cheap
+  spectating (game stream fan-out), seek matching, and rating presentation.
+- **License:** **AGPL-3.0** (LICENSE + COPYING.md, verified 2026-10-06).
+- **Verdict:** prototype-only — **reference only, do not ship lila code.**
+  Client-side AGPL copyleft would infect the game build; even server-side,
+  the network clause forces source disclosure of a modified deployment.
+- **Notes:** Read-only value: `modules/round` (WebSocket game fan-out),
+  `modules/tv` (spectator channel selection), `modules/tournament`, rating
+  code. Also note their CC0 side-assets (chess-openings, puzzle DB) are NOT
+  usable here (chess-specific). Take patterns, reimplement from scratch —
+  exactly like the digichess project does.
+
+---
