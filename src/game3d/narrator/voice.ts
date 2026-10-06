@@ -17,8 +17,10 @@
  *   - Keep the Bill $aber cadence: measured, conspiratorial, amused
  */
 
-const BASE = "/AshLanev2/";
-const DIR = `${BASE}audio/narrator/`;
+import { assetUrl } from "../asset-base";
+
+/** public/audio/narrator/<line-id>.mp3, via the deploy-aware asset helper. */
+const narratorUrl = (lineId: string) => assetUrl(`audio/narrator/${lineId}.mp3`);
 
 /** Cache of which line ids have a recording (probed once, lazily). */
 const knownGood = new Set<string>();
@@ -28,7 +30,7 @@ async function hasRecording(lineId: string): Promise<boolean> {
   if (knownGood.has(lineId)) return true;
   if (knownMissing.has(lineId)) return false;
   try {
-    const res = await fetch(`${DIR}${lineId}.mp3`, { method: "HEAD" });
+    const res = await fetch(narratorUrl(lineId), { method: "HEAD" });
     if (res.ok) {
       knownGood.add(lineId);
       return true;
@@ -64,7 +66,7 @@ export interface SpeakResult {
  */
 export async function speakNarrator(lineId: string, text: string): Promise<SpeakResult> {
   stopNarratorVoice();
-  if (process.env.NODE_ENV !== "production") {
+  if (import.meta.env.DEV) {
     // eslint-disable-next-line no-console
     console.log(`[narrator] "${text}" (line id: ${lineId})`);
   }
@@ -72,7 +74,7 @@ export async function speakNarrator(lineId: string, text: string): Promise<Speak
     return { voiced: false, durationMs: 0 };
   }
   return new Promise((resolve) => {
-    const audio = new Audio(`${DIR}${lineId}.mp3`);
+    const audio = new Audio(narratorUrl(lineId));
     current = audio;
     const done = (voiced: boolean, durationMs: number) => {
       if (current === audio) current = null;
