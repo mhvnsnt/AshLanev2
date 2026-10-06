@@ -339,3 +339,161 @@ Faction deed: cases closed, districts kept under the Heat threshold.*
 | 28 | X Gold | **Legend of the Force** | Academy classes study your cases. |
 | 29 | X Gold | **The Untouchable** | Scandal-proof. The badge polished itself around you. |
 | 30 | X Gold | **Chief of Chiefs** | When chiefs need a chief, they call you. |
+
+### LADDER 5 — Corporate Security (the firm's private army)
+
+*Inspiration: corporate ladder over military bones, Arasaka-pattern parallel chains (Part 1.7).
+Promotion is by **performance review** — quarterly, political, documented. Loyalty is transactional,
+which makes defection a story lever. Faction deed: assets protected, incidents sanitized.*
+
+| # | Tier | Title | Fiction |
+|---|---|---|---|
+| 1 | I Ash | **Temp Guard** | Contract labor. The badge is rented. |
+| 2 | I Ash | **Contractor** | Signed on. Still disposable. |
+| 3 | I Ash | **Associate Guard** | Full-time. The firm owns your schedule now. |
+| 4 | II Rust | **Security Officer** | Badged. You are the firm's visible deterrent. |
+| 5 | II Rust | **Senior Officer** | Trusted posts. Executive floors. |
+| 6 | II Rust | **Dispatcher** | You see every camera. Knowledge is leverage — spend it wisely. |
+| 7 | III Teal | **Patrol Lead** | A team walks because you say so. |
+| 8 | III Teal | **Monitor** | Surveillance craft. You know things the executives don't. |
+| 9 | III Teal | **Response Agent** | When alarms sound, you are the answer. |
+| 10 | IV Green | **Asset Protection** | People and property worth millions sleep because of you. *Review. Claim corporate zones.* |
+| 11 | IV Green | **Supervisor** | Shifts, rosters, incident reports with your signature. |
+| 12 | IV Green | **Tactical Guard** | The firm's quiet professionals. Heavier kit, heavier secrets. |
+| 13 | V Yellow | **Manager** | A site is yours. Budgets, headcount, liability. |
+| 14 | V Yellow | **Senior Manager** | Multiple sites. Your review packet is thick. |
+| 15 | V Yellow | **Operations Lead** | City-wide security posture bends around your planning. |
+| 16 | VI Orange | **Black Badge** | Internal investigations. You police the police. *Unlocks: sanctioned operations.* |
+| 17 | VI Orange | **Investigator** | Corporate espionage, leak hunts, quiet terminations of employment. |
+| 18 | VI Orange | **Fixer** | Problems disappear. The paperwork never existed. |
+| 19 | VII Red | **Director** | A division's security is your P&L. *Board review.* |
+| 20 | VII Red | **Senior Director** | Regional authority. Your signature moves armored columns. |
+| 21 | VII Red | **Regional Director** | The firm's interests in a whole territory, defended. |
+| 22 | VIII Purple | **VP of Security** | C-suite adjacent. You brief the board on threats. *Unlocks: corporate warfare.* |
+| 23 | VIII Purple | **Senior VP** | Global policy flows through you. |
+| 24 | VIII Purple | **Executive VP** | One step from the C-suite. The firm's paranoia has your name on it. |
+| 25 | IX Blue | **Chief Security Officer** | The entire apparatus. Every guard, every camera, every secret. |
+| 26 | IX Blue | **Deputy Chief Executive** | Security *and* operations. The firm trusts you with itself. |
+| 27 | IX Blue | **Co-Chief** | You run the company. The title just hasn't caught up. |
+| 28 | X Gold | **The Chairman's Shield** | You personally guarantee the chairman's safety. And power. |
+| 29 | X Gold | **Corporate Immortal** | Your contract renews itself. It always has. |
+| 30 | X Gold | **The Board's Fist** | The board votes. You execute — in every sense. |
+
+### LADDER 6 — The Stable (wrestler stables)
+
+*Inspiration: wrestling card hierarchy + Tekken dan flavor (Part 1.8). The most **public**
+ladder — rank is crowd reaction made formal. Tier transitions require **winning a ranked bout**,
+not points. Faction deed: put on a five-star match (crowd meter maxed). Demotion is the most
+visible here — losing streaks drop you down the card in front of everyone.*
+
+| # | Tier | Title | Fiction |
+|---|---|---|---|
+| 1 | I Ash | **Trainee** | Ring rust. Rope burns. You are clay. |
+| 2 | I Ash | **Rookie** | First matches. The crowd doesn't know your name yet. |
+| 3 | I Ash | **Dark Match** | You wrestle before the show. Someday the show will notice. |
+| 4 | II Rust | **Opener** | First on the card. The crowd is still finding seats. |
+| 5 | II Rust | **Prospect** | Someone important sees something in you. Don't waste it. |
+| 6 | II Rust | **Workhorse** | You make everyone look good. The locker room respects it. |
+| 7 | III Teal | **Midcarder** | The middle of the card is yours. Solid, dependable, hungry. |
+| 8 | III Teal | **Upper Midcarder** | One feud away from the main event. Everyone can feel it. |
+| 9 | III Teal | **Gatekeeper** | You decide who moves up. Beat you, and you're real. |
+| 10 | IV Green | **Rising Star** | The crowd chants your name. *Ranked bout win. Title contention.* |
+| 11 | IV Green | **Breakout** | Merch moves. Your face is on posters. |
+| 12 | IV Green | **Fan Favorite** | The building shakes when your music hits. |
+| 13 | V Yellow | **Main Eventer** | You close shows. The card is built around you. |
+| 14 | V Yellow | **Contender** | Ranked #1. The champion is avoiding eye contact. |
+| 15 | V Yellow | **Top Contender** | The next title shot has your name on it in ink. |
+| 16 | VI Orange | **Champion** | Gold around your waist. The target on your back is bigger. *Unlocks: stable warfare.* |
+| 17 | VI Orange | **Double Champion** | Two belts. Twice the challengers. |
+| 18 | VI Orange | **Defending Champion** | Every defense makes the legend heavier. |
+| 19 | VII Red | **Top Star** | The company's face. *Championship feud win.* |
+| 20 | VII Red | **Franchise Player** | The business runs through you. |
+| 21 | VII Red | **The Draw** | Arenas sell out on your name alone. |
+| 22 | VIII Purple | **Icon** | Your pose is a tattoo on strangers. *Unlocks: cross-promotion wars.* |
+| 23 | VIII Purple | **Superstar** | Mainstream. Your name works outside wrestling. |
+| 24 | VIII Purple | **Megastar** | The industry's gravity bends around you. |
+| 25 | IX Blue | **Hall of Famer** | Immortalized. The speech made everyone cry. |
+| 26 | IX Blue | **Legend** | Kids who never saw you wrestle know your finisher. |
+| 27 | IX Blue | **Living Legend** | Still here. Still dangerous. The young ones are terrified and honored. |
+| 28 | X Gold | **Immortal** | Your matches are scripture. |
+| 29 | X Gold | **The Standard** | Every wrestler is measured against you. Most fail. |
+| 30 | X Gold | **The Greatest** | The debate is over. It ended years ago. |
+
+### LADDER 7 — The Block (civilian crews)
+
+*Inspiration: block associations, mutual-aid networks. The only ladder where **rank can't be
+taken by force** — it's granted by the community. No demotion, ever; but the community can
+withdraw it (public trust loss). Faction deed: organize a block defense or feed the block.*
+
+| # | Tier | Title | Fiction |
+|---|---|---|---|
+| 1 | I Ash | **Newcomer** | You just got here. The block is deciding about you. |
+| 2 | I Ash | **Neighbor** | Known. Nodded at. A start. |
+| 3 | I Ash | **Regular** | The corner store knows your order. |
+| 4 | II Rust | **Volunteer** | You show up. Cleanups, watches, whatever's needed. |
+| 5 | II Rust | **Helper** | People ask you for things. You deliver. |
+| 6 | II Rust | **Watch Member** | Block watch. Eyes the block trusts. |
+| 7 | III Teal | **Vendor** | You feed the block. Legit hustle, respected. |
+| 8 | III Teal | **Shopkeep** | Your store is neutral ground. Everyone honors it. |
+| 9 | III Teal | **Block Captain** | The block's organizer. When something needs doing, you know who to call. |
+| 10 | IV Green | **Organizer** | Movements start with your phone calls. *Community vote. Claim community spaces.* |
+| 11 | IV Green | **Fundraiser** | Money for the block flows through trusted hands — yours. |
+| 12 | IV Green | **Mediator** | Feuds end at your table. Both sides leave alive. |
+| 13 | V Yellow | **Spokesperson** | You speak for the block to the city. Microphone-ready. |
+| 14 | V Yellow | **Chair** | The association's meetings run on your gavel. |
+| 15 | V Yellow | **Coalition Builder** | Blocks unite because you introduced them. |
+| 16 | VI Orange | **Pillar of the Block** | If you left, the block would feel it like a death. *Unlocks: block-wide actions.* |
+| 17 | VI Orange | **Steward** | You hold the block's resources in trust. |
+| 18 | VI Orange | **Guardian** | The block's safety is your personal religion. |
+| 19 | VII Red | **Elder** | Decades of respect, formalized. *Elders' council.* |
+| 20 | VII Red | **Grand Elder** | Your word settles what mediators can't. |
+| 21 | VII Red | **Council Seat** | A permanent voice in the block's future. |
+| 22 | VIII Purple | **Council Head** | The elders follow your lead. *Unlocks: district coalitions.* |
+| 23 | VIII Purple | **District Rep** | The district's civilians speak through you. |
+| 24 | VIII Purple | **Coalition Lead** | Multiple districts, one voice — yours. |
+| 25 | IX Blue | **Legacy Keeper** | The block's history lives in you. |
+| 26 | IX Blue | **Founder's Kin** | Descended from the ones who built this place. The name carries weight. |
+| 27 | IX Blue | **Living History** | You *are* the block's story. |
+| 28 | X Gold | **Saint of the Streets** | Canonized by the people. No church required. |
+| 29 | X Gold | **The People's Champion** | The block would fight a war for you. It has. |
+| 30 | X Gold | **Eternal Neighbor** | You'll never leave, and the block will never let you. |
+
+### LADDER 8 — The Unit (military / private military)
+
+*Inspiration: enlisted→NCO→officer chain, unit nesting (Part 1.6). The most **formal** ladder —
+every promotion has a board, a test, a ceremony. NCOs (Tier III–IV) are the backbone: the design
+notes that sergeants, not generals, make units work. Faction deed: extract your unit with zero
+losses, or hold an objective against superior numbers.*
+
+| # | Tier | Title | Fiction |
+|---|---|---|---|
+| 1 | I Ash | **Recruit** | Boot. You are raw material. |
+| 2 | I Ash | **Private** | Graduated. The real education starts now. |
+| 3 | I Ash | **Private First Class** | Proven you won't wash out. Low bar, cleared. |
+| 4 | II Rust | **Corporal** | First stripe. Someone's responsible for you being responsible. |
+| 5 | II Rust | **Specialist** | A skill the unit needs. You're the one who has it. |
+| 6 | II Rust | **Squad Member** | A fireteam trusts you with their lives. Don't be weird about it. |
+| 7 | III Teal | **Sergeant** | The backbone begins. You run the squad day-to-day. |
+| 8 | III Teal | **Staff Sergeant** | Squads plural. The officers plan; you execute. |
+| 9 | III Teal | **Squad Leader** | Your squad is the unit's standard. Other squads are measured against it. |
+| 10 | IV Green | **Sergeant First Class** | The platoon's conscience. *Board. Claim operational zones.* |
+| 11 | IV Green | **Master Sergeant** | Technical mastery. The officers ask *you* how things work. |
+| 12 | IV Green | **First Sergeant** | The company's parent. Discipline, morale, welfare — yours. |
+| 13 | V Yellow | **Lieutenant** | Commissioned. Theory meets the street. |
+| 14 | V Yellow | **Captain** | A company is yours. 150 lives, your signature. |
+| 15 | V Yellow | **Platoon Leader** | You lead from the front. The NCOs make sure you survive it. |
+| 16 | VI Orange | **Major** | Staff work. Plans with your fingerprints become operations. *Unlocks: coordinated ops.* |
+| 17 | VI Orange | **Lieutenant Colonel** | A battalion's second. The machine's middle management, armed. |
+| 18 | VI Orange | **Colonel** | A battalion is yours. The buck stops on your desk. |
+| 19 | VII Red | **Brigadier** | General officer. Stars begin. *Selection board.* |
+| 20 | VII Red | **Major General** | A division's weight behind your decisions. |
+| 21 | VII Red | **Lieutenant General** | Corps-level command. Maps with your initials on them. |
+| 22 | VIII Purple | **General** | Theater command. *Unlocks: theater-wide operations.* |
+| 23 | VIII Purple | **Theater Commander** | The whole area of operations answers to you. |
+| 24 | VIII Purple | **Joint Chief** | Services unified under your planning. |
+| 25 | IX Blue | **Supreme Commander** | The final authority in the field. |
+| 26 | IX Blue | **War Legend** | Your campaigns are taught. Your mistakes are taught louder. |
+| 27 | IX Blue | **The Undefeated** | You've never lost an engagement. The record is the intimidation. |
+| 28 | X Gold | **The Doctrine** | Armies fight the way you wrote. |
+| 29 | X Gold | **Immortal General** | Retired. Consulted. Feared. In that order. |
+| 30 | X Gold | **The Art of War** | Your name is the textbook. There is no higher rank. There can't be. |
