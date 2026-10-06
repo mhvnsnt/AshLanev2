@@ -141,3 +141,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **GPL-2.0** (LICENSE file).
 - **Verdict:** **prototype-only as a tool** — GPL-2.0 is fine for an art *editor* (it governs the program, not the art you draw), but never bundle it into shipped software. Output sprites are ours. (Note: upstream Aseprite itself is now proprietary/EULA — do NOT treat random "free Aseprite" downloads as open source.)
 - **Notes:** AshLane use: alternative to Pixelorama for sprite cleanup and frame-by-frame touch-up of generated character sprites. Between the two, Pixelorama (MIT) is the default recommendation; LibreSprite exists for Aseprite-muscle-memory artists. Either way, finished sprites flow into the packers below.
+
+## Sprite sheet packers — free-tex-packer + spritesmith
+
+- **URL:** https://github.com/odrick/free-tex-packer · https://github.com/twolfson/spritesmith
+- **What:** Two MIT packers that turn folders of PNGs into sprite sheets + metadata. **free-tex-packer** = GUI + CLI, multiple export formats (JSON array/hash, XML, CSS, Phaser, Cocos), bin-packing with rotation/trim, the friendlier all-rounder. **spritesmith** = Node.js library (`spritesmith` npm) with `spritesheet-templates` — scriptable, plugs straight into a build pipeline (`gulp`/`npm run build` → packed atlas + JSON).
+- **License:** **MIT** both (LICENSE files verified).
+- **Verdict:** **commercial-safe** both.
+- **Notes:** AshLane use: pack generated/cutout sprites — sticker sheets, tag decals, HUD icon atlases, particle sprites — into atlases the engine loads as one texture. Pipeline: `rembg` cutouts → `vtracer` optional → `free-tex-packer` CLI (or spritesmith in the asset build script) → `atlas.png + atlas.json` committed to `public/sprites/`. free-tex-packer for interactive packing, spritesmith for the automated build.
