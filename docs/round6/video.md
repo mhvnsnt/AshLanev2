@@ -99,3 +99,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** MIT (code; Systran's CTranslate2 model conversions also MIT; underlying OpenAI Whisper MIT).
 - **Verdict:** Commercial-safe (MIT).
 - **Notes:** The caption engine for promos: transcribe narration/dialogue → word timestamps → burn styled captions via ffmpeg `subtitles` filter. Pair with `stable-ts` (MIT) for word-alignment refinement. Local, no API keys, GPU-optional.
+## Aegisub (BSD-3-Clause) — subtitle typesetting
+- **URL:** https://github.com/TypesettingTools/Aegisub
+- **What:** Advanced cross-platform subtitle editor focused on Advanced SubStation Alpha (.ass): karaoke timing, visual typesetting, automation with Lua. Community-maintained (stable 3.5.0, Oct 2026); Windows/macOS/Linux/FreeBSD; 34 languages.
+- **License:** 3-clause BSD (source). Note: official binaries are GPLv2 due to bundled fftw3 — build from source to keep the BSD-only chain.
+- **Verdict:** Commercial-safe from source (BSD-3).
+- **Notes:** For dramatic styled captions and title-dialogue in promos where ffmpeg `subtitles` styling isn't enough. Export .ass → burn in with ffmpeg.
