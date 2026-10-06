@@ -53,3 +53,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **GPL-3.0** (LICENSE file).
 - **Verdict:** **prototype-only as a tool** — same reasoning as chaiNNer: GPL-3.0 is fine for build-time art generation, never ship or publicly host the server itself. Workflow JSONs and output images are ours.
 - **Notes:** AshLane use: canonical workflows in `tools/gen-art/workflows/` — e.g. `character-portrait.json` (txt2img → face detail → 2× upscale), `graffiti-wall.json` (txt2img → outpaint to 21:9), `texture-tile.json` (txt2img → make tileable). Agents and scripts queue jobs by POSTing workflow JSON + prompt text. The "one workflow file = reproducible art factory" model is exactly what the owner asked for.
+
+## InvokeAI
+
+- **URL:** https://github.com/invoke-ai/InvokeAI
+- **What:** The commercially-licensed SD studio: unified canvas (inpaint/outpaint by brushing), layer-based compositing, workflow builder, and a node API — aimed at production art teams rather than hobbyists. The pick when the owner's art needs *directed* generation (e.g. "keep this exact character, change the background") instead of prompt roulette.
+- **License:** **Apache-2.0** (LICENSE file) — verified.
+- **Verdict:** **commercial-safe** (tool). Same checkpoint caveat as diffusers: pair it with Apache-2.0 checkpoints (FLUX.1-schnell) for shippable art; RAIL-M checkpoints stay prototype-only.
+- **Notes:** AshLane use: the canvas/inpainting workflow is the fix for "almost-right" character art — generate a fighter portrait, brush-mask the broken hand, regenerate just that region. Also the friendliest UI to hand the owner for art direction ("paint what you want changed"). Heavier than A1111 but purpose-built for iterative production art.
