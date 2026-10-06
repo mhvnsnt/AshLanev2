@@ -82,6 +82,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe (code)** — port the MIT search/database/feature code to TS for our runtime; ⚠️ **prototype-only (bundled data)** — rebuild the pose database from commercial-safe corpora (CMU, Mesh2Motion CC0, AIST++).
 - **Notes:** The single most important animation-tech entry in this wave: motion matching kills the state-machine authoring bottleneck for locomotion. Deterministic by construction (database lookup). Pair with foot-IK (below) for planted feet.
 
+## godot-motion-matching
+
+- **URL:** https://github.com/guilhermegsousa/godot-motion-matching
+- **What:** Motion Matching as a Godot 4.4 GDExtension + AnimationTree node: builds the pose database from an animation library, queries it at runtime, integrates with Godot's state machines/blend trees/IK. KD-tree queries (20-30x over naive), bone-feature support, editor tooling for baking databases. Demo data taken from the O3DE MotionMatching Gem.
+- **License:** **MIT** (LICENSE.md, verified on repo page).
+- **Verdict:** ✅ **commercial-safe** — MIT. Godot-specific, but the feature-extraction + KD-tree query design ports directly to our three.js runtime; also the fastest way to prototype motion matching today (Godot 4.4 is free).
+- **Notes:** Read alongside orangeduck's C++ reference: this shows how to productize MM inside an engine's animation graph. O3DE's MotionMatching Gem (Apache 2.0) is a second commercial-safe reference implementation.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
