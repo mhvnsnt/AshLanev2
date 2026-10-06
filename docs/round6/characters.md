@@ -34,3 +34,13 @@
 
 ---
 
+## 4. mGear
+
+- **URL:** https://github.com/mgear-dev/mgear (releases: https://github.com/mgear-dev/mgear_dist/releases)
+- **What:** Rigging framework for Autodesk Maya — modular auto-rig builder (guides → full FK/IK control rig), C++ solvers, synoptic pickers, UE/Unity export helpers. Used in game/film production.
+- **License:** **MIT** (stated in repo README).
+- **Verdict:** ✅ COMMERCIAL-SAFE code, but ⚠️ Maya-gated — mGear runs inside Autodesk Maya (proprietary). Useful only if the pipeline includes a Maya seat; our Blender-first pipeline should prefer Rigify. Documented for completeness in case Maya enters the toolchain.
+- **Notes:** Generated rigs (like Rigify's) are tool output — your property. If Maya is ever licensed, mGear's guide-based workflow is faster than hand-building control rigs.
+
+---
+
