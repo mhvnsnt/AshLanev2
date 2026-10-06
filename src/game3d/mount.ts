@@ -9,6 +9,7 @@ import { getMusic } from "./music";
 import { sfxPunch, sfxKick, sfxKnockout, startCrowd, stopCrowd } from "./combat-sfx";
 import type { ImpactKind } from "./impact-particles";
 import type { CrowdReaction } from "./arena-crowd";
+import { installDevHooks } from "./dev-hooks";
 
 export type Handle = {
   start: (mode: Mode) => void;
@@ -204,7 +205,7 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
     view.fx.crowd.crowdReact(react);
   }
 
-  return {
+  const handle: Handle = {
     start(mode) {
       unlock();
       sim.running = true;
@@ -364,6 +365,10 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
       window.__controlsTest = undefined;
     },
   };
+
+  // Dev-only agent control surface (no-op in production builds).
+  installDevHooks(sim, handle);
+  return handle;
 }
 
 function readInput(sim: Sim, keys: Set<string>, stick: { x: number; y: number }, btns: { attack: boolean; grab: boolean; blast: boolean; jump: boolean; dash: boolean; use: boolean }, input: FrameInput) {
