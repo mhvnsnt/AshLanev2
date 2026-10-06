@@ -127,3 +127,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The architecture reference for large-scale AshLane destruction (collapsing scaffolding, wall breaches): pre-fracture everything at load, swap on impact, mask shard-vs-shard collisions. The perf techniques (layer masking, material pooling, RAM-cached fragments) are directly portable even if we reimplement the pipeline.
 
+## fabledrevolutions (game-feel reference)
+- **URL:** https://github.com/ericrius1/fabledrevolutions
+- **What:** Three.js homage to a Unity combat game-feel breakdown: trauma-based camera shake (positional + roll noise, scaled by event weight), hit-stop (70ms on hit, 140ms on kill), hit particles, enemy squash-and-stretch, knockback, weapon trails, procedural WebAudio SFX — each effect independently toggleable.
+- **License:** MIT (per GitHub license detection).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** This is the "screen-shake/hit-stop done RIGHT" reference the brief asked for: trauma accumulates 0–1 and decays, actual offset is trauma² so small hits whisper and kill blows rattle — plus freeze-frames gated on kills. Study `cameraShake.ts`/`hitStop.ts` and adapt the trauma model into our combat layer (polish on foundation only, per owner rule).
+
