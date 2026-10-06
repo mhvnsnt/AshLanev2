@@ -184,3 +184,33 @@
 
 ---
 
+## License ledger
+
+| # | Project | Code/tool license | Output/asset license | Verdict |
+|---|---|---|---|---|
+| 1 | MakeHuman + MPFB2 | AGPL-3.0 / GPL-3.0 (tool only) | **CC0** (official unmodified exports) | ✅ commercial-safe |
+| 2 | MB-Lab (+CharMorph) | GPL-3.0 code / **AGPL-3.0 data** | AGPL-covered (disputed, unresolved) | ❌ license-trapped |
+| 3 | Rigify | GPL (bundled w/ Blender) | yours (Blender output rule) | ✅ commercial-safe (build-time) |
+| 4 | mGear | MIT | yours | ✅ commercial-safe (needs Maya seat) |
+| 5 | SMPL / SMPL-X | custom research license | non-commercial, non-redistributable | ❌ license-trapped |
+| 6 | Anny (NAVER) | **Apache-2.0** | **Apache-2.0** (model too) | ✅ commercial-safe (pin topology=default) |
+| 7 | VRoid Studio | proprietary (pixiv) | any-purpose incl. commercial (per-item check) | ✅ commercial-safe w/ checks |
+| 8 | Ready Player Me | proprietary platform | CC BY-NC 4.0 / dev-terms | ⚠️ platform-tied |
+| 9 | Daz3D | proprietary EULA | renders OK; 3D needs Interactive License | ❌ prototype-only (3D) |
+| 10 | HumGen3D | GPL-3.0 | paid assets, royalty-free | ⚠️ paid product |
+| 11 | MakeHuman Community assets | n/a | CC0 / CC-BY (per pack) | ✅ commercial-safe w/ per-pack check |
+| 12 | BlenderKit | n/a | Royalty Free / CC0 | ✅ commercial-safe (RF: no raw resale) |
+| 13 | MetaHuman | proprietary Epic EULA | free use incl. commercial (2025 EULA) | ✅ free, terms-based |
+| 14 | AccuRIG | proprietary freeware EULA | rigs are yours | ✅ free tool |
+| 15 | FLAME | MPI non-commercial | non-commercial, non-redistributable | ❌ license-trapped |
+| 16 | Auto-Rig Pro | paid, GPL-family code | rigs/exports yours | ⚠️ paid tool |
+| 17 | KeenTools FaceBuilder | paid subscription | outputs yours, commercial OK | ⚠️ paid subscription |
+| 18 | Cinevva Rig | paid $29 one-time | rigs yours; 260 anims **CC0** | ✅ cheap + CC0 anims |
+
+**Tool-vs-output rule (applies to every row):** the license of the SOFTWARE never automatically transfers to what you CREATE with it — Blender/GPL tools, Rigify, AccuRIG, FaceBuilder outputs are yours. The exceptions that break this rule are the DATA licenses: MB-Lab's AGPL morph database, SMPL/FLAME's non-commercial model licenses, and Daz's EULA on 3D content. When in doubt, the DATA license wins — that's the trap.
+
+**Recommended stack from this wave:** bodies from **Anny** (Apache-2.0, headless) or **MakeHuman/MPFB2** (CC0 exports) → clothes/hair from the **MakeHuman Community library** (CC0) → rig with **Rigify** (free) or **AccuRIG** (free, better fingers) → hero faces via **MetaHuman** (EULA) or **FaceBuilder** (paid). Keep all GPL/AGPL code in build-time tooling, never in the shipped game.
+
+---
+
+*Round 6 characters research complete — 18 projects, 2026-10-06.*
