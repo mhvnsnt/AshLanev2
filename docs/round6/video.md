@@ -105,3 +105,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** 3-clause BSD (source). Note: official binaries are GPLv2 due to bundled fftw3 — build from source to keep the BSD-only chain.
 - **Verdict:** Commercial-safe from source (BSD-3).
 - **Notes:** For dramatic styled captions and title-dialogue in promos where ffmpeg `subtitles` styling isn't enough. Export .ass → burn in with ffmpeg.
+## VMAF + ffmpeg QA metrics — video quality gates
+- **URL:** netflix/vmaf on GitHub (BSD-2-Clause); usage via ffmpeg: `ffmpeg -i ref.mp4 -i out.mp4 -lavfi libvmaf -f null -`
+- **What:** Netflix's VMAF perceptual quality metric as an ffmpeg filter, plus built-in `ssim`/`psnr` filters and `signalstats` for broadcast-safe checks (luma/chroma range, saturation). Objective, repeatable quality scoring for every promo render.
+- **License:** VMAF: BSD-2-Clause (Netflix). ffmpeg filters: LGPL-2.1+/GPL per build — build-time QA only.
+- **Verdict:** Commercial-safe as build-time QA tooling.
+- **Notes:** Gives the "broadcast quality" demand a number: score each promo against the El Toro de Oro reference cut, gate releases on VMAF + no signalstats violations. Script: compare → fail the render if below threshold.
