@@ -157,3 +157,38 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The graffiti-logo weapon: liquid-distort or channel-split on the ASHLANE title and fighter nameplates gives the street-art menu kit its signature look — effects CSS alone can't do. Use sparingly (titles/headings only; rendered text becomes canvas, not selectable). Requires Three.js/Underscore in its default build — custom-build without them, or replicate the two or three effects we actually want as hand-written shaders. Pair with anime.js (#13) for sequencing.
 - **AshLane use:** Graffiti logo effects, KO/title text distortion, fighter nameplate treatments.
+
+## 20. Leaflet
+- **URL:** https://github.com/Leaflet/Leaflet · https://leafletjs.com
+- **What:** The standard lightweight JS map library (42KB) — tile layers, GeoJSON overlays, markers/popups, touch-friendly. Huge plugin ecosystem (markercluster, draw, fullscreen).
+- **License:** **BSD-2-Clause** — confirmed in GitHub license metadata + repo-root `LICENSE`. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (BSD-2-Clause).
+- **Notes:** Two uses: (1) **District select map** — AshLane's districts are the game's spine; a stylized Leaflet map (custom tiles or a drawn SVG basemap via `L.imageOverlay`) with turf/faction coloring is the natural mission-select screen, and the R1 OSM/Overpass pipeline can feed real street geometry as the base layer. (2) **Minimap reference** — study its layer/culling model for the in-fight minimap (though the fight minimap itself will be a custom canvas overlay, not Leaflet). Tile providers need attribution (© OpenStreetMap contributors) — use CARTO dark tiles or self-drawn tiles to match Concrete Jungle.
+- **AshLane use:** District/territory select map (mission screen), minimap architecture reference.
+
+## License ledger
+
+| # | Project | License (as stated upstream) | Verdict |
+|---|---|---|---|
+| 1 | Phosphor Icons | MIT | ✅ commercial-safe |
+| 2 | RPG Awesome | SIL OFL 1.1 (font) / MIT (code) | ✅ commercial-safe |
+| 3 | Font Awesome Free | CC-BY 4.0 (icons) / OFL 1.1 (fonts) / MIT (code) | ✅ with attribution |
+| 4 | Remix Icon | Apache-2.0 | ✅ commercial-safe |
+| 5 | Xelu's Controller Prompts | CC0 1.0 | ✅ commercial-safe |
+| 6 | KeyCastOW | MIT | ✅ commercial-safe (tool, not shipped) |
+| 7 | Ikemen GO | MIT (engine) / CC-BY 3.0 (screenpack art) | ✅ engine; art needs attribution/redraw |
+| 8 | Game UI Database | n/a (reference only) | ⚠️ research-only, do not lift art |
+| 9 | NES.css | MIT (code) | ✅ commercial-safe |
+| 10 | daisyUI | MIT | ✅ commercial-safe |
+| 11 | Animate.css | **Hippocratic 2.1** (v4+) / MIT (v3.x only) | 🔴 do NOT ship v4+ |
+| 12 | AutoAnimate | MIT | ✅ commercial-safe |
+| 13 | anime.js | MIT | ✅ commercial-safe |
+| 14 | Embla Carousel | MIT | ✅ commercial-safe |
+| 15 | ldrs | MIT | ✅ commercial-safe |
+| 16 | Floating UI | MIT | ✅ commercial-safe |
+| 17 | driver.js | MIT | ✅ commercial-safe (intro.js is AGPL — avoid) |
+| 18 | Hero Patterns | CC-BY 4.0 | ✅ with attribution |
+| 19 | Blotter.js | MIT | ✅ commercial-safe |
+| 20 | Leaflet | BSD-2-Clause | ✅ commercial-safe |
+
+**Attribution checklist for the credits screen:** Font Awesome Free (CC-BY 4.0 icons), Hero Patterns (CC-BY 4.0, Steve Schoger), Ikemen GO screenpack (CC-BY 3.0 — only if its art is used; prefer redraw). Everything else: keep license notices with the code per MIT/Apache/BSD norms.
