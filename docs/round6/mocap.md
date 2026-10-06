@@ -90,6 +90,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe** — MIT. Godot-specific, but the feature-extraction + KD-tree query design ports directly to our three.js runtime; also the fastest way to prototype motion matching today (Godot 4.4 is free).
 - **Notes:** Read alongside orangeduck's C++ reference: this shows how to productize MM inside an engine's animation graph. O3DE's MotionMatching Gem (Apache 2.0) is a second commercial-safe reference implementation.
 
+## PlayCanvas AnimStateGraph
+
+- **URL:** https://github.com/playcanvas/engine (src/framework/anim/*: AnimStateGraph, AnimComponent, AnimBlendTree)
+- **What:** A complete, engine-grade JS animation state machine: states, transitions with conditions/exitTime/priority/interruptionSource, parameters (bool/int/float/trigger), blend trees (1D/2D/direct), animation layers with weights + bone masks, animation events, and a visual graph editor (playcanvas/editor, ~1800 lines). Pure TypeScript, no engine lock-in for the graph logic.
+- **License:** **MIT** (PlayCanvas engine).
+- **Verdict:** ✅ **commercial-safe** — the reference design for our JS animation state machine. Port the graph/transition/parameter semantics to three.js; study the blend-tree math for upper-body/locomotion layering.
+- **Notes:** Covers the "JS animation state machines" ask outright. AnimComponentLayer's weight/blendType/mask model is exactly what AshLane needs for punch-while-walking layering. Editor is a bonus reference for a future in-house anim graph UI.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
