@@ -6,9 +6,9 @@ import { ASSIGN_SLOTS, CLIP_NAMES, STYLES, type Slot } from "@/game3d/rig-pipeli
 import { MARTIAL, STANCES } from "@/game3d/styles";
 import { CAST_PICKS, fighterByName, ROSTER } from "@/game3d/roster";
 import { sfxBack, sfxFight, wireMenuSfx } from "@/game3d/menu-sfx";
-import { AshlaneLogo, FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
+import { FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
-import { StreetBackdrop } from "@/game3d/menu-backdrop";
+import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
 import type { FactionId } from "@/game3d/char-gen";
 import "@/game3d/menu-theme.css";
@@ -218,10 +218,13 @@ export function AshlaneApp() {
           {!hud.running ? (
             <div ref={sheetRef} className="sheet veil al-sheet al-sheet-clear">
               <MenuArt screen={menu} />
-              <StreetBackdrop />
+              <LaneBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
-                  <AshlaneLogo />
+                  <AshlaneTag variant="red" />
+                  <p className="al-logo-sub">
+                    <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
+                  </p>
                 </div>
                 <div className="al-rip mt-1" aria-hidden="true" />
                 <p className="mt-3 text-sm leading-relaxed text-cream-dim">
@@ -561,6 +564,7 @@ export function AshlaneApp() {
           {suite && hud.running ? (
             <div className="sheet veil al-sheet al-concrete">
               <MenuArt screen="style" />
+              <LaneBackdrop />
               <div className="al-sheet-inner mx-auto w-full max-w-sm px-4 py-6">
                 <p className="al-kicker">Dress for the fight</p>
                 <h2 className="al-title text-3xl mt-1">Customize</h2>
