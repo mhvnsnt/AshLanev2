@@ -252,3 +252,26 @@ checked 2026-10-06. Re-verify before shipping.
   Example" (recommended by Yuka's docs) for steering/FSM fundamentals.
   Keep a reading list in the repo as we implement — cite chapter, not
   copied code.
+
+---
+
+## Dynamic Difficulty Adjustment (DDA) — technique notes
+
+- **URL:** N/A — design technique survey (see Game AI Pro chapters on
+  difficulty; classic case study: Resident Evil 4's hidden "difficulty
+  scale").
+- **What:** The AI silently adapts to the player's skill: track rolling
+  performance metrics (damage taken/dealt ratio, combo success, deaths per
+  minute) and adjust hidden parameters — opponent aggression, reaction
+  delay, damage output, combo escape rates. Never shown to the player.
+- **License:** N/A (technique, not code).
+- **Verdict:** commercial-safe (our own implementation).
+- **Notes:** AshLane design rule: DDA adjusts the AI's *inputs* (reaction
+  time, decision frequency, move-pool randomness), never fakes the *rules*
+  (no hidden damage multipliers that contradict the HUD — honesty rule).
+  Concrete knobs for our fighter AI: AI tick rate (decisions/sec),
+  block/counter probability, whiff-punish window, combo length cap.
+  Wire metrics from day one so difficulty is data-driven, not vibes.
+  Bannon use: jobber-to-main-eventer progression where early opponents
+  have long reaction delays and small move pools, later ones replan and
+  punish.
