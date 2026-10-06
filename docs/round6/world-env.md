@@ -153,3 +153,18 @@ Prelinger.
   generate organic road networks procedurally per district, then feed the road
   graph into the existing building-gen.py block pipeline. Runs entirely in the
   browser — no server, no downloads.
+
+## BlenderGIS (domlysz)
+- **URL:** https://github.com/domlysz/BlenderGIS
+- **What:** Blender addon bridging Blender and geographic data (9.4K stars):
+  imports OpenStreetMap roads/buildings, terrain DEMs, basemaps, shapefiles,
+  georeferenced raster into Blender scenes. The offline counterpart to the
+  Overpass-API OSM ingestion already wired in round 2 — useful when API quotas
+  bite or when an artist needs to hand-tune a district in Blender first.
+- **License:** GPL-3.0 (LICENSE file in root; confirmed via GitHub repo metadata).
+- **Verdict:** prototype-only (GPL-3.0 is viral — fails the owner's commercial
+  license rule; keep quarantined out of the shipped codebase per standing policy)
+- **Notes:** Use only as an offline authoring tool: import real-world street
+  layouts in Blender, export clean geometry, ingest the GLB. Never link its code
+  into the game or build pipeline. Note: download ONLY from the official GitHub
+  repo — fake "blendergis.com" sites distribute malware.
