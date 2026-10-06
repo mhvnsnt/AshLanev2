@@ -3146,9 +3146,19 @@ function updatePlayer(sim: Sim, dt: number, dashEdge: boolean, counterEdge: bool
       if (sim.martial === "capoeira" && p.swing === 3) call = call || "Windmill";
       if ((sim.martial === "kenpo" || sim.martial === "jeet") && p.swing === 5) call = call || "Dragon tail";
       const tag = p.swing === 5 ? "low" : p.swing === 11 || p.swing === 12 ? "mid" : p.swing === 3 || p.swing >= 6 ? "high" : "mid";
-      const hit = hitGrunts(sim, hx, hz, reach + (p.weapon === "spear" ? 0.45 : p.weapon === "blade" ? 0.12 : 0), dmg, kb, lift, poise, f.x, f.z, tag);
+      // UR zone aim: the stick picks the body zone — push up for the head,
+      // pull down for the legs, neutral keeps the move's natural zone.
+      const aimTag: "mid" | "low" | "high" = sim.stickY < -0.35 ? "high" : sim.stickY > 0.35 ? "low" : tag;
+      const aimed = aimTag !== tag;
+      const zoneDmg = aimed && aimTag === "high" ? dmg * 1.15 : dmg;
+      const zonePoise = aimed && aimTag === "low" ? poise * 1.5 : poise;
+      const hit = hitGrunts(sim, hx, hz, reach + (p.weapon === "spear" ? 0.45 : p.weapon === "blade" ? 0.12 : 0), zoneDmg, kb, lift, zonePoise, f.x, f.z, aimTag);
       if (hit) p.landed = true;
       const smashed = hitProps(sim, p.x + f.x * 0.7, p.z + f.z * 0.7, reach + 0.35);
+      if (hit && aimed && !call) {
+        sim.banner = aimTag === "high" ? "Headhunter" : "Leg chop";
+        sim.bannerT = 0.6;
+      }
       if (hit && call) {
         sim.banner = call;
         sim.bannerT = 0.75;
