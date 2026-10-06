@@ -23,7 +23,7 @@ models, unique movesets, story missions built around them. ~8 characters.
 
 | Street Name | Faction | Canon Parallel | Notes |
 |---|---|---|---|
-| **Buffalo Bill** | Ashes | Bill Sabre (parallel, not port) | Ashes boss. Big boss energy. LP uncomputable. |
+| **Buffalo Bill** | Ashes | BILL $ABER | Ashes boss. Big boss energy. LP uncomputable. |
 | **Doc** ("Anchor") | Ashes | Atlas Vance | Gym owner. Moral center. |
 | **Director Cole Vane** | Combine | Edwin Kennedy (parallel) | Halcyon face. Corporate heel. (Kennedy himself can also appear as-is — see §1b.) |
 | **Sombra Negra** | Unaffiliated | Same character | The Calculated Mercenary. Already on roster. |
@@ -51,6 +51,8 @@ They lead squads, give missions, and show up as mini-bosses.
 
 > **Rule:** Only rename EXISTING canon characters. If canon doesn't name someone,
 > the slot stays OPEN for the owner. No invented book characters.
+>
+> ⚠️ 2026-10-06: "Lin" and "Thorne's Heir" were removed — invented by a previous agent, not in the books. See docs/TRUE_CANON_ROSTER.md.
 
 ### Narrative secrets (PLOT TWISTS — never shown in-game)
 
@@ -75,9 +77,7 @@ They exist for writers and story scripts only.
 | **Akon** | Akon ("The Warrior") | KEEP — "The Warrior" already works as a street name | Ashes | Principled to a fault. Fights only for what's right — which makes him the most dangerous man on the block. Teaches the kids. | Boxing (power striker) |
 | **Toro** | El Toro de Oro ("The Golden Bull") | Shortened — "Golden Bull" too wrestling, "Toro" is street | Unaffiliated | Loyal powerhouse. Protective — if you're his people, nobody touches you. Speaks little, hits hard. | Wrestling (power lucha) |
 | **Fuego** | Rey "La Pluma" Fuego | KEEP — lucha names are street culture, not wrestling gimmick | Unaffiliated | Joyful high-flyer. Fights like he's dancing. The only person who seems to be having fun. Runs with Toro. | Lucha (aerial) |
-| **Jaleel** | Jaleel Friday / Trap Shinobi | KEEP — real name already, no gimmick to strip | Hollows | Code-switches between goofy and terrifying. You never know which one you're getting until the first punch. Tactical mind under the act. | Martial Arts (tricky, misdirection) |
-| **Lin** | (Shaolin-adjacent — slot open) | — | — | *OPEN — owner's call* | — |
-| **Thorne's Heir** | (Combine lieutenant — slot open) | — | — | *OPEN — owner's call* | — |
+| **Jaleel** | Jaleel ("The Icon" — book canon; "Friday / Trap Shinobi" UNVERIFIED) | KEEP — real name already, no gimmick to strip | Hollows | Code-switches between goofy and terrifying. You never know which one you're getting until the first punch. Tactical mind under the act. | Martial Arts (tricky, misdirection) |
 
 ### Tier 1b — WRESTLING FACTIONS (keep wrestling personas)
 There WILL be wrestling factions in AshLane — underground fight clubs, lucha
