@@ -134,3 +134,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** This is the "screen-shake/hit-stop done RIGHT" reference the brief asked for: trauma accumulates 0–1 and decays, actual offset is trauma² so small hits whisper and kill blows rattle — plus freeze-frames gated on kills. Study `cameraShake.ts`/`hitStop.ts` and adapt the trauma model into our combat layer (polish on foundation only, per owner rule).
 
+## Kenney Particle Pack (smoke/fire sprites)
+- **URL:** https://kenney.nl/assets/particle-pack (companion: https://kenney.nl/assets/smoke-particles)
+- **What:** 80 production-quality 512×512 particle sprite PNGs: smoke puffs, sparks, muzzle flashes, glows, debris, magic flares — plus tilesheets and vector sources. The smoke-particles pack adds dedicated billowy smoke.
+- **License:** CC0 1.0 (Kenney distributes all packs under CC0; no attribution required).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Instant art for our particle systems (three-nebula/SPE/impact-particles.ts): real smoke and spark sprites beat procedural circles for trash fires, exhaust, dust kicks and KO impact bursts. Drop into the asset pipeline as billboard textures; no licensing paperwork.
+
