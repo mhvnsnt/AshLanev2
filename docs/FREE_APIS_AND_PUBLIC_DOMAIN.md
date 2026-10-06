@@ -707,3 +707,90 @@ Branches: `round3/nakama`, `round3/visuals`, `round3/audio`, `round3/content`
 - **HF Inference findings (verified live):** legacy `api-inference.huggingface.co` endpoint dead (empty reply); new `router.huggingface.co` 401s without token — free token required even on free tier.
 - **Free-tier verdicts:** Groq free tier = best quality batch option (no card, no training on data, commercial OK, needs free key); Google AI Studio free tier usable but prompts may train Google models; Pollinations.ai broken (HTTP 500); public Gradio Spaces unreliable. **Never call an LLM during a match — batch/offline only.**
 - **Companion:** `tools/free-apis/dialogue-gen.py` (TTS track) writes curated per-character line packs as JSON ready to feed into `piper-voice.py` — LLM drafts → human review → curated packs → WAVs.
+
+---
+
+# ROUND 6 — The Max Harvest (2026-10-06)
+
+**Owner directive: "turn this shit up to the max."** 12 parallel research workers, one per game dimension. **~225 new projects** researched, each license-verified from the actual LICENSE file, each flagged commercial-safe vs prototype-only. Full per-category registries live in `docs/round6/<category>.md` (one `##` entry per project + license ledger table). This section is the index.
+
+**License rule (owner binding):** prototype may use whatever works — license purity does not gate prototyping. Every item below carries its verdict. Game-ripped / unclear-license / non-commercial = prototype-only, never ships for money without a clean license. Re-verify all licenses + free-tier figures before shipping — they rot fast.
+
+## Index by category
+
+| # | Category | Doc | Projects | Commercial-safe | Prototype-only / caution |
+|---|---|---|---|---|---|
+| 1 | Fighter AI & opponent brains | `docs/round6/fighter-ai.md` | 17 | 10 (all MIT) | 3 study-only (IKEMEN GO, Schwarzerblitz — NOASSERTION) |
+| 2 | NPC / crowd / pedestrian AI | `docs/round6/crowd-ai.md` | 18 | 14 (MIT/Apache) | SUMO (EPL-2.0), gta7-web (no license — research only); 2 need file re-verify |
+| 3 | Quests / dialogue trees / narrative | `docs/round6/narrative.md` | 20 | 16 (MIT) | Twine (GPL-3.0), novelWriter (GPL-3.0); TyranoScript (terms-based, commercial OK) |
+| 4 | Generative 2D art pipeline | `docs/round6/generative-art.md` | 20 | 11 | chaiNNer/SD WebUI/ComfyUI/LibreSprite (GPL/AGPL — tools only); FLUX.1-schnell weights Apache-2.0 = commercial-safe lane |
+| 5 | Music & adaptive audio | `docs/round6/music.md` | 20 | 12 (CC0/CC-BY w/ attribution) | Newgrounds (BY-NC-SA), Mixkit (excludes games — DO NOT SHIP), FMOD (proprietary), Band.js (unverified) |
+| 6 | Mocap & animation expansion | `docs/round6/mocap.md` | 19 | 10 | 9 prototype-only (AMASS/BABEL/LaFAN1/KIT/HDM05/Bandai — NC or research terms) |
+| 7 | Characters, rigs, clothing, faces | `docs/round6/characters.md` | 18 | Anny (Apache-2.0), MakeHuman exports (CC0), VRoid (terms), BlenderKit (royalty-free) | MB-Lab (AGPL meshes), SMPL/X (NC), Daz3D (paid Interactive License) |
+| 8 | UI / HUD / menu assets | `docs/round6/ui-assets.md` | 20 | 17 (MIT/Apache/CC0) | Animate.css v4+ (Hippocratic — DO NOT SHIP, use v3.x), intro.js (AGPL — use driver.js), Hero Patterns (CC-BY attribution) |
+| 9 | World & environment | `docs/round6/world-env.md` | 18 | 14 | BlenderGIS (GPL-3.0), tavern pack + PSX subway (license-unclear), threex.daynight (no LICENSE file) |
+| 10 | Video production pipeline | `docs/round6/video.md` | 18 | 15 (PD archives per-title + MIT/Apache tools) | Remotion (source-available — REJECTED, use HyperFrames); Mixkit two-tier per-asset check |
+| 11 | Physics, destruction & VFX | `docs/round6/physics-vfx.md` | 19 | 18 (15 MIT, 1 zlib, 2 CC0) | lygia (Prosperity PPL-3.0 noncommercial — reference only) |
+| 12 | Multiplayer services & backend | `docs/round6/multiplayer.md` | 18 | 15 (Apache/MIT/ISC/BSD) | lichess/lila (AGPL — reference only); Fly.io/Railway/Koyeb free tiers dead/changed — Oracle Always Free is the pick |
+
+**Totals: ~225 projects — roughly 175 commercial-safe (with per-item attribution notes where CC-BY), ~50 prototype-only.**
+
+## Top wiring picks (highest leverage per category)
+
+1. **Fighter AI:** Yuka (MIT) — FSM + steering + perception for opponent brains; behavior3js for decisions; javascript-state-machine for combat states. Hard law: AI plays the same game as the player (same frame data, no input reading).
+2. **Crowd AI:** recast-navigation-js (DetourCrowd, MIT) + Yuka steering + three-vat (GPU-baked crowd animation) + ink/tracery for ambient barks.
+3. **Narrative:** ink + inkjs (MIT) runtime, Dialogue Tree Editor / Corkboard authoring → Ink, Monogatari or renpy-js for VN presentation.
+4. **Generative art:** rembg + Real-ESRGAN (upscale/cutout pass), vtracer → resvg (SVG pipeline), FLUX.1-schnell (Apache-2.0) for commercial-safe generation, graffiti-tag recipe from OFL/MIT parts.
+5. **Music:** Demucs (MIT) stems → adaptive layers, Howler.js (MIT) playback, TeknoAXE (CC-BY) + filmmusic.io (CC-BY) catalogs, Meyda (MIT) for audio-reactive triggers.
+6. **Mocap:** Mesh2Motion (~150 CC0 GLB clips — biggest win), AIST++ (CC-BY), orangeduck motion-matching code (MIT), FreeMoCap (AGPL sidecar — record our own wrestling moves with webcams).
+7. **Characters:** Anny (Apache-2.0, pin topology=default), MakeHuman CC0 exports, AccuRIG (free finger rigging).
+8. **UI:** Phosphor Icons (MIT), Xelu's CC0 controller glyphs, Blotter.js (MIT) for graffiti logo text, driver.js (MIT) tutorials, Embla (MIT) character-select carousel.
+9. **World:** CK42BB procedural-weather (MIT), SunCalc (BSD-2), three.js Sky (MIT), lanmower roadGen (MIT), DecalGeometry (MIT) for graffiti, OGA CC0 decal/neon packs.
+10. **Video:** color-grade-ai (MIT, generate our own LUTs), HyperFrames (Apache-2.0, motion graphics as code), faster-whisper (MIT captions), VMAF (BSD-2) quality gates.
+11. **Physics/VFX:** cannon-es (MIT, mobile-friendly debris/ragdoll) + voronoifracture (CC0) + three-mesh-bvh (MIT) destruction stack; fabledrevolutions trauma-shake reference.
+12. **Multiplayer:** LiveKit (Apache-2.0, voice + TURN), Colyseus (MIT, lobbies), Centrifugo (Apache-2.0, chat), openskill.js (MIT, ranked), Oracle Always Free (hosting).
+
+## Wired into the game (2026-10-06)
+
+Round 6 picks now running in AshLane's actual game loop — not just links:
+
+**1. Yuka opponent brain (fighter-AI pick #1) — `src/game3d/opponent-brain.ts`**
+- Yuka `StateMachine` (MIT) drives every grunt: approach / orbit / retreat / hold states.
+- Reaction-delayed perception (120–450ms by difficulty tier): the brain edge-detects
+  player attacks and perceives them LATE — no input reading, hard law intact.
+- Utility attack scoring (aggression roll + whiff-punish boost), no-pile-on rule,
+  difficulty tiers via `difficultyFor(arch, mission)` (easy/normal/hard/boss:
+  reaction time, aggression, windup scale, punish range).
+- Hooked into `sim.ts` `updateEnemies()`: the brain decides WHEN to attack and
+  WHERE to move; windup/attack/hit resolution frame data is untouched.
+- License: Yuka MIT = **commercial-safe**. (`src/game3d/yuka-shim.d.ts` documents
+  why we shim types instead of @types/yuka — the published types target a newer,
+  stricter API than the 0.7.8 runtime requires.)
+
+**2. ink/inkjs narrative runtime (narrative pick #3) — `src/game3d/dialogue/`**
+- `dialogue-runtime.ts`: `InkRunner` (real compiled ink via inkjs) + `BeatsRunner`
+  (zero-tooling beat format), both with `{var}` interpolation and variable sets.
+- `ink-adapter.ts`: `InkDialogueSession` adapts either runner to the game's
+  existing `DialogueEvent` UI (line → options → line → end) — ink stories play
+  through the same overlay as the Yarn-style scripts.
+- `services.ts`: `openInkDialogue()` / `openBeatsDialogue()`; `advanceDialogue()`
+  / `chooseDialogue()` route to the ink session when one is open.
+- Authoring: write `.ink` in `src/game3d/dialogue/stories/`, compile with
+  `node tools/dialogue/compile-ink.mjs` (uses the compiler **bundled with inkjs**,
+  no extra installs), commit both `.ink` + `.ink.json`. Speaker tags go at END
+  of line: `...text. # speaker:STATIC`. Guide: `src/game3d/dialogue/DIALOGUE_AUTHORING.md`.
+- Sample shipped: `stories/static-backstage.ink` (+ compiled `.ink.json`) — Static
+  backstage encounter.
+- License: inkjs MIT (runtime + bundled compiler) = **commercial-safe**.
+
+**Tests:** `src/game3d/round6-ai.test.ts` — 14 tests (reaction-delay proof, no
+input reading, difficulty tiers, state transitions, utility rules, full
+author→compile→JSON→runtime→UI ink pipeline). Run: `npm test`.
+
+## Attribution checklist (CC-BY items needing a credits line)
+
+Font Awesome Free (CC-BY-4.0), Hero Patterns (CC-BY-4.0), Ikemen GO screenpack art if used (CC-BY-3.0), Incompetech (CC-BY-4.0, from R2), game-icons.net (CC-BY-3.0, from R2), TeknoAXE (CC-BY), filmmusic.io (CC-BY-4.0), AIST++ (CC-BY-4.0), Sketchfab woulfric lamps (CC-BY, verify per model), Mixkit Restricted-tier (per-asset). → All belong on the game's credits screen.
+
+## Do NOT ship (new R6 additions)
+
+Animate.css v4+ (Hippocratic), intro.js (AGPL), lygia (PPL-3.0 noncommercial), Remotion (source-available), Mixkit music in games, webm-muxer (deprecated), Synapse/Dendrite (AGPL-3.0 — use Tuwunel), BlenderGIS output in shipped client (GPL-3.0 — offline tool only), MB-Lab/SMPL meshes (AGPL/NC), Daz3D data without Interactive License, Twine/novelWriter GPL code in client, gta7-web (no license).
