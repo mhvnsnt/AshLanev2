@@ -139,3 +139,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe **for the music we compose** (original output, no licensed-audio baggage).
 - **Notes:** ⚠️ Caveats: (1) never ship LMMS itself inside the game — it's a build-time tool; (2) check licenses of any bundled/third-party sample libraries or soundfonts used (a few may be NC) — stick to bundled synth presets or verified-CC0 samples. Best path to fully-owned entrance themes and combat BGM.
 
+## 20. Riffusion — text-to-music via spectrogram diffusion
+- **URL:** https://github.com/riffusion/riffusion (hobby repo) · model checkpoint: https://huggingface.co/riffusion/riffusion-model-v1
+- **What:** Stable-Diffusion-based music generation: text prompt → spectrogram image → inverse Fourier transform → audio. Prompt interpolation morphs between styles. CLI + Flask server + Streamlit app.
+- **License:** **MIT** (code, verified via repo badge; Wikipedia lists MIT).
+- **Verdict:** ✅ Commercial-safe (MIT) as a **build-time tool**.
+- **Notes:** Use offline: prompt → curate → render loops/stems at build time; ship the audio, not the model. Complements Magenta.js (different generation style). Note: the hobby repo is no longer actively maintained (the team pivoted to Producer AI) — pin a working commit/checkpoint. Generated output from our own prompts is original work.
+
