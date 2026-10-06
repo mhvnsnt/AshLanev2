@@ -45,6 +45,9 @@
 - **Source**: https://github.com/sketchpunklabs/ossos (MIT ✅)
 - **Status**: Reference only. All three games have working foot IK already.
 
+### 5. Weight repair — ALREADY game-agnostic ✅
+- `tools/promo-video/reskin.js`: `cleanStrayWeights(skinnedMesh)` + `autoSkinByDistance(skinnedMesh)` operate on any THREE.SkinnedMesh — zero game-specific references. Usable by AshLanev2, Brutal-Fist, Bannon as-is.
+
 ## Evaluated, Not Pulled
 - **Motion matching**: Unity/C# only in OSS. Spec'd as a three.js build on our clip libraries.
 - **AccuRIG/Mixamo/DeepMotion**: no headless CLI / web-only / paid. Rejected.
