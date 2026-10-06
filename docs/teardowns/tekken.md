@@ -326,3 +326,123 @@ layers.
    corruption. Boss fights get second-phase outfits.
 6. **Customization must preserve the archetype.** Let players restyle within
    the default (T7 model); keep the canonical look free.
+
+---
+
+## 5. AshLane mapping: corporate-faction design + outfit direction
+
+Concrete, actionable recommendations. Steal the structure, not the IP —
+rename everything, reskin everything, keep the mechanics of *how Tekken
+makes corporations feel powerful*.
+
+### 5a. The three-corporation cold war (faction structure)
+
+Mirror Tekken's triangle, recast for a street game:
+
+| Tekken role | AshLane analog | Identity | How players meet them |
+|---|---|---|---|
+| **Mishima Zaibatsu** (incumbent megacorp + private army) | **The incumbent** — a legacy private-military/security conglomerate that "protects" the city. Owns the arena circuit the way the Zaibatsu sponsors the tournament | Old money, heraldic branding, dojo/martial tradition as corporate culture | Their PMC patrols the streets (Tekken Force analog); their sponsored fight circuit is the game's tournament structure — winning blocks shifts *their* territory map |
+| **G Corporation** (rising biotech rival, militarized) | **The disruptor** — a biotech/pharma corp running clinics and "enhancement" programs in the districts. Underneath: super-soldier R&D, private army | Sleek, clinical, purple/black palette; hires street fighters as "security consultants" (T8's parole-hire model) | Players get *hired* by them before realizing what they are — the G Corp trick of looking like the good guys |
+| **Violet Systems** (boutique tech, funds the resistance) | **The string-puller** — a robotics/tech firm with a charismatic exiled-founder CEO. Never fields an army; buys shares, plants people, funds gangs | High-fashion techwear, showman CEO, purple accent | Their money is behind the player's crew and rival gangs alike — reveal late that both sides were bankrolled |
+
+Plus the street-level layers Tekken implies but never centers (AshLane's
+actual playground):
+
+- **The rebel army (Yggdrasil analog):** a deserter faction from the
+  incumbent's PMC, ~half the force, fighting both corps. Gives the player a
+  military-grade ally faction with a motto, insignia, and a defection story.
+- **The exorcists (Archers of Sirius analog):** an old order that treats
+  Malakor corruption the way Sirius treats the Devil Gene — they hunt the
+  corrupted, including corrupted executives. Natural ally/antagonist pivot.
+- **The cops (Interpol analog):** one detective archetype (Lei Wulong
+  model) investigating the corps; the corps bury investigations by force.
+  Grounds the corporate war in street-level consequences.
+
+### 5b. "Executive threat" outfit direction (the portable formula)
+
+For every corpo boss in AshLane, apply Tekken's five rules from §3:
+
+1. **Status garment + combat accessory.** Tailored suit/long coat +
+   fighting gloves, brass knuckles, or reinforced boots. The accessory says
+   *I don't need bodyguards*.
+2. **Chest/shoulder emblem.** Faction insignia embroidered or engraved —
+   the allegiance read. Never a full uniform; the suit stays personal, the
+   emblem says corporate (binding faction rule: patches, armbands, small
+   accents, symbols).
+3. **Silhouette dominance.** Long coats, wide shoulders, capes. Bosses are
+   visibly larger on screen than their security detail.
+4. **Corrupted second phase.** Malakor corruption IS the Devil Gene: when a
+   corpo boss's health breaks, the outfit degrades (Jinpachi grammar —
+   jewelry falls off, clothes tatter) and the supernatural shows (aura,
+   altered skin, inhuman features). Design both phases up front.
+5. **Ceremonial staging.** Corpo bosses are fought in *their* venues —
+   boardrooms, penthouses, private arenas, sponsored tournament finals —
+   never ambushed in alleys. The venue is part of the outfit.
+
+**Palette discipline (owner's district rule):** each corp gets a base color
+identity *filtered through the district palette* where they appear — the
+incumbent reads "old gold + black" downtown and "dust gold + brown" in the
+industrial district. Same emblem, different cloth. Never faction-wide
+single-color uniforms.
+
+### 5c. Archetype slots to fill (from §1, adapted)
+
+- **House-style dojo faction:** a Mishima-karate analog — one martial
+  tradition, one family/company teaching it, multiple practitioners with
+  shared fundamentals but unique hooks. (Respects the "no clones" rule.)
+- **The masked grappler:** one King-analog slot for the 15% wrestling
+  flavor — mask, chain-throws, spectacle. Keep it to one or two slots max.
+- **The street master:** a Leroy-analog — older, stylish, parry-based,
+  weapon-adjacent (cane → chain, bat, umbrella). The mentor archetype every
+  district needs.
+- **The silent operative:** a Dragunov-analog — PMC commando, Sambo/grapple
+  hybrid, no wasted motion. The incumbent corp's signature fighter.
+- **The enhanced heavy:** a Jack-analog — corp security juggernaut,
+  cybernetics or just armor + size. Readable from 50 feet.
+- **The hired gun with a twist:** a Victor-analog — weapon-integrated
+  fighter (baton, blade, sidearm as *melee* tools) for the disruptor corp.
+- **The exorcist:** a Claudio-analog — Malakor-hunter with anti-corruption
+  techniques; gives the mystic/stance-technician slot a story reason to
+  exist.
+
+### 5d. Structural steals (systems, not costumes)
+
+1. **The fight circuit is the corporation's weapon.** The Zaibatsu doesn't
+   just sponsor the tournament — ownership of the company is the prize, and
+   in T8 losers' countries are erased. AshLane: the block/turf circuit must
+   be *run* by the corps — winning a block shifts corporate territory on a
+   visible map. The street fight and the corporate war are the same war.
+2. **Hire the player before revealing the villain.** G Corp hires beaten
+   fighters on parole; Violet Systems funds the rebellion. Let AshLane corps
+   employ, sponsor, and fund the player early — the betrayal/reveal lands
+   harder than a boss who was evil from minute one.
+3. **Morality is positional.** G Corp are heroes when they oppose Jin's
+   war, conquerors when they win it. Let districts disagree about the corps:
+   the clinic corp is beloved where it heals, feared where it experiments.
+4. **Private armies need doctrine.** Name, motto, insignia, public cover
+   story ("community security"), and a defection arc. A PMC with no
+   doctrine is just enemies with guns.
+5. **Ikeda's roster rule is law:** every character = unique visual hook +
+   unique mechanical hook, designed together. No "compatible characters."
+   Audit the AshLane roster against this before any model work starts.
+
+---
+
+## Sources
+
+- Faction relations / corporate war: https://tekken.fandom.com/wiki/G_Corporation
+- Archers of Sirius / Lee / Violet Systems: https://www.vg247.com/tekken-7-story-mode-involves-a-group-of-exorcists-plus-lee-and-violet-return-in-new-trailer
+- G Corp story through T8: https://villains.fandom.com/wiki/G_Corporation
+- Mishima family / Zaibatsu history: https://www.denofgeek.com/games/tekken-the-strange-history-of-the-mishima-family/
+- Tekken Force (soldiers, motto, ~60,000 strength): https://tekken.fandom.com/wiki/Tekken_Force_(soldiers)
+- Mishima Zaibatsu corporate history: https://tekken.fandom.com/wiki/Mishima_Zaibatsu
+- Character roster / styles (T8): https://dotesports.com/fgc/news/all-confirmed-characters-for-tekken-8 · https://www.radiotimes.com/technology/gaming/tekken-8-roster/ · https://dtgre.com/2024/01/tekken-8-all-characters-and-their.html · http://gamerant.com/tekken-8-roster-breakdown/
+- T8 redesigns / Kazuya's suit: https://www.thegamer.com/tekken-8-the-best-new-designs/
+- Heihachi T8 outfit + monk arc (Ikeda interview): http://gamespot.com/articles/heihachis-surprising-return-in-tekken-8-rights-the-fighting-game-rosters-greatest-wrong/1100-6526645/
+- Ikeda on unique archetypes / cutting clones; Harada on guest characters: https://esports.gg/news/tekken-8/harada-about-heihachi-tekken8/ · https://www.techradar.com/gaming/tekken-8s-kouhei-ikeda-talks-about-cutting-classic-characters-and-bringing-together-players-both-old-and-new
+- Anna Williams S2 return/redesign: https://arcader.org/news/one-of-the-most-highly-requested-legacy-characters-has-finally-been-revealed-for-tekken-8-season-2-but-at-what-cost/
+- Customization system: https://www.ggrecon.com/guides/tekken-8-customisation-character-player-avatar/ · https://tekken.fandom.com/wiki/Customize · https://www.pcgamer.com/tekken-8-character-customization/ · https://tekken.fandom.com/wiki/Tekken_Shop
+- Heihachi outfits detail: https://tekken.fandom.com/wiki/Heihachi_Mishima/Outfits
+- Jinpachi design / outfits: https://tekken.fandom.com/wiki/Jinpachi_Mishima/Outfits · https://villains.fandom.com/wiki/Jinpachi_Mishima
+- Kazuya outfits / flame-motif gi: https://tekken.fandom.com/wiki/Kazuya_Mishima/Outfits
+- T8 costume critique (redesign backlash, shop controversy): https://www.dcgameblog.com/2023/10/fighting-games-friday-the-specific-threads-of-tekken-8/
