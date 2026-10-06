@@ -174,3 +174,13 @@
 
 ---
 
+## 18. Cinevva Rig
+
+- **URL:** https://app.cinevva.com/blender-addon/
+- **What:** Blender auto-rig add-on ($29 one-time launch price): select mesh → ~15s → skinned Mixamo-named skeleton already playing idle. Offline unlimited rigging (2.4GB engine download, no per-rig fee, no cloud), up to 3 machines. Ships **260 CC0 animations** retargeted onto your rig in one click; game-ready export for Unity/Unreal/Godot/web.
+- **License:** **Paid one-time ($29); bundled 260 animations are CC0.** Online (server-side) rigging costs credits — use the offline mode.
+- **Verdict:** ✅ CHEAP TOOL + CC0 ANIMATION BONUS. The 260 CC0 animations alone are worth the price as mocap-adjacent content (check per-clip quality). Rig outputs are yours.
+- **Notes:** Newer/unknown vendor vs Auto-Rig Pro's track record — trial before committing the pipeline to it. The offline requirement fits our sandbox constraints.
+
+---
+
