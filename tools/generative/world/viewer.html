@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AshLane Seeded City Viewer</title>
+<style>
+  body { margin: 0; background: #0b0d14; overflow: hidden; }
+  canvas { display: block; }
+  #hud { position: fixed; top: 12px; left: 12px; color: #9df; font: 13px monospace;
+         background: rgba(0,0,0,.55); padding: 8px 10px; border-radius: 6px; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/node_modules/three/build/three.module.js",
+               "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="hud">seed: <span id="seed">—</span> · <span id="stats">—</span></div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(1280, 800);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b0d14);
+scene.fog = new THREE.Fog(0x0b0d14, 220, 520);
+
+const camera = new THREE.PerspectiveCamera(55, 1280 / 800, 0.5, 1200);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+// Night street lighting: cool ambient + warm streetlights
+scene.add(new THREE.HemisphereLight(0x4a5a8a, 0x0c0a12, 0.85));
+const moon = new THREE.DirectionalLight(0x8aa0ff, 0.5);
+moon.position.set(-120, 180, 60); scene.add(moon);
+
+function hex(c) { return new THREE.Color(c); }
+
+window.renderCity = (data) => {
+  window.__ready = false; window.__error = null;
+  try {
+    document.getElementById('seed').textContent = data.meta.seed;
+    document.getElementById('stats').textContent =
+      `${data.stats.buildings} bldg · ${data.stats.windows} win · ${data.stats.neons} neon · ${data.stats.props} props`;
+
+    const W = data.size.w, D = data.size.d;
+
+    // Ground: dark asphalt plane
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(W + 60, D + 60),
+      new THREE.MeshStandardMaterial({ color: 0x14161d, roughness: 0.95 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.set(W / 2, 0, D / 2);
+    scene.add(ground);
+
+    // Streets: slightly lighter strips
+    const streetMat = new THREE.MeshStandardMaterial({ color: 0x1d2029, roughness: 0.9 });
+    for (const s of data.streets) {
+      const len = s.to - s.from;
+      const geo = s.axis === 'z' ? new THREE.PlaneGeometry(s.width, len) : new THREE.PlaneGeometry(len, s.width);
+      const m = new THREE.Mesh(geo, streetMat);
+      m.rotation.x = -Math.PI / 2;
+      if (s.axis === 'z') m.position.set(s.at, 0.02, s.from + len / 2);
+      else m.position.set(s.from + len / 2, 0.02, s.at);
+      scene.add(m);
+    }
+
+    // Buildings (merged into few draw calls via one material each is fine for proof)
+    const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+    for (const b of data.buildings) {
+      const m = new THREE.Mesh(boxGeo, new THREE.MeshStandardMaterial({ color: hex(b.color), roughness: 0.85 }));
+      m.scale.set(b.w, b.h, b.d);
+      m.position.set(b.x, b.h / 2, b.z);
+      scene.add(m);
+      // rooftop cap
+      const cap = new THREE.Mesh(boxGeo, new THREE.MeshStandardMaterial({ color: 0x101218, roughness: 1 }));
+      cap.scale.set(b.w + 0.6, 0.5, b.d + 0.6);
+      cap.position.set(b.x, b.h + 0.25, b.z);
+      scene.add(cap);
+    }
+
+    // Windows (instanced planes)
+    const winGeo = new THREE.PlaneGeometry(1.6, 2.2);
+    const litMat = new THREE.MeshBasicMaterial({ color: 0xffd97a });
+    const darkMat = new THREE.MeshBasicMaterial({ color: 0x11131c });
+    for (const w of data.windows) {
+      const m = new THREE.Mesh(winGeo, w.emissive ? litMat : darkMat);
+      m.position.set(w.x, w.y, w.z);
+      scene.add(m);
+    }
+
+    // Neon signs (emissive boxes) — cap point lights for software GL
+    let neonLights = 0;
+    for (const n of data.neons) {
+      const m = new THREE.Mesh(
+        new THREE.BoxGeometry(n.w, 1.1, 0.25),
+        new THREE.MeshBasicMaterial({ color: hex(n.color) })
+      );
+      m.position.set(n.x, n.y, n.z);
+      scene.add(m);
+      if (neonLights++ < 6) {
+        const glow = new THREE.PointLight(hex(n.color), 30, 40, 1.8);
+        glow.position.set(n.x, n.y, n.z + 2);
+        scene.add(glow);
+      }
+    }
+
+    // Props
+    const propColors = { dumpster: 0x1f5c2e, crate: 0x6b4a2a, barrel: 0x7a2a1e, hydrant: 0xb8b0a0, tree: 0x1e4423 };
+    for (const p of data.props) {
+      let geo;
+      if (p.kind === 'barrel') geo = new THREE.CylinderGeometry(0.5 * p.s, 0.5 * p.s, 1.2 * p.s, 10);
+      else if (p.kind === 'tree') geo = new THREE.ConeGeometry(1.6 * p.s, 4.5 * p.s, 8);
+      else if (p.kind === 'hydrant') geo = new THREE.CylinderGeometry(0.3 * p.s, 0.35 * p.s, 1.1 * p.s, 8);
+      else geo = new THREE.BoxGeometry(1.6 * p.s, 1.1 * p.s, 1.0 * p.s);
+      const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: propColors[p.kind] || 0x555555, roughness: 0.9 }));
+      const y = p.kind === 'tree' ? 2.2 * p.s : (p.kind === 'barrel' || p.kind === 'hydrant' ? 0.6 * p.s : 0.55 * p.s);
+      m.position.set(p.x, y, p.z);
+      m.rotation.y = p.ry || 0;
+      scene.add(m);
+    }
+
+    // Streetlights (pole + warm point light — capped for software GL)
+    const poleGeo = new THREE.CylinderGeometry(0.12, 0.16, 9, 6);
+    const poleMat = new THREE.MeshStandardMaterial({ color: 0x2a2d36, roughness: 0.7, metalness: 0.6 });
+    let li = 0;
+    for (const s of data.streetlights) {
+      const pole = new THREE.Mesh(poleGeo, poleMat);
+      pole.position.set(s.x, 4.5, s.z);
+      scene.add(pole);
+      if (li++ % 16 === 0 && li < 200) {
+        const lamp = new THREE.PointLight(0xffb45e, 60, 55, 1.9);
+        lamp.position.set(s.x, 8.6, s.z);
+        scene.add(lamp);
+      }
+    }
+
+    // Camera: aerial 3/4 view of the district
+    camera.position.set(W * 0.5 - 170, 150, D * 0.5 + 210);
+    controls.target.set(W / 2, 10, D / 2);
+    controls.update();
+
+    // Render a few frames to settle lights, then flag ready
+    for (let n = 0; n < 8; n++) {
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    window.__ready = true;
+  } catch (e) { window.__error = String(e && e.stack || e); window.__ready = true; }
+};
+</script>
+</body>
+</html>
