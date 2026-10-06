@@ -97,3 +97,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** Compose original loops IN CODE: generate per-district chord progressions and drum patterns at build time → render to MIDI → render audio offline → ship loops. Zero licensed-audio baggage, infinite variety, fully original. Pair with Tone.js (already in stack) for rendering.
 
+## 14. Magenta.js (Google) — ML music generation in the browser
+- **URL:** https://github.com/magenta/magenta-js · npm `@magenta/music`
+- **What:** Google's ML music toolkit for the browser (TensorFlow.js): MusicVAE (melody/drum generation), MusicRNN, GANSynth (instrument timbres), groove continuation, melody harmonization. Powers Lo-Fi Player-style generative rooms.
+- **License:** **Apache-2.0** (verified in repo).
+- **Verdict:** ✅ Commercial-safe (Apache-2.0).
+- **Notes:** Best use: OFFLINE generation of original loops (generate → curate → render → ship audio; the model stays out of the game). Runtime in-browser generation is possible but heavy for a game client. Generated output from our own prompts is original work — no licensed-audio baggage. Watch checkpoint download size; generate at build time.
+
