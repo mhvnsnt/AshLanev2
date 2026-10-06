@@ -3648,6 +3648,14 @@ function openCity(sim: Sim, quiet: string) {
 export function step(sim: Sim, input: FrameInput, dt: number) {
   sim.sfx.length = 0;
   sim.time += dt;
+  // Intro splash + banner timers tick unconditionally at the top of step(),
+  // before any early return (paused / hitstop / not-running). The VsSplash
+  // overlay keys off hud.splash, so if these decrements are skipped the
+  // overlay never unmounts and covers the 3D canvas indefinitely.
+  sim.bannerT -= dt;
+  if (sim.bannerT <= 0) sim.banner = "";
+  sim.splashT -= dt;
+  if (sim.splashT <= 0) sim.splash = "";
   for (const prop of sim.props) {
     if (prop.kind !== "car") continue;
     const target = !prop.alive ? 1 : 1 - Math.max(0, prop.hp) / prop.maxHp;
@@ -3762,10 +3770,6 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   updateDoor(sim, dt);
   sim.comboT -= dt;
   if (sim.comboT <= 0) sim.combo = 0;
-  sim.bannerT -= dt;
-  if (sim.bannerT <= 0) sim.banner = "";
-  sim.splashT -= dt;
-  if (sim.splashT <= 0) sim.splash = "";
   sim.shake *= Math.exp(-3.2 * dt);
 
   refreshZone(sim);
