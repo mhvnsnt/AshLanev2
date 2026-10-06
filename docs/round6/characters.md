@@ -144,3 +144,13 @@
 
 ---
 
+## 15. FLAME (Max Planck) — face model
+
+- **URL:** https://flame.is.tue.mpg.de | Universe: https://github.com/TimoBolkart/FLAME-Universe
+- **What:** Learned 3D head/face model (shape + expression + jaw pose) from 4D scans; the standard parametric face behind most face-reconstruction research (DECA, EMOCA, SMIRK, MICA all build on it). FLAME 2023 has jaw-factored and no-jaw variants.
+- **License:** **MPI non-commercial license** — verbatim: "use the Model & Software for the sole purpose of performing peaceful non-commercial scientific research, non-commercial education, or non-commercial artistic projects." Commercial use (including "production of other artefacts for commercial purposes" and commercial NN training) prohibited; no redistribution; no reverse engineering. Commercial licensing via ps-license@tuebingen.mpg.de.
+- **Verdict:** ❌ LICENSE-TRAPPED — same family as SMPL. Research/previs only. Do not ship FLAME-derived head geometry or train commercial models on it.
+- **Notes:** Face-side replacements: MakeHuman/MPFB face targets (CC0, entry 11), MetaHuman Creator (EULA, entry 13), KeenTools FaceBuilder (paid, entry 17). Note the contamination vector: many "MIT" face-reconstruction repos vendor FLAME code/weights — check before adopting.
+
+---
+
