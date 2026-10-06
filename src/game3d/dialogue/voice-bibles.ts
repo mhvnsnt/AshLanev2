@@ -16,16 +16,26 @@
 export type Pace = "rapid" | "measured" | "slow" | "erratic" | "booming";
 
 export type Situation =
+  // --- wrestling contexts (arena, wrestler factions, wrestling storylines) ---
   | "promo"          // pre-match promo to camera / crowd
   | "callout"        // calling out a specific opponent
   | "backstage"      // backstage segment, aftermath, locker room
   | "weighin"        // staredown / face-to-face
   | "victory"        // post-win
   | "defeat"         // post-loss (rarely humble)
-  | "betrayal"       // turning on someone
+  | "betrayal"       // turning on someone (wrestling context)
   | "faction"        // faction rally / recruitment
   | "street"         // JCPW street interview (Judas' corner style)
-  | "title";         // title win / championship moment
+  | "title"          // title win / championship moment
+  // --- street contexts (Urban Reign street life — NOT the wrestling world) ---
+  | "confront"       // street confrontation: turf dispute, corner standoff
+  | "parley"         // gang negotiation before it pops off
+  | "corpo"          // corpo threat: suit in a boardroom or black car, clean menace
+  | "hustle"         // deal going down — or going wrong
+  | "claim"          // territory claim: rolling up on a block
+  | "civilian"       // civilian caught in it: shopkeeper, bystander
+  | "loyalty"        // crew loyalty / street betrayal (not a locker room)
+  | "heat";          // police / authority pressure
 
 export interface SpeechProfile {
   pace: Pace;
@@ -52,6 +62,13 @@ export interface VoiceBible {
   attitude: string;
   /** narrative hooks: promotions, names, places the character references */
   hooks: string[];
+  /**
+   * How they talk on the STREET vs in the ring. AshLane is Urban Reign street
+   * life — wrestlers AND gangsters AND corpo bosses AND civilians. The promo
+   * voice and the street voice are not the same register: the ring is
+   * performance, the corner is survival. Undefined = same voice everywhere.
+   */
+  streetVoice?: string;
 }
 
 export const VOICE_BIBLES: VoiceBible[] = [
@@ -100,6 +117,11 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "One-on-one sit-downs: Edwin Kennedy, Triple X, Stan Combs",
       "Fought for everything, never a pushover",
     ],
+    streetVoice:
+      "On the corner he's the same mouth but the audience changed — he's not performing " +
+      "for a crowd, he's holding court for the block. Less 'certified' branding, more Jersey " +
+      "block-talk: block politics, who's eating, who owes who. Still fast, still loud, but the " +
+      "JCPW code talk drops and the street code talk takes over. He knows every corner kid by name.",
   },
   {
     id: "cipher",
@@ -137,6 +159,11 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The sludge: what happens when the shine cracks",
       "Steals the show, then steals your finisher's thunder",
     ],
+    streetVoice:
+      "The shine dials down and the nerves show. On the street he's still fast but it's " +
+      "survival-fast, not hype-fast — he's the guy who knows everybody and owes half of them. " +
+      "The sludge talk gets quieter and meaner away from cameras; nobody's watching, so there's " +
+      "no show to steal.",
   },
   {
     id: "echo",
@@ -173,6 +200,11 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The tank, the green hair, the beautiful violence",
       "Nobody knows if she's laughing with you or at you",
     ],
+    streetVoice:
+      "Same chaos, smaller stage. On the street she's the girl who'll fight you for your bike " +
+      "and then ride it better than you. The mimic thing works on corners too — she'll repeat a " +
+      "lieutenant's threat back at him in his own voice and laugh. Civilians love her; crews find " +
+      "her exhausting.",
   },
   {
     id: "stickup",
@@ -210,6 +242,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Cyborg form is a separate canon entity — never confuse them",
       "Finisher lore: Twisted Faith",
     ],
+    streetVoice:
+      "Barely changes — the street IS his register. In the ring he performs the rebel; on the " +
+      "corner he IS the corner. The measured silences get longer. He doesn't explain the system " +
+      "to the block; the block already knows. Fewer words, more weight.",
   },
   {
     id: "maime",
@@ -245,6 +281,11 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Three-back-to-back jacketed original (when it returns)",
       "Self-destruction as performance art",
     ],
+    streetVoice:
+      "No difference between street and ring for Maime — there is no performance, only the " +
+      "basement with the door open. On the street he's the rumor parents warn kids about: the " +
+      "Marquis thing that walks at 3AM talking to itself. The poetry gets uglier without a crowd " +
+      "to play to.",
   },
   {
     id: "sombra_negra",
@@ -282,6 +323,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Sleeveless suit, cut-off arms",
       "Every contract has a price. Hers is just higher than yours.",
     ],
+    streetVoice:
+      "The mercenary is the same everywhere — the contract doesn't care about the venue. On the " +
+      "street she's quieter still: a woman in a doorway you don't notice until the job's done. " +
+      "Spanish drops to a whisper. Civilians never see her; they only hear about her after.",
   },
   {
     id: "onyx",
@@ -317,6 +362,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The paint, the carnival, the beautiful ruin",
       "Static, Cipher, Echo run with her colors",
     ],
+    streetVoice:
+      "The ringmaster act stays but the paint's metaphor changes: on the street the 'show' is the " +
+      "block itself and everyone's already in the cast. She's the block's beautiful rumor — generous " +
+      "to her people, theatrical to her enemies. The Painted run corners like venues.",
   },
   {
     id: "toro",
@@ -352,6 +401,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The golden bull, the herd's pride",
       "Honor is the whole character",
     ],
+    streetVoice:
+      "The bull doesn't do street corners — honor has no turf. Off the plaza he's quieter, almost " +
+      "gentle with civilians; the proclamation voice only comes out when challenged. A corner kid who " +
+      "shows him respect gets a blessing; a crew that disrespects the block gets the horns.",
   },
   {
     id: "cain",
@@ -387,6 +440,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Gear and snakeskin attires",
       "The throw is the whole philosophy",
     ],
+    streetVoice:
+      "The street is just another compliance zone. He walks corners like he walks offices: clipboard " +
+      "energy, threat as policy. Gangsters hate him because he won't take it personal — you can't " +
+      "intimidate a spreadsheet. Civilians think he's a cop. He's worse: he's thorough.",
   },
   {
     id: "edwin",
@@ -422,6 +479,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "Static name-dropped the one-on-one sit-down — it stayed in the room",
       "Combine polish, street ego",
     ],
+    streetVoice:
+      "Off-camera the showman act thins — he's still loud but it's needier, like he's not sure the " +
+      "street is watching. Name-drops his own name less; name-drops Combine money more. Corner kids " +
+      "imitate him and he HATES it, which makes it worse.",
   },
   {
     id: "triplex",
@@ -457,6 +518,10 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The Combine's throne",
       "Every war he's in ended before it started",
     ],
+    streetVoice:
+      "The boardroom is his natural habitat — the street is just a board with worse lighting. He " +
+      "doesn't raise his voice on a corner; he doesn't need to, because the men with him do the " +
+      "talking. Every parley with him is a negotiation you've already lost.",
   },
   {
     id: "stan",
@@ -492,6 +557,167 @@ export const VOICE_BIBLES: VoiceBible[] = [
       "The veteran's veteran",
       "Old-school code in a new-school ward",
       "The sit-down with Static — sealed",
+    ],
+    streetVoice:
+      "The street is where Stan's from and it shows: the veteran act drops and the old head comes " +
+      "out. He knows the corner hustlers' fathers. Speaks softer on the block than in the ring — " +
+      "out of respect for the civilians, not fear of the crews.",
+  },
+  /* ---------------------------------------------------------------- */
+  /* Street archetypes — the non-wrestler world. Original characters,     */
+  /* no real-world basis, zero invented casting. These are the people     */
+  /* the street runs on: the block's muscle, the money's cleaner, the    */
+  /* corner's survivor, and the badge.                                   */
+  /* ---------------------------------------------------------------- */
+  {
+    id: "__lieutenant",
+    name: "Corner Lieutenant",
+    basedOn: undefined, // original archetype — the crew's block boss, crew varies
+    faction: "unaffiliated",
+    archetype: "Crew muscle with a brain — holds the block, collects, decides who eats",
+    speech: {
+      pace: "measured",
+      register: "Block command — calm orders over chaos",
+      signaturePhrases: [
+        "This block eats because I say so.",
+        "You standin' where?",
+        "The crew feeds who the crew trusts.",
+        "Walk away. That's the only warning with my name on it.",
+      ],
+      vocab: [
+        "block", "crew", "tribute", "corner", "runners", "the set",
+        "respect", "tax", "quiet", "boundaries",
+      ],
+      neverSays: [
+        "begging", "snitching", "explaining himself to outsiders",
+        "showing fear in front of runners", "apologizing for the tax",
+      ],
+      rhythm:
+        "Short orders. Lets the crew's reputation do the intimidating. Asks questions " +
+        "he already knows the answer to, just to watch you lie.",
+    },
+    attitude:
+      "Middle management with a bat. Loyal to the crew above all — the block is his resume. " +
+      "Fair to his people, final with everyone else. The parley only happens because he allowed it.",
+    hooks: [
+      "Crew tribute system — who pays, who doesn't, why",
+      "Block boundaries and who crossed them",
+      "Runner discipline",
+      "Parley etiquette: you talk, he decides",
+    ],
+  },
+  {
+    id: "__fixer",
+    name: "The Fixer",
+    basedOn: undefined, // original archetype — deniable corpo cleaner
+    faction: "unaffiliated",
+    archetype: "Corpo cleaner — the suit who makes street problems disappear quietly",
+    speech: {
+      pace: "slow",
+      register: "Boardroom politeness stretched over a threat",
+      signaturePhrases: [
+        "Let's keep this civilized.",
+        "My employers prefer quiet.",
+        "Everyone has a price. I've never met the exception.",
+        "This conversation didn't happen.",
+      ],
+      vocab: [
+        "employers", "arrangement", "discretion", "assets", "exposure",
+        "settlement", "final offer", "mutually beneficial", "regrettable",
+      ],
+      neverSays: [
+        "slang", "a raised voice", "a threat without a smile",
+        "anything on the record", "naming the employers",
+      ],
+      rhythm:
+        "Pauses like punctuation. Every sentence is a contract clause. Smiles while " +
+        "describing consequences — the smile is the worst part.",
+    },
+    attitude:
+      "Violence with a receipt. Doesn't hate the street — just bills it. The most dangerous " +
+      "man in the room because he's the only one in a suit and he knows exactly what that means. " +
+      "The black car's engine is still running.",
+    hooks: [
+      "Deniable contracts and who signs them",
+      "Block buyouts — the offer before the other offer",
+      "Evidence that vanishes",
+      "The black car, always the black car",
+    ],
+  },
+  {
+    id: "__hustler",
+    name: "Corner Hustler",
+    basedOn: undefined, // original archetype — the corner's survivor
+    faction: "unaffiliated",
+    archetype: "Small-time runner — survives on speed, charm, and knowing when to run",
+    speech: {
+      pace: "rapid",
+      register: "Corner sales pitch — half charm, half panic",
+      signaturePhrases: [
+        "Yo, I got you, I got you.",
+        "You didn't see me, I wasn't here.",
+        "Everybody's got a guy — I'm everybody's guy.",
+        "Look, look, look—",
+      ],
+      vocab: [
+        "plug", "pack", "runners", "lookouts", "the corner",
+        "quick", "low", "ghost", "seen nothin'", "word is",
+      ],
+      neverSays: [
+        "standing his ground", "saying no to money",
+        "staying in one place too long", "loyalty that costs him",
+      ],
+      rhythm:
+        "Talks fast because standing still gets you caught. Sentences stack like he's pitching — " +
+        "because he is, always. The 'look, look, look' is a verbal hand on your chest.",
+    },
+    attitude:
+      "The street's cockroach — unkillable, everywhere, knows everything. Not brave, not loyal, " +
+      "but useful: information flows through him like water. Everybody's guy is nobody's guy, " +
+      "and that's exactly how he likes it.",
+    hooks: [
+      "Knows every crew's business and sells it twice",
+      "The lookout network — eyes on every corner",
+      "What the cops don't know (he knows what they know)",
+      "The deal that went wrong — his version",
+    ],
+  },
+  {
+    id: "__cop",
+    name: "Beat Cop",
+    basedOn: undefined, // original archetype — tired authority, no heroics
+    faction: "authority",
+    archetype: "Tired authority — has seen this block eat better men",
+    speech: {
+      pace: "slow",
+      register: "Weary official — the badge is heavy and he lets you hear it",
+      signaturePhrases: [
+        "I've seen how this ends.",
+        "Don't make me do paperwork.",
+        "Go home. All of you.",
+        "This block's got enough ghosts.",
+      ],
+      vocab: [
+        "paperwork", "precinct", "curfew", "the badge", "ghosts",
+        "overtime", "seen it", "go home", "probable cause",
+      ],
+      neverSays: [
+        "fresh idealism", "taking sides in crew beef",
+        "pretending the badge scares anyone", "running",
+      ],
+      rhythm:
+        "Tired sentences. Pauses like he's deciding whether you are worth the effort. " +
+        "The authority is in what he DOESN'T do — and everyone on the block knows it.",
+    },
+    attitude:
+      "Not corrupt, not heroic — just tired. Knows every face on the block and most of their " +
+      "fathers. The badge doesn't stop the street; it just documents it. His real weapon is that " +
+      "nobody wants to be the reason he has to care.",
+    hooks: [
+      "The precinct's blind eye — what gets ignored and why",
+      "Curfew enforcement as theater",
+      "The ghosts of the block — names he still remembers",
+      "Knows the crews by first name",
     ],
   },
   {
