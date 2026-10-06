@@ -66,3 +66,10 @@
 - **License:** Apache (LICENSE.MD in repo root; downstream ports state they inherit the Apache license from Tracery — re-verify the file before shipping)
 - **Verdict:** commercial-safe
 - **Notes:** Cheaper than ink for pure ambient barks: hustler/vendor lines ("Yo, #product# — #price#, #pitch#"), crowd heckles, procedural graffiti and signage text. Pair with Piper TTS (R4) to voice the generated barks at build time.
+
+## meyda
+- **URL:** https://github.com/meyda/meyda
+- **What:** Real-time audio feature extraction on the Web Audio API: loudness, RMS energy, spectral centroid, MFCCs, chroma, spectral flux / onset detection. Pure JavaScript, no WASM, works on live nodes or plain arrays.
+- **License:** MIT (repo page license field, LICENSE.md at root)
+- **Verdict:** commercial-safe
+- **Notes:** The sound-reactive crowd bridge: feed game audio (music energy, hit-SFX loudness, KO stingers) into Meyda and drive `arena-crowd.ts` excitement, NPC reactions, and lighting pulses. Loudness/RMS is the cheap always-on signal; spectral flux gives beat-ish onsets for hype moments.
