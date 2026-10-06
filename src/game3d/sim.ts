@@ -16,7 +16,7 @@ import {
   type GameServices,
 } from "./services";
 
-export type Phase = "free" | "atk" | "hit" | "launch" | "down" | "grab" | "throw" | "dash" | "spin" | "windup" | "out";
+export type Phase = "free" | "atk" | "hit" | "launch" | "down" | "grab" | "throw" | "dash" | "spin" | "windup" | "cheapshot" | "out";
 export type Home = "plaza" | "street" | "scaffold" | "market" | "yard" | "dock" | "under" | "ring" | "cage" | "subway" | "crane" | "office";
 export type Arch = "brawler" | "runner" | "brute" | "hood" | "hex";
 export type Weapon = "fist" | "pipe" | "bottle" | "board" | "blade" | "spear";
@@ -2622,6 +2622,25 @@ function updateEnemies(sim: Sim, dt: number) {
     }
     if (yokoStreet) continue;
     if (e.state === "launch") continue;
+    if (e.state === "cheapshot") {
+      // UR-feel 5/5: telegraph window — the enemy visibly winds up behind the
+      // player. If the player dodges or turns in time, the shot can miss.
+      e.vx = 0;
+      e.vz = 0;
+      e.stateT -= dt;
+      if (p) e.yaw = yawFromDir(p.x - e.x, p.z - e.z);
+      if (e.stateT <= 0) {
+        // Telegraph expired — the cheap shot launches, fast and mean.
+        const f = forward(e.yaw);
+        e.state = "atk";
+        e.stateT = 0.18;
+        e.swung = false;
+        e.swing = 6; // marks the cheap-shot (used for bonus damage in hurt)
+        e.vx = f.x * 7;
+        e.vz = f.z * 7;
+      }
+      continue;
+    }
     if (e.state === "windup") {
       e.vx = 0;
       e.vz = 0;
@@ -2642,7 +2661,8 @@ function updateEnemies(sim: Sim, dt: number) {
         if (!e.swung && e.stateT < 0.14) {
         e.swung = true;
         const f = forward(e.yaw);
-        const bite = (e.arch === "brute" ? 14 : e.arch === "hex" ? 11 : e.arch === "hood" ? 8 : e.arch === "runner" ? 7 : 9) * (e.chest < 35 ? 0.65 : 1);
+        const cheapBonus = e.swing === 6 ? 1.35 : 1; // UR-feel 5/5: cheap shot from behind hits harder
+        const bite = (e.arch === "brute" ? 14 : e.arch === "hex" ? 11 : e.arch === "hood" ? 8 : e.arch === "runner" ? 7 : 9) * (e.chest < 35 ? 0.65 : 1) * cheapBonus;
         const tag = e.swing === 5 || e.arch === "runner" ? "low" : e.arch === "brute" ? "high" : "mid";
         for (const target of sim.bodies) {
           if (target.kind === "grunt" || !target.alive) continue;
@@ -2675,6 +2695,25 @@ function updateEnemies(sim: Sim, dt: number) {
     const d = Math.hypot((hot && p ? p.x : e.homeX) - e.x, (hot && p ? p.z : e.homeZ) - e.z) || 1;
     if (hot && p && intent.wantAttack) {
       if (!requestAttack(sim.group, e.id, sim.bodies)) continue;
+      // UR-feel 5/5: CHEAP SHOT — if the attacker is behind the player's
+      // facing, telegraph a cheap shot ("Behind you!") instead of a normal
+      // windup. The player gets a 0.7s window to dodge or turn.
+      const pFace = forward(p.yaw);
+      const toE = { x: e.x - p.x, z: e.z - p.z };
+      const toEM = Math.hypot(toE.x, toE.z) || 1;
+      const behindPlayer = (pFace.x * toE.x + pFace.z * toE.z) / toEM < -0.35;
+      if (behindPlayer && p.state === "free" && p.grounded && Math.random() < 0.5) {
+        e.state = "cheapshot";
+        e.stateT = 0.7;
+        e.yaw = yawFromDir(p.x - e.x, p.z - e.z);
+        e.vx = 0;
+        e.vz = 0;
+        e.cd = 2.2;
+        sim.banner = "Behind you!";
+        sim.bannerT = 0.8;
+        sim.sfx.push("warn");
+        continue;
+      }
       // UR GRAB: brute (wrestling) archetype grabs the player instead of
       // striking when chest-to-chest. Opens a mash-to-escape struggle.
       const gdist = Math.hypot(p.x - e.x, p.z - e.z);
