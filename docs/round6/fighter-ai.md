@@ -299,3 +299,28 @@ checked 2026-10-06. Re-verify before shipping.
   with an explicit, difficulty-scaled reaction delay — this structurally
   prevents input reading. Log AI decisions in debug builds so "the AI
   cheated" claims can be disproven with data.
+
+---
+
+## Reaction-time models & frame-data-driven fighter AI — technique notes
+
+- **URL:** N/A — design technique survey (fighting-game frame-data
+  community resources, e.g. Dustloop-style frame tables; human reaction
+  ~200–250ms baseline).
+- **What:** The AI's "skill" is parameterized as human-plausible reaction:
+  decisions happen on a tick (e.g. every 6–12 frames at 60fps), each
+  decision commits to an action with startup frames, and the AI only
+  "sees" committed animation states — never button inputs. Difficulty =
+  shorter tick + wider move pool + better spacing math. Frame data
+  (startup/active/recovery per move) is shared data both the player-facing
+  movelist and the AI consume, so AI punishes are always *possible for a
+  human* — it whiff-punishes only inside real frame windows.
+- **License:** N/A (technique, not code).
+- **Verdict:** commercial-safe (our own implementation).
+- **Notes:** Implementation plan: one canonical frame-data table per
+  fighter (startup/active/recovery/on-block/on-hit). AI reads it to pick
+  guaranteed punishes; players read the same table in training mode.
+  Reaction delay per difficulty: rookie ~300ms, pro ~180ms, boss ~140ms —
+  always above the inhuman threshold. This is what makes losing feel fair
+  and winning feel earned. Also the basis for the "replay AI decision"
+  debug view.
