@@ -118,3 +118,21 @@ checked 2026-10-06. Re-verify before shipping.
   "stamina" region). Parallel regions model a wrestler's simultaneous
   concerns (position vs. limb damage vs. crowd heat in Bannon). Heavier than
   js-state-machine — adopt only if hierarchical AI proves necessary.
+
+---
+
+## Ego (decision trees + state machines)
+
+- **URL:** https://github.com/oguzeroglu/Ego
+- **What:** Lightweight decision-making library for game AI: decision trees
+  (knowledge -> decisions -> tree evaluation) plus hierarchical state
+  machines. Built for the ROYGBIV engine but engine-independent; client-side
+  script tag or `npm i @oguz.eroglu/ego-js`.
+- **License:** MIT (GitHub API: MIT).
+- **Verdict:** commercial-safe.
+- **Notes:** Decision trees are the classic fighting-game AI structure
+  (Street Fighter II-style: distance bands -> probability tables ->
+  actions). Ego's "knowledge" object maps cleanly to a fighter's sensed
+  world (distance, opponent state, own health). Good reference for
+  hand-tuned, designer-driven AI where a behavior tree feels like overkill.
+  172 stars — smaller community than Yuka; audit the source before wiring.
