@@ -46,6 +46,16 @@ const FIGHTER_FACTIONS: Record<string, FactionId> = {
   quaternius_female: "unaffiliated",
 };
 
+/* Player-selectable emblems (faction badges as personal emblems) */
+const EMBLEM_OPTIONS: { id: FactionId; label: string }[] = [
+  { id: "ashes", label: "Ashes Flame" },
+  { id: "combine", label: "Combine Shield" },
+  { id: "hollows", label: "Hollows Skull" },
+  { id: "painted", label: "Painted Mask" },
+  { id: "authority", label: "Authority Badge" },
+  { id: "unaffiliated", label: "Lone Coin" },
+];
+
 /* Deterministic pseudo-stats for fighter cards (seeded by id) */
 function fighterStats(id: string): { pow: number; spd: number; tgh: number } {
   let h = 0;
@@ -88,6 +98,7 @@ export function AshlaneApp() {
   const [pendingJob, setPendingJob] = useState<number | null>(null);
   const [pendingWho, setPendingWho] = useState<string | null>(null);
   const [suiteWho, setSuiteWho] = useState<string | null>(null);
+  const [playerEmblem, setPlayerEmblem] = useState<FactionId | null>(null);
   const [menu, setMenu] = useState<"main" | "jobs" | "style" | "library" | "story" | "arenas">("main");
   const [arena, setArena] = useState("ward");
   const [slot, setSlot] = useState<Slot>("jab");
@@ -579,6 +590,22 @@ export function AshlaneApp() {
                       <button type="button" className="al-btn al-btn-ghost" onClick={() => setSuiteWho(null)}><span>← Different fighter</span></button>
                     </>
                   )}
+                  <div className="al-section"><span className="al-section-title">Emblem</span></div>
+                  <div className="al-emblem-grid">
+                    {EMBLEM_OPTIONS.map((emblem) => (
+                      <button
+                        key={emblem.id}
+                        type="button"
+                        data-on={playerEmblem === emblem.id ? "1" : undefined}
+                        className="al-emblem-btn"
+                        onClick={() => setPlayerEmblem(playerEmblem === emblem.id ? null : emblem.id)}
+                        title={emblem.label}
+                      >
+                        <FactionEmblem faction={emblem.id} size={48} />
+                        <span className="al-emblem-label">{emblem.label}</span>
+                      </button>
+                    ))}
+                  </div>
                   <div className="al-section"><span className="al-section-title">Kit</span></div>
                   {STYLES.map((style) => (
                     <button key={style.id} type="button" data-on={hud.style === style.id ? "1" : undefined} className="al-card" onClick={() => api.current?.setStyle(style.id)}>
