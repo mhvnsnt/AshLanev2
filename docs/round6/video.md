@@ -51,3 +51,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** Pexels License — free for personal AND commercial use, NO attribution required. Prohibited: selling unaltered copies, portraying people offensively, implying endorsement.
 - **Verdict:** Commercial-safe (no standalone redistribution — clips only inside rendered videos, which is our use).
 - **Notes:** API: `curl -H "Authorization: $PEXELS_KEY" "https://api.pexels.com/videos/search?query=...&per_page=15"` → `video_files[]` with per-resolution MP4 links. Curated quality is higher than Pixabay on average — good for hero B-roll plates.
+## Coverr
+- **URL:** https://coverr.co/license
+- **What:** Curated free stock video focused on clean backgrounds and hero footage (nature, tech, urban, aerial). Smaller than Pixabay/Pexels but consistently high quality.
+- **License:** Coverr license — free for commercial and non-commercial use, no attribution required. Prohibited: reselling, offering clips as part of services or stock sites, trademark/logo misuse.
+- **Verdict:** Commercial-safe for rendered promos. Note the "can't offer as part of services" clause — fine for us (final MP4s, not a clip library), but don't bundle raw Coverr clips into any downloadable tool.
+- **Notes:** Best use: atmospheric background plates and looping textures behind title cards. Quality-over-quantity alternative to Pixabay.
