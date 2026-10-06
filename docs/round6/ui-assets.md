@@ -93,3 +93,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** 🔴 **Do NOT ship the current version.** If the keyframe vocabulary is wanted, pin `animate.css@3.7.2` (last MIT release) — or lift only the *easing/duration patterns* as inspiration and hand-write keyframes.
 - **Notes:** This is exactly why the license rule says to check the actual LICENSE file: every third-party roundup still calls Animate.css "MIT". The keyframes themselves are the value — bounceIn/tada/wobble timing curves are great references for KO announcements and combo-counter pops. For new code, prefer anime.js (#13) or Motion (already in R5 stack).
 - **AshLane use:** Animation *reference* only — KO text pops, combo-counter entrances, menu stagger timing. Never bundle v4+.
+
+## 12. AutoAnimate (FormKit)
+- **URL:** https://github.com/formkit/auto-animate · package `@formkit/auto-animate`
+- **What:** Zero-config 3KB animation library — attach one ref/hook to a parent and list add/remove/reorder automatically animate. Framework-agnostic (React hook, Vue, Svelte, vanilla). Respects `prefers-reduced-motion` out of the box.
+- **License:** **MIT** — confirmed across FormKit's package metadata and multiple downstream license records. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The cheapest way to make menus feel alive: mission lists, move lists, inventory grids, and toast stacks animate for free with one hook. Use for *structural* transitions (lists appearing/disappearing); use anime.js (#13) or the R5 Motion stack for choreographed sequences (versus-screen intros, round announcements). SSR-safe import pattern documented for TanStack Start.
+- **AshLane use:** Animated menu lists (missions, moves, inventory), toast/notification stacks, settings toggles.
