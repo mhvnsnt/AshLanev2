@@ -125,3 +125,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** Loading-screen kit: pair a themed loader (ember-colored `l-quantum` or `l-helix`) with the Narrator's curated appearances — the purple-robed wizard shows up at *narrative* moments (chapter/territory shifts), so loading screens split into two kinds: Narrator moments (custom art + line) and ordinary loads (ldrs spinner + tip text). Respect `prefers-reduced-motion` (ldrs speed can be paused via `speed="0"`).
 - **AshLane use:** Loading screens (ordinary loads), matchmaking spinner, asset-load indicators.
+
+## 16. Floating UI
+- **URL:** https://github.com/floating-ui/floating-ui · https://floating-ui.com
+- **What:** The positioning engine for tooltips, popovers, dropdowns, and anchored overlays — successor to Popper. Tiny modular core (`@floating-ui/dom`), collision-aware placement middleware, React hooks for accessible interactions.
+- **License:** **MIT** — confirmed in GitHub license metadata + repo-root `LICENSE`. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The foundation under the tutorial/tooltip layer: move-list tooltips, control-remap popovers, and driver.js (#17) highlight popovers all need collision-aware anchoring — Floating UI is the standard engine. Style the tooltip chrome in Concrete Jungle (torn-paper clip-path, hazard-stripe border) while Floating UI handles placement. Works with the R4 remappable-controls data (show the *bound* key per action).
+- **AshLane use:** Tooltip/popover positioning engine — move-list tooltips, remap-screen popovers, tutorial callouts.
