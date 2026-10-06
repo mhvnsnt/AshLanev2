@@ -2,11 +2,12 @@
  * AshLane Animation System — real-clip state machine.
  *
  * Every combat state plays a REAL animation clip. No procedural faking
- * for core combat. Clips come from bank.json (50 clips), CMU Mocap
- * additions, and the UAL library, all baked onto the fighter's rig
- * by motion-bank.ts.
+ * for core combat. Clips come from bank.json (59 clips: 50 original +
+ * 9 converted from Drive FBX mocap), CMU Mocap additions, and the UAL
+ * library, all baked onto the fighter's rig by motion-bank.ts.
  *
- * Paired grapples synchronize attacker + victim on the same timeline.
+ * Paired grapples synchronize attacker + victim on the same timeline
+ * using the bank's vic tracks (baked as "<clip>:vic" by motion-bank).
  */
 import * as THREE from "three";
 import { motionDur } from "./motion-bank";
@@ -25,10 +26,16 @@ const CLIPS: Record<string, ClipRef> = {
   run: ["run", "walk", "boxidle"],
   strafe_left: ["walk", "boxidle"],
   strafe_right: ["walk", "boxidle"],
+  backpedal: ["walk", "drunkwalk", "boxidle"],
   dash: ["evade", "corkscrew", "run"],
   jump: ["bigjump", "crossjump"],
   land: ["crouch", "boxidle"],
-  climb: ["walk", "boxidle"],
+  fall: ["crouch", "boxidle"],
+  climb: ["climb", "walk", "boxidle"],
+
+  // Hurt / dazed locomotion (Drive FBX: injured mocap)
+  hurt_idle: ["hurt_idle", "drunkidle", "boxidle"],
+  hurt_walk: ["hurt_run", "drunkwalk", "walk"],
 
   // Strikes — punches
   jab: ["jabcross", "boxing", "combo"],
@@ -75,17 +82,23 @@ const CLIPS: Record<string, ClipRef> = {
   knockdown_fwd: ["flat", "fallflat"],
   getup: ["kip", "rise", "corkscrew"],
   getup_kip: ["kip", "rise"],
+  getup_cover: ["getup_cover", "kip", "rise"],
   dazed: ["drunkidle", "boxidle"],
 
-  // Grapples — PAIRED (attacker + victim play synchronized)
+  // Knockouts (Drive FBX: death mocap)
+  ko_headshot: ["ko_headshot", "fallflat", "flat"],
+  ko_defeat: ["ko_defeat", "fallflat", "flat"],
+
+  // Grapples — PAIRED (attacker + victim play synchronized via vic tracks)
   clinch: ["takedown", "combo"],
   takedown: ["takedown", "combo"],       // double-leg, has vic track
   suplex: ["suplex", "backdrop"],        // has vic track
-  german_suplex: ["german", "suplex"],
-  ddt: ["ddt", "suplex"],
+  german_suplex: ["german", "suplex"],   // has vic track
+  ddt: ["ddt", "suplex"],               // has vic track
   brainbuster: ["brainbuster", "suplex"],
-  chokeslam: ["chokeslam", "suplex"],
-  backdrop: ["backdrop", "suplex"],
+  chokeslam: ["chokeslam", "suplex"],    // has vic track
+  backdrop: ["backdrop", "suplex"],      // has vic track
+  feral_maul: ["feral", "takedown"],     // has vic track
 
   // Ground
   ground_mount: ["takedown", "combo"],
@@ -97,9 +110,11 @@ const CLIPS: Record<string, ClipRef> = {
   finisher_clinch: ["takedown", "combo"],
   finisher_wall: ["suplex", "backdrop"],
   finisher_limb: ["combo", "boxing"],
+  finisher_assassination: ["finisher_assassination", "slugger", "boxing"],
 
-  // Weapons
-  weapon_swing: ["combo", "boxing"],     // Drive: Heavy Weapon Swing -> add
+  // Weapons (Drive FBX: real weapon mocap)
+  weapon_swing: ["weapon_swing", "weapon_swing2", "combo"],
+  weapon_swing_alt: ["weapon_swing2", "weapon_swing", "combo"],
   weapon_pickup: ["crouch", "boxidle"],
   weapon_throw: ["boxing", "combo"],
 
@@ -115,8 +130,84 @@ const CLIPS: Record<string, ClipRef> = {
 
 const PAIRED_GRAPPLES = new Set([
   "clinch", "takedown", "suplex", "german_suplex",
-  "ddt", "brainbuster", "chokeslam", "backdrop",
+  "ddt", "brainbuster", "chokeslam", "backdrop", "feral_maul",
 ]);
+
+// States that lock the fighter until the animation completes
+// (committed attacks, grapples, knockdowns — can't be interrupted)
+const LOCKED_STATES = new Set([
+  "jab", "cross", "hook", "uppercut", "overhand", "body_blow", "slugger",
+  "elbow", "knee", "front_kick", "roundhouse", "side_kick", "low_kick",
+  "dropkick", "hurricane_kick", "capoeira",
+  "takedown", "suplex", "german_suplex", "ddt", "brainbuster",
+  "chokeslam", "backdrop", "feral_maul", "clinch",
+  "knockdown", "knockdown_back", "knockdown_fwd",
+  "ko_headshot", "ko_defeat",
+  "getup", "getup_kip", "getup_cover",
+  "finisher_haymaker", "finisher_clinch", "finisher_wall",
+  "finisher_limb", "finisher_assassination",
+  "weapon_swing", "weapon_swing_alt", "weapon_throw",
+]);
+
+// ---------------------------------------------------------------------------
+// Rig-pipeline Slot → AnimState mapping
+// Bridges the sim's slot system to this animation state machine.
+// ---------------------------------------------------------------------------
+
+export function slotToState(
+  slot: string,
+  opts: { armed?: boolean; swing?: number; hurt?: boolean } = {}
+): string {
+  // Hurt variants
+  if (opts.hurt) {
+    if (slot === "idle") return "hurt_idle";
+    if (slot === "walk" || slot === "run" || slot === "back") return "hurt_walk";
+  }
+  switch (slot) {
+    // Locomotion
+    case "idle": return "idle";
+    case "walk": return "walk";
+    case "run": return "run";
+    case "strafeL": return "strafe_left";
+    case "strafeR": return "strafe_right";
+    case "back": return "backpedal";
+    case "jump": return "jump";
+    case "fall": return "fall";
+    case "dodge": return "dodge";
+    case "spin": return "hurricane_kick";
+    case "climb": return "climb";
+
+    // Attacks — map swing number to specific strikes
+    case "jab": return opts.armed ? "weapon_swing" : "jab";
+    case "cross": return opts.armed ? "weapon_swing" : "cross";
+    case "hook": return "hook";
+    case "lunge": return opts.armed ? "weapon_swing_alt" : "cross";
+    case "sweep": return "low_kick";
+    case "launch": return "uppercut";
+
+    // Armed variants
+    case "armedJab":
+    case "armedCross":
+    case "armedLunge": return "weapon_swing";
+    case "armedSweep": return "weapon_swing_alt";
+    case "armedLaunch": return "weapon_swing";
+
+    // Defense / reactions
+    case "hit": return "hit_body";
+    case "down": return "knockdown";
+    case "death": return "ko_defeat";
+    case "grab": return "clinch";
+    case "pickup": return "weapon_pickup";
+    case "throw": return "weapon_throw";
+
+    default: return "idle";
+  }
+}
+
+/** Should this state lock the fighter until the animation completes? */
+export function stateIsLocked(state: string): boolean {
+  return LOCKED_STATES.has(state);
+}
 
 // ---------------------------------------------------------------------------
 // Animation state machine
@@ -162,8 +253,9 @@ export function resolveClip(state: string): string {
 
 /**
  * Play a state on a fighter. Crossfades from current clip.
- * If `lock` is true, the animation cannot be interrupted until it finishes
- * (committed attacks, grapples, knockdowns).
+ * If `lock` is true (or the state is in LOCKED_STATES), the animation
+ * cannot be interrupted until it finishes (committed attacks, grapples,
+ * knockdowns).
  */
 export function playState(
   fa: FighterAnim,
@@ -192,7 +284,8 @@ export function playState(
 
   fa.current = clipName;
   fa.currentState = state;
-  if (opts.lock) {
+  const shouldLock = opts.lock ?? stateIsLocked(state);
+  if (shouldLock) {
     let dur = 0;
     try { dur = motionDur(clipName); } catch { dur = action.getClip().duration; }
     fa.lockUntil = now + dur / (opts.timeScale ?? 1);
@@ -213,6 +306,7 @@ export function forceState(fa: FighterAnim, state: string, opts?: { blendTime?: 
 /**
  * Start a paired grapple. The attacker's bank clip contains both
  * atk and vic tracks; the victim plays the vic role.
+ * motion-bank bakes vic tracks as "<clip>:vic" actions.
  * Both fighters lock until the grapple completes.
  */
 export function playPairedGrapple(
@@ -225,8 +319,8 @@ export function playPairedGrapple(
 
   const atkAction = attacker.actions[clipName];
   // Victim uses the same clip but the bank's vic track.
-  // motion-bank bakes vic tracks as "<clip>_vic" actions.
-  const vicClipName = `${clipName}_vic`;
+  // motion-bank bakes vic tracks as "<clip>:vic" actions.
+  const vicClipName = `${clipName}:vic`;
   const vicAction = victim.actions[vicClipName] || victim.actions[clipName];
   if (!atkAction || !vicAction) return false;
 
