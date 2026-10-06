@@ -109,3 +109,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The choreography engine for the menu kit: versus-screen build-ups, round-announcement sequences, combo-counter pops, graffiti-logo draw-on effects (SVG stroke animation via `createDrawable`), title-card text splits. SVG morphing is ideal for animated faction emblems and the SWMG wizard mark. Lighter and more controllable than CSS keyframes for sequenced UI; complements AutoAnimate (#12, structural) and Motion (R5, React components).
 - **AshLane use:** Versus-screen/round-announcement choreography, graffiti-logo draw-on, combo-counter pops, animated SVG emblems.
+
+## 14. Embla Carousel
+- **URL:** https://github.com/davidjerleke/embla-carousel · https://www.embla-carousel.com
+- **What:** Lightweight, dependency-free carousel with fluid swipe physics — framework packages for React/Vue/Svelte plus vanilla. Plugins: autoplay, auto-scroll (ticker/marquee), class-names, fade. Touch + gamepad-friendly.
+- **License:** **MIT** — "Embla Carousel is an open source MIT licensed project", Copyright © 2019–present David Jerleke, LICENSE in repo root. Verified via release notes + third-party notices (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The character-select engine: swipeable fighter cards with snap physics feel right on both touch and gamepad-stick navigation. Auto-scroll plugin doubles as a marquee ticker for menu banners ("next fight" strips, faction news). Loop mode for attire selectors. Keep slides GPU-cheap (transform/opacity only) — portraits are already duotone CSS in the Concrete Jungle kit.
+- **AshLane use:** Character select carousel, attire selectors, menu banner tickers, stage select.
