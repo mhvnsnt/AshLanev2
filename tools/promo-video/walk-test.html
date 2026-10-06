@@ -128,8 +128,13 @@ root.traverse((o) => {
 const staging = new CharacterStaging(root);
 staging.centerXZ().syncY();
 
-const WALK_FROM = DIR === 'across' ? new THREE.Vector3(-5, 0, 0) : new THREE.Vector3(0, 0, 6);
-const WALK_TO = DIR === 'across' ? new THREE.Vector3(5, 0, 0) : new THREE.Vector3(0, 0, 0.5);
+// Speed-matched travel (defect 2 fix): the CMU walk's natural speed is ~0.55 m/s
+// (same as the original El Toro cinematic). Moving faster causes foot-skating
+// which reads as "procedural." Distance = speed * duration.
+const WALK_SPEED = 0.55;
+const WALK_DIST = WALK_SPEED * DUR;
+const WALK_FROM = DIR === 'across' ? new THREE.Vector3(-WALK_DIST/2, 0, 0) : new THREE.Vector3(0, 0, WALK_DIST/2 + 0.5);
+const WALK_TO = DIR === 'across' ? new THREE.Vector3(WALK_DIST/2, 0, 0) : new THREE.Vector3(0, 0, 0.5);
 const travelDir = WALK_TO.clone().sub(WALK_FROM).setY(0).normalize();
 staging.face(travelDir);
 scene.add(travelArrow(WALK_FROM, WALK_TO));
