@@ -168,3 +168,18 @@ Prelinger.
   layouts in Blender, export clean geometry, ingest the GLB. Never link its code
   into the game or build pipeline. Note: download ONLY from the official GitHub
   repo — fake "blendergis.com" sites distribute malware.
+
+## OpenGameArt Environment Decals (Savino)
+- **URL:** https://opengameart.org/content/environment-decals-sign82usedpng?destination=node%2F152041
+- **What:** CC0 environment decal pack — miscellaneous worn/used and clean signs
+  as 2048×2048 PNGs (sign_82_used, sign_84_used, sign_46_used, sign_41_used,
+  sign_38_clean, sign_80_clean, sign_84_clean, sign_59_clean, sign_05_used…).
+  Grungy used variants fit AshLane's street-level urban art direction; clean
+  variants fit commercial districts.
+- **License:** CC0 (stated on each OpenGameArt page; authors agree to later
+  license versions).
+- **Verdict:** commercial-safe
+- **Notes:** Project onto walls via three.js DecalGeometry (next entry) for
+  graffiti-adjacent signage, posters, and worn storefront decals. Combine with
+  the Google Fonts graffiti typefaces (already wired, round 2) rendered to canvas
+  textures for custom faction tags.
