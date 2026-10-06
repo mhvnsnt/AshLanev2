@@ -50,6 +50,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ⚠️ **prototype-only** — excellent locomotion/transition test corpus for motion-matching and in-betweening experiments; cannot ship clips.
 - **Notes:** No-gate download makes it the fastest corpus to exercise the retargeter + a motion-matching prototype against. Pairs naturally with orangeduck/Motion-Matching below (same research lineage).
 
+## AIST++ (dance)
+
+- **URL:** https://google.github.io/aistplusplus_dataset/ · API: https://github.com/google/aistplusplus_api
+- **What:** 10,108,015 frames of 3D keypoints / 1,408 dance motion sequences across 10 dance genres (street, ballet, etc.) with music, 9 camera views, train/val/test splits, SMPL pose parameters. The standard dance-motion corpus (ICCV 2021, "AI Choreographer"). Built from the AIST Dance Video Database via a multi-view 3D reconstruction pipeline.
+- **License:** SPLIT — **annotations licensed by Google LLC under CC BY 4.0** (official factsfigures page: "The annotations are licensed by Google LLC under CC BY 4.0 license"); API starter code is Apache 2.0; the underlying AIST Dance Video Database has its own separate terms of use (aistdancedb.ongaaccel.jp/terms_of_use/) — check those before using the source videos.
+- **Verdict:** ✅ **commercial-safe** for the 3D motion annotations with attribution (credit Li et al., ICCV 2021 / Google). Do not ship the source dance videos without clearing the AIST terms.
+- **Notes:** AshLane's dance/taunt/celebration animations + rhythm-synced moves. 10 genres x 30 subjects gives huge variety for crowd dancers and character taunts. Retarget SMPL params -> 58-bone skeleton via tools/anim-retarget/.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
@@ -59,3 +67,4 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 | BABEL | non-commercial scientific research (repo README) | prototype-only |
 | HumanML3D | MIT code / AMASS-derived data = non-commercial research | prototype-only (data) |
 | LaFAN1 | Ubisoft license.txt, non-commercial (BY-NC-ND) | prototype-only |
+| AIST++ | CC BY 4.0 annotations (Google); AIST video DB separate terms | commercial-safe (attribution) |
