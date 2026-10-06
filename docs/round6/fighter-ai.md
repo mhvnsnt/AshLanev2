@@ -100,3 +100,21 @@ checked 2026-10-06. Re-verify before shipping.
   fighting-game rules (cancel windows, hitstop, armor). Async transitions
   fit animation-driven state changes. Use it for the low-level combat
   statechart; layer behavior3js/Yuka on top for decisions/movement.
+
+---
+
+## XState
+
+- **URL:** https://github.com/statelyai/xstate
+- **What:** Actor-based statecharts for JS/TS: hierarchical + parallel
+  states, guards, actions, delayed transitions, and a visual inspector/
+  editor (Stately Studio). The standard for complex UI/game state logic in
+  the JS ecosystem.
+- **License:** MIT (GitHub API: MIT).
+- **Verdict:** commercial-safe.
+- **Notes:** javascript-state-machine covers flat fighter states; XState is
+  the upgrade path when AI gets hierarchical (e.g. a "grappling" superstate
+  containing clinch/throw/pin substates, running in parallel with a
+  "stamina" region). Parallel regions model a wrestler's simultaneous
+  concerns (position vs. limb damage vs. crowd heat in Bannon). Heavier than
+  js-state-machine — adopt only if hierarchical AI proves necessary.
