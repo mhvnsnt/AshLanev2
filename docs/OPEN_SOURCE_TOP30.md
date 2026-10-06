@@ -204,3 +204,225 @@ Ranked: what we can pull in *this week* and feel the difference.
 **Research bets:** Babylon.js WebGPU eval, MotionBricks paper, Infinigen techniques, Reall3dViewer LOD
 
 *License gate stands: MIT/Apache/BSD/CC0 only into the build. ⚠️ items are strategy-only.*
+
+---
+
+## 4. GENERATIVE AI — Permissive Licenses Only
+
+> Research: 2026-10-05 (round 2). Beyond TripoSR/TRELLIS/Shap-E already in `tools/generative/`.
+> Every entry here is MIT, Apache-2.0, BSD, or CC0 — safe for the commercial build.
+
+### 4.1 OpenX Clay — MIT
+- https://github.com/openx-inc/clay
+- **What:** Image/text → game-ready 3D. The killer feature isn't generation — it's **post-processing**: remesh/decimate to poly budget, clean UVs, pack PBR maps, export GLB/FBX. Turns AI blobs into shippable assets.
+- **Integration:** Add as the post-process stage in `tools/generative/`. Pipeline becomes: TRELLIS.2 (generate) → Clay (clean + retopo + UV) → our rig pipeline (animate). This closes the loop from prompt to game-ready character.
+- **Fits:** AshLane (character/prop pipeline), Asset Doctor (the sellable service).
+
+### 4.2 TRELLIS.2 — MIT (Microsoft)
+- https://github.com/microsoft/TRELLIS
+- **What:** Single-image → 3D mesh with **full PBR** (albedo, roughness, metallic, opacity). ~3s at 512³ on H100, ~60s at 1536³. 4B params. Strongest open image-to-3D for production PBR.
+- **Integration:** GPU backend for `tools/generative/`. Run on Modal/RunPod (no local GPU needed). Output GLBs feed directly into Clay for cleanup.
+- **Fits:** AshLane (props, environment pieces), Asset Doctor.
+
+### 4.3 Material Anything — MIT (3DTopia, CVPR 2025 Highlight)
+- https://github.com/3DTopia/MaterialAnything
+- **What:** Generates PBR materials (albedo, roughness, metallic, normal) for **any existing 3D mesh** — texture-less, scanned, or AI-generated. The highest-value texturing tool because our problem is texturing meshes we already have.
+- **Integration:** Add as `tools/generative/texture_pbr.py`. Feed it untextured GLBs (our generated characters, Sombra variants) → get PBR maps → apply in three.js.
+- **Fits:** AshLane (character texturing), Asset Doctor.
+
+### 4.4 Poly Haven — CC0
+- https://polyhaven.org
+- **What:** Hundreds of CC0 PBR materials + HDRIs. No attribution needed, commercial-safe.
+- **Integration:** Bulk-download district-appropriate materials (concrete, asphalt, brick, neon) into `public/textures/`. Wire into worldgen-textures.ts.
+- **Fits:** AshLane (worldgen — immediate).
+
+### 4.5 ambientCG — CC0
+- https://ambientcg.com
+- **What:** Another large CC0 PBR material library. Complements Poly Haven.
+- **Integration:** Same as 4.4 — fill gaps in material variety.
+- **Fits:** AshLane (worldgen).
+
+### 4.6 Material Maker — MIT
+- https://github.com/RodZill4/material-maker
+- **What:** Procedural PBR material authoring tool (Godot-based, exports to standard PBR). Create custom materials without painting.
+- **Integration:** Author AshLane-specific materials (Hollows concrete, Malakor neon trim) → export → `public/textures/`.
+- **Fits:** AshLane (art direction).
+
+### 4.7 MDM (Human Motion Diffusion Model) — ⚠️ verify license
+- https://github.com/GuyTevet/motion-diffusion-model
+- **What:** Text-to-motion: describe an action ("a person throws a punch") → generates 3D human motion. ICLR 2023, mature, strong HumanML3D benchmarks.
+- **Integration:** Generate fight choreography from text descriptions → retarget to our 52-bone skeleton via universal-retarget → new moveset animations without mocap.
+- **Fits:** AshLane (moveset expansion), Bannon.
+- **Note:** Verify license before merging code. The HumanML3D dataset itself is MIT.
+
+### 4.8 HumanML3D — MIT
+- https://github.com/EricGuo5513/HumanML3D
+- **What:** The standard text↔motion dataset + 263-dim representation. 14,616 motions with text descriptions.
+- **Integration:** Training/fine-tuning data for any motion generation. The representation format is the lingua franca — our retargeting should speak it.
+- **Fits:** AshLane (animation pipeline research).
+
+### 4.9 NVIDIA kimodo / ardy — Apache-2.0
+- https://github.com/nv-tlabs/kimodo
+- **What:** SE(2)-invariant motion representation with foot-contact heuristics. The modern successor to HumanML3D-style encodings.
+- **Integration:** Study the representation for our animation compression. If we build text-to-motion, this is the encoding to use.
+- **Fits:** AshLane (animation research).
+
+---
+
+## 5. VOICE & AUDIO GENERATION
+
+> All permissive. These give AshLane voiced dialogue and generated music without licensing fees.
+
+### 5.1 Piper — MIT
+- https://github.com/rhasspy/piper
+- **What:** Real-time neural TTS. Runs on CPU (even Raspberry Pi). 30+ languages. ~50-150ms latency.
+- **Integration:** Pre-generate all NPC dialogue lines as audio files → `public/audio/dialogue/`. Wire into dialogue system. Zero runtime cost.
+- **Fits:** AshLane (NPC voices — immediate win).
+
+### 5.2 Kokoro-82M — Apache-2.0
+- https://github.com/hexgrad/kokoro
+- **What:** 82M param TTS that punches far above its weight. Near-XTTS quality at 1/6th the size. 54 voice presets with blending.
+- **Integration:** Higher-quality voice for main characters (Buffalo Bill, Onyx, etc.). Generate → `public/audio/dialogue/main/`.
+- **Fits:** AshLane (hero character voices).
+
+### 5.3 Chatterbox — MIT (Resemble AI)
+- https://github.com/resemble-ai/chatterbox
+- **What:** TTS with emotion/exaggeration control + zero-shot voice cloning. Built-in watermarking.
+- **Integration:** Emotional dialogue variants (angry, scared, mocking). Clone a voice from a short sample for consistent character voices.
+- **Fits:** AshLane (emotional range in story scenes).
+
+### 5.4 Bark — MIT (Suno)
+- https://github.com/suno-ai/bark
+- **What:** Expressive TTS that handles non-verbal sounds — laughter, sighs, hesitations, sound effects mid-sentence.
+- **Integration:** Ambient NPC barks, crowd reactions, effort grunts in combat.
+- **Fits:** AshLane (crowd life, combat SFX).
+
+### 5.5 sherpa-onnx — Apache-2.0
+- https://github.com/k2-fsa/sherpa-onnx
+- **What:** Unified ONNX runtime that loads Piper, Kokoro, and other models through one API. Can switch voices at runtime.
+- **Integration:** If we ever need runtime TTS (dynamic dialogue), this is the engine. For now, pre-generate.
+- **Fits:** AshLane (future runtime TTS).
+
+### 5.6 GPT-SoVITS — MIT
+- https://github.com/RVC-Boss/GPT-SoVITS
+- **What:** Voice cloning from 1-2 minutes of audio. CPU/Apple Silicon support.
+- **Integration:** Clone distinctive voices for major characters from short reference clips. Consistent voice identity across all their lines.
+- **Fits:** AshLane (character voice consistency).
+
+### 5.7 AudioCraft (MusicGen + AudioGen) — MIT (Meta)
+- https://github.com/facebookresearch/audiocraft
+- **What:** Text-to-music (MusicGen) + text-to-sound-effects (AudioGen). `pip install audiocraft`.
+- **Integration:** Generate district ambient tracks ("dark urban alley, rain, distant bass") → `public/audio/music/`. Generate SFX ("punch impact", "glass break").
+- **Fits:** AshLane (soundtrack + SFX — immediate).
+
+### 5.8 ACE-Step — Apache-2.0
+- https://github.com/ace-step/ACE-Step
+- **What:** 3.5B param music foundation model. Up to 4 min of music in 20s. 19 languages, all mainstream styles.
+- **Integration:** Higher-quality menu/loading music, faction themes.
+- **Fits:** AshLane (music).
+
+### 5.9 Stable Audio Tools — MIT (Stability AI)
+- https://github.com/Stability-AI/stable-audio-tools
+- **What:** Open-weight music/sound generation up to 47s stereo.
+- **Integration:** Alternative to AudioCraft for music beds.
+- **Fits:** AshLane (music).
+
+---
+
+## 6. ANIMATION SYSTEMS
+
+### 6.1 Ossos — MIT
+- https://github.com/fuleinist/immersive-3d-ar-cricket/issues/11 (spec — find the actual repo)
+- **What:** Pure TypeScript skeletal animation: 12 IK solvers (FABRIK, CCD, Limb, SwingTwist, etc.), GLTF2 parser, BVH parser, full retargeting with bone mapping, dual-quaternion skinning, bone springs for secondary motion.
+- **Integration:** Could replace/augment our universal-retarget.ts. The BVH parser + retargeting directly serves our CMU mocap ingestion.
+- **Fits:** AshLane (animation pipeline).
+
+### 6.2 ik-test (foot-locking IK) — ⚠️ verify license
+- https://github.com/mulualem-tekle/ik-test
+- **What:** Copy-pasteable `ik.ts` — pure math, no React. Foot contact detection → ground locking → two-bone IK → no foot sliding. The exact fix for our "wobbly" walk cycles.
+- **Integration:** Copy `src/ik.ts` into `src/game3d/foot-lock-ik.ts`. Run as a post-process after animation mixer.
+- **Fits:** AshLane (locomotion quality — high priority).
+
+### 6.3 threejs-procedural-spider — ⚠️ verify license
+- https://github.com/tyler-mitchell/threejs-procedural-spider
+- **What:** Analytic IK legs, terrain-adaptive gait, ~1,200 lines, three.js only. Demonstrates procedural locomotion without any animation clips.
+- **Integration:** Study the gait state machine for our quadruped/creature NPCs. Techniques transfer to biped procedural idle/walk.
+- **Fits:** AshLane (creature NPCs, procedural animation research).
+
+### 6.4 CMU Motion Capture Database — Unrestricted (public-domain-like)
+- https://github.com/konyshevgmbh/cmu-mocap (BVH mirror)
+- **What:** 2,500+ professionally captured BVH motions across 144 subjects. **License: "free for use in research and commercial projects worldwide"** — no restrictions from CMU or the BVH converter.
+- **Key clips for us:** 143_23/143_24 (punching, kicking), 144_20/144_13 (punch sequences), 144_05/144_09 (front kicks), 144_07/144_26 (blocks), 135_xx (karate), 86_06 (kicking/punching/knee).
+- **Integration:** Download target clips → parse BVH → retarget to 52-bone skeleton via universal-retarget → new combat animations. This is hundreds of free fight animations.
+- **Fits:** AshLane (moveset expansion — HIGHEST VALUE), Bannon.
+
+---
+
+## 7. WORLD BUILDING
+
+### 7.1 city-pcg — MIT
+- https://github.com/jason9075/city-pcg
+- **What:** Browser-based procedural city generator. **Three.js renderer, seeded PRNG, pure-function generator** (`generateCity(params) → CityModel`) with no Three.js dependency in the core. Instanced buildings, ribbon roads.
+- **Integration:** Port `generator.js` logic into our worldgen.ts. The clean separation (pure data → thin renderer) matches our architecture.
+- **Fits:** AshLane (worldgen upgrade — immediate).
+
+### 7.2 NexusCity — MIT
+- https://github.com/vineetsharma96/nexuscity
+- **What:** Full procedural cyberpunk open world in the browser — **zero external models/textures/audio**. Everything procedural: buildings, NPCs, traffic, enterable interiors, dynamic weather, procedural audio. React + Three.js + TypeScript.
+- **Integration:** Study their interior generation + NPC/traffic systems. The "zero external assets" philosophy matches our PWA constraints. Cherry-pick the interior room generator and traffic AI.
+- **Fits:** AshLane (interiors, traffic, NPCs).
+
+### 7.3 ProceduralCityGeneration (Grzybojad) — MIT
+- https://github.com/Grzybojad/ProceduralCityGeneration
+- **What:** Terrain (Perlin) + roads (Voronoi) + buildings (plot extrusion with shrinking-layer stacking).
+- **Integration:** The shrinking-layer technique gives buildings distinctive silhouettes cheaply. Port the algorithm to our worldgen-buildings.ts.
+- **Fits:** AshLane (building variety).
+
+### 7.4 configurator-unreal-building — Apache-2.0
+- https://github.com/VladimirKobranov/configurator-unreal-building
+- **What:** Modular building assembly with seed-based randomization.
+- **Integration:** Adapt the modular-piece approach for our storefront/industrial building variants.
+- **Fits:** AshLane (building modularity).
+
+---
+
+## 8. GAME SYSTEMS
+
+### 8.1 stickman-fighter — MIT
+- https://github.com/sinusphi/stickman-fighter
+- **What:** Complete fighting game in TypeScript: **deterministic 60Hz combat**, 33 attacks, frame data, hitbox display, training mode with frame stepping, replay recording, CPU opponents.
+- **Integration:** Study the deterministic sim architecture (`src/simulation/`) for our combat netcode. The training-mode hitbox display is exactly what our moveset debugger needs.
+- **Fits:** AshLane (combat architecture, debug tools).
+
+### 8.2 bash-fighter — ⚠️ verify license
+- https://github.com/bashentertainment/bash-fighter
+- **What:** **Moves as data** — declarative state machine, frame windows (startup/active/endlag) as typed data, fixed-point hitboxes, knockback model, schema validator for character data.
+- **Integration:** The "moves as data" philosophy matches our movesets.ts. Adopt their validation approach — a schema validator that catches bad frame data before it ships.
+- **Fits:** AshLane (moveset validation).
+
+### 8.3 dot-npc-ai — MIT
+- https://github.com/modcommunity/dot-npc-ai
+- **What:** NPC behavior trees with running-state memory, blackboard that forgets, steering behaviors for crowds.
+- **Integration:** Replace/augment our pedestrian AI with proper behavior trees. The "blackboard that forgets" is the right model for ambient NPC memory.
+- **Fits:** AshLane (NPC AI upgrade).
+
+### 8.4 sprout-brawl — ⚠️ verify license
+- https://github.com/tobinschleifer1/sprout-brawl
+- **What:** Fighter state machine + combat engine + **bot AI where difficulty is a perception handicap** (not an aggression dial). Generative music per stage.
+- **Integration:** The perception-handicap AI model is smarter than difficulty sliders — adopt for our enemy AI tiers.
+- **Fits:** AshLane (enemy AI).
+
+---
+
+## Integration Priority (new entries)
+
+1. **CMU mocap → combat animations** (§6.4) — hundreds of free fight moves, immediate moveset expansion
+2. **Foot-locking IK** (§6.2) — fixes foot sliding, highest visual-quality ROI
+3. **Piper/Kokoro → NPC voices** (§5.1/5.2) — voiced world, zero runtime cost
+4. **AudioCraft → music/SFX** (§5.7) — generated soundtrack
+5. **Poly Haven/ambientCG → worldgen textures** (§4.4/4.5) — immediate visual upgrade
+6. **Material Anything → character texturing** (§4.3) — PBR for generated characters
+7. **OpenX Clay → pipeline post-processing** (§4.1) — closes the generative loop
+8. **city-pcg → worldgen algorithm** (§7.1) — cleaner city generation
+9. **stickman-fighter → combat debug tools** (§8.1) — hitbox display, frame stepping
+10. **dot-npc-ai → behavior trees** (§8.3) — smarter NPCs
