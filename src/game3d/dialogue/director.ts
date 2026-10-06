@@ -441,10 +441,15 @@ export function missionBriefing(
       situation = "claim";
       label = `Take the block — ${mission.title}`;
       break;
-    case "rival":
-      situation = "callout";
+    case "rival": {
+      // Owner law: AshLane is a STREET brawler, not a wrestling game. Arena
+      // locations (ring, cage) get the wrestling register; everywhere else
+      // the challenge is a street confrontation.
+      const arenaHomes = ["ring", "cage"];
+      situation = arenaHomes.includes(mission.home) ? "callout" : "confront";
       label = `One name — ${mission.title}`;
       break;
+    }
     case "inside":
       situation = "parley";
       label = `The room — ${mission.title}`;
