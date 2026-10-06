@@ -20,7 +20,7 @@ import { generateDialogue, promoExchange, type DialogueContext } from "./generat
 import { samplesFor, type DialogueSample } from "./samples";
 import { bibleFor } from "./voice-bibles";
 import { fighterById } from "../roster";
-import { missionAt, type Mission } from "../campaign";
+import { missionAt, placeName, type Mission } from "../campaign";
 import type { CameraLike } from "../cinematics";
 
 export interface DialogueCue {
@@ -250,6 +250,221 @@ export function backstageSegment(
     });
   }
   return { title: `JCPW Backstage — ${name}`, turns };
+}
+
+/* ------------------------------------------------------------------ */
+/* 4. Street encounters — Urban Reign street life, NOT the wrestling    */
+/*    world. Roam mode, turf war events, mission briefings. Wrestling   */
+/*    promos stay in wrestling contexts (arena, wrestler factions).     */
+/* ------------------------------------------------------------------ */
+
+export type StreetSituation =
+  | "confront" | "parley" | "corpo" | "hustle"
+  | "claim" | "civilian" | "loyalty" | "heat";
+
+export interface StreetEncounterOptions {
+  situation: StreetSituation;
+  place?: string;
+  /** who they're facing — crew name, rival, "the block", etc. */
+  opponent?: string;
+  /** second speaker for two-sided scenes (parley, confront) */
+  otherId?: string;
+  seed?: number;
+  msPerLine?: number;
+}
+
+export interface StreetEncounter {
+  title: string;
+  turns: { speaker: string; fighterId: string; text: string }[];
+}
+
+const STREET_TITLES: Record<StreetSituation, string> = {
+  confront: "Corner Standoff",
+  parley: "Parley",
+  corpo: "The Suit",
+  hustle: "The Deal",
+  claim: "Territory Claim",
+  civilian: "Caught In It",
+  loyalty: "Crew Business",
+  heat: "Heat",
+};
+
+/**
+ * A street scene: one voice (or two, for parley/confront) talking in the
+ * corner register. Prefers hand-written samples, falls back to the generator.
+ * Feed turns to director.playSequence() or the subtitle overlay.
+ */
+export function streetEncounter(
+  fighterId: string,
+  opts: StreetEncounterOptions,
+): StreetEncounter {
+  const name = bibleFor(fighterId)?.name ?? fighterById(fighterId).name;
+  const place = opts.place ?? "the ward";
+  const seed = opts.seed ?? 0;
+  const ctx: DialogueContext = { place, opponent: opts.opponent, seed };
+
+  const turns: StreetEncounter["turns"] = [];
+  const sample: DialogueSample | undefined = samplesFor(fighterId).find(
+    (s) => s.situation === opts.situation,
+  );
+  const lines = sample
+    ? sample.lines.slice(0, 3)
+    : generateDialogue(fighterId, opts.situation, ctx).lines.slice(0, 3);
+  for (const line of lines) turns.push({ speaker: name, fighterId, text: line });
+
+  // Two-sided scenes: the other side answers.
+  if (opts.otherId) {
+    const otherName = bibleFor(opts.otherId)?.name ?? fighterById(opts.otherId).name;
+    const answer = generateDialogue(opts.otherId, opts.situation, {
+      ...ctx,
+      opponent: name,
+      seed: seed ^ 0x3c6e,
+    }).lines.slice(0, 2);
+    for (const line of answer) turns.push({ speaker: otherName, fighterId: opts.otherId, text: line });
+  }
+
+  return { title: `${STREET_TITLES[opts.situation]} — ${name}`, turns };
+}
+
+/** Play a street encounter through the director's cue system. */
+export function playStreetEncounter(
+  director: DialogueDirector,
+  fighterId: string,
+  opts: StreetEncounterOptions,
+): StreetEncounter {
+  const enc = streetEncounter(fighterId, opts);
+  director.playSequence(
+    enc.turns.map((t) => ({ speaker: t.speaker, fighterId: t.fighterId, text: t.text })),
+    opts.msPerLine ?? 4200,
+  );
+  return enc;
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. Turf war beats — territory changes hands                         */
+/* ------------------------------------------------------------------ */
+
+export interface TurfWarOptions {
+  blockName: string;
+  /** fighterId of the crew/character taking the block */
+  takenById: string;
+  /** display name of the crew that lost it */
+  lostByName?: string;
+  seed?: number;
+  msPerLine?: number;
+}
+
+export interface TurfWarBeat {
+  title: string;
+  turns: { speaker: string; fighterId: string; text: string }[];
+}
+
+/**
+ * The block changed hands. The taker claims it (claim register); if we know
+ * who lost it, they get a confront line about it. For turf-war HUD events,
+ * roam-mode takeovers, story territory shifts.
+ */
+export function turfWarBeat(
+  director: DialogueDirector,
+  opts: TurfWarOptions,
+): TurfWarBeat {
+  const takerName = bibleFor(opts.takenById)?.name ?? fighterById(opts.takenById).name;
+  const seed = opts.seed ?? 0;
+  const turns: TurfWarBeat["turns"] = [];
+
+  const claimSample = samplesFor(opts.takenById).find((s) => s.situation === "claim");
+  const claimLines = claimSample
+    ? claimSample.lines.slice(0, 2)
+    : generateDialogue(opts.takenById, "claim", {
+        place: opts.blockName,
+        opponent: opts.lostByName,
+        seed,
+      }).lines.slice(0, 2);
+  for (const line of claimLines) {
+    turns.push({ speaker: takerName, fighterId: opts.takenById, text: line });
+  }
+
+  if (opts.lostByName) {
+    turns.push({
+      speaker: opts.lostByName,
+      fighterId: "__lieutenant",
+      text: generateDialogue("__lieutenant", "confront", {
+        place: opts.blockName,
+        opponent: takerName,
+        seed: seed ^ 0x77,
+      }).lines[0] ?? "That block was ours. It ain't over.",
+    });
+  }
+
+  director.playSequence(
+    turns.map((t) => ({ speaker: t.speaker, fighterId: t.fighterId, text: t.text })),
+    opts.msPerLine ?? 4200,
+  );
+  return { title: `Turf War — ${opts.blockName}`, turns };
+}
+
+/* ------------------------------------------------------------------ */
+/* 6. Mission briefings — street-context job intros                    */
+/* ------------------------------------------------------------------ */
+
+export interface MissionBriefing {
+  speaker: string;
+  fighterId: string;
+  lines: string[];
+  label: string;
+}
+
+/**
+ * In-character lines for a mission intro, grounded in the street — not the
+ * ring. Situation follows the mission rule: clear → confront, reach → claim,
+ * rival → callout (named fighter, wrestling register is correct there),
+ * inside → parley, second → loyalty.
+ */
+export function missionBriefing(
+  fighterId: string,
+  missionIndex: number,
+  seed?: number,
+): MissionBriefing {
+  const mission: Mission = missionAt(missionIndex);
+  const name = bibleFor(fighterId)?.name ?? fighterById(fighterId).name;
+  const place = placeName(mission.home);
+  const ctx: DialogueContext = { place, title: mission.title, seed };
+
+  let situation: Situation;
+  let label: string;
+  switch (mission.rule) {
+    case "clear":
+      situation = "confront";
+      label = `Street job — ${mission.title}`;
+      break;
+    case "reach":
+      situation = "claim";
+      label = `Take the block — ${mission.title}`;
+      break;
+    case "rival":
+      situation = "callout";
+      label = `One name — ${mission.title}`;
+      break;
+    case "inside":
+      situation = "parley";
+      label = `The room — ${mission.title}`;
+      break;
+    case "second":
+      situation = "loyalty";
+      label = `They send more — ${mission.title}`;
+      break;
+    default:
+      situation = "confront";
+      label = `Street job — ${mission.title}`;
+  }
+
+  const sample: DialogueSample | undefined = samplesFor(fighterId).find(
+    (s) => s.situation === situation,
+  );
+  const lines = sample
+    ? sample.lines.slice(0, 2)
+    : generateDialogue(fighterId, situation, ctx).lines.slice(0, 2);
+  return { speaker: name, fighterId, lines, label };
 }
 
 /* ------------------------------------------------------------------ */
