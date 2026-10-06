@@ -48,3 +48,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ❌ **DO NOT SHIP game music from Mixkit** — license excludes games. Prototype-only at most.
 - **Notes:** Documented here so nobody mistakes it for ship-safe. If a track is Content-ID-claimed, Mixkit support handles it — but that doesn't fix the game-use exclusion.
 
+## 7. Purple Planet Music
+- **URL:** https://www.purple-planet.com
+- **What:** Royalty-free music library (ambient, cinematic, electronic, chill) by Chris Martyn & Geoff Harvey. Long-running free-music staple for creators.
+- **License:** Royalty-free with **attribution required** on the free tier — credit line `Music: https://www.purple-planet.com`. Paid commercial licenses available (attribution-free).
+- **Verdict:** ✅ Commercial-safe WITH attribution on the free tier.
+- **Notes:** Good ambient/cinematic beds for district ambience and menus. Re-verify the current license page before shipping (terms evolve). Not a CC license — follow their credit-line wording exactly.
+
