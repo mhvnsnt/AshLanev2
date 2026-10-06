@@ -114,3 +114,13 @@
 
 ---
 
+## 12. BlenderKit (now blendkit.com)
+
+- **URL:** https://www.blendkit.com (blenderkit.com redirects) | licenses: https://www.blendkit.com/docs/licenses/
+- **What:** In-Blender asset library (also Godot/Maya/Rhino): huge catalog of models, materials, brushes, HDRIs — including character clothing, hair, and full humanoid models. Searchable/filterable inside Blender.
+- **License:** **Two licenses only: Royalty Free and CC0.** "Everything you download is available for commercial use." Royalty Free = commercial use OK with no credit, BUT **bans resale of the asset in the same form** (can't redistribute the model as a model / asset pack). Shipping a game ("higher-level derivative work") is explicitly allowed under RF.
+- **Verdict:** ✅ COMMERCIAL-SAFE for in-game use. Filter **CC0** when the asset might be redistributed raw (public repo, modding packs); RF is fine for baked-in game content. Check the badge per asset — don't inherit the license from a neighboring thumbnail.
+- **Notes:** Best used as a clothing/hair/material quarry for dressing our parametric bodies, not as a character source (quality/style varies). Free plan vs Full plan is about access, not licensing.
+
+---
+
