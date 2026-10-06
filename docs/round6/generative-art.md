@@ -85,3 +85,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **MIT** (LICENSE file, visioncortex).
 - **Verdict:** **commercial-safe** — the MIT-licensed workhorse of the vector pipeline.
 - **Notes:** AshLane use: THE logo/sticker pipeline step — AI-generated or hand-drawn graffiti → vtracer → crisp SVG faction logos, wall tags, menu emblems that scale from phone HUD to 4K title screens. Alternatives noted: `mringler/image-tracer-ts` (MIT, TypeScript port of imagetracerjs — browser/Node, jagged curves on detail) and potrace (next entry) for pure black-and-white work. vtracer is the default for anything with color.
+
+## potrace (bitmap tracer)
+
+- **URL:** https://potrace.sourceforge.net
+- **What:** The reference bitmap tracer (Peter Selinger): bitmap → smooth vector outlines, best-in-class for high-contrast black-and-white art — stencil logos, one-color tags, silhouette shapes. CLI (`potrace input.pbm -s -o out.svg`); the algorithm every other tracer is measured against.
+- **License:** **GPL-2.0**.
+- **Verdict:** **commercial-safe as a build-time tool** — GPL covers the program, not the SVGs it produces. Trace all day; just don't embed/link potrace's code into shipped software without GPL compliance.
+- **Notes:** AshLane use: stencil-style faction marks, single-color spray tags, and silhouette cutouts where vtracer's color mode is overkill. Practical pattern from production pipelines: quantize art to flat colors → trace one binary mask per color with potrace → merge layers (preserves small interior details like eyes/highlights better than whole-image color tracing). For color logos prefer vtracer (MIT, no GPL surface at all).
