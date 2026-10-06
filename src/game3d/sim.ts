@@ -4,6 +4,7 @@ import { jobNow } from "./jobs";
 import { missionAt, placeName, saveCleared, MISSIONS } from "./campaign";
 import { motionDur, motionReady } from "./motion-bank";
 import { fighterById } from "./roster";
+import { spawnAmbientCast, stepAmbientRoam } from "./ambient-cast";
 import { LEASE_NAME, PARTNER, claimWard, resetWard, wardByName } from "./ward";
 import { resetYoko, tickYokosukaBelt } from "./yokosuka/belt";
 import { createLockOn, lockOnPress, lockOnUpdate, clearLock, type LockOnState } from "./federated/lockon";
@@ -22,7 +23,7 @@ export type Weapon = "fist" | "pipe" | "bottle" | "board" | "blade" | "spear";
 
 export type Body = {
   id: number;
-  kind: "player" | "grunt" | "ally";
+  kind: "player" | "grunt" | "ally" | "ambient";
   name: string;
   home: Home;
   arch: Arch;
@@ -35,6 +36,10 @@ export type Body = {
   vy: number;
   vz: number;
   yaw: number;
+  /** Roster GLB file for ambient cast (models/cast/...). Falls back to humanoid pool while loading. */
+  castFile?: string;
+  /** Ambient life state (roam waypoints, hangouts, scuffles). Only on kind "ambient". */
+  ambient?: import("./ambient-cast").AmbientState;
   hp: number;
   maxHp: number;
   poise: number;
@@ -456,7 +461,7 @@ function loadShape(): Pick<Sim, "build" | "crowd" | "height" | "bulk" | "head" |
     const num = (value: unknown, min: number, max: number, fallback: number) => (typeof value === "number" && value >= min && value <= max ? value : fallback);
     return {
       build: raw.build === "chibi" ? "chibi" : "full",
-      crowd: raw.crowd === "chibi" || raw.crowd === "full" || raw.crowd === "mix" ? raw.crowd : "full",
+      crowd: raw.crowd === "full" || raw.crowd === "mix" ? raw.crowd : "full", // "chibi" crowd retired with KayKit 2026-10-06
       height: num(raw.height, 0.86, 1.18, 1),
       bulk: num(raw.bulk, 0.8, 1.25, 1),
       head: num(raw.head, 0.75, 1.3, 1),
@@ -814,6 +819,9 @@ function spawnBodies(sim: Sim) {
   addProp(sim, "table", 32.4, 0, -19.4, 2, "");
   addProp(sim, "chair", 30.2, 0, -18.2, 1, "");
   addProp(sim, "car", 11, 0, -21, 18, "");
+  // Ambient roster cast — real fighters living in the city (roam waypoints,
+  // hangouts, scuffles). Curated placement, no duplicate attires.
+  spawnAmbientCast(sim, blankBody);
   placePlayer(sim, sim.mode);
   sim.foes = 12;
 }
@@ -1059,6 +1067,12 @@ function breakGrab(sim: Sim) {
 
 function hurt(sim: Sim, b: Body, dmg: number, poiseDmg: number, kx: number, kz: number, lift: number, tag: "mid" | "low" | "high" = "mid") {
   if (!b.alive || b.iframe > 0 || b.state === "out") return false;
+  // Hitting an ambient roster fighter provokes them — they fight back.
+  if (b.kind === "ambient" && b.ambient && !b.ambient.provoked) {
+    b.ambient.provoked = true;
+    b.ambient.scuffleId = -1;
+    b.ambient.idleT = 0;
+  }
   if (b.kind === "player" && sim.martial === "capoeira" && b.state === "atk" && b.swing === 3 && tag === "high") {
     sim.banner = "Handstand";
     sim.bannerT = 0.4;
@@ -1298,7 +1312,9 @@ function hitGrunts(sim: Sim, hx: number, hz: number, radius: number, dmg: number
   const p = sim.bodies[0];
   let any = false;
   for (const e of sim.bodies) {
-    if (e.kind !== "grunt" || !e.alive || e.state === "grab") continue;
+    // Player strikes land on grunts AND ambient roster fighters (hitting an
+    // ambient provokes them — they fight back).
+    if ((e.kind !== "grunt" && e.kind !== "ambient") || !e.alive || e.state === "grab") continue;
     if (Math.abs(e.y + 0.7 - (p.y + 0.8)) > 1.35) continue;
     if (Math.hypot(e.x - hx, e.z - hz) > radius) continue;
     const laying = e.state === "down" && e.grounded;
@@ -2368,7 +2384,13 @@ function brainFor(e: Body, sim: Sim): OpponentBrain {
 function updateEnemies(sim: Sim, dt: number) {
   const p = sim.bodies[0];
   for (const e of sim.bodies) {
-    if (e.kind !== "grunt") continue;
+    if (e.kind !== "grunt" && e.kind !== "ambient") continue;
+    // Ambient cast: unprovoked ambients live their own life (roam waypoints,
+    // hangouts, scuffles). Provoked ones fight back with the standard brain.
+    if (e.kind === "ambient" && !e.ambient?.provoked) {
+      stepAmbientRoam(sim, e, dt);
+      continue;
+    }
     // Opponent brain (Yuka, Round 6): perceive every tick so the
     // reaction-delay buffer stays honest even through hitstun.
     const brain = brainFor(e, sim);
@@ -2472,7 +2494,10 @@ function updateEnemies(sim: Sim, dt: number) {
       continue;
     }
     if (e.state !== "free") continue;
-    const hot = engaged(e.home, p) || (sim.scuffle === e.home && Math.hypot(p.x - e.homeX, p.z - e.homeZ) < 22);
+    // Provoked ambients fight back when the player is close; grunts use turf engagement.
+    const hot = e.kind === "ambient"
+      ? Math.hypot(p.x - e.x, p.z - e.z) < 14
+      : engaged(e.home, p) || (sim.scuffle === e.home && Math.hypot(p.x - e.homeX, p.z - e.homeZ) < 22);
     // --- Opponent brain decides (Yuka state machine + utility scoring).
     // Same frame data as before: the brain only chooses WHEN to attack and
     // WHERE to move; windup/attack/hit resolution are untouched.

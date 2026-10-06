@@ -219,17 +219,13 @@ export function createView(canvas: HTMLCanvasElement) {
     bar: new THREE.PlaneGeometry(0.72, 0.08),
   };
   const fighters: Fighter[] = [];
-  let knight: RigTemplate | null = null;
-  let rogue: RigTemplate | null = null;
-  let brute: RigTemplate | null = null;
-  let hood: RigTemplate | null = null;
-  let hex: RigTemplate | null = null;
+  // Humanoid character rigs only — KayKit characters were retired 2026-10-06
+  // (owner directive: real humanoid characters, no KayKit knights/skeletons
+  // as people). KayKit PROPS still load separately (environmental, not people).
+  let quatM: RigTemplate | null = null;
+  let quatF: RigTemplate | null = null;
   let drifter: RigTemplate | null = null;
-  let skel: RigTemplate | null = null;
-  let bones: RigTemplate | null = null;
   let mannequin: RigTemplate | null = null;
-  let skull: RigTemplate | null = null;
-  let minion: RigTemplate | null = null;
   let soldier: RigTemplate | null = null;
   let soldierf: RigTemplate | null = null;
   let zombie: RigTemplate | null = null;
@@ -271,21 +267,14 @@ export function createView(canvas: HTMLCanvasElement) {
   const loadRig = (url: string, slot: string, moveset: string) =>
     loader.loadAsync(url).then((gltf) => {
       const rig = adoptRig(gltf.scene, gltf.animations, moveset);
-      if (slot === "knight") knight = rig;
-      else if (slot === "rogue") rogue = rig;
-      else if (slot === "brute") brute = rig;
-      else if (slot === "hood") hood = rig;
+      if (slot === "quatM") quatM = rig;
+      else if (slot === "quatF") quatF = rig;
       else if (slot === "drifter") drifter = rig;
-      else if (slot === "skel") skel = rig;
-      else if (slot === "bones") bones = rig;
       else if (slot === "mannequin") mannequin = rig;
-      else if (slot === "skull") skull = rig;
-      else if (slot === "minion") minion = rig;
       else if (slot === "soldier") soldier = rig;
       else if (slot === "soldierf") soldierf = rig;
       else if (slot === "zombie") zombie = rig;
       else if (slot === "zombief") zombief = rig;
-      else hex = rig;
       rigKey = "";
     });
   void Promise.all([
@@ -294,18 +283,12 @@ export function createView(canvas: HTMLCanvasElement) {
     loadRig(assetUrl("models/humanoid/Zombie_Male.glb"), "zombie", "zombie"),
     loadRig(assetUrl("models/humanoid/Zombie_Female.glb"), "zombief", "zombief"),
     loadRig(assetUrl("models/humanoid/mannequin.glb"), "mannequin", "mannequin"),
-  ]).then(() => {
-    void loadRig(assetUrl("models/kaykit/Knight.glb"), "knight", "knight");
-    void loadRig(assetUrl("models/kaykit/Rogue.glb"), "rogue", "runner");
-    void loadRig(assetUrl("models/kaykit/Barbarian.glb"), "brute", "brute");
-    void loadRig(assetUrl("models/kaykit/Rogue_Hooded.glb"), "hood", "hood");
-    void loadRig(assetUrl("models/kaykit/Mage.glb"), "hex", "hex");
-    void loadRig(assetUrl("models/humanoid/drifter.glb"), "drifter", "drifter");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Warrior.glb"), "skel", "skeleton");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Rogue.glb"), "bones", "bones");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Mage.glb"), "skull", "skull");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Minion.glb"), "minion", "minion");
-  });
+    // Quaternius CC0 humanoids — the stylized-but-human character pool that
+    // replaced KayKit (owner directive 2026-10-06). Same 65-joint rig family
+    // as the UAL animation libraries; adoptRig handles the "quat" family.
+    loadRig(assetUrl("models/cast/quaternius/Superhero_Male_FullBody.glb"), "quatM", "soldier"),
+    loadRig(assetUrl("models/cast/quaternius/Superhero_Female_FullBody.glb"), "quatF", "soldierf"),
+  ]);
   void loadMotionBank().then(() => {
     rigKey = "";
   });
@@ -873,24 +856,33 @@ export function createView(canvas: HTMLCanvasElement) {
       });
   }
 
+  /** Humanoid character pool — real people only. No KayKit, no skeletons. */
   function people(): RigTemplate[] {
-    return [soldier, soldierf, drifter, knight, rogue, hood, brute, hex].filter((rig): rig is RigTemplate => rig !== null);
+    return [soldier, soldierf, drifter, mannequin, quatM, quatF].filter((rig): rig is RigTemplate => rig !== null);
   }
 
-  /** Realistic crowd pool — NO KayKit, NO skeletons, NO zombies. Real people only. */
+  /** Realistic crowd pool — full-size human bodies. */
   function realistic(): RigTemplate[] {
     return [soldier, soldierf, drifter, mannequin].filter((rig): rig is RigTemplate => rig !== null);
   }
 
   function mixed(): RigTemplate[] {
-    const extra = [skel, bones, skull, minion, zombie, zombief, mannequin].filter((rig): rig is RigTemplate => rig !== null);
+    // "mix" adds the humanoid shamblers for variety — still no KayKit.
+    const extra = [zombie, zombief].filter((rig): rig is RigTemplate => rig !== null);
     return [...people(), ...extra];
   }
 
   function rigFor(b: Body, sim: Sim): RigTemplate | null {
     const humans = people();
     const real = realistic();
-    const all = sim.crowd === "chibi" ? [knight, rogue, hood, brute, hex, skel, bones, skull, minion].filter((rig): rig is RigTemplate => rig !== null) : mixed();
+    const all = mixed();
+    // Ambient roster cast: real fighter GLBs. Falls back to the humanoid pool
+    // while the cast model loads.
+    if (b.castFile) {
+      ensureCast(b.castFile);
+      const cr = castRigs.get(b.castFile);
+      if (cr) return cr;
+    }
     if (!humans.length && !all.length && !soldier) return null;
     if (b.kind === "player") {
       if (sim.cast && castRigs.has(sim.cast)) return castRigs.get(sim.cast) ?? null;
@@ -900,27 +892,28 @@ export function createView(canvas: HTMLCanvasElement) {
       if (sim.style === "zombief") return zombief ?? real[0] ?? soldier;
       if (sim.style === "mannequin") return mannequin ?? real[0] ?? soldier;
       if (sim.style === "drifter") return drifter ?? real[0] ?? soldier;
-      if (sim.style === "runner" || sim.style === "ash") return sim.build === "chibi" ? rogue ?? knight : soldierf ?? rogue ?? real[0] ?? soldier;
-      if (sim.style === "brute" || sim.style === "pit") return sim.build === "chibi" ? brute ?? knight : soldier ?? brute ?? real[0];
-      if (sim.style === "hood") return sim.build === "chibi" ? hood ?? knight : soldierf ?? hood ?? real[0] ?? soldier;
-      if (sim.style === "hex") return sim.build === "chibi" ? hex ?? knight : soldier ?? hex ?? real[0];
-      if (sim.style === "skeleton") return skel ?? soldier;
-      if (sim.style === "bones") return bones ?? soldier;
-      if (sim.style === "skull") return skull ?? soldier;
-      if (sim.style === "minion") return minion ?? soldier;
-      if (sim.build === "chibi") return knight;
+      if (sim.style === "runner" || sim.style === "ash") return sim.build === "chibi" ? quatF ?? soldierf : soldierf ?? quatF ?? real[0] ?? soldier;
+      if (sim.style === "brute" || sim.style === "pit") return sim.build === "chibi" ? quatM ?? soldier : soldier ?? quatM ?? real[0];
+      if (sim.style === "hood") return sim.build === "chibi" ? quatF ?? soldierf : soldierf ?? quatF ?? real[0] ?? soldier;
+      if (sim.style === "hex") return sim.build === "chibi" ? quatM ?? soldier : soldier ?? quatM ?? real[0];
+      if (sim.style === "skeleton") return zombie ?? soldier;
+      if (sim.style === "bones") return zombief ?? soldier;
+      if (sim.style === "skull") return zombie ?? soldier;
+      if (sim.style === "minion") return quatM ?? soldier;
+      if (sim.build === "chibi") return quatM ?? quatF ?? soldier;
       return soldier ?? soldierf ?? drifter ?? real[0] ?? null;
     }
     if (b.kind === "ally") return soldierf ?? real[0] ?? soldier;
-    // "full" = realistic humans only (no KayKit). "mix" = variety incl. KayKit. "chibi" = all KayKit.
-    const pool = sim.crowd === "full" ? real : sim.crowd === "mix" ? all : all;
+    // "full" = realistic humans only. "mix" = variety incl. shamblers. "chibi" now maps to the humanoid pool too (KayKit retired).
+    const pool = sim.crowd === "full" ? real : sim.crowd === "mix" ? all : humans;
     if (pool.length) return pool[b.id % pool.length];
     return soldier;
   }
 
   function syncFighters(sim: Sim) {
     if (sim.cast) ensureCast(sim.cast);
-    const key = `${sim.cast}|${castRigs.has(sim.cast) ? 1 : 0}|${sim.style}|${sim.build}|${sim.crowd}|${sim.height}|${sim.bulk}|${sim.head}|${sim.leg}|${sim.shoulder}|${sim.bodies.map((b) => b.id).join(",")}|${knight ? 1 : 0}${rogue ? 1 : 0}${brute ? 1 : 0}${hood ? 1 : 0}${hex ? 1 : 0}${drifter ? 1 : 0}${skel ? 1 : 0}${bones ? 1 : 0}${mannequin ? 1 : 0}${skull ? 1 : 0}${minion ? 1 : 0}${soldier ? 1 : 0}${soldierf ? 1 : 0}${zombie ? 1 : 0}${zombief ? 1 : 0}`;
+    for (const b of sim.bodies) if (b.castFile) ensureCast(b.castFile);
+    const key = `${sim.cast}|${castRigs.has(sim.cast) ? 1 : 0}|${sim.style}|${sim.build}|${sim.crowd}|${sim.height}|${sim.bulk}|${sim.head}|${sim.leg}|${sim.shoulder}|${sim.bodies.map((b) => b.id).join(",")}|${quatM ? 1 : 0}${quatF ? 1 : 0}${drifter ? 1 : 0}${mannequin ? 1 : 0}${soldier ? 1 : 0}${soldierf ? 1 : 0}${zombie ? 1 : 0}${zombief ? 1 : 0}`;
     if (key === rigKey && fighters.length === sim.bodies.length) return;
     rigKey = key;
     for (const f of fighters) {

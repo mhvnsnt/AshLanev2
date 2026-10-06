@@ -88,9 +88,11 @@ export function generateBuilding(o: BuildingOpts): THREE.Group {
     addEntryDoor(g, o, rng);
   }
 
-  // Fire escape (alleys signature)
+  // Fire escape (alleys signature) — mounted ON the facade (+z face)
   if (district.id === "alleys" && o.h > 8 && rng.chance(0.65)) {
-    g.add(makeFireEscape(rng, o.w * 0.5, Math.min(o.h - 3, 12)));
+    const fe = makeFireEscape(rng, o.w * 0.5, Math.min(o.h - 3, 12));
+    fe.position.z = o.d / 2; // was 0: buried inside the building mass
+    g.add(fe);
   }
 
   // Rooftop clutter
@@ -236,7 +238,7 @@ function makeFireEscape(rng: Rng, width: number, height: number): THREE.Group {
       g.add(lad);
     }
   }
-  // mount slightly off the wall — caller positions at facade
+  // mount slightly off the wall — caller must set position.z to the facade (o.d / 2)
   g.position.z = 0.1;
   return g;
 }
@@ -268,14 +270,15 @@ function makeNeonSign(rng: Rng, o: BuildingOpts): THREE.Group {
     new THREE.PlaneGeometry(1.8, 0.7),
     new THREE.MeshBasicMaterial({ map: neonSignTexture(rng, rng.pick(words), color) })
   );
-  // Blade sign jutting perpendicular from wall
+  // Blade sign jutting perpendicular from wall — arm extends OUTWARD (+z)
+  // from the facade, sign hangs at the outer end. (Was -z: buried in the wall.)
   const arm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 1), lam(0x222226));
-  arm.position.set(0, 0, -0.5);
+  arm.position.set(0, 0, 0.5);
   sign.rotation.y = Math.PI / 2;
-  sign.position.set(0, 0, -1);
+  sign.position.set(0, 0, 1);
   // backing glow plane
   const glow = new THREE.PointLight(new THREE.Color(color), 6, 9);
-  glow.position.set(0, 0, -1);
+  glow.position.set(0, 0, 1);
   g.add(arm, sign, glow);
   g.position.set(rng.range(-o.w / 3, o.w / 3), rng.range(3.5, 6), o.d / 2 + 0.05);
   return g;

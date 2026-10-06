@@ -359,14 +359,13 @@ export function AshlaneApp() {
                 {menu === "style" ? (
                   <div className="mt-4 flex flex-col gap-2.5">
                     <div className="al-section"><span className="al-section-title">Build</span></div>
-                    <p className="text-sm text-cream-dim">KayKit stays shorter, at ward size. Soldier, Second soldier, Shambler, and Second shambler are full-size CC0 bodies and stand taller. Limb bones are no longer stretched, so the skin stays in one piece. Sliders change height, width, and the head only.</p>
+                    <p className="text-sm text-cream-dim">Ward size uses the stylized Quaternius body. Soldier, Second soldier, Shambler, and Second shambler are full-size CC0 bodies and stand taller. Limb bones are no longer stretched, so the skin stays in one piece. Sliders change height, width, and the head only.</p>
                     <div className="flex gap-2.5">
                       <button type="button" className="al-chip flex-1" data-on={hud.build === "chibi" ? "1" : undefined} onClick={() => api.current?.setBuild("chibi")}>Ward size</button>
                       <button type="button" className="al-chip flex-1" data-on={hud.build === "full" ? "1" : undefined} onClick={() => api.current?.setBuild("full")}>Full size</button>
                     </div>
                     <div className="flex gap-2.5">
                       <button type="button" className="al-chip flex-1" data-on={hud.crowd === "mix" ? "1" : undefined} onClick={() => api.current?.setCrowd("mix")}>Mixed crowd</button>
-                      <button type="button" className="al-chip flex-1" data-on={hud.crowd === "chibi" ? "1" : undefined} onClick={() => api.current?.setCrowd("chibi")}>KayKit crowd</button>
                       <button type="button" className="al-chip flex-1" data-on={hud.crowd === "full" ? "1" : undefined} onClick={() => api.current?.setCrowd("full")}>Realistic crowd</button>
                     </div>
                     <label className="al-slider-label">Height
@@ -709,7 +708,6 @@ export function AshlaneApp() {
                   <button type="button" className="al-chip" data-on={hud.build === "chibi" ? "1" : undefined} onClick={() => api.current?.setBuild("chibi")}>You chibi</button>
                   <button type="button" className="al-chip" data-on={hud.crowd === "full" ? "1" : undefined} onClick={() => api.current?.setCrowd("full")}>Crowd realistic</button>
                   <button type="button" className="al-chip" data-on={hud.crowd === "mix" ? "1" : undefined} onClick={() => api.current?.setCrowd("mix")}>Crowd mix</button>
-                  <button type="button" className="al-chip" data-on={hud.crowd === "chibi" ? "1" : undefined} onClick={() => api.current?.setCrowd("chibi")}>Crowd KayKit</button>
                 </div>
                 <div className="al-section"><span className="al-section-title">Switch block</span></div>
                 <div className="flex flex-col gap-2.5">
