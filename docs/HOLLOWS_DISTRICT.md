@@ -121,3 +121,19 @@ Applied at **modern high fidelity**. Themes, not polygon counts:
 ---
 *Owner-approved direction only. No invented Malakor lore. Modern high
 graphics throughout — Malakor themes, never low-poly.*
+
+## Shadow Wizard Money Gang Elements (Owner 2026-10-05)
+
+The Hollows district weaves SWMG iconography throughout — not as Easter eggs, but as the gang's visual language:
+
+- **Wizard silhouettes**: Hooded figures on rooftops and archways, backlit in purple. Some are Onyx's lookouts, some are just... there.
+- **Gold chain motifs**: Oversized chain links as architectural details — fence toppers, gate decorations, hanging from lampposts
+- **Grill/mouth imagery**: Murals of grinning mouths with diamond grills on walls. Menacing, not cartoonish.
+- **Cauldron fires**: Barrel fires reimagined — glowing green/purple fire pits at gang gathering spots
+- **Robe-wearing NPCs**: Some Hollows grunts wear dark hooded robes over street clothes. The wizard/street mashup as character design.
+- **Floating eye motifs**: Glowing eyes painted on walls, some animated (slow blink). 'IT SEES' tags.
+- **Spellbook props**: Graffiti that looks like open spellbooks with street slang as 'spells'
+- **Double cup imagery**: Styrofoam cup motifs in murals — the culture clash made visual
+
+This isn't costume — it's how the Painted (Onyx's gang) see themselves. Wizards of the street.
+
