@@ -45,3 +45,10 @@
 - **License:** MIT ("You may use it for commercial use." — README license section)
 - **Verdict:** commercial-safe
 - **Notes:** The lightweight tile-grid pick. Per-tile costs model "crowded sidewalk vs empty alley" naturally; async calculation keeps dozens of NPC repaths off the critical path. Good fit for block-grid district layouts.
+
+## javascript-state-machine
+- **URL:** https://github.com/jakesgordon/javascript-state-machine
+- **What:** Finite state machine library: declarative states and transitions, lifecycle callbacks (onEnter/onLeave/onTransition), async transition support. Tiny, zero dependencies.
+- **License:** MIT (README points to LICENSE file)
+- **Verdict:** commercial-safe
+- **Notes:** The NPC brain structure: idle → walk → watch-fight → heckle → flee. Combine with Yuka steering for movement and ink for dialogue to get complete ambient NPCs. One FSM definition shared across hundreds of NPC instances.
