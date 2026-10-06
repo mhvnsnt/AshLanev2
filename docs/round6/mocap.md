@@ -122,6 +122,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe as tools** (all three) — output rigs/animations are yours. Budget note: Auto-Rig Pro is the only paid item in this whole wave (~$40 one-time).
 - **Notes:** Pipeline recommendation: Rigify (free) for in-house rigs, Mr Mannequins Tools for UE-mannequin-sourced mocap, Auto-Rig Pro if retarget volume justifies $40. All three feed baked actions into tools/anim-retarget/.
 
+## Assimp (BVH/FBX → glTF converter)
+
+- **URL:** https://github.com/assimp/assimp
+- **What:** The Open Asset Import Library: reads 40+ 3D formats (BVH, FBX, Collada, C3D-adjacent pipelines) and writes glTF 2.0. The `assimp` CLI does batch conversion (`assimp export in.bvh out.glb`) — the missing link for turning BVH mocap corpora (CMU, LaFAN1, HDM05) into engine-ready GLB clips without opening Blender.
+- **License:** **BSD 3-Clause** (repo LICENSE).
+- **Verdict:** ✅ **commercial-safe** — BSD tool; converted output is yours.
+- **Notes:** Wire into the ingest pipeline as the first conversion stage: BVH/FBX → GLB → tools/anim-retarget/ → 58-bone skeleton. Also useful for validating downloaded mocap before retargeting.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
