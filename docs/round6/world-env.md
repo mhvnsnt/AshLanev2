@@ -79,3 +79,16 @@ Prelinger.
 - **Notes:** Feed its altitude/azimuth into the three.js sun light + Sky addon
   uniforms for a real-time day/night cycle that matches the player's actual
   location and time. Also usable for gameplay: night-only missions, shop hours.
+
+## three.js Sky addon (Preetham atmospheric scattering)
+- **URL:** https://threejs.org
+- **What:** `three/addons/objects/Sky.js` — physical sky shader (Preetham et al.
+  analytic skylight model) with sun position, turbidity, rayleigh, mie
+  coefficients, and elevation/azimuth uniforms. The standard three.js dynamic sky;
+  pairs with PMREMGenerator for image-based lighting that follows the sun.
+- **License:** MIT (part of three.js).
+- **Verdict:** commercial-safe
+- **Notes:** The visual core of the day/night cycle: drive its sun-position
+  uniform from SunCalc, lerp turbidity/rayleigh for dawn/dusk color, and
+  regenerate the PMREM environment at intervals so PBR materials track the sky.
+  Zero asset downloads — pure shader.
