@@ -25,7 +25,7 @@ run_one() {
   local w="$OUT/$name/work"
   mkdir -p "$w"
   if ! node "$QCDIR/extract.mjs" "$model" "$w" >/dev/null 2>&1; then
-    echo "$name|EXTRACT_FAIL|0|0"
+    echo "$name|EXTRACT_FAIL|0"
     return
   fi
   python3 "$QCDIR/extract_tex.py" "$model" "$w" >/dev/null 2>&1
