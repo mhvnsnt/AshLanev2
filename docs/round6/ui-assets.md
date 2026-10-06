@@ -117,3 +117,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The character-select engine: swipeable fighter cards with snap physics feel right on both touch and gamepad-stick navigation. Auto-scroll plugin doubles as a marquee ticker for menu banners ("next fight" strips, faction news). Loop mode for attire selectors. Keep slides GPU-cheap (transform/opacity only) — portraits are already duotone CSS in the Concrete Jungle kit.
 - **AshLane use:** Character select carousel, attire selectors, menu banner tickers, stage select.
+
+## 15. ldrs (uiball loaders)
+- **URL:** https://github.com/GriffinJohnston/ldrs · gallery https://uiball.com/ldrs
+- **What:** 44 minimalist loading spinners as web components (`<l-ring-2>`, `<l-waveform>`, `<l-trefoil>`…) + React wrappers. Pure CSS/SVG, zero dependencies; size/color/speed/stroke tunable via attributes. Standalone HTML extraction supported (no npm needed).
+- **License:** **MIT** — stated in the repo README license section. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** Loading-screen kit: pair a themed loader (ember-colored `l-quantum` or `l-helix`) with the Narrator's curated appearances — the purple-robed wizard shows up at *narrative* moments (chapter/territory shifts), so loading screens split into two kinds: Narrator moments (custom art + line) and ordinary loads (ldrs spinner + tip text). Respect `prefers-reduced-motion` (ldrs speed can be paused via `speed="0"`).
+- **AshLane use:** Loading screens (ordinary loads), matchmaking spinner, asset-load indicators.
