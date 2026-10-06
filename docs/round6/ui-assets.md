@@ -45,3 +45,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (CC0 — no attribution required).
 - **Notes:** Critical for the remappable-controls work (R4 accessibility module): render the *detected pad's* glyphs (Xbox A vs PlayStation Cross vs Switch B are different buttons in the same position — see the position-not-letters rule). Keyboard keycaps cover the tutorial/tooltip layer. Light + dark variants theme with Concrete Jungle palettes.
 - **AshLane use:** Input prompts, control-remap screen, tutorial tooltips, pause-menu legends.
+
+## 6. KeyCastOW
+- **URL:** https://github.com/brookhong/KeyCastOW (original) · maintained fork https://github.com/ryanmossor/keycastow
+- **What:** Keystroke visualizer for Windows — tiny (~100KB) overlay that displays pressed keys while recording screencasts. Hotkey toggle, configurable display/fade timing and opacity.
+- **License:** **MIT** — stated in the repo README license section (both original and forks). Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT) — as a tool, not shipped in the game.
+- **Notes:** Dev-tooling entry: use for tutorial videos, move-lab recordings, and playtest footage so viewers see inputs. Windows-only binary — fine for capture machines. For the in-game equivalent (input display in training mode), pair Xelu glyphs (#5) with the HUD store's input feed — don't ship a keylogger-adjacent overlay in the client.
+- **AshLane use:** Tutorial/promo video production (visible inputs), move-lab capture.
