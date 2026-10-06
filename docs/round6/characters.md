@@ -54,3 +54,13 @@
 
 ---
 
+## 6. Anny (NAVER LABS Europe) ⭐
+
+- **URL:** https://github.com/naver/anny | Paper: https://arxiv.org/abs/2511.03589 | `pip install anny`
+- **What:** Parametric human body model written in pure PyTorch, built on MakeHuman community assets. **Interpretable phenotype parameters** (gender, age, height, weight, muscle, proportions — not PCA latents), infants→elders in one model, 13,380-vert clean quad topology, 163-bone rig + Mixamo-style rig + SOMA-X rig, accuracy comparable to SMPL-X (2.4mm fitting error). Headless sidecar: params → skinned glTF, CPU-friendly.
+- **License:** **Apache-2.0 for BOTH code and model** (paper §Abstract: "We release the Anny body model and its code under the Apache 2.0 license"). Underlying shape assets derived from MakeHuman (CC0).
+- **Verdict:** ✅ COMMERCIAL-SAFE — the cleanest parametric human of this wave. Pin `topology="default"` — the optional `smplx` retopology mode is **non-commercial only** (license trap inside an otherwise clean repo; the anny-rs port documents this explicitly).
+- **Notes:** Best candidate for a "character forge" web endpoint: phenotypes → rigged glTF → our weight-transfer repair lane → game. Rust port exists (ztripez/anny-rs, Apache-2.0). No clothing/textures — pair with clothing sources below. Sidecar pattern keeps PyTorch out of the game process.
+
+---
+
