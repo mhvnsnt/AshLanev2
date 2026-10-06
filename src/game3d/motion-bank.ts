@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { assetUrl } from "./asset-base";
 
 // Bone families the bank can bake onto. Likeness meshes were not imported.
 // KayKit: hips, upperarm.l. Rigify: DEF-hips.
@@ -150,7 +151,7 @@ export function motionDur(id: string) {
 }
 
 export function loadMotionBank() {
-  return fetch("/motion/bank.json")
+  return fetch(assetUrl("motion/bank.json"))
     .then((res) => (res.ok ? res.json() : null))
     .then((data: Bank | null) => {
       bank = data;

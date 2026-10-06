@@ -23,6 +23,7 @@ import {
   applyMalakorGrade,
 } from "./malakor";
 import { buildSky, applySkyLights, type BuiltSky, type DistrictId } from "./sky";
+import { assetUrl } from "./asset-base";
 
 type Fighter = {
   id: number;
@@ -139,7 +140,7 @@ export function createView(canvas: HTMLCanvasElement) {
   scene.add(ground);
   const texLoader = new THREE.TextureLoader();
   const loadSkin = (file: string, rx: number, ry: number) => {
-    const tex = texLoader.load(`/textures/${file}`);
+    const tex = texLoader.load(assetUrl(`textures/${file}`));
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.RepeatWrapping;
@@ -220,9 +221,9 @@ export function createView(canvas: HTMLCanvasElement) {
   // Load all three UAL libraries: Godot Standard (base) + UAL1/UAL2 (86 combat clips).
   // UAL1/UAL2 ship on the Quaternius 65-joint rig — retargetUal() handles the mapping.
   const ualLibs = [
-    "/motion/ual/AnimationLibrary_Godot_Standard.gltf",
-    "/motion/ual/UAL1_Standard.glb",
-    "/motion/ual/UAL2_Standard.glb",
+    assetUrl("motion/ual/AnimationLibrary_Godot_Standard.gltf"),
+    assetUrl("motion/ual/UAL1_Standard.glb"),
+    assetUrl("motion/ual/UAL2_Standard.glb"),
   ];
   void Promise.all(ualLibs.map((url) => loader.loadAsync(url).catch(() => null))).then(
     (gltfs) => {
@@ -240,7 +241,7 @@ export function createView(canvas: HTMLCanvasElement) {
   function ensureCast(file: string) {
     if (!file || castRigs.has(file) || castLoading.has(file)) return;
     castLoading.add(file);
-    loader.loadAsync(`/models/cast/${file}`).then((gltf) => {
+    loader.loadAsync(assetUrl(`models/cast/${file}`)).then((gltf) => {
       castRigs.set(file, adoptRig(gltf.scene, gltf.animations, castMoveset(file)));
       castLoading.delete(file);
       rigKey = "";
@@ -269,22 +270,22 @@ export function createView(canvas: HTMLCanvasElement) {
       rigKey = "";
     });
   void Promise.all([
-    loadRig("/models/humanoid/Soldier_Male.glb", "soldier", "soldier"),
-    loadRig("/models/humanoid/Soldier_Female.glb", "soldierf", "soldierf"),
-    loadRig("/models/humanoid/Zombie_Male.glb", "zombie", "zombie"),
-    loadRig("/models/humanoid/Zombie_Female.glb", "zombief", "zombief"),
-    loadRig("/models/humanoid/mannequin.glb", "mannequin", "mannequin"),
+    loadRig(assetUrl("models/humanoid/Soldier_Male.glb"), "soldier", "soldier"),
+    loadRig(assetUrl("models/humanoid/Soldier_Female.glb"), "soldierf", "soldierf"),
+    loadRig(assetUrl("models/humanoid/Zombie_Male.glb"), "zombie", "zombie"),
+    loadRig(assetUrl("models/humanoid/Zombie_Female.glb"), "zombief", "zombief"),
+    loadRig(assetUrl("models/humanoid/mannequin.glb"), "mannequin", "mannequin"),
   ]).then(() => {
-    void loadRig("/models/kaykit/Knight.glb", "knight", "knight");
-    void loadRig("/models/kaykit/Rogue.glb", "rogue", "runner");
-    void loadRig("/models/kaykit/Barbarian.glb", "brute", "brute");
-    void loadRig("/models/kaykit/Rogue_Hooded.glb", "hood", "hood");
-    void loadRig("/models/kaykit/Mage.glb", "hex", "hex");
-    void loadRig("/models/humanoid/drifter.glb", "drifter", "drifter");
-    void loadRig("/models/kaykit/Skeleton_Warrior.glb", "skel", "skeleton");
-    void loadRig("/models/kaykit/Skeleton_Rogue.glb", "bones", "bones");
-    void loadRig("/models/kaykit/Skeleton_Mage.glb", "skull", "skull");
-    void loadRig("/models/kaykit/Skeleton_Minion.glb", "minion", "minion");
+    void loadRig(assetUrl("models/kaykit/Knight.glb"), "knight", "knight");
+    void loadRig(assetUrl("models/kaykit/Rogue.glb"), "rogue", "runner");
+    void loadRig(assetUrl("models/kaykit/Barbarian.glb"), "brute", "brute");
+    void loadRig(assetUrl("models/kaykit/Rogue_Hooded.glb"), "hood", "hood");
+    void loadRig(assetUrl("models/kaykit/Mage.glb"), "hex", "hex");
+    void loadRig(assetUrl("models/humanoid/drifter.glb"), "drifter", "drifter");
+    void loadRig(assetUrl("models/kaykit/Skeleton_Warrior.glb"), "skel", "skeleton");
+    void loadRig(assetUrl("models/kaykit/Skeleton_Rogue.glb"), "bones", "bones");
+    void loadRig(assetUrl("models/kaykit/Skeleton_Mage.glb"), "skull", "skull");
+    void loadRig(assetUrl("models/kaykit/Skeleton_Minion.glb"), "minion", "minion");
   });
   void loadMotionBank().then(() => {
     rigKey = "";
@@ -426,28 +427,28 @@ export function createView(canvas: HTMLCanvasElement) {
     ];
     for (const [file, x, z, height, yaw] of city) plantBuilding(sim, file, x, z, height, yaw);
     const dress: [string, number, number, number, boolean][] = [
-      ["/models/kenney/nature/grass.glb", -40, 6, 0.55, false],
-      ["/models/kenney/nature/grass_large.glb", -36, -4, 0.7, false],
-      ["/models/kenney/nature/grass.glb", 12, 38, 0.55, false],
-      ["/models/kenney/nature/flower_redA.glb", -38, 4, 0.4, false],
-      ["/models/kenney/nature/plant_bush.glb", -42, -2, 0.85, false],
-      ["/models/kenney/nature/tree_oak.glb", -44, 12, 4.2, true],
-      ["/models/kenney/nature/tree_default.glb", 16, 40, 3.4, true],
-      ["/models/kenney/nature/rock_largeA.glb", -46, -8, 0.8, true],
-      ["/models/kenney/nature/fence_simple.glb", 18, 36, 1.15, true],
-      ["/models/kenney/pets/animal-dog.glb", -40, -6, 0.7, false],
-      ["/models/kenney/pets/animal-cat.glb", 40, -16, 0.42, false],
+      [assetUrl("models/kenney/nature/grass.glb"), -40, 6, 0.55, false],
+      [assetUrl("models/kenney/nature/grass_large.glb"), -36, -4, 0.7, false],
+      [assetUrl("models/kenney/nature/grass.glb"), 12, 38, 0.55, false],
+      [assetUrl("models/kenney/nature/flower_redA.glb"), -38, 4, 0.4, false],
+      [assetUrl("models/kenney/nature/plant_bush.glb"), -42, -2, 0.85, false],
+      [assetUrl("models/kenney/nature/tree_oak.glb"), -44, 12, 4.2, true],
+      [assetUrl("models/kenney/nature/tree_default.glb"), 16, 40, 3.4, true],
+      [assetUrl("models/kenney/nature/rock_largeA.glb"), -46, -8, 0.8, true],
+      [assetUrl("models/kenney/nature/fence_simple.glb"), 18, 36, 1.15, true],
+      [assetUrl("models/kenney/pets/animal-dog.glb"), -40, -6, 0.7, false],
+      [assetUrl("models/kenney/pets/animal-cat.glb"), 40, -16, 0.42, false],
     ];
     for (const [url, x, z, height, solid] of dress) dropPiece(sim, url, x, z, height, solid);
-    void loader.loadAsync("/models/kenney/arms/weapon-sword.glb").then((gltf) => {
+    void loader.loadAsync(assetUrl("models/kenney/arms/weapon-sword.glb")).then((gltf) => {
       swordTpl = gltf.scene;
       propKey = "";
     });
-    void loader.loadAsync("/models/kenney/arms/weapon-spear.glb").then((gltf) => {
+    void loader.loadAsync(assetUrl("models/kenney/arms/weapon-spear.glb")).then((gltf) => {
       spearTpl = gltf.scene;
       propKey = "";
     });
-    void loader.loadAsync("/models/gen/cart.glb").then((gltf) => {
+    void loader.loadAsync(assetUrl("models/gen/cart.glb")).then((gltf) => {
       const mesh = gltf.scene;
       const steel = document.createElement("canvas");
       steel.width = 128;
@@ -535,7 +536,7 @@ export function createView(canvas: HTMLCanvasElement) {
   }
 
   function plantBuilding(sim: Sim, file: string, x: number, z: number, height: number, yaw: number) {
-    void loader.loadAsync(`/models/kenney/${file}`).then((gltf) => {
+    void loader.loadAsync(assetUrl(`models/kenney/${file}`)).then((gltf) => {
       const mesh = gltf.scene;
       mesh.rotation.y = yaw;
       const raw = new THREE.Box3().setFromObject(mesh);
@@ -726,7 +727,7 @@ export function createView(canvas: HTMLCanvasElement) {
 
   function addDress() {
     const files = ["wall", "barrel_small", "barrel_large", "box_small", "box_large", "table_small", "table_medium", "pillar", "column", "floor_tile_large", "banner_red", "barrier", "stairs_wood", "stool", "torch_mounted", "wall_arched"];
-    void Promise.all(files.map((name) => loader.loadAsync(`/models/kaykit/props/${name}.gltf.glb`).then((gltf) => [name, gltf.scene] as const)))
+    void Promise.all(files.map((name) => loader.loadAsync(assetUrl(`models/kaykit/props/${name}.gltf.glb`)).then((gltf) => [name, gltf.scene] as const)))
       .then((pairs) => {
         kit = Object.fromEntries(pairs);
         const root = new THREE.Group();

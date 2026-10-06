@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { assetUrl } from "./asset-base";
 
 /**
  * Quaternius CC0 modular character system for AshLane.
@@ -30,8 +31,8 @@ import * as THREE from "three";
  * 58-joint cast, which retargetUal() now handles.
  */
 
-export const QUATERNIUS_MODEL_ROOT = "/models/cast/quaternius/";
-export const QUATERNIUS_MOTION_ROOT = "/motion/ual/";
+export const QUATERNIUS_MODEL_ROOT = assetUrl("models/cast/quaternius/");
+export const QUATERNIUS_MOTION_ROOT = assetUrl("motion/ual/");
 
 export type QuaterniusPart = {
   id: string;
