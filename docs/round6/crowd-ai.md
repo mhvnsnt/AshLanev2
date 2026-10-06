@@ -24,3 +24,10 @@
 - **License:** MIT (repo page license field, LICENSE file at root)
 - **Verdict:** commercial-safe
 - **Notes:** Best default for AshLane's streets: no WASM init cost on mobile, navmesh data serializes to JSON (replay/network friendly), and the flow-field example is exactly how to move hundreds of pedestrians cheaply — one field, many agents. Pair with Yuka steering for local avoidance.
+
+## three-pathfinding
+- **URL:** https://github.com/donmccurdy/three-pathfinding
+- **What:** Lightweight navmesh pathfinding toolkit for three.js (PatrolJS-based): build zones from a BufferGeometry, `findPath` / `getClosestNode` / `getRandomNode` / `getGroup`, and `clampStep` to constrain movement to the navmesh. No navmesh generation — import baked geometry (Blender, Recast CLI, navcat/recast-navigation-js export).
+- **License:** MIT (repo page license field, LICENSE file at root)
+- **Verdict:** commercial-safe
+- **Notes:** The simplest three.js-native option when the navmesh is baked offline. Good for scripted NPC routes, arena staff, and vendors with fixed patrol loops. One zone per district keeps queries cheap.
