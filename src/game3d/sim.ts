@@ -985,12 +985,11 @@ export function startBout(sim: Sim, kind: "exhibit" | "practice", stage: string)
       foe.hp = 400;
       foe.maxHp = 400;
     } else {
-      foe.name = "The card";
-      foe.hp = 160;
+            foe.hp = 160;
       foe.maxHp = 160;
     }
   }
-  sim.banner = kind === "practice" ? "Practice. The bag does not swing." : "Exhibition.";
+  sim.banner = kind === "practice" ? "Practice. The bag does not swing." : "Throwdown.";
   sim.bannerT = 2;
 }
 
@@ -3782,7 +3781,7 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   if (sim.bout === "exhibit" && foes === 0 && sim.running && !sim.paused) {
     sim.paused = true;
     sim.bout = "done";
-    sim.banner = "Exhibition clear";
+    sim.banner = "Block taken";
     sim.bannerT = 2;
   }
   sim.canGrab = p.state === "free" && nearestGrunt(sim, sim.tune.grapple * (sim.stance === "drunken" ? 1.35 : 1)) != null;

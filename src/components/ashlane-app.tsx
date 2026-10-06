@@ -223,7 +223,7 @@ export function AshlaneApp() {
                 <div className="al-logo-wrap al-rise">
                   <AshlaneTag variant="red" />
                   <p className="al-logo-sub">
-                    <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
+                    <SpellbookTag text="concrete jungle" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
                 </div>
                 <div className="al-rip mt-1" aria-hidden="true" />
@@ -237,7 +237,7 @@ export function AshlaneApp() {
                     </button>
                     <div className="grid grid-cols-2 gap-2.5">
                       <button type="button" className="al-btn al-rise al-rise-1" onClick={() => api.current?.startBout("exhibit", arena)}>
-                        <span className="al-btn-icon"><MenuIcon name="fight" />Exhibition</span>
+                        <span className="al-btn-icon"><MenuIcon name="fight" />Throw down</span>
                       </button>
                       <button type="button" className="al-btn al-rise al-rise-1" onClick={() => api.current?.startBout("practice", arena)}>
                         <span className="al-btn-icon"><MenuIcon name="trophy" />Practice</span>
@@ -282,7 +282,7 @@ export function AshlaneApp() {
                 {menu === "arenas" ? (
                   <div className="mt-4 flex flex-col gap-2.5">
                     <div className="al-section"><span className="al-section-title">Pick a block</span></div>
-                    <p className="text-sm text-cream-dim">Exhibition and Practice use a ring in the middle of it. Ward still walks the whole lane.</p>
+                    <p className="text-sm text-cream-dim">Throwdown and Practice clear the middle of the block. Ward still walks the whole lane.</p>
                     {ARENAS.map((place, i) => (
                       <button
                         key={place.id}
@@ -299,7 +299,7 @@ export function AshlaneApp() {
                       </button>
                     ))}
                     <button type="button" className="al-btn al-btn-primary" onClick={() => api.current?.startBout("exhibit", arena)}>
-                      <span>Exhibition here</span>
+                      <span>Throw down here</span>
                     </button>
                     <button type="button" className="al-btn" onClick={() => api.current?.startBout("practice", arena)}>
                       <span>Practice here</span>
@@ -644,7 +644,7 @@ export function AshlaneApp() {
             <div className="veil al-sheet absolute inset-0 flex items-end justify-center p-4 sm:items-center">
               <div className="w-full max-w-sm al-rise">
                 <p className="al-kicker">Card's down</p>
-                <h2 className="al-title text-4xl mt-1">Exhibition clear</h2>
+                <h2 className="al-title text-4xl mt-1">Block taken</h2>
                 <div className="al-rip mt-2" aria-hidden="true" />
                 <p className="mt-2 text-sm text-cream-dim">Flow was <span className="font-headline text-brass">{hud.flow}</span>.</p>
                 <div className="mt-4 flex flex-col gap-2.5">
@@ -793,7 +793,7 @@ function labelFor(mode: Mode) {
 
 function objective(hud: Hud) {
   if (hud.bout === "practice") return "Practice. The bag stays. Try the dives, the grabs, and the flow counter.";
-  if (hud.bout === "exhibit" || hud.bout === "done") return "Exhibition. One card in the ring. Hit them as they swing and it counts as flow.";
+  if (hud.bout === "exhibit" || hud.bout === "done") return "Throwdown. One of theirs in the middle. Hit them as they swing and it counts as flow.";
   if (hud.story) return `Rank ${hud.level}. ${hud.actName}. ${hud.missionTitle}. Wave ${hud.wave}/${hud.waveMax}. Purse ${hud.purse}. ${hud.missionStep}`;
   if (hud.scuffle || hud.phase === "clear") return `${hud.phase}. ${hud.phaseStep}`;
   if (hud.area === "house") return hud.weapon === "fist" ? "Noodle house. Take the pipe. Smash the crate." : "Pipe's in hand. Run and the swing lunges. It snaps.";
