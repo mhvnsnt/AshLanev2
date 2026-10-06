@@ -46,3 +46,20 @@ Research date: 2026-10-06.
   control. mediasoup-client (JS) is also ISC.
 
 ---
+## 3. Mumble (+ Murmur server) — classic gamer VoIP
+- **URL:** https://github.com/mumble-voip/mumble
+- **What:** The open-source TeamSpeak alternative, built for gamers since 2005:
+  ultra-low-latency Opus voice, positional audio API, channel hierarchies with
+  ACLs, push-to-talk, encrypted by default. Server is "Murmur" — tiny footprint,
+  runs anywhere. Clients on every platform. For AshLane: tournament voice lobbies
+  and crew channels; positional audio maps naturally to open-world proximity chat.
+  Browser path: Mumble protocol clients exist (e.g. mumdroid reference; gumble Go
+  lib is MPL-2.0 — flag; haydenmc/mumble-webrtc-bridge bridges Mumble ↔ WebRTC).
+- **License:** **BSD-3-Clause** (Wikipedia + repo forks confirm; vendored libopus
+  also BSD-3-Clause).
+- **Verdict:** commercial-safe.
+- **Notes:** No WebRTC — native protocol over TCP/UDP, so browser voice needs a
+  bridge or a native/Electron wrapper. Best as the "serious crew voice" option
+  alongside LiveKit's in-browser path. Murmur uses ~10–40 kbit/s per user.
+
+---
