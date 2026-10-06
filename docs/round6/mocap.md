@@ -162,6 +162,13 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ⚠️ **prototype-only** — non-commercial + no-derivatives. Study the timing/spacing for game-feel reference; do not ship clips or retargeted derivatives.
 - **Notes:** The only stylized corpus in this wave — everything else is realistic mocap. Valuable for calibrating "how exaggerated should a hit reaction be" against real mocap baselines.
 
+## Coverage gaps (no open dataset found)
+
+- **Wrestling-specific mocap:** No open wrestling/grappling mocap dataset exists. The in-repo `drive/wrestling-moves-batch` branch (25 WWE2K moves baked to motion-bank format) is the closest internal asset — but WWE2K rips carry copyright risk (flagged in MEMORY.md legal notes); reskin/remodel before any paid use.
+- **Parkour mocap:** No dedicated open parkour dataset found. Closest: LaFAN1 (jumps, falls, vaults), CMU acrobatics subjects, Mixamo tricking clips (tool-only, no redistribution).
+- **Martial-arts-specific:** Covered partially by CMU subject 135 (karate), HDM05 (kicks/punches/throws classes), and Mesh2Motion's game clips. No single open kata/forms corpus found.
+- **Recommended fill:** FreeMoCap (above) — record the exact book-canon moves with our own performers. This is the only clean path to wrestling/parkour coverage.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
