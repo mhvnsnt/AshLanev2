@@ -5,3 +5,5 @@ node_modules/
 .env.*
 __pycache__/
 tools/free-apis/.piper/
+.vercel/
+.output/
