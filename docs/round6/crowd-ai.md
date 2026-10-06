@@ -73,3 +73,10 @@
 - **License:** MIT (repo page license field, LICENSE.md at root)
 - **Verdict:** commercial-safe
 - **Notes:** The sound-reactive crowd bridge: feed game audio (music energy, hit-SFX loudness, KO stingers) into Meyda and drive `arena-crowd.ts` excitement, NPC reactions, and lighting pulses. Loudness/RMS is the cheap always-on signal; spectral flux gives beat-ish onsets for hype moments.
+
+## rbush
+- **URL:** https://github.com/mourner/rbush
+- **What:** High-performance 2D R-tree spatial index for points and rectangles: bulk insertion, bounding-box search, k-nearest-neighbors (via rbush-knn), hundreds of times faster than linear scan. ES module, tiny.
+- **License:** MIT (repo page license field, LICENSE file at root)
+- **Verdict:** commercial-safe
+- **Notes:** The index behind any crowd sim: neighbor queries for separation/flocking, "NPCs near the fight", vendor-customer matching, and distance-culling ambient AI each frame. Rebuild or incrementally update per tick — cheap at our entity counts.
