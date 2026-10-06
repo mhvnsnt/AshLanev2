@@ -136,3 +136,20 @@ checked 2026-10-06. Re-verify before shipping.
   world (distance, opponent state, own health). Good reference for
   hand-tuned, designer-driven AI where a behavior tree feels like overkill.
   172 stars — smaller community than Yuka; audit the source before wiring.
+
+---
+
+## brain.js
+
+- **URL:** https://github.com/BrainJS/brain.js
+- **What:** GPU-accelerated neural networks in JavaScript (browser + Node):
+  feedforward nets, recurrent/LSTM nets, with training in JS. ~15k stars,
+  the de-facto JS neural-net library.
+- **License:** MIT (GitHub API: MIT).
+- **Verdict:** commercial-safe.
+- **Notes:** Learning-based opponent AI path: train a small network on
+  (game-state -> player-action) pairs to predict and counter the player's
+  habits — a personalized "reads your tendencies" rival. Keep nets TINY
+  (a few dozen neurons) for mobile frame budgets; train offline, ship
+  frozen weights, run inference only. Pairs with Yuka's perception as the
+  feature source. Never ship live training on-device in v1 — inference only.
