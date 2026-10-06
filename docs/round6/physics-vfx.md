@@ -141,3 +141,29 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Instant art for our particle systems (three-nebula/SPE/impact-particles.ts): real smoke and spark sprites beat procedural circles for trash fires, exhaust, dust kicks and KO impact bursts. Drop into the asset pipeline as billboard textures; no licensing paperwork.
 
+## License ledger
+
+| Project | License (from actual LICENSE file) | Verdict |
+|---|---|---|
+| cannon-es | MIT | commercial-safe |
+| ammo.js | zlib-style | commercial-safe |
+| three.js physics examples | MIT | commercial-safe |
+| three-nebula | MIT | commercial-safe |
+| ShaderParticleEngine | MIT | commercial-safe |
+| three-bvh-csg | MIT | commercial-safe |
+| three-mesh-bvh | MIT | commercial-safe |
+| WebGL-Fluid-Simulation | MIT | commercial-safe |
+| lygia | Prosperity Public License 3.0.0 | PROTOTYPE-ONLY — do not ship |
+| glsl-noise | MIT | commercial-safe |
+| p2.js | MIT | commercial-safe |
+| matter-js | MIT | commercial-safe |
+| planck.js | MIT | commercial-safe |
+| Oimo.js | MIT | commercial-safe |
+| verlet-js | MIT | commercial-safe |
+| voronoifracture | CC0-1.0 | commercial-safe |
+| industrial-mesh-swap-destruction | MIT | commercial-safe |
+| fabledrevolutions | MIT | commercial-safe |
+| Kenney Particle Pack | CC0 1.0 | commercial-safe |
+
+**Summary:** 18 of 19 commercial-safe (15 MIT, 1 zlib, 2 CC0). One prototype-only: lygia (Prosperity-3.0). No GPL/AGPL physics in this wave — nothing needs quarantining.
+
