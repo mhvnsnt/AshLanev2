@@ -750,6 +750,43 @@ Branches: `round3/nakama`, `round3/visuals`, `round3/audio`, `round3/content`
 11. **Physics/VFX:** cannon-es (MIT, mobile-friendly debris/ragdoll) + voronoifracture (CC0) + three-mesh-bvh (MIT) destruction stack; fabledrevolutions trauma-shake reference.
 12. **Multiplayer:** LiveKit (Apache-2.0, voice + TURN), Colyseus (MIT, lobbies), Centrifugo (Apache-2.0, chat), openskill.js (MIT, ranked), Oracle Always Free (hosting).
 
+## Wired into the game (2026-10-06)
+
+Round 6 picks now running in AshLane's actual game loop — not just links:
+
+**1. Yuka opponent brain (fighter-AI pick #1) — `src/game3d/opponent-brain.ts`**
+- Yuka `StateMachine` (MIT) drives every grunt: approach / orbit / retreat / hold states.
+- Reaction-delayed perception (120–450ms by difficulty tier): the brain edge-detects
+  player attacks and perceives them LATE — no input reading, hard law intact.
+- Utility attack scoring (aggression roll + whiff-punish boost), no-pile-on rule,
+  difficulty tiers via `difficultyFor(arch, mission)` (easy/normal/hard/boss:
+  reaction time, aggression, windup scale, punish range).
+- Hooked into `sim.ts` `updateEnemies()`: the brain decides WHEN to attack and
+  WHERE to move; windup/attack/hit resolution frame data is untouched.
+- License: Yuka MIT = **commercial-safe**. (`src/game3d/yuka-shim.d.ts` documents
+  why we shim types instead of @types/yuka — the published types target a newer,
+  stricter API than the 0.7.8 runtime requires.)
+
+**2. ink/inkjs narrative runtime (narrative pick #3) — `src/game3d/dialogue/`**
+- `dialogue-runtime.ts`: `InkRunner` (real compiled ink via inkjs) + `BeatsRunner`
+  (zero-tooling beat format), both with `{var}` interpolation and variable sets.
+- `ink-adapter.ts`: `InkDialogueSession` adapts either runner to the game's
+  existing `DialogueEvent` UI (line → options → line → end) — ink stories play
+  through the same overlay as the Yarn-style scripts.
+- `services.ts`: `openInkDialogue()` / `openBeatsDialogue()`; `advanceDialogue()`
+  / `chooseDialogue()` route to the ink session when one is open.
+- Authoring: write `.ink` in `src/game3d/dialogue/stories/`, compile with
+  `node tools/dialogue/compile-ink.mjs` (uses the compiler **bundled with inkjs**,
+  no extra installs), commit both `.ink` + `.ink.json`. Speaker tags go at END
+  of line: `...text. # speaker:STATIC`. Guide: `src/game3d/dialogue/DIALOGUE_AUTHORING.md`.
+- Sample shipped: `stories/static-backstage.ink` (+ compiled `.ink.json`) — Static
+  backstage encounter.
+- License: inkjs MIT (runtime + bundled compiler) = **commercial-safe**.
+
+**Tests:** `src/game3d/round6-ai.test.ts` — 14 tests (reaction-delay proof, no
+input reading, difficulty tiers, state transitions, utility rules, full
+author→compile→JSON→runtime→UI ink pipeline). Run: `npm test`.
+
 ## Attribution checklist (CC-BY items needing a credits line)
 
 Font Awesome Free (CC-BY-4.0), Hero Patterns (CC-BY-4.0), Ikemen GO screenpack art if used (CC-BY-3.0), Incompetech (CC-BY-4.0, from R2), game-icons.net (CC-BY-3.0, from R2), TeknoAXE (CC-BY), filmmusic.io (CC-BY-4.0), AIST++ (CC-BY-4.0), Sketchfab woulfric lamps (CC-BY, verify per model), Mixkit Restricted-tier (per-asset). → All belong on the game's credits screen.

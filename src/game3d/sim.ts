@@ -9,6 +9,7 @@ import { resetYoko, tickYokosukaBelt } from "./yokosuka/belt";
 import { createLockOn, lockOnPress, lockOnUpdate, clearLock, type LockOnState } from "./federated/lockon";
 import { pickFreeflowTarget, freeflowLunge } from "./federated/freeflow";
 import { requestAttack, releaseAttack, type GroupAIState } from "./federated/groupai";
+import { OpponentBrain, buildPercept, difficultyFor } from "./opponent-brain";
 import {
   tickSimServices, tryParry, resolveParry, comboDamageScale, styleFor,
   type GameServices,
@@ -2338,10 +2339,26 @@ function engaged(home: Home, p: Body) {
   return p.z > -12.8 && p.z < 14.6 && p.x < 23 && p.x > -26;
 }
 
+// Opponent brains, one per grunt body id. Created lazily on first sight;
+// difficulty comes from the grunt's archetype + mission index.
+const gruntBrains = new Map<number, OpponentBrain>();
+function brainFor(e: Body, sim: Sim): OpponentBrain {
+  let b = gruntBrains.get(e.id);
+  if (!b) {
+    b = new OpponentBrain(difficultyFor(e.arch, sim.mission));
+    gruntBrains.set(e.id, b);
+  }
+  return b;
+}
+
 function updateEnemies(sim: Sim, dt: number) {
   const p = sim.bodies[0];
   for (const e of sim.bodies) {
     if (e.kind !== "grunt") continue;
+    // Opponent brain (Yuka, Round 6): perceive every tick so the
+    // reaction-delay buffer stays honest even through hitstun.
+    const brain = brainFor(e, sim);
+    brain.perceive(buildPercept(e, p, sim.bodies, sim.time));
     if (e.stopT > 0) {
       e.stopT -= dt;
       continue;
@@ -2442,27 +2459,17 @@ function updateEnemies(sim: Sim, dt: number) {
     }
     if (e.state !== "free") continue;
     const hot = engaged(e.home, p) || (sim.scuffle === e.home && Math.hypot(p.x - e.homeX, p.z - e.homeZ) < 22);
-    let rank = 0;
-    if (hot && p) {
-      const mine = Math.hypot(e.x - p.x, e.z - p.z);
-      for (const o of sim.bodies) {
-        if (o === e || o.kind !== "grunt" || !o.alive || o.state === "down" || o.state === "out") continue;
-        if (Math.hypot(o.x - p.x, o.z - p.z) < mine - 0.05) rank += 1;
-      }
-    }
-    const pressing = rank === 0 || (rank === 1 && p && p.state === "atk" && p.swung);
-    const swinging = sim.bodies.some((o) => o !== e && o.kind === "grunt" && o.alive && (o.state === "windup" || o.state === "atk") && p && Math.hypot(o.x - p.x, o.z - p.z) < 2.2);
-    let ax = (hot && p ? p.x : e.homeX) - e.x;
-    let az = (hot && p ? p.z : e.homeZ) - e.z;
-    const d = Math.hypot(ax, az) || 1;
-    const playerOpen = p && p.state === "atk" && p.swung && p.stateT < 0.16;
-    const playerThreat = p && p.state === "atk" && !p.swung;
-    if (hot && p && pressing && !swinging && e.cd <= 0 && Math.abs(e.y - p.y) < 1.1 && d < (playerOpen ? 2.5 : e.arch === "hex" ? 2.3 : 1.35)) {
+    // --- Opponent brain decides (Yuka state machine + utility scoring).
+    // Same frame data as before: the brain only chooses WHEN to attack and
+    // WHERE to move; windup/attack/hit resolution are untouched.
+    const intent = brain.decide(dt);
+    const d = Math.hypot((hot && p ? p.x : e.homeX) - e.x, (hot && p ? p.z : e.homeZ) - e.z) || 1;
+    if (hot && p && intent.wantAttack) {
       if (!requestAttack(sim.group, e.id, sim.bodies)) continue;
       e.swing = p.state === "down" || e.arch === "runner" ? 5 : 0;
       e.state = "windup";
-      e.stateT = (playerOpen ? 0.12 : SPEC.enemyWindup) * (e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "brute" || e.arch === "hex" ? 1.28 : 1);
-      e.yaw = yawFromDir(ax, az);
+      e.stateT = SPEC.enemyWindup * brain.tuning.windupScale * (e.arch === "runner" || e.arch === "hood" ? 0.62 : e.arch === "brute" || e.arch === "hex" ? 1.28 : 1);
+      e.yaw = yawFromDir(p.x - e.x, p.z - e.z);
       e.vx = 0;
       e.vz = 0;
       continue;
@@ -2472,17 +2479,9 @@ function updateEnemies(sim: Sim, dt: number) {
       e.vz = 0;
       continue;
     }
-    if (hot && p && !pressing) {
-      const orbit = e.id * 0.9 + sim.time * 0.45;
-      ax = p.x + Math.sin(orbit) * 2.55 - e.x;
-      az = p.z + Math.cos(orbit) * 2.55 - e.z;
-    } else if (hot && p && playerThreat && e.arch !== "brute" && d < 2.1) {
-      ax = e.x - p.x;
-      az = e.z - p.z;
-    }
-    const steer = Math.hypot(ax, az) || 1;
-    ax /= steer;
-    az /= steer;
+    // Brain steering + the same separation as before.
+    let ax = hot && p ? intent.moveX : (e.homeX - e.x) / d;
+    let az = hot && p ? intent.moveZ : (e.homeZ - e.z) / d;
     if (hot) {
       for (const o of sim.bodies) {
         if (o === e || o.kind !== "grunt" || !o.alive) continue;
@@ -2498,8 +2497,8 @@ function updateEnemies(sim: Sim, dt: number) {
     const m = Math.hypot(ax, az) || 1;
     const archMul = e.arch === "runner" ? 1.38 : e.arch === "hood" ? 1.2 : e.arch === "brute" ? 0.72 : e.arch === "hex" ? 0.84 : 1;
     const heat = sim.story ? 1 + sim.mission * 0.012 : 1;
-    const retreat = hot && p && playerThreat && e.arch !== "brute" && d < 2.1;
-    const sp = (!hot ? sim.tune.enemySpeed * 0.65 : retreat ? sim.tune.enemySpeed * 0.8 : !pressing ? sim.tune.enemySpeed * 0.75 : d < 1.05 ? sim.tune.enemySpeed * 0.35 : sim.tune.enemySpeed) * archMul * heat * (e.legs < 35 ? 0.55 : 1);
+    const retreating = brain.stateId === "retreat";
+    const sp = (!hot ? sim.tune.enemySpeed * 0.65 : retreating ? sim.tune.enemySpeed * 0.8 : d < 1.05 ? sim.tune.enemySpeed * 0.35 : sim.tune.enemySpeed) * archMul * heat * (e.legs < 35 ? 0.55 : 1);
     e.vx = (ax / m) * sp;
     e.vz = (az / m) * sp;
     if (sp > 0 && p) e.yaw = approachAngle(e.yaw, yawFromDir(hot ? p.x - e.x : e.vx, hot ? p.z - e.z : e.vz), 10, dt);
