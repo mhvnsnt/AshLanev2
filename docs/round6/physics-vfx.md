@@ -57,3 +57,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Infrastructure win for destruction AND combat: cheap per-frame melee hit-raycasts against complex arena geometry, fast ground-height queries, and the slicing backend for breakable props. Well-maintained, drop-in `acceleratedRaycast` patch.
 
+## WebGL-Fluid-Simulation
+- **URL:** https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+- **What:** Stable-fluids (Navier-Stokes) solver running fully on the GPU in WebGL — colorful dye advection with mouse/touch interaction, multi-splat emitters, sunrays/bloom hooks.
+- **License:** MIT (LICENSE file, Pavel Dobryakov).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Research-only tier for gameplay, but two real uses: (1) menu/loading-screen fluid backgrounds that react to touch — premium feel for AshLane's street-art UI; (2) technique reference for blood-spray/ink decals and smoke advection. Heavy on low-end GPUs — keep behind a quality gate, never in the combat loop.
+
