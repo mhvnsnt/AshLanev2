@@ -92,7 +92,7 @@ Sources: [Wikipedia plot summary](https://en.wikipedia.org/wiki/Urban_Reign) · 
 
 > **Method:** every one of the 60 playable fighters was mapped to a faction from the characters' **in-game bios** (GameFAQs guide/walkthrough by KDKM0506, v2.7), cross-checked against Wikipedia, the Tekken Wiki (Fandom), and the Villains Wiki. Paraphrased throughout — bios are summarized, not quoted.
 >
-> **Two corrections to earlier sections and press-summary lore:**
+> **Four corrections to earlier sections and press-summary lore:**
 > - *The "Zanetti gang" is not in Urban Reign.* The drug-kingpin Zanetti family of Las Sombras belongs to Capcom's **Beat Down: Fists of Vengeance** (2005), a different brawler whose wiki text leaked into the Cubevice Urban Reign page. No Zanetti appears in Urban Reign's 60-fighter roster. The §3 "Zanetti gang" row is superseded.
 > - *There is no separately named "skinhead gang" in the roster.* Press summaries describe "muscle-bound, tattooed skinhead ex-cons" — that visual description maps onto **the Outlaws** (ex-convicts, Mighty physiques, prison ink), not a distinct faction. All 60 fighters are accounted for below with no skinhead gang left over.
 > - *The "Cuban Americans"* are the in-game faction **the Outsiders** (Miguel Estevez et al.).
