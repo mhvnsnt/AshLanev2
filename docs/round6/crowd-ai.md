@@ -59,3 +59,10 @@
 - **License:** MIT (inkle org page lists MIT for ink; inkjs MIT)
 - **Verdict:** commercial-safe
 - **Notes:** The ambient-life dialogue engine: street-vendor barks, hustler pitches, crowd chants, NPC one-liners that react to game state (heat level, district, time of day). Compile `.ink` to JSON at build time; drive line selection from each NPC's state machine. Powers Bannon arena chants too.
+
+## tracery
+- **URL:** https://github.com/galaxykate/tracery
+- **What:** Story-grammar text expansion library (Kate Compton): write grammar objects, get generative sentences and story fragments. The classic procedural-text tool.
+- **License:** Apache (LICENSE.MD in repo root; downstream ports state they inherit the Apache license from Tracery — re-verify the file before shipping)
+- **Verdict:** commercial-safe
+- **Notes:** Cheaper than ink for pure ambient barks: hustler/vendor lines ("Yo, #product# — #price#, #pitch#"), crowd heckles, procedural graffiti and signage text. Pair with Piper TTS (R4) to voice the generated barks at build time.
