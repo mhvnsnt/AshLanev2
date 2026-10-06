@@ -157,3 +157,57 @@ prototype-only. Unclear = prototype-only.
 - **Notes:** Tag-script style is a proven format for writer-authored
   cutscenes. The `[iscript]` escape hatch (inline JS in scripts) is the right
   pattern for triggering three.js camera/fight events from dialogue.
+
+## Fungus
+
+- **URL:** https://github.com/snozbot/fungus
+- **What:** Unity library for illustrated interactive fiction — Flowchart-based
+  visual scripting for dialogue, branching choices, character portraits,
+  narration, and cutscene sequencing. Writer-friendly block editor inside the
+  engine.
+- **License:** MIT (GitHub API: spdx MIT).
+- **Verdict:** commercial-safe
+- **Notes:** Unity-only runtime, so not directly usable — but its Flowchart UX
+  (blocks = dialogue/choice/command, drag-wire authoring) is the best
+  reference for what a three.js cutscene/dialogue editor should feel like.
+  Borrow the interaction design, not the code.
+
+## Dialogic (Godot)
+
+- **URL:** https://github.com/dialogic-godot/dialogic
+- **What:** Godot 4 dialogue system — visual timeline editor, character
+  manager, portraits, choices, variables, text effects, voice support, VN/RPG
+  presets. The most complete open-source dialogue editor+runtime in any
+  engine.
+- **License:** MIT (GitHub API: spdx MIT).
+- **Verdict:** commercial-safe
+- **Notes:** Godot-only, so study-only for AshLane — but mine it for feature
+  checklist: timelines, character directory, glossary, text-effect tags, and
+  its event-based save format are all directly portable concepts.
+
+## Dialogue Manager (Godot)
+
+- **URL:** https://github.com/nathanhoad/godot_dialogue_manager
+- **What:** Nonlinear dialogue addon for Godot 4 — write branching dialogue
+  in a script-like `.dialogue` text format (conditions, mutations, random
+  lines, BBCode text effects), stateless runtime, built-in CSV/PO translation
+  pipeline, visual editor tab, dialogue balloons.
+- **License:** MIT (LICENSE file, author Nathan Hoad — confirmed via multiple
+  downstream attributions).
+- **Verdict:** commercial-safe
+- **Notes:** The `.dialogue` TEXT format (not a node graph) is the key idea:
+  writers prefer readable script text over boxes-and-wires for long
+  conversations. Strong candidate format to imitate for AshLane writer
+  tooling; pairs naturally with an ink/inkjs runtime underneath.
+
+## Corkboard
+
+- **URL:** https://github.com/skyaphid/corkboard
+- **What:** Open-source, web-based, node-based branching dialogue editor — an
+  Arcweave alternative. Runs in the browser, exports/imports easy-to-parse
+  JSON, extensible node types, includes a sample JSON importer.
+- **License:** MIT (GitHub API: spdx MIT).
+- **Verdict:** commercial-safe
+- **Notes:** Runs in-browser and exports plain JSON — the closest thing to a
+  drop-in web dialogue editor for our pipeline. Evaluate as the authoring
+  frontend with a custom three.js JSON runner on the game side.
