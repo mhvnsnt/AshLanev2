@@ -50,3 +50,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** Runtime boolean = destructible walls, bullet-hole punching in doors, slicing tables in half mid-fight. BVH acceleration makes it fast enough to do live (not just pre-baked). Pair with cannon-es: CSG-sliced halves become physics bodies.
 
+## three-mesh-bvh
+- **URL:** https://github.com/gkjohnson/three-mesh-bvh
+- **What:** Bounding Volume Hierarchy acceleration for three.js meshes: 10–100x faster raycasts, spatial queries, and closest-point tests. Powers three-bvh-csg slicing.
+- **License:** MIT (LICENSE file, Garrett Johnson).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Infrastructure win for destruction AND combat: cheap per-frame melee hit-raycasts against complex arena geometry, fast ground-height queries, and the slicing backend for breakable props. Well-maintained, drop-in `acceleratedRaycast` patch.
+
