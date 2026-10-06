@@ -117,3 +117,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** Custom **"Fair Use License"** (NOT CC0 — corrected 2026-10-06): irrevocable, worldwide, perpetual, royalty-free; commercial projects OK, no attribution required. **BUT: unaltered logos may only be used as placeholders** — they may NOT be used as final logos, trademarks, or brand identities, and may not be resold/redistributed as-is.
 - **Verdict:** **prototype-only** — perfect for menu mockups, UI wireframes, and sponsor-board filler. Never ship an unaltered Logoipsum mark as an AshLane faction/company logo (that's trademark territory); heavily modified versions are permitted but still get owner sign-off.
 - **Notes:** AshLane use: drop Logoipsum marks into menu mockups and arena sponsor boards *today* so layouts read correctly, then replace one-by-one with originals from the opentype.js/vtracer pipeline. Tag every placeholder in the asset manifest so none leak into a build.
+
+## simple-icons (brand SVG icon set)
+
+- **URL:** https://github.com/simple-icons/simple-icons
+- **What:** 3,000+ SVG icons of popular brands/services, kept current by the community, with an npm package and per-icon metadata (title, hex color, source URL). One-line import of any brand glyph as SVG path data.
+- **License:** **CC0-1.0** (LICENSE file — the *drawings* are public domain).
+- **Verdict:** **commercial-safe** (CC0) — with the standard trademark caveat: CC0 covers copyright in the icon artwork, not trademark rights in the brand. Fine for UI/social icons; don't imply endorsement.
+- **Notes:** AshLane use: menu/social icons, settings-screen glyphs, fake in-world brand parodies (remixed, not verbatim — parody marks get redrawn through vtracer anyway). The per-icon brand hex colors double as reference palettes. Pairs with the Round-2 game-icons.net set (CC-BY, needs attribution) — simple-icons needs none.
