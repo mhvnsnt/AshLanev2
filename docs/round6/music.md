@@ -62,3 +62,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe WITH attribution — credit per track on the credits screen.
 - **Notes:** Strong fit for AshLane combat BGM (metal/synthwave/electronic) and Bannon entrance themes (heavy guitar tracks). Verify the license version per track (mix of 3.0/4.0) and never redistribute as standalone music.
 
+## 9. Newgrounds Audio Portal
+- **URL:** https://www.newgrounds.com/audio/
+- **What:** Huge community music portal (open since 2003) — hundreds of submissions weekly; hip-hop, electronic, rock, orchestral. Historically built for game/movie developers to use tracks in their Flash games.
+- **License:** **Mixed per artist.** The OLD default was CC BY-NC-SA 3.0 (non-commercial). Modern Audio Portal lets each artist set their own permissions per track ("contact author" filter, some artists — e.g. Hypervolt — allow any creative work commercial or otherwise).
+- **Verdict:** ⚠️ **Prototype-only for default-licensed tracks** (old BY-NC-SA = non-commercial, never ship). Ship-safe ONLY for tracks where the artist explicitly permits commercial use — get it in writing / screenshot the license setting per track.
+- **Notes:** Great scouting ground for unique fight music, but licensing is artist-by-artist — treat as leads, not a library. For shipped tracks, prefer CC-BY sources above.
+
