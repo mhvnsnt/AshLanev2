@@ -314,3 +314,24 @@ Research date: 2026-10-06.
   Upstash only for cross-instance counters when we scale past one box.
 
 ---
+## 17. Abuse tooling — chat filter, rate limits, signup protection
+- **URL:** https://github.com/FlacSy/badwords ·
+  https://github.com/animir/node-rate-limiter-flexible
+- **What:** Three-piece abuse kit for lobbies/chat/accounts:
+  - **FlacSy/badwords** — high-performance profanity filter (Python/Rust/JS-WASM),
+    multilingual + evasion detection (l33t-speak bypasses). For lobby chat,
+    fighter names, crew tags. **MIT** (verified 2026-10-06).
+  - **rate-limiter-flexible** — atomic counters & limiters for Node (Memory,
+    Redis, Postgres, Mongo…), brute-force/DoS protection, zero prod deps.
+    **ISC** (verified via ecosyste.ms metadata + skill docs, 2026-10-06).
+  - **Cloudflare Turnstile** — CAPTCHA alternative for signup/account-creation
+    abuse (free tier per vendor — re-verify at signup). **@upstash/ratelimit**
+    — 5-line sliding-window limiting on Upstash Redis (free tier, #16).
+- **License:** MIT + ISC (both permissive). **Verdict:** commercial-safe.
+- **Notes:** Wire the filter server-side (Nakama before-hook on chat writes —
+  never trust the client to censor itself), rate-limit auth/matchmaking/chat
+  endpoints per IP+account, Turnstile on registration. Chat filter word lists
+  need a street-culture pass: default lists miss slang and over-flag AAVE —
+  curate the list, don't ship defaults blind.
+
+---
