@@ -31,3 +31,18 @@ Research date: 2026-10-06.
   game backend. Watch: SFU bandwidth scales with speakers — audio-only is cheap.
 
 ---
+## 2. mediasoup — SFU library (DIY voice, maximum control)
+- **URL:** https://github.com/versatica/mediasoup (canonical; search surfaced a fork mirror)
+- **What:** Cutting-edge WebRTC SFU as a Node.js library (not a server product):
+  C++ worker + JS API. You build your own selective-forwarding server: per-lobby
+  voice rooms, spatial audio routing, custom mixing. Lower-level than LiveKit —
+  no rooms/auth/recording out of the box, but total control and tiny footprint.
+- **License:** **ISC** (README "## License → [ISC](./LICENSE)", verified 2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** Pick mediasoup over LiveKit only if we need custom audio processing
+  (proximity voice in open-world hubs, per-player gain/occlusion) or want zero
+  dependency on LiveKit's opinionated room model. Needs a signaling layer
+  (Centrifugo below, or Nakama) + own TURN (coturn from round 4). More code, more
+  control. mediasoup-client (JS) is also ISC.
+
+---
