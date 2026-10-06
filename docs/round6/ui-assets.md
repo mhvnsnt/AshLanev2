@@ -141,3 +141,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The tutorial system for onboarding: first-launch tour (menu → character select → first fight), contextual coach marks in move lab. Theme the popover/hole-overlay in Concrete Jungle. ⚠️ Do NOT substitute **intro.js** — the other popular tour library is **AGPL-licensed** (copyleft; commercial use requires a paid license). driver.js is the safe pick.
 - **AshLane use:** First-launch onboarding tour, move-lab coach marks, contextual help overlays.
+
+## 18. Hero Patterns
+- **URL:** https://heropatterns.com/ — by Steve Schoger
+- **What:** ~90 repeatable SVG background patterns (topography, brick wall, diagonal stripes, circuit board, skulls, wiggle, graph paper…) with live foreground/background color pickers — copy-paste as inline SVG or data-URI backgrounds. A Tailwind plugin (`@danielfgray/tw-heropatterns`) exists.
+- **License:** **CC-BY 4.0** — confirmed by multiple downstream THIRD_PARTY_NOTICES files ("distributed under the Creative Commons Attribution 4.0 International License"). ⚠️ NOT CC0 as commonly assumed. Verified (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe with attribution (CC-BY — one credit line for Steve Schoger / heropatterns.com).
+- **Notes:** The textured-box layer of the street-art menu kit: brick-wall behind faction panels, topography on district cards, diagonal-stripes as hazard fills — all tintable to the SWMG ember/brass/concrete palette. SVG data-URIs keep them resolution-independent and near-zero weight. Pick patterns that read "street" (brick, cage, stripes), skip the corporate ones.
+- **AshLane use:** Textured menu/card backgrounds, district cards, loading-screen backdrops (SVG decorations layer).
