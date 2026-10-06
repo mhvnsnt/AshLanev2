@@ -69,3 +69,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ⚠️ Research-only by nature (inspiration, not assets). No license to record — nothing ships from here.
 - **Notes:** The fastest way to answer "how does Tekken 8 lay out its character select?" or "how do fighting games stage versus screens?" with real pixels. Pair with #7 (Ikemen GO) — Game UI Database shows the *what*, Ikemen shows the *how*. Especially useful for the Concrete Jungle theme pass: filter by textures/materials (concrete, graffiti, metal) to see how shipped games dress street-style UI.
 - **AshLane use:** UI/UX research — character select, versus screens, HUD layouts, street-style menu dressing from shipped fighters.
+
+## 9. NES.css
+- **URL:** https://github.com/nostalgic-css/NES.css (by B.C.Rikko)
+- **What:** 8-bit pixel-art CSS framework — chunky pixel borders, pixel buttons/dialogs/badges, balloon tooltips, plus a built-in 16×16 pixel icon set (sword, heart, controller, star). Pure CSS, no JS. Pairs with the OFL Press Start 2P font.
+- **License:** **MIT** (code) · docs CC — "Code and documentation copyright 2018 B.C.Rikko. Code released under the MIT License." Verified from README license section (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** Not the main theme (Concrete Jungle is street, not retro) — but valuable as a *contrast layer*: arcade-mode screens, retro mini-game overlays, or a "classic" HUD skin option. The pixel-icon technique (box-shadow pixel art in pure CSS) is directly reusable for custom street-style pixel badges. Study its border-image/corner-cut patterns for textured menu boxes.
+- **AshLane use:** Retro/arcade-mode UI skin, pixel badge technique reference, textured-box border patterns.
