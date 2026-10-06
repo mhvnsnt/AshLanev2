@@ -227,6 +227,10 @@ export function AshlaneApp() {
                   <p className="al-logo-sub">
                     <SpellbookTag text="concrete jungle" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
+                  <div className="mt-2 flex gap-2 justify-center">
+                    <Sticker text="Est. 2026" tone="gold" rotate={-6} />
+                    <Sticker text="The lane watches" tone="blood" rotate={5} />
+                  </div>
                 </div>
                 <div className="al-rip mt-1" aria-hidden="true" />
                 <p className="mt-3 text-sm leading-relaxed text-cream-dim">
