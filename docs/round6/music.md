@@ -132,3 +132,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ❌ **Prototype-only** — fails the permissive-license rule. Never ship without a paid license.
 - **Notes:** Study FMOD's parameter/event model as the DESIGN reference for our own MIT adaptive-music layer (Howler.js + stems + Meyda): replicate its "music event + intensity parameter + transition rules" shape in ~200 lines of TS rather than adopting the middleware. Wwise has the same profile (free for small projects, proprietary) — same verdict.
 
+## 19. LMMS — free DAW for composing original tracks
+- **URL:** https://lmms.io
+- **What:** Free open-source digital audio workstation (Windows/Mac/Linux): piano roll, beat+bassline editor, bundled synths, automation. The zero-cost way to compose fully original game music in-house.
+- **License:** **GPL-2.0** (the tool). Per the GNU GPL FAQ, the license of a program does NOT cover its output — **music composed in LMMS is the composer's own work** and can be used commercially (confirmed on the LMMS forums).
+- **Verdict:** ✅ Commercial-safe **for the music we compose** (original output, no licensed-audio baggage).
+- **Notes:** ⚠️ Caveats: (1) never ship LMMS itself inside the game — it's a build-time tool; (2) check licenses of any bundled/third-party sample libraries or soundfonts used (a few may be NC) — stick to bundled synth presets or verified-CC0 samples. Best path to fully-owned entrance themes and combat BGM.
+
