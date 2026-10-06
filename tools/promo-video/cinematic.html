@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+  canvas { display: block; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const params = new URLSearchParams(location.search);
+const MODEL = params.get('model') || 'EL_TORO_DE_ORO.glb';
+const DUR = 50; // seconds
+
+const W = 1920, H = 1080;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+scene.fog = new THREE.FogExp2(0x000000, 0.055);
+
+const camera = new THREE.PerspectiveCamera(42, W / H, 0.05, 60);
+
+// ---------- STAGE ----------
+const stageTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(256, 256, 10, 256, 256, 256);
+  grad.addColorStop(0, '#3a3a42'); grad.addColorStop(0.45, '#1c1c22');
+  grad.addColorStop(1, '#050506');
+  g.fillStyle = grad; g.fillRect(0, 0, 512, 512);
+  // scuff marks
+  g.strokeStyle = 'rgba(255,255,255,0.04)';
+  for (let i = 0; i < 40; i++) {
+    g.beginPath();
+    const a = Math.random() * Math.PI * 2, r = 60 + Math.random() * 180;
+    g.arc(256, 256, r, a, a + 0.3 + Math.random() * 0.8); g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+})();
+const stage = new THREE.Mesh(
+  new THREE.CylinderGeometry(7, 7, 0.12, 48),
+  new THREE.MeshStandardMaterial({ map: stageTex, roughness: 0.45, metalness: 0.55 })
+);
+stage.position.y = -0.06;
+stage.receiveShadow = true;
+scene.add(stage);
+
+// Light beams (arena feel)
+const beams = [];
+const beamMat = new THREE.MeshBasicMaterial({
+  color: 0xffe0b0, transparent: true, opacity: 0.0,
+  blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+});
+for (let i = 0; i < 4; i++) {
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(0.9, 14, 20, 1, true), beamMat.clone());
+  const a = (i / 4) * Math.PI * 2 + 0.4;
+  cone.position.set(Math.cos(a) * 4.2, 6.4, Math.sin(a) * 4.2);
+  cone.rotation.z = Math.cos(a) * 0.22; cone.rotation.x = -Math.sin(a) * 0.22;
+  scene.add(cone); beams.push(cone);
+}
+
+// Dust particles
+const DUST_N = 260;
+const dustGeo = new THREE.BufferGeometry();
+const dustPos = new Float32Array(DUST_N * 3);
+for (let i = 0; i < DUST_N; i++) {
+  dustPos[i * 3] = (Math.random() - 0.5) * 7;
+  dustPos[i * 3 + 1] = Math.random() * 3.2;
+  dustPos[i * 3 + 2] = -4 + Math.random() * 6; // z in [-4, 2], out of the camera lane
+}
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+  color: 0xffd9a0, size: 0.011, transparent: true, opacity: 0.0,
+  blending: THREE.AdditiveBlending, depthWrite: false
+}));
+scene.add(dust);
+
+// ---------- LIGHTS ----------
+scene.add(new THREE.AmbientLight(0xffffff, 0.0)); // animated
+const amb = scene.children[0];
+
+const keySpot = new THREE.SpotLight(0xfff2dd, 0, 30, 0.5, 0.45, 1.2);
+keySpot.position.set(1.5, 6.5, 4.5);
+keySpot.castShadow = true;
+keySpot.shadow.mapSize.set(1024, 1024);
+scene.add(keySpot); scene.add(keySpot.target);
+
+const backSpot = new THREE.SpotLight(0x6fa8ff, 0, 30, 0.7, 0.6, 1.4);
+backSpot.position.set(-1, 5.5, -5);
+scene.add(backSpot); scene.add(backSpot.target);
+
+const rimSpot = new THREE.SpotLight(0xff3b30, 0, 30, 0.6, 0.5, 1.3);
+rimSpot.position.set(-4.5, 3.2, -1.5);
+scene.add(rimSpot); scene.add(rimSpot.target);
+
+const sideSpot = new THREE.SpotLight(0x9fd8ff, 0, 30, 0.55, 0.5, 1.3);
+sideSpot.position.set(4.5, 2.6, 1.0);
+scene.add(sideSpot); scene.add(sideSpot.target);
+
+// ---------- CHARACTER ----------
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const gltf = await loader.loadAsync('/models/' + MODEL);
+const root = gltf.scene;
+scene.add(root);
+
+// Center on XZ, face +Z
+const bbox = new THREE.Box3().setFromObject(root);
+const center = bbox.getCenter(new THREE.Vector3());
+const size = bbox.getSize(new THREE.Vector3());
+root.position.x -= center.x; root.position.z -= center.z;
+root.position.y -= bbox.min.y; // feet on the stage
+const BASE_Y = root.position.y;
+const HIPS_Y = center.y; // approx char center height
+const CHAR_H = size.y;
+
+// Facing: thinnest horizontal axis faces camera, plus manual override ?ry=
+if (size.x > size.z) root.rotation.y = Math.PI / 2;
+root.rotation.y += parseFloat(params.get('ry') || '0');
+
+// Collect bones
+const bones = {};
+root.traverse(o => { if (o.isBone) bones[o.name.replace(/^mixamorig:?/, '')] = o; });
+const rest = {};
+for (const k in bones) rest[k] = bones[k].quaternion.clone();
+
+function setBone(name, ex, ey, ez) {
+  const b = bones[name]; if (!b) return;
+  b.quaternion.copy(rest[name]);
+  const e = new THREE.Euler(ex || 0, ey || 0, ez || 0, 'XYZ');
+  b.quaternion.multiply(new THREE.Quaternion().setFromEuler(e));
+}
+
+const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const lerp = (a, b, t) => a + (b - a) * t;
+
+// Walk phase amount over time (0..1)
+function walkAmt(t) {
+  if (t < 5) return 0;
+  if (t < 14) return sstep(5, 6.5, t) * (1 - sstep(12.5, 14, t));
+  if (t >= 30 && t < 34) return sstep(30, 31, t) * (1 - sstep(33, 34, t)) * 0.7;
+  return 0;
+}
+
+let walkDist = 0, lastT = -1;
+
+function pose(t) {
+  // reset
+  for (const k in bones) bones[k].quaternion.copy(rest[k]);
+
+  const wA = walkAmt(t);
+  const wt = t * (Math.PI * 2 * 1.35); // walk cycle freq
+
+  // --- idle breathing (always, subtle) ---
+  const br = Math.sin(t * 2.1) * 0.02;
+  setBone('Spine', br, 0, 0);
+  setBone('Spine1', br * 1.4, 0, 0);
+  setBone('Head', Math.sin(t * 1.3) * 0.03, Math.sin(t * 0.7) * 0.06, 0);
+
+  // --- walk cycle ---
+  if (wA > 0.001) {
+    const s = Math.sin(wt), c = Math.cos(wt);
+    setBone('LeftUpLeg', s * 0.55 * wA, 0, 0.03 * wA);
+    setBone('RightUpLeg', -s * 0.55 * wA, 0, -0.03 * wA);
+    setBone('LeftLeg', Math.max(0, -c) * 0.8 * wA + 0.06 * wA, 0, 0);
+    setBone('RightLeg', Math.max(0, c) * 0.8 * wA + 0.06 * wA, 0, 0);
+    setBone('LeftFoot', -s * 0.25 * wA, 0, 0);
+    setBone('RightFoot', s * 0.25 * wA, 0, 0);
+    setBone('LeftArm', -s * 0.4 * wA, 0, 0.1 * wA);
+    setBone('RightArm', s * 0.4 * wA, 0, -0.1 * wA);
+    setBone('LeftForeArm', 0, 0, -0.25 * wA);
+    setBone('RightForeArm', 0, 0, 0.25 * wA);
+    setBone('Hips', 0, s * 0.04 * wA, 0);
+    root.position.y = BASE_Y + Math.abs(c) * 0.035 * wA;
+  } else {
+    root.position.y = BASE_Y;
+  }
+
+  // --- power pose (14-22): arms up/out, chest out ---
+  const pp = sstep(14, 15.5, t) * (1 - sstep(21, 22.5, t));
+  if (pp > 0.001) {
+    setBone('LeftArm', -0.25 * pp, 0, 1.15 * pp);
+    setBone('RightArm', -0.25 * pp, 0, -1.15 * pp);
+    setBone('LeftForeArm', -0.5 * pp, 0, 0.35 * pp);
+    setBone('RightForeArm', -0.5 * pp, 0, -0.35 * pp);
+    setBone('Spine', -0.14 * pp, 0, 0);
+    setBone('Spine1', -0.1 * pp, 0, 0);
+    setBone('Head', -0.28 * pp, 0, 0);
+    setBone('LeftUpLeg', 0, 0, 0.1 * pp); setBone('RightUpLeg', 0, 0, -0.1 * pp);
+  }
+
+  // --- taunt (22-30): head shake + fist pump ---
+  const ta = sstep(22, 23, t) * (1 - sstep(29, 30.5, t));
+  if (ta > 0.001) {
+    const pump = Math.max(0, Math.sin(t * 5.2)) * ta;
+    setBone('RightArm', -0.9 * ta - pump * 0.35, 0, -0.35 * ta);
+    setBone('RightForeArm', -1.15 * ta, 0, 0);
+    setBone('LeftArm', 0.15 * ta, 0, 0.5 * ta);
+    setBone('LeftForeArm', -0.7 * ta, 0, 0);
+    setBone('Head', 0.06 * ta, Math.sin(t * 5.2) * 0.14 * ta, 0.08 * ta);
+    setBone('Spine', 0.08 * ta + pump * 0.05, 0, 0);
+  }
+
+  // --- signature bull pose (30-38): arms spread wide like horns, head down then up ---
+  const sg = sstep(30, 31.5, t) * (1 - sstep(37, 38.5, t));
+  if (sg > 0.001) {
+    const rise = sstep(32, 35, t);
+    setBone('LeftArm', -0.1 * sg, 0, 1.45 * sg);
+    setBone('RightArm', -0.1 * sg, 0, -1.45 * sg);
+    setBone('LeftForeArm', -0.2 * sg, 0, 0.25 * sg);
+    setBone('RightForeArm', -0.2 * sg, 0, -0.25 * sg);
+    setBone('Head', lerp(0.35, -0.3, rise) * sg, 0, 0);
+    setBone('Spine', lerp(0.22, -0.12, rise) * sg, 0, 0);
+    setBone('LeftUpLeg', 0, 0, 0.14 * sg); setBone('RightUpLeg', 0, 0, -0.14 * sg);
+  }
+
+  // --- hero final pose (38-50): one fist raised, other down, chin up ---
+  const hp = sstep(38, 39.5, t);
+  if (hp > 0.001) {
+    setBone('RightArm', -2.5 * hp, 0, -0.25 * hp);
+    setBone('RightForeArm', -0.35 * hp, 0, 0);
+    setBone('LeftArm', 0.1 * hp, 0, 0.3 * hp);
+    setBone('LeftForeArm', -0.4 * hp, 0, 0);
+    setBone('Head', -0.22 * hp, 0.1 * hp, 0);
+    setBone('Spine', -0.1 * hp, 0, 0);
+    setBone('LeftUpLeg', 0, 0, 0.08 * hp); setBone('RightUpLeg', -0.12 * hp, 0, -0.08 * hp);
+    setBone('RightLeg', 0.2 * hp, 0, 0);
+  }
+
+  // --- forward walk translation ---
+  if (lastT >= 0 && wA > 0.001) {
+    const dt = Math.min(0.1, t - lastT);
+    walkDist += dt * 0.55 * wA;
+  }
+  lastT = t;
+  root.position.z = Math.min(walkDist, 1.6);
+}
+
+// ---------- CAMERA SHOTS (cz = character z after walk) ----------
+function shot(t, cz) {
+  // returns {pos, look}
+  const P = (x, y, z) => new THREE.Vector3(x, y, z);
+  let p0, p1, l0, l1, a, b;
+  if (t < 5) { a = 0; b = 5; p0 = P(0, 0.7, 5.2); p1 = P(0, 0.75, 4.9); l0 = P(0, 1.25, cz); l1 = P(0, 1.25, cz); }
+  else if (t < 14) { a = 5; b = 14; p0 = P(1.1, 0.55, 4.6); p1 = P(0.5, 0.75, 3.5); l0 = P(0, 1.35, cz * 0.4); l1 = P(0, 1.3, cz); }
+  else if (t < 22) {
+    a = 14; b = 22;
+    const a0 = 0.35, a1 = 2.6, r = 4.1;
+    const aa = lerp(a0, a1, (t - a) / (b - a));
+    p0 = P(Math.sin(a0) * r, 1.45, cz + Math.cos(a0) * r); p1 = P(Math.sin(aa) * r, 1.45, cz + Math.cos(aa) * r);
+    l0 = l1 = P(0, 1.25, cz);
+    const k = sstep(a, b, t);
+    return { pos: p0.clone().lerp(p1, k), look: l0 };
+  }
+  else if (t < 30) { a = 22; b = 30; p0 = P(1.6, 1.78, cz + 2.6); p1 = P(1.25, 1.7, cz + 2.15); l0 = P(0, 1.5, cz); l1 = P(0, 1.48, cz); }
+  else if (t < 38) { a = 30; b = 38; p0 = P(-3.6, 1.9, cz + 4.8); p1 = P(-2.7, 1.45, cz + 3.9); l0 = P(0, 1.15, cz); l1 = P(0, 1.1, cz); }
+  else { a = 38; b = 50; p0 = P(0, 1.32, cz + 3.7); p1 = P(0, 1.26, cz + 2.95); l0 = P(0, 1.28, cz); l1 = P(0, 1.26, cz); }
+  const k = sstep(a, b, t);
+  // ease camera
+  const e = k * k * (3 - 2 * k);
+  return { pos: p0.clone().lerp(p1, e), look: l0.clone().lerp(l1, e) };
+}
+
+// ---------- LIGHTING TIMELINE ----------
+const GOLD = new THREE.Color(0xffb347), RED = new THREE.Color(0xff2a20),
+      BLUE = new THREE.Color(0x5f9dff), WARM = new THREE.Color(0xfff0d8);
+const tmpC = new THREE.Color();
+
+function lights(t) {
+  amb.intensity = lerp(0.02, 0.12, sstep(0, 8, t));
+  keySpot.intensity = 20 * sstep(1, 5, t) + 260 * sstep(5, 9, t);
+  backSpot.intensity = 60 * sstep(0.5, 4, t) + 120 * sstep(14, 18, t);
+  backSpot.color.copy(tmpC.copy(BLUE).lerp(GOLD, sstep(14, 22, t)));
+  rimSpot.intensity = 200 * sstep(6, 10, t);
+  rimSpot.color.copy(tmpC.copy(RED).lerp(GOLD, sstep(22, 32, t)));
+  sideSpot.intensity = 160 * sstep(22, 25, t) * (1 - sstep(36, 40, t));
+  // beams sweep during signature + hero
+  const beamOn = sstep(28, 32, t) * (1 - sstep(47, 50, t));
+  beams.forEach((bm, i) => {
+    bm.material.opacity = beamOn * (0.10 + 0.05 * Math.sin(t * 2 + i * 1.7));
+    bm.material.color.copy(tmpC.copy(GOLD).lerp(RED, 0.5 + 0.5 * Math.sin(t * 0.8 + i)));
+    bm.rotation.y = t * 0.12 * (i % 2 ? 1 : -1);
+  });
+  dust.material.opacity = 0.5 * sstep(4, 9, t);
+  // drift dust
+  const pa = dustGeo.attributes.position.array;
+  for (let i = 0; i < DUST_N; i++) {
+    pa[i * 3 + 1] += 0.0012;
+    pa[i * 3] += Math.sin(t * 0.5 + i) * 0.0006;
+    if (pa[i * 3 + 1] > 3.4) pa[i * 3 + 1] = 0;
+  }
+  dustGeo.attributes.position.needsUpdate = true;
+}
+
+// ---------- DETERMINISTIC RENDER ----------
+keySpot.target.position.set(0, 1.2, 0.4);
+backSpot.target.position.set(0, 1.4, 0);
+rimSpot.target.position.set(0, 1.2, 0.4);
+sideSpot.target.position.set(0, 1.4, 0.4);
+
+// shadows
+root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
+
+window.__renderAt = function (t) {
+  walkDist = 0; lastT = -1;
+  // re-run pose from 0 to t in small steps so walkDist accumulates deterministically
+  const steps = Math.max(1, Math.ceil(t / 0.05));
+  for (let i = 1; i <= steps; i++) pose((t * i) / steps);
+  const cz = root.position.z; // character z after walk
+  // light targets track the character
+  keySpot.target.position.set(0, 1.2, cz);
+  backSpot.target.position.set(0, 1.4, cz);
+  rimSpot.target.position.set(0, 1.2, cz);
+  sideSpot.target.position.set(0, 1.4, cz);
+  const s = shot(t, cz);
+  camera.position.copy(s.pos);
+  camera.lookAt(s.look);
+  lights(t);
+  renderer.render(scene, camera);
+  return true;
+};
+
+window.__ready = true;
+window.__dur = DUR;
+</script>
+</body>
+</html>

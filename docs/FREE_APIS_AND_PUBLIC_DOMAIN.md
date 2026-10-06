@@ -551,3 +551,151 @@ Both tested and working. No API keys needed.
 | `saves.ts` | Versioned saves, migrations, backup, export | idb-keyval (optional) |
 | `i18n.ts` | Namespaced string tables, en+es | none |
 | `analytics.ts` | Umami event tracking, safe wrapper | none (script tag) |
+# ROUND 3 — In-Game Wiring (2026-10-06)
+
+**Rule (unchanged): only CC0 / public-domain / permissive (MIT/Apache-2.0/BSD/Unlicense/OFL) goes in the game build.** CC-BY allowed with written attribution. Everything below was license-checked at research time — re-verify before shipping.
+
+All four workstreams branched from `c4de9eb`, merged to `main` 2026-10-06.
+Branches: `round3/nakama`, `round3/visuals`, `round3/audio`, `round3/content`
+(pushed to origin for review history).
+
+## 23. Procedural audio — ZzFX ✅ WIRED IN
+
+- **What:** ZzFX v1.4.0 (Frank Force, KilledByAPixel) — tiny procedural WebAudio
+  SFX synth. https://github.com/KilledByAPixel/ZzFX — **MIT** (verified in repo).
+- **jsfxr** (Unlicense) evaluated — ZzFX chosen: smaller, maintained, TS-friendly.
+- **Integration:** `src/game3d/zzfx.ts` (vendored, license header kept) +
+  `src/game3d/zxfx-sfx.ts` (recipes: zxPunch/zxKick/zxBlock/zxWhoosh/
+  zxKnockdown/zxCheer/zxBoo) augmenting the hand-rolled `combat-sfx.ts`.
+- **API:** `setSfxEngine('classic' | 'zzfx' | 'both')` (default `'both'`) —
+  punch/kick/block/whoosh/bodyfall/knockout route through ZzFX. All existing
+  exports keep working; lazy AudioContext, SSR-safe, null-guarded.
+- **Status:** ✅ committed on `round3/audio`, tsc-clean.
+
+## 24. Post-processing — three.js EffectComposer ✅ WIRED IN
+
+- **What:** three.js addons (RenderPass + UnrealBloomPass + VignetteShader +
+  OutputPass) — **MIT** (part of three.js, already a dependency).
+- **Integration:** `src/game3d/postfx.ts` — `graphics.postFx` toggle, bloom
+  threshold 0.85 (neon/signage pop without washing the fight), vignette for
+  cinematic framing. On by default on desktop, off on phones.
+- **Status:** ✅ committed on `round3/visuals`, hooked into `view.ts`/`mount.ts`.
+
+## 25. Impact particles ✅ WIRED IN
+
+- **What:** hand-rolled GPU particle pool (THREE.Points, 2048 particles) —
+  no new dependency, no license surface. (three.quarks evaluated; custom pool
+  chosen for zero-overhead combat use.)
+- **Integration:** `src/game3d/impact-particles.ts` —
+  `spawnImpactBurst(pos, kind)` with kinds: punch / kick / block / knockdown /
+  blood / dust / spark. Fired from combat hit resolution in `mount.ts`.
+- **Status:** ✅ committed on `round3/visuals`.
+
+## 26. Arena crowd ✅ WIRED IN
+
+- **What:** InstancedMesh spectator system (custom, no dependency) informed by
+  boids flocking (Ben Eater, MIT) and crowds-system-js (MIT) research.
+  (The federated street-pedestrian/boids system is separate — this is the
+  arena bowl crowd.)
+- **Integration:** `src/game3d/arena-crowd.ts` — instanced spectators with
+  per-instance excitement 0..1, `crowdReact()` spikes excitement on KOs and
+  big moments; idle/clap/cheer variation.
+- **Status:** ✅ committed on `round3/visuals`.
+
+## 27. Procedural textures ✅ WIRED IN
+
+- **What:** `tools/free-apis/proc-texture-gen.py` — numpy/PIL generator for
+  tileable asphalt / concrete / brick albedo + roughness maps (512px).
+  Fully procedural, zero license baggage (pixy.js/materialab/TexGen Pro from
+  R2 remain documented alternatives).
+- **Integration:** `public/textures/procedural/*.png` +
+  `src/game3d/stage-dressing.ts` — asphalt ground overlay (y=0.012,
+  polygon-offset, roughnessMap) hooked into `view.ts` via `dressStage(scene)`.
+- **Status:** ✅ TESTED — textures visually verified (asphalt aggregate,
+  brick running bond, concrete with formwork seams); tsc-clean.
+
+## 28. Public-domain films — Prelinger Archive ✅ WIRED IN
+
+- **What:** Three 512kb MP4s from the Prelinger Archive (all public domain):
+  `DuckandC1951_512kb.mp4` (Duck and Cover, 1951), `MakeMine1948_512kb.mp4`
+  (Make Mine Freedom, 1948), `hindenberg_explodes_512kb.mp4` (Hindenburg, 1937).
+- **Integration:** `src/game3d/stage-dressing.ts` — three freestanding in-world
+  TV screens (VideoTexture, muted/loop/playsinline, gesture fallback for
+  autoplay policies) placed around the arena.
+- **Status:** ✅ TESTED — MP4s verified valid (ftyp headers), wired into the
+  stage via `dressStage(scene)`.
+
+## 29. Voice / TTS — Piper ✅ WIRED IN (build-time)
+
+- **What:** Piper neural TTS (https://github.com/rhasspy/piper) — **MIT**,
+  pinned to the MIT 2023.11.14-2 release (newer dev moved to a GPL-3.0 fork).
+  Fully offline: no API keys, no per-line fees.
+- **Integration:** `tools/free-apis/piper-voice.py` — character casts
+  (announcer→ryan, cipher→joe, onyx→lessac, crowd→ryan), `--samples`
+  regenerates the 5 canonical WAVs in `tools/free-apis/samples/`
+  (announcer_ko, announcer_round_one, cipher_menacing, crowd_hype,
+  onyx_taunt). Binary+voices auto-download to `.piper/` (gitignored).
+  `dialogue-gen.py` authors per-character line scripts (`--synthesize`
+  renders them). `DYNAMIC_COMMENTARY.md` documents the runtime
+  event/priority/cooldown design.
+- **License nuance:** Piper is build-time only (never bundled); the release
+  tarball embeds espeak-ng (GPL-3.0) as a shared lib — irrelevant for
+  offline build use. One third-party review flags Lessac/Ryan voices as
+  possibly research-licensed — re-verify per-voice MODEL_CARDs before
+  bundling .onnx files (we don't today). Generated WAVs unaffected.
+- **Status:** ✅ TESTED — all 5 WAVs synthesized and valid.
+
+## 30. Mobile asset pipeline ✅
+
+- **What:** `tools/free-apis/mobile-pipeline.py` — PNG/JPG → downscaled WebP
+  (lossy q80 albedo, lossless data maps) + `manifest.json`. Never touches sources.
+- **Status:** ✅ TESTED — 6 procedural textures: 376KB → 112KB (70% smaller).
+
+## 31. More mocap — Rokoko free packs ✅ PULLED & TESTED
+
+- **What:** Rokoko's free mocap sample packs (fight, martial arts, idles,
+  dance, sports, walk/run, zombies) — FBX, Mixamo skeleton, 30 FPS.
+  Rokoko's site: usable "in any animation, VFX, game, 3D art etc project
+  you want, from passion project to commercial use."
+  (TrueBones evaluated — coupon-gated Gumroad checkout, no scriptable
+  downloads, not automatable. MoCap Online noted for later — manual download.)
+- **Integration:** `tools/free-apis/rokoko-mocap-puller.py` — pulls from the
+  archive.org mirror (`rokoko-free-mocap-archive`); `--list`, `--pack`,
+  `--combat` (fight + martial arts). Tested: 13 fight clips
+  (Idle_FightStance, WrestlingIntro, StepForwardandPunch, FightScene A/B…)
+  + 6 martial-arts clips (kata, Muay Thai, GetUp_WipeBloodfromMouth…),
+  all valid FBX binary. Drops into the existing retargeting pipeline
+  (`src/game3d/universal-retarget.ts`).
+- **Status:** ✅ TESTED — download + enumerate verified 2026-10-06.
+
+## 32. Nakama backend ✅ WIRED IN (client + local server)
+
+- **What:** Nakama (Heroic Labs) — **Apache-2.0** (server) / client MIT.
+- **Integration:** `tools/nakama/docker-compose.yml` + `data.yml` (one-command
+  local server), `src/game3d/nakama-client.ts` (device-ID auth, wallet,
+  leaderboard — fail-soft offline), `@heroiclabs/nakama-js` dependency,
+  `tools/nakama/proof-login.js`, `docs/NAKAMA_SETUP.md`.
+- **Status:** ✅ committed on `round3/nakama`. Live-server proof not possible
+  in this sandbox (no docker/postgres) — run `docker compose up` in
+  `tools/nakama/` on a real machine, then `node proof-login.js`.
+
+## Scripts added (round 3)
+
+| Script | Source | License | Status |
+|---|---|---|---|
+| `tools/free-apis/rokoko-mocap-puller.py` | Rokoko via archive.org | commercial-OK (rokoko.com) | ✅ tested |
+| `tools/free-apis/proc-texture-gen.py` | procedural (new) | none (own code) | ✅ tested |
+| `tools/free-apis/piper-voice.py` | Piper TTS | MIT | ✅ tested |
+| `tools/free-apis/dialogue-gen.py` | own line scripts | none (own code) | ✅ tested |
+| `tools/free-apis/mobile-pipeline.py` | PIL/WebP | none (own code) | ✅ tested |
+
+## In-game modules added (round 3)
+
+| Module | What | Branch |
+|---|---|---|
+| `src/game3d/zzfx.ts` + `zzfx-sfx.ts` | ZzFX procedural SFX engine | `round3/audio` |
+| `src/game3d/postfx.ts` | EffectComposer: bloom + vignette | `round3/visuals` |
+| `src/game3d/impact-particles.ts` | GPU impact bursts | `round3/visuals` |
+| `src/game3d/arena-crowd.ts` | instanced arena crowd | `round3/visuals` |
+| `src/game3d/stage-dressing.ts` | asphalt overlay + Prelinger TVs | `round3/content` |
+| `src/game3d/nakama-client.ts` | Nakama auth/wallet/leaderboard | `round3/nakama` |
