@@ -220,3 +220,20 @@ Research date: 2026-10-06.
   flagged in round 5) — WebCodecs + mp4-muxer keeps it clean.
 
 ---
+## 13. Owncast — self-hosted spectator streaming
+- **URL:** https://github.com/owncast/owncast
+- **What:** Self-hosted live-streaming + chat server (the open Twitch): RTMP
+  ingest → HLS out, built-in chat, ActivityPub federation, single Go binary.
+  ~11k stars, one-click images on Hetzner/DigitalOcean.
+- **License:** **MIT** (README "Distributed under the MIT License" + repo field,
+  verified 2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** The spectator-mode answer for tournaments: stream featured matches
+  (RTMP from a headless game client or LiveKit Egress) to a self-hosted Owncast
+  with chat — no Twitch cut, no ToS risk, full branding. Lower latency than
+  HLS-only setups isn't its strength (~10–30s HLS delay); for near-realtime
+  spectating use LiveKit viewer roles or rrweb live-stream mode instead, and
+  Owncast for the public broadcast. Watch: bandwidth is the real cost — budget
+  per-viewer egress.
+
+---
