@@ -33,3 +33,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** Public domain — "free of known copyright restrictions... free to use this material without restriction." Verified per-item `licenseurl` fields on archive.org metadata (e.g. Duck and Cover 1951 carries `creativecommons.org/licenses/publicdomain` plus 17 U.S.C. 105 as a federal work).
 - **Verdict:** Commercial-safe. Still verify the item's `licenseurl`/`rights` field per title (collection contains some CC items alongside PD).
 - **Notes:** Strong source for retro/period B-roll and in-game TV flavor. The per-item metadata check is the same discipline as the Feature Films entry.
+## Wikimedia Commons — video archive
+- **URL:** https://commons.wikimedia.org (reuse guide: https://commons.wikimedia.org/wiki/Commons:Simple_media_reuse_guide)
+- **What:** ~146M freely-licensed media files including video (.webm/.ogv) — city footage, crowds, nature, historical clips. Every file MUST be freely licensed or PD (strict upload requirement, community-enforced). Timed-text subtitle files available per language.
+- **License:** Per-file: CC0, CC BY, or CC BY-SA (mostly). All allow commercial use + derivatives; CC BY requires credit; CC BY-SA requires attribution AND share-alike on derivatives.
+- **Verdict:** Commercial-safe for CC0/CC BY (credit the author). AVOID CC BY-SA clips in promos — share-alike arguably reaches the rendered video as a derivative.
+- **Notes:** Search by category/gallery. License info lives on each file's description page — check per file. Good hunting ground for crowd B-roll plates and city establishing shots.
