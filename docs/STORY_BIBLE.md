@@ -270,6 +270,7 @@ The Painted (Onyx's gang) has SECRET leaders behind the scenes:
 - Echo: pink robe
 - Static: deep blue robe
 - Hollow: orange robe
+- Sombra Negra: black robe with purple trim/designs on the edges
 
 Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang' in-game — that's the visual inspiration, not the name.
 
