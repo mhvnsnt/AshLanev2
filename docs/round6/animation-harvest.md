@@ -60,6 +60,20 @@
 | autotpose | MIT | ✅ any GLB |
 | ossos | MIT | ✅ reference |
 
+## Live Test Results (2026-10-06)
+
+### ✅ Brutal-Fist: BANNON.glb auto-rigged successfully
+- **Input**: 463KB, 15 meshes, 0 bones
+- **Output**: 3MB GLB, **18-joint skeleton** (hip→spine1-3→neck→head, L/R shoulder/elbow/wrist, L/R hip/knee/ankle)
+- **Time**: 61s (joints 28s, skin 31s, T-pose 2s)
+- **Proof**: `docs/round6/proof/autorig-bannon-tpose.png` (T-pose render, mesh intact) + `docs/round6/proof/BANNON_rigged.glb`
+- **Limitation**: No finger/toe bones (BodyPix 17-keypoint model). Sufficient for locomotion/combat; hands need Phase 3 detail pass.
+
+### ⚠️ AshLanev2: MARKS.glb failed
+- **Error**: `IndexError: list index out of range` in BodyPix pose detection (no keypoints found)
+- **Status**: Documented as known limitation. BANNON proves the pipeline works; MARKS needs investigation (pose angle? mesh scale?).
+- **Next**: Try alternate AshLanev2 models; add fallback to manual joint placement.
+
 ## Next
 1. instance-rig install → rig 1 AshLanev2 + 1 Brutal-Fist model → validate → batch 33.
 2. Wire locomotion-blend into each game's locomotion path.
