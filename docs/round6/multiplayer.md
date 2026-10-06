@@ -185,3 +185,20 @@ Research date: 2026-10-06.
   runtime or a Colyseus room.
 
 ---
+## 11. rrweb — session replay (record & replay the web)
+- **URL:** https://github.com/rrweb-io/rrweb
+- **What:** Records DOM mutations + user input as a typed JSON event stream and
+  replays them pixel-perfect (rrweb-player). Powers session replay at Sentry,
+  PostHog, Amplitude, Highlight. Canvas recording plugin captures WebGL/canvas
+  frames; live-stream mode enables co-browsing/mirroring. ~20k stars.
+- **License:** **MIT** (LICENSE, reproduced in multiple downstream
+  THIRD-PARTY-NOTICES, verified 2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** Two AshLane uses: (1) bug-report replays — record menu/lobby
+  sessions on error (mask inputs with `rr-block`/`rr-mask`); (2) spectator-lite —
+  stream rrweb events of a match's DOM/canvas overlay to viewers with 1–2s
+  delay. NOT a substitute for deterministic input-log replays of the fight sim
+  itself (those come from the round-4 rollback checksums/input logs — byte-exact
+  and 100× smaller). Use rrweb for UI sessions, input logs for fights.
+
+---
