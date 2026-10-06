@@ -78,3 +78,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The commercial-safe answer to lygia for our shaders: drives fire flicker, smoke billow, scorch-edge masks, and damage dissolve transitions. Already the de-facto standard — battle-tested on mobile GPUs.
 
+## p2.js
+- **URL:** https://github.com/schteppe/p2.js
+- **What:** 2D rigid-body physics engine in JavaScript: circles/polygons/capsules, springs, constraints, broadphase sweep-and-prune, sleeping bodies.
+- **License:** MIT (LICENSE file header, p2.js authors).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** 2D physics tier for AshLane: menu-screen debris, 2D mini-game overlays, ragdoll-ish UI characters, projectile arcs for top-down map views. Lighter than Matter for single-purpose 2D sims; deterministic stepping works well for replayable VFX.
+
