@@ -21,3 +21,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (OFL font + MIT code).
 - **Notes:** Purpose-built for game UI: faction symbols, move/skill icons, inventory glyphs, achievement badges. Mature/stable (feature-complete, low churn). Icon style is fantasy-RPG — use for move lists, faction emblems, and loot/gear UI; pair with Phosphor for neutral chrome.
 - **AshLane use:** Move/skill icons, faction symbols, inventory glyphs.
+
+## 3. Font Awesome Free
+- **URL:** https://github.com/fortawesome/font-awesome · https://fontawesome.com
+- **What:** 2,000+ free icons as SVG sprites, webfonts, and JS — the largest general-purpose icon set with a free tier (solid/regular/brands styles).
+- **License:** **Icons CC-BY 4.0** (all .svg/.js) · **Fonts SIL OFL 1.1** (web/desktop fonts) · **Code MIT** — per the official README license section. Attribution required, but downloaded files carry embedded attribution comments, so normal use needs nothing extra (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe with attribution (CC-BY on the icons — add one line to credits/ATTRIBUTION.md; the OFL/MIT parts need no action).
+- **Notes:** The free **brands** set covers social/share icons (Twitch/YouTube/Discord) for menu share buttons and streamer-mode UI. Solid style matches heavy street headers; `fa-burst`-style layered icons work for combo-counter badges. Heavier than Phosphor — cherry-pick SVGs.
+- **AshLane use:** Social/brand icons, settings glyphs, share buttons, achievement badges.
