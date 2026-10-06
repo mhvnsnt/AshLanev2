@@ -1,0 +1,24 @@
+{
+  "classical": {
+    "clips": [
+      "cmu_walk",
+      "ual_idle",
+      "ddt:vic",
+      "feral"
+    ],
+    "energy": -29.6,
+    "ms": 54.82792854309082
+  },
+  "qaoa": {
+    "clips": [
+      "cmu_walk",
+      "ual_idle",
+      "ddt:vic",
+      "feral"
+    ],
+    "count": 4,
+    "quality": 3.2,
+    "seconds": 10.496525526046753,
+    "energy": -18.50126063240347
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "n": 3,
+  "p": 2,
+  "classical": {
+    "mapping": {
+      "pelvis": "Hips",
+      "spine_01": "Spine",
+      "upperarm_l": "LeftArm"
+    },
+    "similarity": 1.789819004524887,
+    "ms": 0.44345855712890625
+  },
+  "qaoa": {
+    "mapping": {
+      "pelvis": "Hips",
+      "spine_01": "Spine",
+      "upperarm_l": "LeftArm"
+    },
+    "similarity": 1.789819004524887,
+    "seconds": 5.144704341888428,
+    "energy": -12.991197008290577
+  },
+  "ground_truth": {
+    "pelvis": "Hips",
+    "spine_01": "Spine",
+    "upperarm_l": "LeftArm"
+  }
+}

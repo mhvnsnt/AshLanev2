@@ -8,3 +8,4 @@ tools/free-apis/.piper/
 
 # Voice likeness reference clips — NEVER commit (local only, see tools/voice/REFERENCE_LEDGER.md)
 tools/voice/refs/
+tools/quantum/.venv/
