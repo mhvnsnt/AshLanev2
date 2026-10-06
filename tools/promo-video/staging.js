@@ -1,6 +1,23 @@
 /**
  * staging.js — ONE shared character-staging code path for every promo cinematic.
  *
+ * PORTABILITY (owner 2026-10-06): this module is game-agnostic — fix once,
+ * apply everywhere (AshLane, Bannon, Brutal Fist). It has NO hardcoded game
+ * paths, NO per-model constants, and handles multiple skeleton families via
+ * FAMILY_ALIASES (Mixamo, C4D wrestling rigs). To port: copy staging.js +
+ * reskin.js to the target repo's tools directory; the NEEDS_* sets in
+ * reskin.js are per-game (different rosters), but the logic is shared.
+ *
+ * Game-specific differences flagged 2026-10-06:
+ * - Brutal Fist: PS1-style low-poly is INTENTIONAL — do NOT apply weight
+ *   repair or smoothing; the QA geometry gate (2.5x segment spike) may
+ *   false-positive on long low-poly triangles, tune threshold per game.
+ * - Bannon: same XFER weight-transfer pipeline as AshLane — NEEDS_WEIGHT_REPAIR
+ *   applies to the same broken-transfer models; WWE/canon DO_NOT_TOUCH list
+ *   must be maintained per roster.
+ * - AshLane: 1.85m height normalization in walk-test.html is AshLane-specific
+ *   (Bannon uses per-character scale metadata per GLOBAL height rule).
+ *
  * Why this exists: cinematic-faction.html re-implemented character staging from
  * scratch and got two things wrong that cinematic.html had right —
  *   1. feet below the ground plane (root.position.y overwritten, discarding the

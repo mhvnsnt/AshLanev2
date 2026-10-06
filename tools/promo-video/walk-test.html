@@ -18,6 +18,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { loadMotionBanks, bakeClipRole } from './faction-motion.js';
 import { CharacterStaging } from './staging.js';
+import { cleanStrayWeights, NEEDS_WEIGHT_REPAIR, DO_NOT_TOUCH_WEIGHTS } from './reskin.js';
 
 // C4D wrestling rigs -> canonical (Mixamo-style) bone names, so the mocap
 // bake path stays family-agnostic.
@@ -100,6 +101,18 @@ loader.setMeshoptDecoder(MeshoptDecoder);
 const gltf = await loader.loadAsync('/models/' + MODEL);
 const root = gltf.scene;
 scene.add(root);
+
+// Hip-pivot defect fix (2026-10-06): BANNON/MAIME have stray weights causing
+// body parts to pivot from the hips. cleanStrayWeights at load time.
+// WWE/canon models (DO_NOT_TOUCH_WEIGHTS) are never repaired.
+if (NEEDS_WEIGHT_REPAIR.has(MODEL) && !DO_NOT_TOUCH_WEIGHTS.has(MODEL)) {
+  root.traverse((o) => {
+    if (o.isSkinnedMesh) {
+      const r = cleanStrayWeights(o);
+      console.log('[walk-test] weight repair', MODEL, JSON.stringify(r));
+    }
+  });
+}
 
 // Normalize rogue scales to ~1.85m BEFORE staging (C4D wrestling rips are
 // giants; the engine does this via per-character scale metadata).

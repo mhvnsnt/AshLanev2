@@ -3,6 +3,14 @@
  * Onyx/Hollow/Echo have broken skin weights (ribbon geometry under animation).
  * This applies Laplacian smoothing to fix abrupt weight transitions.
  * Safe to run on working models too (smoothing is conservative).
+ *
+ * PORTABILITY (owner 2026-10-06): game-agnostic — fix once, apply everywhere
+ * (AshLane, Bannon, Brutal Fist). cleanStrayWeights() and autoSkinByDistance()
+ * derive anatomical regions from the model's OWN bone positions (scale-invariant,
+ * no hardcoded measurements). The NEEDS_* / DO_NOT_TOUCH_* sets are per-game
+ * roster lists — copy the module, replace the sets for the target roster.
+ * Brutal Fist EXCEPTION: PS1 low-poly is intentional — do NOT run weight repair
+ * there; the sets should be empty for that game.
  */
 import * as THREE from 'three';
 export function repairSkinWeights(skinnedMesh, iterations = 10) {
@@ -266,4 +274,40 @@ export const NEEDS_RESKIN = new Set([
   'ONYX_casual_skinned.glb',
   'HOLLOW.glb',
   'ECHO.glb',
+]);
+
+/**
+ * NEEDS_WEIGHT_REPAIR — models with the "hip-pivot" defect (2026-10-06):
+ * body parts pivoting from the hips instead of their own joints, arms/legs
+ * swinging out like they're flying off. Root cause: stray skin weights —
+ * verts bound to anatomically-impossible bones (waist verts on ForeArm,
+ * hip verts on Arm, etc.). Fixed by cleanStrayWeights() at load time.
+ *
+ * Verified 2026-10-06: MAIME fan eliminated, BANNON spike eliminated,
+ * rest pose intact for both. BANNON still twists at extreme (>60°) joint
+ * angles due to 63% stray transfer — acceptable for walk/idle promo motions.
+ */
+export const NEEDS_WEIGHT_REPAIR = new Set([
+  'BANNON_muscular_skinned.glb',
+  'MAIME_skinned.glb',
+  'MAIME_tattered_skinned.glb',
+]);
+
+/**
+ * DO_NOT_TOUCH_WEIGHTS — owner directive 2026-10-06: WWE-related models are
+ * already reskinned canon versions (Cena→John Ford, Goldberg→Bill Dozer,
+ * Cole→Marks, Jericho→Judas, Priest→Sombra Negra). Never apply weight repair,
+ * reskin, or QA-flag them. If a gate flags them, it's a false positive.
+ */
+export const DO_NOT_TOUCH_WEIGHTS = new Set([
+  'BILL_DOZER.glb',
+  'JUDAS.glb',
+  'JUDAS_alt_source.glb',
+  'JUDAS_classic.glb',
+  'JUDAS_crow.glb',
+  'JUDAS_lionheart.glb',
+  'JUDAS_painmaker.glb',
+  'JUDAS_y2j.glb',
+  'MARKS.glb',
+  'SOMBRA_NEGRA.glb',
 ]);

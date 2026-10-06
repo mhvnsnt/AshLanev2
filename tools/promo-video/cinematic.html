@@ -15,6 +15,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { cleanStrayWeights, NEEDS_WEIGHT_REPAIR, DO_NOT_TOUCH_WEIGHTS } from './reskin.js';
 
 const params = new URLSearchParams(location.search);
 const MODEL = params.get('model') || 'EL_TORO_DE_ORO.glb';
@@ -120,6 +121,17 @@ loader.setMeshoptDecoder(MeshoptDecoder);
 const gltf = await loader.loadAsync('/models/' + MODEL);
 const root = gltf.scene;
 scene.add(root);
+
+// Hip-pivot defect fix (2026-10-06): BANNON/MAIME have stray weights.
+// WWE/canon models (DO_NOT_TOUCH_WEIGHTS) are never repaired.
+if (NEEDS_WEIGHT_REPAIR.has(MODEL) && !DO_NOT_TOUCH_WEIGHTS.has(MODEL)) {
+  root.traverse((o) => {
+    if (o.isSkinnedMesh) {
+      const r = cleanStrayWeights(o);
+      console.log('[cinematic] weight repair', MODEL, JSON.stringify(r));
+    }
+  });
+}
 
 import { loadMotionBanks, makeDirector } from './real-motion.js';
 import { CharacterStaging } from './staging.js';
