@@ -522,8 +522,11 @@ export const VOICE_BIBLES: VoiceBible[] = [
     },
     attitude:
       "Exists OUTSIDE the game world. Purple robe, void-black face, diamond-grill smile, " +
-      "gold chains — the owner's avatar design. Menus, loading screens, narration, " +
-      "mid-match commentary. CRITICAL: purple = Narrator (outside fiction); RED robe = " +
+      "gold chains — the owner's avatar design. He appears SOMETIMES, never constantly: " +
+      "a story-progression narrator at curated moments (gang war shifts, territory changes, " +
+      "chapter transitions, character milestones). Scarcity is the point — when he shows up, " +
+      "the player knows something important happened. NOT a constant commentator, no mid-match " +
+      "play-by-play. CRITICAL: purple = Narrator (outside fiction); RED robe = " +
       "Buffalo Bill / 'Ashes', the in-world character. Never mix them.",
     hooks: [
       "Appears in menus, loading, narration, commentary",
