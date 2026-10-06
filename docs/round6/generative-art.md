@@ -133,3 +133,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **MIT** (LICENSE file).
 - **Verdict:** **commercial-safe** — MIT tool; art we make in it is ours, no strings.
 - **Notes:** AshLane use: hand-authored pixel sprites for HUD icons, retro mini-game segments, loading-screen pixel art, and cleaning up AI-generated sprite drafts. The indexed-palette workflow pairs with the graffiti pipeline (limit a piece to 8 faction colors → instant sticker-sheet look). Runs on the owner's machine at zero cost; project files are open formats.
+
+## LibreSprite
+
+- **URL:** https://github.com/LibreSprite/LibreSprite
+- **What:** Community fork of Aseprite from before its license went proprietary — same UI/workflow Aseprite users know (timeline, layers, pixel-perfect tools), kept alive as free software. For anyone who wants the Aseprite experience without the paid EULA.
+- **License:** **GPL-2.0** (LICENSE file).
+- **Verdict:** **prototype-only as a tool** — GPL-2.0 is fine for an art *editor* (it governs the program, not the art you draw), but never bundle it into shipped software. Output sprites are ours. (Note: upstream Aseprite itself is now proprietary/EULA — do NOT treat random "free Aseprite" downloads as open source.)
+- **Notes:** AshLane use: alternative to Pixelorama for sprite cleanup and frame-by-frame touch-up of generated character sprites. Between the two, Pixelorama (MIT) is the default recommendation; LibreSprite exists for Aseprite-muscle-memory artists. Either way, finished sprites flow into the packers below.
