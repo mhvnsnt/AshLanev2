@@ -497,3 +497,176 @@ losses, or hold an objective against superior numbers.*
 | 28 | X Gold | **The Doctrine** | Armies fight the way you wrote. |
 | 29 | X Gold | **Immortal General** | Retired. Consulted. Feared. In that order. |
 | 30 | X Gold | **The Art of War** | Your name is the textbook. There is no higher rank. There can't be. |
+
+---
+
+## PART 3 — Rank-based AI behavior spec
+
+**Layers on top of** `docs/teardowns/AI_BEHAVIOR_TEARDOWN.md` §4. Nothing in the AI teardown is
+replaced — rank *modifies* the aggro state machine (§4b), backup rules (§4c), and provocation
+ladder (§4d). All numbers below are starting tunables for playtest.
+
+### 3.1 Rank delta bands
+
+`delta = player_rank − AI_rank` (ranks 1–30). Checked at **Aware** transition (18 m) and
+re-checked whenever either party's rank changes mid-fight or a higher-rank character enters the
+scene. Tier difference amplifies: if the two characters are in different tiers, treat delta as
++1 per tier crossed (a rank-12 vs rank-9 across the Green/Teal boundary hits harder than the raw
+3 suggests).
+
+| Delta | Band | Behavior |
+|---|---|---|
+| ≤ 0 | **Peer or superior** | Normal AI-teardown behavior. If negative (AI outranks player), the *player* gets the fear UI treatment — screen-edge pulse, heartbeat audio — but no mechanical penalty. Fair is fair. |
+| 1–2 | **Wary** | +0.5 s hesitation before Engage; barks acknowledge the player's rank ("that's [Title]…"). Attack frequency −10%. |
+| 3–5 | **Intimidated** | Provocation ladder gains a **Cower** rung (see §3.2). 40% chance to **refuse initiation** — backs away instead of engaging. Attack frequency −20%, block frequency +15% (defensive shell). |
+| 6–9 | **Afraid** | 70% chance to **flee at Aware** (before ever engaging). Those who stay fight at −30% aggression. First hit taken triggers a morale check (§3.4). |
+| 10+ | **Terror** | Flees **on sight** (Aware range). Only fights if cornered (§3.5) or ordered (§3.6). Civilians already flee; this makes *thugs* flee. |
+
+**Intimidation radius** (universal curve, Part 2) is the aura check: inside it, the AI *knows* the
+player's rank without needing line-of-sight history. Outside it, rank is assessed on first visual
+contact (Aware transition).
+
+### 3.2 The Cower rung (provocation ladder insertion)
+
+AI teardown §4d ladder was: Ignore → React → Warn → Flee → Fight. With rank, it becomes:
+
+1. **Ignore** → 2. **React** → 3. **Warn** → **3b. Cower** (NEW, only when delta ≥ 3) → 4. **Flee** → 5. **Fight**
+
+- **Cower:** hands-up/backing-away animation, 2–3 s window. The AI is *asking* not to fight.
+  - Player backs off → de-escalates to Flee (AI leaves) or back to React.
+  - Player attacks → jumps to **desperate Fight** (§3.5), not normal Fight.
+  - Player issues a faction command (stand down / pay tribute, if implemented) → resolves peacefully, small rank XP ("mercy" deed).
+- Cower uses the ambient dialogue system (AI teardown §4e bark categories) — faction-specific
+  fear lines, not generic screams.
+
+### 3.3 Respect displays (same faction, AI rank < player rank)
+
+When the player encounters **same-faction** AI at delta ≥ 3:
+
+- **Deference:** AI steps aside (clears the player's path node), plays a respect gesture
+  (nod, fist-to-chest, bow — per faction flavor), barks a respect line using the player's *title*
+  ("Captain." / "Elder." / "Champ.").
+- **Unprompted backup:** respect extends the proximity-backup radius by +50% (AI teardown §4c:
+  15 m → 22.5 m at high respect). They still wait for the player to *take a hit* before joining —
+  respect doesn't make them start your fights.
+- **Refusal to spar:** same-faction AI never initiates against a higher-rank player. Ever.
+  (Prevents the "my own crew jumps me" bug class.)
+- **Tribute:** at delta ≥ 6, same-faction low ranks may offer small gifts (cash, items, info) —
+  the yakuza tribute pattern, player-side.
+
+### 3.4 Morale checks and group behavior
+
+- **First-blood check:** when an Intimidated-or-worse AI (delta ≥ 3) takes its first hit in a
+  fight, it rolls morale: 50% (delta 3–5) / 75% (delta 6–9) / 95% (delta 10+) to **break and flee**
+  immediately. This is the owner's "they know they're going to lose" beat.
+- **Leader-break cascade:** when the highest-rank visible ally of a group flees *or* drops, every
+  remaining ally with delta ≥ 3 vs the threat rolls the same morale check at +10%. Groups rout.
+- **Rally:** when a higher-rank ally (rank ≥ player's − 2) *enters* the scene, all fleeing/cowering
+  allies of that faction clear fear and re-engage — the cavalry arrived. This is also the
+  mechanical answer to "ordered to fight" (§3.6).
+- **Bodyguard override:** AI flagged as a bodyguard (protecting a superior) ignores fear while
+  the principal is in danger. Self-preservation < 25% HP (AI teardown §4c) still applies — a
+  bodyguard at death's door flees, because a dead guard protects no one.
+
+### 3.5 Cornered: the desperate fight (the owner's key beat)
+
+When a fearful AI **cannot flee** — no path to a leash/safe node within 30 m, or backed against
+geometry — it fights **desperate**, not normal:
+
+- **Wild swings:** attack speed +30%, defense/block −30%, accuracy −20%. It looks and feels like
+  panic — because it is.
+- **Getting back up:** one free knockdown recovery per fight at 25% HP ("still try and get back
+  up"), with a 1.5 s vulnerability window where the player can finish it or let it stand.
+- **Survival targeting:** desperate AI targets *escape*, not victory — its movement AI biases
+  toward the nearest exit node between attacks. If an exit opens (player moves, ally arrives),
+  it takes it and the fight ends.
+- **Never hopeless:** desperate AI can still *hurt* the player — wild swings connect. The fantasy
+  is "dangerous but doomed," not "free punching bag."
+
+### 3.6 When a grunt fights anyway (fear overrides)
+
+Fear loses to, in priority order:
+
+1. **Direct order from a present superior** — a higher-rank faction member within 20 m and line
+   of sight issuing an attack order. The chain of command is the oldest courage technology.
+   (If the superior flees or drops → immediate morale re-check at +10%.)
+2. **Defending home turf** — on faction-owned ground, effective delta is reduced by 2
+   ("home courage"). A rank-8 defending his own corner against a rank-12 plays it as delta 2
+   (Wary), not delta 4 (Intimidated).
+3. **Cornered** — §3.5. No choice is also a kind of courage.
+4. **Protecting a principal** — bodyguard override (§3.4).
+5. **Fearless flag** — a per-character personality trait (bosses, fanatics, the mentally
+   unwell). Used sparingly; if everyone is fearless, rank means nothing.
+6. **Blood debt** — story-flagged vendettas ignore fear entirely (narrative override, set by
+   WORLD_STORY_DESIGN faction arcs).
+
+### 3.7 Rank vs the AI teardown systems (integration map)
+
+| AI teardown §4 system | How rank modifies it |
+|---|---|
+| §4b Aggro (Aware 18 m / Engage 8 m / Leash 30 m, max 3 attackers) | Engage transition gated by morale check when delta ≥ 3. Max-3-attacker cap unchanged — rank doesn't let you get mobbed *harder*. Leash unchanged. |
+| §4c Proximity backup (15 m + LoS, trigger = player takes hit) | Radius scales with player rank (universal curve: 10→30 m). Respect extends it +50% (§3.3). Recruit cap follows the universal curve (0→6). |
+| §4c Self-preservation (< 25% HP flees) | Unchanged — outranks everything except bodyguard duty, and even that bends at death's door. |
+| §4d Provocation ladder | Gains the Cower rung at delta ≥ 3 (§3.2). |
+| §4e Ambient barks | Fear/respect bark categories added, keyed to delta bands and player title. |
+| Turf meta (SA_TURF_WAR_TEARDOWN) | Home-turf courage (−2 effective delta, §3.6.2). |
+
+### 3.8 Rank gates for story progression (WORLD_STORY_DESIGN hooks)
+
+Recommended gates — the world-story worker should treat these as the default contract:
+
+- **Rank 4** (Tier II): faction membership formalized (patch vote / oath / exam passed). Before
+  this, you're an associate — the story treats you as outside.
+- **Rank 10** (Tier IV): tournament/contender storylines unlock; turf-claim actions unlock.
+  WORLD_STORY_DESIGN's "rep gates" section maps here.
+- **Rank 16** (Tier VI): turf *challenge* declaration — the mid-game war arc.
+- **Rank 22** (Tier VIII): the city notices. **Narrator milestone trigger** — the purple robe
+  appears to mark "you're a power now" (per NARRATOR.md: curated milestones only).
+- **Rank 28** (Tier X): endgame faction arcs; rival bosses take the field personally.
+
+### 3.9 Anti-failure rules
+
+- **Civilians never check rank.** The Block ladder is social, not martial — civilians don't cower,
+  don't fight, don't care about your 30 ranks. (Owner's rule, preserved.)
+- **Rank is per-faction.** Being The One (street 30) means nothing to a police Captain — cross-
+  faction delta uses the *relevant* ladder only. Global Street Rep (WORLD_STORY_DESIGN dual-axis)
+  adds a small universal intimidation floor (+1 effective delta at max rep), nothing more.
+- **No fear-stunlock:** an AI that fails a morale check and flees can't be re-feared into
+  fleeing *further* — it just keeps running. Fear resolves, it doesn't loop.
+- **Bosses are fear-capped:** named/story bosses never go above Afraid, and never flee at Aware.
+  They can Cower (great drama) but they don't run off-screen. Story needs its confrontations.
+- **The player is never debuffed by being outranked** — only UI pressure (heartbeat, edge pulse).
+  Losing because the game decided you're scared is not a mechanic we're shipping.
+
+---
+
+## OPEN QUESTIONS (owner decisions needed)
+
+1. **One rank per faction, or one ladder the player climbs?** Recommended: per-faction rank
+   (you can be a Street Legend *and* a Police Probationer — the comedy writes itself) + global
+   Street Rep as the universal floor. Needs owner sign-off.
+2. **Demotion yes/no?** Recommended: Tekken-style, from rank 10 up. Below 10 is safe.
+3. **Cross-faction recognition:** should a max-rank Syndicate head intimidate street thugs at
+   all? Recommended: only via global Street Rep floor (+1), not the full ladder.
+4. **The Block ladder in combat:** civilians don't fight — but should a rank-30 Eternal Neighbor
+   be able to *stop* a street fight by showing up? (Recommended: yes — "the block intervenes"
+   event. Great Urban Reign/GTA texture.)
+5. **Wrestler-stable rank vs faction rank:** is a Champion (stable 16) automatically respected by
+   street crews? Recommended: stable rank converts to Street Rep at 50% — fame crosses over,
+   authority doesn't.
+
+## Sources (Part 1)
+
+- Wikipedia: "Yakuza" (family structure, shikkobu posts, Yamaguchi-gumi 2024 order);
+  "Outlaw motorcycle club" (officer structure, prospect pipeline, chapters);
+  "Sicilian Mafia" (Buscetta clan hierarchy: boss/underboss/consigliere/decina).
+- FBI National Gang Threat Assessment 2009 & National Gang Report 2013 (Latin Kings structure,
+  prison shot-caller dynamics, Sureño/Eme hierarchy).
+- PoliceMag via pitag.com, "The Structure of Gangs" (Aztec-pyramid model, OG/veterano informal
+  authority, two-arm structure).
+- Brainscape POST gang flashcards; answers.com street-gang ranks (associate → BG → member →
+  shot caller → OG ladder pattern).
+- Fandom wikis (Sopranos/Godfather/Mafia): Don → underboss → consigliere → capo → soldier →
+  associate chain (summarized, not reproduced).
+- Tekken 8 rank structure: 30 ranks / 10 color divisions (dotesports, tekken.fandom.com,
+  esports.gg, estnn.com) — structural inspiration for the tier system only; no titles copied.
