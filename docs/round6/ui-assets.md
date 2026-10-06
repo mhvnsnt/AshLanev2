@@ -85,3 +85,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT).
 - **Notes:** The pragmatic base for the street-art menu kit: take daisyUI's component *structure* (modal, drawer, menu, toast) and reskin with Concrete Jungle tokens — this is exactly how you avoid the "generic mobile-style menu" the owner rejected. Custom theme support means the SWMG palette (ember, brass, concrete) becomes a first-class theme. CSS-only = zero runtime cost, works with the existing Tailwind v4 setup.
 - **AshLane use:** Menu component base (modals, drawers, toasts, tabs) reskinned to Concrete Jungle; settings screens.
+
+## 11. Animate.css — ⚠️ LICENSE CHANGED, do not ship current version
+- **URL:** https://github.com/animate-css/animate.css · https://animate.style
+- **What:** The classic "just-add-water" CSS animation library — 80+ entrance/exit/attention animations as classes (`animate__bounceIn`, `animate__fadeOutUp`). Built-in `prefers-reduced-motion` support.
+- **License:** ⚠️ **Hippocratic License 2.1** (current v4.x, per the README license badge + LICENSE file) — an *ethical-source* license with use restrictions, **NOT** MIT. It fails the owner's license rule (only MIT/Apache/BSD/Unlicense/OFL/ISC/CC0 in the build). Older **v3.x was MIT** (repo keeps old docs for v3.x and under).
+- **Verdict:** 🔴 **Do NOT ship the current version.** If the keyframe vocabulary is wanted, pin `animate.css@3.7.2` (last MIT release) — or lift only the *easing/duration patterns* as inspiration and hand-write keyframes.
+- **Notes:** This is exactly why the license rule says to check the actual LICENSE file: every third-party roundup still calls Animate.css "MIT". The keyframes themselves are the value — bounceIn/tada/wobble timing curves are great references for KO announcements and combo-counter pops. For new code, prefer anime.js (#13) or Motion (already in R5 stack).
+- **AshLane use:** Animation *reference* only — KO text pops, combo-counter entrances, menu stagger timing. Never bundle v4+.
