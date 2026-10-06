@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+  canvas { display: block; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { loadMotionBanks, makeCastDirector } from './faction-motion.js';
+
+const DUR = 50;
+const W = 1920, H = 1080;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x030308);
+scene.fog = new THREE.FogExp2(0x030308, 0.045);
+const camera = new THREE.PerspectiveCamera(42, W / H, 0.05, 120);
+
+// ================= STREET ENVIRONMENT =================
+// Wet asphalt
+const asphalt = new THREE.Mesh(
+  new THREE.PlaneGeometry(30, 70),
+  new THREE.MeshStandardMaterial({ color: 0x0b0b10, roughness: 0.35, metalness: 0.55 })
+);
+asphalt.rotation.x = -Math.PI / 2;
+asphalt.position.z = -10;
+asphalt.receiveShadow = true;
+scene.add(asphalt);
+
+// Center dashes
+const dashMat = new THREE.MeshBasicMaterial({ color: 0x8a7a2a });
+for (let z = 12; z > -34; z -= 4) {
+  const dash = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 1.6), dashMat);
+  dash.rotation.x = -Math.PI / 2;
+  dash.position.set(0, 0.005, z);
+  scene.add(dash);
+}
+
+// Buildings (both sides) with lit windows via canvas texture
+function buildingTexture(litRatio, hue) {
+  const c = document.createElement('canvas'); c.width = 128; c.height = 256;
+  const g = c.getContext('2d');
+  g.fillStyle = '#0a0a0f'; g.fillRect(0, 0, 128, 256);
+  for (let y = 8; y < 248; y += 22) {
+    for (let x = 8; x < 120; x += 20) {
+      const lit = Math.random() < litRatio;
+      g.fillStyle = lit ? hue : '#111118';
+      g.fillRect(x, y, 12, 14);
+    }
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const bTexA = buildingTexture(0.28, '#ffd9a0');
+const bTexB = buildingTexture(0.18, '#9fd8ff');
+const bMatA = new THREE.MeshStandardMaterial({ map: bTexA, roughness: 0.9 });
+const bMatB = new THREE.MeshStandardMaterial({ map: bTexB, roughness: 0.9 });
+let bi = 0;
+for (let z = 14; z > -36; z -= 10) {
+  for (const sx of [-1, 1]) {
+    const h = 9 + Math.random() * 14, w = 8 + Math.random() * 3;
+    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 9), (bi++ % 2) ? bMatA : bMatB);
+    b.position.set(sx * (9.5 + Math.random() * 2), h / 2, z + (Math.random() - 0.5) * 2);
+    scene.add(b);
+  }
+}
+
+// Neon signs (canvas textures, SWMG palette — no real business names)
+function neonSign(text, color) {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = '#050508'; g.fillRect(0, 0, 512, 128);
+  g.font = 'bold 64px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.shadowColor = color; g.shadowBlur = 28;
+  g.fillStyle = color; g.fillText(text, 256, 66);
+  g.shadowBlur = 8; g.fillText(text, 256, 66);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.Mesh(
+    new THREE.PlaneGeometry(4.4, 1.1),
+    new THREE.MeshBasicMaterial({ map: t, transparent: true })
+  );
+}
+const signs = [
+  { m: neonSign('SWMG', '#39ff6a'), p: [-7.2, 4.2, 6], ry: Math.PI / 2 },
+  { m: neonSign('ASHLANE', '#ff2fb3'), p: [7.2, 5.0, -6], ry: -Math.PI / 2 },
+  { m: neonSign('24 HR', '#39ff6a'), p: [-7.2, 3.4, -16], ry: Math.PI / 2 },
+  { m: neonSign('THE LANE', '#ffb347'), p: [7.2, 4.6, -24], ry: -Math.PI / 2 },
+];
+for (const s of signs) { s.m.position.set(...s.p); s.m.rotation.y = s.ry; scene.add(s.m); }
+
+// Streetlight poles + pools
+const poleMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1e, roughness: 0.7, metalness: 0.6 });
+const lampPositions = [[-5.5, 8], [5.5, -2], [-5.5, -14]];
+for (const [x, z] of lampPositions) {
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 6.5, 10), poleMat);
+  pole.position.set(x, 3.25, z); scene.add(pole);
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.1, 0.1), poleMat);
+  arm.position.set(x + (x < 0 ? 0.75 : -0.75), 6.4, z); scene.add(arm);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 10),
+    new THREE.MeshBasicMaterial({ color: 0xffc98a }));
+  lamp.position.set(x + (x < 0 ? 1.5 : -1.5), 6.32, z); scene.add(lamp);
+}
+
+// Props: dumpster, trash bags, parked car silhouette
+const dumpster = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 1.2),
+  new THREE.MeshStandardMaterial({ color: 0x1d3a24, roughness: 0.8, metalness: 0.3 }));
+dumpster.position.set(-6.2, 0.65, 3.5); dumpster.castShadow = true; scene.add(dumpster);
+for (let i = 0; i < 4; i++) {
+  const bag = new THREE.Mesh(new THREE.SphereGeometry(0.32 + Math.random() * 0.12, 8, 8),
+    new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.95 }));
+  bag.position.set(-5.4 + Math.random(), 0.3, 4.6 + Math.random() * 1.4);
+  bag.scale.y = 0.85; scene.add(bag);
+}
+const carBody = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.75, 4.4),
+  new THREE.MeshStandardMaterial({ color: 0x101014, roughness: 0.4, metalness: 0.6 }));
+carBody.position.set(6.4, 0.55, -9); carBody.castShadow = true; scene.add(carBody);
+const carTop = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.6, 2.2),
+  new THREE.MeshStandardMaterial({ color: 0x0c0c10, roughness: 0.3, metalness: 0.7 }));
+carTop.position.set(6.4, 1.15, -9); scene.add(carTop);
+
+// Haze dust
+const DUST_N = 320;
+const dustGeo = new THREE.BufferGeometry();
+const dustPos = new Float32Array(DUST_N * 3);
+for (let i = 0; i < DUST_N; i++) {
+  dustPos[i * 3] = (Math.random() - 0.5) * 16;
+  dustPos[i * 3 + 1] = Math.random() * 4;
+  dustPos[i * 3 + 2] = 12 - Math.random() * 34;
+}
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+  color: 0xaad4ff, size: 0.02, transparent: true, opacity: 0.0,
+  blending: THREE.AdditiveBlending, depthWrite: false
+}));
+scene.add(dust);
+
+// ================= LIGHTS =================
+const amb = new THREE.AmbientLight(0x2a3a5f, 0.0);
+scene.add(amb);
+
+const neonGreen = new THREE.PointLight(0x39ff6a, 0, 22, 1.6);
+neonGreen.position.set(-6.5, 4.2, 6); scene.add(neonGreen);
+const neonPink = new THREE.PointLight(0xff2fb3, 0, 22, 1.6);
+neonPink.position.set(6.5, 5.0, -6); scene.add(neonPink);
+
+function streetSpot(x, z) {
+  const s = new THREE.SpotLight(0xffb45e, 0, 20, 0.75, 0.55, 1.4);
+  s.position.set(x + (x < 0 ? 1.5 : -1.5), 6.3, z);
+  s.target.position.set(x + (x < 0 ? 1.5 : -1.5), 0, z);
+  s.castShadow = true; s.shadow.mapSize.set(1024, 1024);
+  scene.add(s); scene.add(s.target);
+  return s;
+}
+const spotA = streetSpot(-5.5, 8);    // over Onyx's entrance
+const spotB = streetSpot(5.5, -2);     // mid street
+const spotC = streetSpot(-5.5, -14);   // over the rivals (flickers)
+
+const rim = new THREE.SpotLight(0x6fa8ff, 0, 30, 0.8, 0.6, 1.4);
+rim.position.set(0, 4.5, 12);
+rim.target.position.set(0, 1.2, 2);
+scene.add(rim); scene.add(rim.target);
+
+const redWash = new THREE.PointLight(0xff2a20, 0, 30, 1.5);
+redWash.position.set(0, 3, -6); scene.add(redWash);
+
+// ================= CAST =================
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+
+async function loadChar(file, tint) {
+  const gltf = await loader.loadAsync('/models/' + file);
+  const root = gltf.scene;
+  scene.add(root);
+  const bbox = new THREE.Box3().setFromObject(root);
+  const center = bbox.getCenter(new THREE.Vector3());
+  root.position.x -= center.x; root.position.z -= center.z;
+  root.position.y -= bbox.min.y;
+  if (tint) {
+    root.traverse(o => {
+      if (o.isMesh) {
+        o.material = o.material.clone();
+        o.material.color.setHex(0x551111);
+        o.material.emissive = new THREE.Color(0x220505);
+      }
+    });
+  }
+  root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
+  const bones = {};
+  root.traverse(o => { if (o.isBone) bones[o.name.replace(/^mixamorig:?/, '')] = o; });
+  const rest = {};
+  for (const k in bones) rest[k] = bones[k].quaternion.clone();
+  return { root, bones, rest };
+}
+
+const defs = [
+  { name: 'onyx',   file: 'ONYX_street.glb',      base: [0, 0, 2],     face: Math.PI },
+  { name: 'hollow', file: 'HOLLOW.glb',           base: [1.2, 0, 2.8],  face: Math.PI },
+  { name: 'static', file: 'STATIC.glb',           base: [-1.2, 0, 2.8],  face: Math.PI },
+  { name: 'echo',   file: 'ECHO.glb',             base: [2.2, 0, 3.6],   face: Math.PI },
+  { name: 'cipher', file: 'CIPHER_rigged.glb',    base: [-2.2, 0, 3.6],  face: Math.PI },
+  { name: 'rival1', file: 'CAIN_ELIAS_gear.glb',  base: [0, 0, -14],     face: 0, tint: true },
+  { name: 'rival2', file: 'CAIN_ELIAS_gear.glb',  base: [-1.6, 0, -14.5], face: 0, tint: true },
+  { name: 'rival3', file: 'CAIN_ELIAS_gear.glb',  base: [1.6, 0, -14.5],  face: 0, tint: true },
+];
+
+const cast = [];
+for (const d of defs) {
+  const { root, bones, rest } = await loadChar(d.file, d.tint);
+  root.rotation.y = d.face;
+  cast.push({ name: d.name, root, bones, rest, basePos: new THREE.Vector3(...d.base), face: d.face });
+}
+const C = Object.fromEntries(cast.map(c => [c.name, c]));
+
+// Walk-in start positions (from the dark, z=10)
+const walkFrom = { onyx: [0, 0, 10], hollow: [1.2, 0, 10], static: [-1.2, 0, 10], echo: [2.2, 0, 10], cipher: [-2.2, 0, 10] };
+
+// Choreographies (times in promo seconds)
+C.onyx.choreo = [
+  { t0: 5, t1: 12, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 12, t1: 50, clip: 'boxidle', mode: 'loop' },
+];
+C.onyx.visible = [5, 50];
+C.onyx.rootTrack = [{ t: 5, pos: walkFrom.onyx }, { t: 12, pos: [0, 0, 2] }, { t: 50, pos: [0, 0, 2] }];
+
+C.hollow.choreo = [
+  { t0: 12.5, t1: 16, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 16, t1: 38, clip: 'guardhigh', mode: 'hold', holdT: 1.9 },
+  { t0: 38, t1: 44, clip: 'suplex', mode: 'once', role: 'atk' },
+  { t0: 44, t1: 50, clip: 'guardhigh', mode: 'hold', holdT: 1.9 },
+];
+C.hollow.visible = [12.5, 50];
+C.hollow.rootTrack = [
+  { t: 12.5, pos: walkFrom.hollow }, { t: 16, pos: [1.2, 0, 2.8] },
+  { t: 32, pos: [1.2, 0, 2.8] }, { t: 38, pos: [0.8, 0, -2.5] }, { t: 50, pos: [0.8, 0, -2.5] },
+];
+
+C.static.choreo = [
+  { t0: 14, t1: 17.5, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 17.5, t1: 20, clip: 'boxidle', mode: 'loop' },
+  { t0: 20, t1: 26, clip: 'taunt_kofi', mode: 'once' },
+  { t0: 26, t1: 50, clip: 'boxidle', mode: 'loop' },
+];
+C.static.visible = [14, 50];
+C.static.rootTrack = [
+  { t: 14, pos: walkFrom.static }, { t: 17.5, pos: [-1.2, 0, 2.8] },
+  { t: 32, pos: [-1.2, 0, 2.8] }, { t: 38, pos: [-1.0, 0, -1.5] }, { t: 50, pos: [-1.0, 0, -1.5] },
+];
+
+C.echo.choreo = [
+  { t0: 15.5, t1: 19, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 19, t1: 23, clip: 'boxidle', mode: 'loop' },
+  { t0: 23, t1: 26, clip: 'esquiva', mode: 'loop' },
+  { t0: 26, t1: 50, clip: 'boxidle', mode: 'loop' },
+];
+C.echo.visible = [15.5, 50];
+C.echo.rootTrack = [
+  { t: 15.5, pos: walkFrom.echo }, { t: 19, pos: [2.2, 0, 3.6] },
+  { t: 32, pos: [2.2, 0, 3.6] }, { t: 38, pos: [2.0, 0, -1.0] }, { t: 50, pos: [2.0, 0, -1.0] },
+];
+
+C.cipher.choreo = [
+  { t0: 17, t1: 20.5, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 20.5, t1: 24.5, clip: 'boxidle', mode: 'loop' },
+  { t0: 24.5, t1: 26, clip: 'capoeira', mode: 'hold', holdT: 1.93 },
+  { t0: 26, t1: 50, clip: 'boxidle', mode: 'loop' },
+];
+C.cipher.visible = [17, 50];
+C.cipher.rootTrack = [
+  { t: 17, pos: walkFrom.cipher }, { t: 20.5, pos: [-2.2, 0, 3.6] },
+  { t: 32, pos: [-2.2, 0, 3.6] }, { t: 38, pos: [-2.0, 0, -1.0] }, { t: 50, pos: [-2.0, 0, -1.0] },
+];
+
+// Rivals: lurk 26-32, advance 32-38, then the suplex
+C.rival1.choreo = [
+  { t0: 26, t1: 32, clip: 'boxidle', mode: 'loop' },
+  { t0: 32, t1: 38, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 38, t1: 44, clip: 'suplex', mode: 'once', role: 'vic' },
+  { t0: 44, t1: 50, clip: 'fallflat', mode: 'hold', holdT: 0.5 },
+];
+C.rival1.visible = [26, 50];
+C.rival1.rootTrack = [
+  { t: 26, pos: [0, 0, -14] }, { t: 38, pos: [0.8, 0, -4] },
+  // suplex lift arc (synced to clip: heave ~41.1s, slam ~42.7s)
+  { t: 39.5, pos: [0.8, 0.25, -4] }, { t: 41.1, pos: [0.8, 1.2, -4.2] },
+  { t: 42.7, pos: [0.8, 0.05, -5.2] }, { t: 44, pos: [0.8, 0, -5.2] }, { t: 50, pos: [0.8, 0, -5.2] },
+];
+C.rival2.choreo = [
+  { t0: 26, t1: 32, clip: 'boxidle', mode: 'loop' },
+  { t0: 32, t1: 38, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 38, t1: 40, clip: 'hitback', mode: 'once' },
+  { t0: 40, t1: 50, clip: 'boxidle', mode: 'loop' },
+];
+C.rival2.visible = [26, 50];
+C.rival2.rootTrack = [
+  { t: 26, pos: [-1.6, 0, -14.5] }, { t: 38, pos: [-1.2, 0, -5.5] }, { t: 50, pos: [-1.2, 0, -5.5] },
+];
+C.rival3.choreo = [
+  { t0: 26, t1: 32, clip: 'boxidle', mode: 'loop' },
+  { t0: 32, t1: 38, clip: 'walk', bank: 'cmu', mode: 'loop' },
+  { t0: 38, t1: 40, clip: 'hit', mode: 'once' },
+  { t0: 40, t1: 50, clip: 'boxidle', mode: 'loop' },
+];
+C.rival3.visible = [26, 50];
+C.rival3.rootTrack = [
+  { t: 26, pos: [1.6, 0, -14.5] }, { t: 38, pos: [2.4, 0, -5.5] }, { t: 50, pos: [2.4, 0, -5.5] },
+];
+
+const banks = await loadMotionBanks();
+const director = makeCastDirector(banks, cast);
+
+// ================= CAMERA =================
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const lerp = (a, b, t) => a + (b - a) * t;
+
+function shot(t) {
+  let p0, p1, l0, l1, a, b;
+  if (t < 5) {           // 1: empty street
+    a = 0; b = 5;
+    p0 = V3(0, 2.2, 14); p1 = V3(0, 2.0, 12); l0 = l1 = V3(0, 1.5, 0);
+  } else if (t < 12) {   // 2: the leader
+    a = 5; b = 12;
+    p0 = V3(2.6, 1.1, 6.5); p1 = V3(2.2, 1.2, 3.0); l0 = l1 = V3(0, 1.4, 2);
+  } else if (t < 20) {   // 3: the gang assembles
+    a = 12; b = 20;
+    p0 = V3(-4.5, 1.6, 5.5); p1 = V3(-5.5, 1.8, 7.5); l0 = l1 = V3(0, 1.4, 2.5);
+  } else if (t < 26) {   // 4: personality cuts
+    const cuts = [
+      { a: 20, b: 21.5, p: V3(0.3, 1.7, 5.0), l: V3(-1.2, 1.4, 2.8) },   // Static
+      { a: 21.5, b: 23, p: V3(-0.3, 1.7, 5.0), l: V3(1.2, 1.4, 2.8) },   // Hollow
+      { a: 23, b: 24.5, p: V3(3.7, 1.7, 5.6), l: V3(2.2, 1.4, 3.6) },    // Echo
+      { a: 24.5, b: 26, p: V3(-3.7, 1.7, 5.6), l: V3(-2.2, 1.4, 3.6) },  // Cipher
+    ];
+    for (const c of cuts) if (t >= c.a && t < c.b) return { pos: c.p, look: c.l };
+    return { pos: cuts[0].p, look: cuts[0].l };
+  } else if (t < 32) {   // 5: the rival crew
+    a = 26; b = 32;
+    p0 = V3(0, 2.1, -1.5); p1 = V3(0, 1.9, -2.5); l0 = l1 = V3(0, 1.4, -14);
+  } else if (t < 46) {   // 6: the takeover
+    a = 32; b = 46;
+    p0 = V3(3.0, 2.4, 9.0); p1 = V3(2.0, 1.8, 5.5); l0 = l1 = V3(0, 1.3, -2);
+  } else {               // 7: title hold
+    a = 46; b = 50;
+    p0 = V3(1.5, 1.7, 6.0); p1 = V3(1.4, 1.65, 5.7); l0 = l1 = V3(0, 1.35, 1.0);
+  }
+  const k = sstep(a, b, t), e = k * k * (3 - 2 * k);
+  return { pos: p0.clone().lerp(p1, e), look: l0.clone().lerp(l1, e) };
+}
+
+// ================= LIGHTING TIMELINE =================
+const GOLD = new THREE.Color(0xffb347), RED = new THREE.Color(0xff2a20),
+      SODIUM = new THREE.Color(0xffb45e), NEON_G = new THREE.Color(0x39ff6a);
+const tmpC = new THREE.Color();
+
+function lights(t) {
+  amb.intensity = lerp(0.03, 0.10, sstep(0, 10, t));
+  // neon ramps with the gang
+  neonGreen.intensity = 30 * sstep(4, 10, t);
+  neonPink.intensity = 30 * sstep(10, 16, t);
+  // streetlights
+  spotA.intensity = 180 * sstep(3, 6, t);
+  spotB.intensity = 150 * sstep(10, 14, t);
+  const flick = (Math.sin(t * 37.0) > -0.2 ? 1 : 0.25); // faulty lamp over rivals
+  spotC.intensity = (60 * sstep(24, 27, t) + 140 * sstep(27, 30, t)) * (t < 32 ? flick : 1);
+  // rim on the gang
+  rim.intensity = 120 * sstep(5, 9, t);
+  rim.color.copy(tmpC.copy(new THREE.Color(0x6fa8ff)).lerp(RED, sstep(32, 40, t)));
+  // red push during confrontation
+  redWash.intensity = 60 * sstep(32, 38, t);
+  // sign flicker (subtle)
+  signs[1].visible = Math.sin(t * 23.0) > -0.85;
+  // haze
+  dust.material.opacity = 0.45 * sstep(2, 8, t) + 0.25 * sstep(32, 38, t);
+  const pa = dustGeo.attributes.position.array;
+  for (let i = 0; i < DUST_N; i++) {
+    pa[i * 3 + 1] += 0.0011;
+    pa[i * 3] += Math.sin(t * 0.4 + i) * 0.0007;
+    if (pa[i * 3 + 1] > 4.2) pa[i * 3 + 1] = 0;
+  }
+  dustGeo.attributes.position.needsUpdate = true;
+}
+
+// ================= DETERMINISTIC RENDER =================
+rim.target.position.set(0, 1.2, 2);
+
+window.__renderAt = function (t) {
+  director.poseAt(t);
+  const s = shot(t);
+  camera.position.copy(s.pos);
+  camera.lookAt(s.look);
+  lights(t);
+  renderer.render(scene, camera);
+  return true;
+};
+
+window.__ready = true;
+window.__dur = DUR;
+</script>
+</body>
+</html>
