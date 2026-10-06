@@ -153,3 +153,22 @@ checked 2026-10-06. Re-verify before shipping.
   (a few dozen neurons) for mobile frame budgets; train offline, ship
   frozen weights, run inference only. Pairs with Yuka's perception as the
   feature source. Never ship live training on-device in v1 — inference only.
+
+---
+
+## neataptic
+
+- **URL:** https://github.com/wagenaartje/neataptic
+- **What:** Neuroevolution (NEAT) + backpropagation for browser and Node:
+  evolves neural-network topologies and weights by genetic algorithm,
+  no training data needed — fitness function only.
+- **License:** MIT (LICENSE file: "The MIT License (MIT)", Copyright 2017
+  Thomas Wagenaar).
+- **Verdict:** commercial-safe.
+- **Notes:** Offline AI-tuning path: evolve opponent behavior networks
+  against scripted sparring partners (fitness = damage dealt, damage
+  avoided, match wins), then ship the winning genome frozen. NEAT discovers
+  non-obvious counters a designer wouldn't script — useful for boss-tier
+  opponents and the "Warpath"-style wildcards. Evolve on desktop, run the
+  tiny evolved net on mobile. Research-only until the pipeline proves out;
+  classic trees/FSM ship first.
