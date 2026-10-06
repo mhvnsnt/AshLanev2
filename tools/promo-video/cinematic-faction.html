@@ -14,6 +14,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { repairSkinWeights, NEEDS_RESKIN } from './reskin.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { loadMotionBanks, makeCastDirector } from './faction-motion.js';
 
@@ -193,6 +194,12 @@ async function loadChar(file, tint) {
   const gltf = await loader.loadAsync('/models/' + file);
   const root = gltf.scene;
   scene.add(root);
+  // Repair broken skin weights (Onyx/Hollow/Echo have bad weight transfers)
+  if (NEEDS_RESKIN.has(file)) {
+    root.traverse(o => {
+      if (o.isSkinnedMesh) repairSkinWeights(o, 12);
+    });
+  }
   const bbox = new THREE.Box3().setFromObject(root);
   const center = bbox.getCenter(new THREE.Vector3());
   root.position.x -= center.x; root.position.z -= center.z;

@@ -32,6 +32,7 @@ function serve(page) {
       else if (urlPath === '/cinematic-faction.html') filePath = path.join(HERE, 'cinematic-faction.html');
       else if (urlPath === '/real-motion.js') filePath = path.join(HERE, 'real-motion.js');
       else if (urlPath === '/faction-motion.js') filePath = path.join(HERE, 'faction-motion.js');
+      else if (urlPath === '/reskin.js') filePath = path.join(HERE, 'reskin.js');
       else if (urlPath.startsWith('/models/')) filePath = path.join(MODELS_DIR, urlPath.slice(8));
       else if (urlPath.startsWith('/motion/')) filePath = path.join(HERE, '..', '..', 'public', 'motion', urlPath.slice(8));
       else if (urlPath.startsWith('/node_modules/')) filePath = path.join(RENDERER_NODE_MODULES, urlPath.slice(14));
@@ -54,10 +55,10 @@ async function main() {
   const end = parseFloat(a.end || '50');
   const fps = parseInt(a.fps || '24', 10);
   const extra = a.extra || '';
-  const page = a.page || 'cinematic.html';
+  const pageFile = a.page || 'cinematic.html';
   fs.mkdirSync(out, { recursive: true });
 
-  const server = await serve(page);
+  const server = await serve(pageFile);
   const port = server.address().port;
 
   const browser = await puppeteer.launch({
@@ -67,7 +68,7 @@ async function main() {
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
-  await page.goto(`http://127.0.0.1:${port}/${page}?model=${encodeURIComponent(model)}${extra ? '&' + extra : ''}`, { waitUntil: 'networkidle0', timeout: 120000 });
+  await page.goto(`http://127.0.0.1:${port}/${pageFile}?model=${encodeURIComponent(model)}${extra ? '&' + extra : ''}`, { waitUntil: 'networkidle0', timeout: 120000 });
   await page.waitForFunction('window.__ready === true', { timeout: 120000 });
 
   const n = Math.round((end - start) * fps);
