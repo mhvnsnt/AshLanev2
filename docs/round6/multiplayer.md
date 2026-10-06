@@ -80,3 +80,21 @@ Research date: 2026-10-06.
   not now.
 
 ---
+## 5. Colyseus — rooms, lobbies, state sync (Node.js)
+- **URL:** https://github.com/colyseus/colyseus
+- **What:** Multiplayer framework for Node.js: room-based architecture with
+  built-in matchmaking (filtering, queuing, reconnection), delta-compressed
+  binary state sync via @colyseus/schema, and JS/Unity/Defold/Haxe clients.
+  Authoritative-server model = cheat-resistant by design. v0.17/0.18 line in
+  2026 (public 1.0 roadmap); scales with Redis presence.
+- **License:** **MIT** — "Free forever, even for commercial games" (README +
+  repo license field, verified 2026-10-06).
+- **Verdict:** commercial-safe.
+- **Notes:** Strongest lobby/matchmaking complement to Nakama in this wave:
+  Nakama owns accounts/storage/leaderboards; Colyseus owns live rooms (fight
+  lobbies, crew hangouts, spectator rooms) with automatic state sync. JS client
+  drops straight into the three.js build. Colyseus Cloud is a separate paid
+  product ($15/mo) — self-host is free/unlimited. Pair with openskill.js (#10)
+  for rated rooms.
+
+---
