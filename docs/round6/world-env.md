@@ -51,3 +51,18 @@ Prelinger.
 - **Notes:** Use as the canonical reference implementation when porting the
   CK42BB weather states or ektogamat rain into AshLane's pinned three.js version.
   Check which three revision AshLane pins — the compute examples track latest.
+
+## threex.daynight (jeromeetienne)
+- **URL:** https://github.com/jeromeetienne/threex.daynight/blob/HEAD/README.md
+- **What:** Classic three.js day/night cycle extension: four modules driven by a
+  single `sunAngle` — SunSphere (sun disc color/position), SunLight (directional
+  light), SkyDome (sky color shifts), StarField (night stars). Dead simple API:
+  create each, `scene.add()`, call `.update(sunAngle)` per frame. Old (pre-ES6,
+  bower-era) but tiny and easy to modernize.
+- **License:** MIT — per the author's stated convention across all threex.*
+  modules ("It is released under MIT license" appears in threex READMEs); note
+  this repo has no LICENSE file, so re-verify before ship.
+- **Verdict:** commercial-safe (with the no-LICENSE-file caveat above)
+- **Notes:** Reference design for wiring sun angle → sky + light + stars in one
+  place. Pair with SunCalc below for astronomically correct sun positions; use
+  three.js Sky addon for prettier skies.
