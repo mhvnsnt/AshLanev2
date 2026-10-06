@@ -131,3 +131,103 @@ the fight venue IS the power mechanism.
   act through proxies: hiring fighters, funding gangs, buying blocks. The
   player fights the *symptoms* for most of the game and the *executive* at
   the end.
+
+---
+
+## 3. Corporate villain design: how Tekken makes a CEO read as a final boss
+
+### Heihachi Mishima — the founder-patriarch as force of nature
+
+**Who he is:** CEO of the Mishima Zaibatsu for ~40 years, built it into the
+world's biggest military-equipment developer, supreme commander of the
+Tekken Force. Hosted every King of Iron Fist Tournament as a corporate
+instrument. Threw his son off a cliff; threw his son into a volcano.
+
+**Outfit:** Wing-like white hair, tiger face on the back of his blue gi,
+red belt, wrist bandages. Tekken 8's update of his classic Tekken 2/5 gi:
+sleeves rolled up (not torn), a **gold emblem embroidered on the chest**,
+red prayer beads, yellow belt replacing the red, and flame motifs on the
+pant legs echoing Kazuya's. Battle-damaged variants appear in story ("the
+damaged gi" look from Tekken 7's Awakened form). His DLC monk arc flips the
+silhouette entirely — flat hair, subdued monk attire — to signal a
+*personality* change, proving Tekken treats outfit as character state.
+
+**Presence:** Arrives by helicopter, holds tournaments in temples, fights on
+volcanoes. His intimidation is *scale*: the stage bends around him.
+
+**Moveset:** Mishima 50/50 (hell sweep / Electric Wind God Fist) + headbutt;
+Tekken 8 made him even more aggressive with two new stances (Thunder God /
+Wind God). The design philosophy: the CEO doesn't poke — he *dictates*.
+
+**The lesson:** Heihachi reads as executive power through *heraldry* (the
+gold emblem, the tiger) and *ceremony* (the tournament itself). He never
+wears a suit — his "uniform of office" is the gi of the Mishima style,
+because the Zaibatsu's brand IS martial tradition.
+
+### Kazuya Mishima — the CEO-devil duality
+
+**Who he is:** CEO of G Corporation (publicly revealed in Tekken 4).
+Consolidated the world under G Corp within months in Tekken 8. Runs the
+eighth tournament with nation-erasure stakes. Carries the Devil Gene.
+
+**Outfit:** Tekken 8's default is the franchise's best "executive threat"
+design: a **purple leather snakeskin jacket over a suit**, classic red
+fighting gloves underneath. It fuses his Tekken 2 suit, Tag 1, and Tekken
+6/7 looks into one silhouette. As TheGamer put it, it gives him "final boss
+aura" that complements "his profession, wealth, and taste" — the dark
+colors are intimidating and the outfit says *this battle is beneath him*.
+The key detail: **he wears fighting gloves with the suit.** He is always
+ready to fight. His Tekken 5-era alt — white gi pants with purple/red
+flame motifs — is the same idea in martial register.
+
+**Presence:** Tekken 8 opens with him destroying military satellites in
+devil form over New York, then calmly announcing the tournament. Power
+display first, bureaucracy second.
+
+**Moveset:** Mishima 50/50 core + devil powers (laser, devil form as Heat
+state in T8, "Parricide Fist"). The devil form is the *escalation*: the
+executive has a second, supernatural phase.
+
+**The lesson:** Kazuya's formula is **suit + fight-readiness accessory +
+supernatural escalation**. The suit says CEO; the gloves say he doesn't need
+security; the devil says the corporation's power has a metaphysical price.
+This is the single most portable formula for AshLane's corpo bosses.
+
+### Jinpachi Mishima — the corrupted founder
+
+**Who he is:** Original founder of the Zaibatsu (canon later retconned —
+Tekken 7 says Heihachi built it up; Harada clarified Jinpachi never had the
+money), who regretted the arms business and tried to return the company to
+martial-arts honor. Possessed by a vengeful spirit, he became Tekken 5's
+final boss.
+
+**Outfit:** Human form: gold bands on wrists/ankles/arms, ornate gold
+necklace, waist sash — an ancient patriarch. Possessed form: red/purple
+skin, yellow glowing eyes, back spikes, a **fanged mouth in his stomach**
+firing fireballs, tattered clothes. Dark Resurrection alt: full flaming
+body, magma eyes, forehead horn, hair replaced by fire. His design is
+inspired by Buddhist warlike figures (Vajrapani).
+
+**The lesson:** Jinpachi is the "founder's sin made flesh" — the company
+founder corrupted into a demon. His outfit *degrades* with corruption:
+jewelry falls off, clothes tatter, the body transforms. **Corruption has a
+visual grammar: remove the trappings of status, add the supernatural.**
+AshLane's Malakor corruption can use exactly this grammar on its corpo
+bosses.
+
+### The executive-threat formula (portable rules)
+
+1. **Status garment + combat accessory.** Suit + gloves (Kazuya), gi +
+   gold emblem (Heihachi). The accessory must imply "I fight personally."
+2. **Heraldry.** Embroidered/engraved faction emblem on the chest. Instant
+   allegiance read.
+3. **Silhouette dominance.** Long coats, big shoulders, capes — the boss is
+   bigger on screen than the rank and file, literally and figuratively.
+4. **Supernatural escalation.** Every Tekken final boss has a second phase:
+   devil form, possessed form, "Awakened" battle-damage state. The executive
+   threat *transforms*. For AshLane: Malakor corruption = the Devil Gene —
+   the corrupted second-phase form of a corpo boss.
+5. **Ceremonial staging.** Tournaments, announcements, country-erasure
+   stakes. The boss doesn't ambush you in an alley — he summons you to *his*
+   venue. AshLane corpo bosses should be fought in their boardrooms,
+   penthouses, and private arenas, not on the street.
