@@ -85,3 +85,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** 2D physics tier for AshLane: menu-screen debris, 2D mini-game overlays, ragdoll-ish UI characters, projectile arcs for top-down map views. Lighter than Matter for single-purpose 2D sims; deterministic stepping works well for replayable VFX.
 
+## matter-js
+- **URL:** https://github.com/liabru/matter-js
+- **What:** Popular 2D rigid-body physics engine: sleeping, compound bodies, constraints, plugins (wrap, attractors), built-in renderer/debug views.
+- **License:** MIT (LICENSE file, Liam Brummitt).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** The friendliest 2D physics for menu/loading-screen toys and HUD debris (bouncing logos, coin bursts). Mature plugin ecosystem; broadphase is fine for dozens of bodies. Keep 2D-only — it is not a substitute for the 3D combat physics.
+
