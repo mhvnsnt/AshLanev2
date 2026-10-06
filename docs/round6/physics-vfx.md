@@ -99,3 +99,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** When 2D physics must be CORRECT (not just pretty): Box2D's continuous collision prevents tunneling for fast projectiles in top-down map views or 2D bonus stages. Deterministic enough for synced multiplayer prototypes. Heavier API than matter-js — pick planck when accuracy matters, matter when iteration speed matters.
 
+## Oimo.js
+- **URL:** https://github.com/lo-th/Oimo.js
+- **What:** Lightweight 3D physics engine for the browser (successor to the original OimoPhysics): rigid bodies, joints, broadphase; built for speed on modest hardware.
+- **License:** MIT (LICENSE file, lo-th).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Third option in the 3D physics bake-off alongside cannon-es and ammo.js — Oimo is the fastest to drop in for simple falling-debris scenes. Less active maintenance than cannon-es, so treat as fallback candidate rather than first choice; evaluate if cannon-es shows perf issues on target phones.
+
