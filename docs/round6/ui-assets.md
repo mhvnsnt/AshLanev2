@@ -149,3 +149,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe with attribution (CC-BY — one credit line for Steve Schoger / heropatterns.com).
 - **Notes:** The textured-box layer of the street-art menu kit: brick-wall behind faction panels, topography on district cards, diagonal-stripes as hazard fills — all tintable to the SWMG ember/brass/concrete palette. SVG data-URIs keep them resolution-independent and near-zero weight. Pick patterns that read "street" (brick, cage, stripes), skip the corporate ones.
 - **AshLane use:** Textured menu/card backgrounds, district cards, loading-screen backdrops (SVG decorations layer).
+
+## 19. Blotter.js
+- **URL:** https://github.com/bradley/Blotter · https://blotter.js.org
+- **What:** JS API for GLSL-backed unconventional text effects on the web — liquid distortion, channel-split (RGB), flapping, rolling, sliding door effects on any text, rendered via WebGL with a single shared back buffer. Custom materials via `Blotter.ShaderMaterial`.
+- **License:** **MIT** — verified verbatim from the repo's `license.txt` ("The MIT License // Copyright © 1986 - ∞, Blotter / Bradley Griffith"). Checked 2026-10-06.
+- **Verdict:** ✅ Commercial-safe (MIT).
+- **Notes:** The graffiti-logo weapon: liquid-distort or channel-split on the ASHLANE title and fighter nameplates gives the street-art menu kit its signature look — effects CSS alone can't do. Use sparingly (titles/headings only; rendered text becomes canvas, not selectable). Requires Three.js/Underscore in its default build — custom-build without them, or replicate the two or three effects we actually want as hand-written shaders. Pair with anime.js (#13) for sequencing.
+- **AshLane use:** Graffiti logo effects, KO/title text distortion, fighter nameplate treatments.
