@@ -24,6 +24,18 @@ export interface StageDefinition {
 
 export const STAGES: readonly StageDefinition[] = [
   {
+    id: 'city',
+    name: 'ASHLANE CITY',
+    description: 'The open city. Nine districts, turf war live. Procedurally built — no two visits identical.',
+    modelPath: '',
+    thumbnailPath: 'stages/thumbs/city.png',
+    district: 'open-city',
+    environment: 'outdoor',
+    timeOfDay: 'any',
+    props: [],
+    bounds: { x: 400, z: 400 },
+  },
+  {
     id: 'ring-square',
     name: 'RING SQUARE',
     description: 'Regulation wrestling ring. The purest fight.',

@@ -33,6 +33,7 @@ import { assetUrl } from "./asset-base";
 import { PostFx, graphics } from "./postfx";
 import { ImpactParticles } from "./impact-particles";
 import { ArenaCrowd } from "./arena-crowd";
+import { mountCityBinding, cityFogFor, type CityBinding } from "./city/game-bind";
 
 type Fighter = {
   id: number;
@@ -367,6 +368,11 @@ export function createView(canvas: HTMLCanvasElement) {
 
   let stageId = "";
   let stageSky: BuiltSky | null = null;
+  // Open-city binding (src/game3d/city) — active when sim.stage === "city".
+  let cityBinding: CityBinding | null = null;
+  let cityMounting = false;
+  let cityPlaced = false;
+  let savedBoxes: Box[] | null = null;
   // stage -> worldgen district for sky lookup
   const STAGE_SKY: Record<string, DistrictId> = {
     ward: "alleys", dock: "strip", pit: "alleys",
@@ -377,6 +383,8 @@ export function createView(canvas: HTMLCanvasElement) {
     stageId = id;
     // Round 3 visuals: arena crowd only shows on arena stages (pit).
     crowd.setStage(id);
+    // The open city brings its own sky, ground, and fog — skip arena dressing.
+    if (id === "city") return;
     // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
     // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
     // horizon glow, light rig, and Malakor accents where defined.
@@ -410,6 +418,50 @@ export function createView(canvas: HTMLCanvasElement) {
     groundMat.map = floor;
     groundMat.color.setHex(0xffffff);
     groundMat.needsUpdate = true;
+  }
+
+  /**
+   * Open-city lifecycle, called at the top of render().
+   * Mounts the city when sim.stage === "city", ticks it, resolves bodies
+   * against city colliders, drives fog/sky focus from the player.
+   */
+  function updateCityBinding(sim: Sim, dt: number) {
+    const wantCity = sim.stage === "city";
+    if (wantCity && !cityBinding && !cityMounting) {
+      cityMounting = true;
+      // stash arena collision while the city is up
+      savedBoxes = sim.boxes;
+      sim.boxes = [];
+      mountCityBinding(scene).then((b) => {
+        cityBinding = b;
+        cityMounting = false;
+      }).catch(() => { cityMounting = false; });
+    }
+    if (!wantCity && (cityBinding || cityMounting)) {
+      if (cityBinding) { cityBinding.unmount(); cityBinding = null; }
+      cityMounting = false;
+      cityPlaced = false;
+      if (savedBoxes) { sim.boxes = savedBoxes; savedBoxes = null; }
+    }
+    if (!cityBinding) return;
+
+    const b = cityBinding;
+    // place the player at the city spawn once the binding is ready
+    const pp = sim.bodies[0];
+    if (pp && !cityPlaced) {
+      pp.x = b.spawn.x; pp.z = b.spawn.z; pp.yaw = b.spawn.yaw;
+      pp.y = 0; pp.vx = 0; pp.vy = 0; pp.vz = 0;
+      sim.spawnX = pp.x; sim.spawnZ = pp.z; sim.spawnYaw = pp.yaw;
+      sim.camYaw = pp.yaw;
+      cityPlaced = true;
+    }
+    // sky + fog follow the player
+    if (pp) { b.city.focus.x = pp.x; b.city.focus.z = pp.z; }
+    b.tick(sim.time, dt);
+    const fog = pp ? cityFogFor(b, pp.x, pp.z) : null;
+    scene.fog = fog;
+    // city collision for every body (arena boxes are stashed)
+    for (const body of sim.bodies) b.resolve(body, 0.45);
   }
 
   function resize() {
@@ -941,6 +993,10 @@ export function createView(canvas: HTMLCanvasElement) {
   function render(sim: Sim, dt: number) {
     const p = sim.bodies[0];
     applyStage(sim.story ? sim.stage : p && p.x < -26 ? "yard" : p && p.z > 26 ? "dock" : p && p.z < -26 ? "under" : sim.stage);
+    // -- Open city mode -------------------------------------------------
+    updateCityBinding(sim, dt);
+    const cityActive = cityBinding !== null;
+    // ------------------------------------------------------------------
     const day = (Math.sin(sim.time * 0.045) + 1) / 2;
     // New sky system: per-district dome + day blend + tick
     if (stageSky) {
@@ -950,10 +1006,11 @@ export function createView(canvas: HTMLCanvasElement) {
     }
     // Legacy sky objects (kept for weather compat — hidden when stageSky active)
     skyMat.uniforms.uDay.value = day;
-    sky.visible = !stageSky;
-    stars.visible = !stageSky;
-    sunOrb.visible = !stageSky && day > 0.08;
-    for (const cl of clouds) cl.visible = !stageSky;
+    sky.visible = !stageSky && !cityActive;
+    stars.visible = !stageSky && !cityActive;
+    sunOrb.visible = !stageSky && !cityActive && day > 0.08;
+    for (const cl of clouds) cl.visible = !stageSky && !cityActive;
+    ground.visible = !cityActive;
     sky.position.copy(camera.position);
     stars.position.copy(camera.position);
     (stars.material as THREE.PointsMaterial).opacity = Math.max(0, 0.9 - day * 1.6);
