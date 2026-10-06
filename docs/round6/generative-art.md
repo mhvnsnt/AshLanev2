@@ -29,3 +29,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **GPL-3.0** (LICENSE file).
 - **Verdict:** **prototype-only as a tool** — GPL-3.0 is fine for *build-time* art processing (GPL governs the program, not images it outputs), but never bundle chaiNNer itself into the game or a shipped tool. Output PNGs are ours.
 - **Notes:** AshLane use: build saved chains like "concept art → 4× upscale → background-remove → export PNG" and hand the owner one-click workflows. Pairs with Real-ESRGAN (entry above) and rembg. The node graph maps 1:1 onto a future headless batch script when volume grows.
+
+## Hugging Face diffusers (programmatic SD pipeline)
+
+- **URL:** https://github.com/huggingface/diffusers
+- **What:** The Python library for *scripted* Stable Diffusion: text-to-image, img2img, inpainting, ControlNet, LoRAs — all from code, no GUI. This is the backbone of a REAL generative pipeline: seeded, batched, reproducible art generation (e.g. "generate 50 graffiti wall variants, seed 1000–1049, 768px, save with prompt metadata").
+- **License:** **Apache-2.0** (LICENSE file) — the library itself is commercial-safe.
+- **Verdict:** **commercial-safe (library); per-checkpoint verdicts:** checkpoints carry their own licenses. SD 1.5/2.1/XL = **CreativeML Open RAIL-M** (allows commercial use but with behavioral use-restrictions + the murky-training-data caveat) → **prototype-only** for shipped art per the owner rule. **FLUX.1-schnell = Apache-2.0 weights** → **commercial-safe** and the recommended checkpoint for any art that might ship.
+- **Notes:** AshLane use: `tools/gen-art/` scripts — `gen-batch.py --prompt ... --checkpoint <id> --seeds ...` writing PNG + JSON sidecars (prompt, seed, checkpoint, license). Deterministic seeds = regenerable art. Runs on free Colab/Kaggle GPUs or the owner's machine; no paid key (owner has no paid Tripo key and the same frugality applies here).
