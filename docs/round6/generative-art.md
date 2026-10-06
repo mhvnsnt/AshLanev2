@@ -93,3 +93,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **GPL-2.0**.
 - **Verdict:** **commercial-safe as a build-time tool** — GPL covers the program, not the SVGs it produces. Trace all day; just don't embed/link potrace's code into shipped software without GPL compliance.
 - **Notes:** AshLane use: stencil-style faction marks, single-color spray tags, and silhouette cutouts where vtracer's color mode is overkill. Practical pattern from production pipelines: quantize art to flat colors → trace one binary mask per color with potrace → merge layers (preserves small interior details like eyes/highlights better than whole-image color tracing). For color logos prefer vtracer (MIT, no GPL surface at all).
+
+## resvg (@resvg/resvg-js)
+
+- **URL:** https://github.com/linebender/resvg
+- **What:** Fast, correct SVG renderer in Rust with first-class Node.js bindings (`@resvg/resvg-js`, npm). Renders any SVG → PNG at arbitrary resolution — the missing link that makes SVG a *generative* format: author logos/tags programmatically as SVG, then rasterize to PNG/WebP textures, sprite sheets, and title cards at exactly the size each use needs.
+- **License:** **Apache-2.0** (LICENSE file — relicensed from MPL-2.0; GitHub detection confirms Apache-2.0).
+- **Verdict:** **commercial-safe** — can be bundled into build tools and even the game toolchain.
+- **Notes:** AshLane use: `svg → resvg → PNG` bake step for all vector art (faction logos on arena aprons, HUD emblems, spray-tag decals). Pairs with opentype.js (next): text → SVG paths → resvg → texture. Related: `scour` (Apache-2.0, now at scour-project/scour) and `svgo` (MIT) for optimizing SVG file size before rasterizing.
