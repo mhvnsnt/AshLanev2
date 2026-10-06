@@ -265,10 +265,11 @@ The Painted (Onyx's gang) has SECRET leaders behind the scenes:
 **The Robed Council:** The inner circle wears different colored robes (SWMG-inspired but NOT called Shadow Wizard Money Gang — proprietary name TBD):
 - Buffalo Bill: scarlet red
 - Onyx: green (sometimes)
-- Theory: [color TBD]
-- Others: [colors TBD]
+- Theory: purple robe
+- Cipher: yellow robe
+- Echo: pink robe
+- Static: deep blue robe
 
 Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang' in-game — that's the visual inspiration, not the name.
 
 **These secrets must NEVER appear in:** menus, roster UI, HUD, character select, or any player-facing text. Writers and story scripts only.
-
