@@ -38,3 +38,10 @@
 - **License:** MIT (license section in the user guide)
 - **Verdict:** commercial-safe
 - **Notes:** For district-level street routing on a coarse grid (blocks, alleys, plazas) where a full 3D navmesh is overkill. Jump Point Search is the fast pick for long pedestrian routes. Use for macro routes, then Yuka steering for local movement.
+
+## easystarjs
+- **URL:** https://github.com/prettymuchbryce/easystarjs
+- **What:** Asynchronous A* pathfinding API for tile grids: acceptable tiles, per-tile movement costs, directional conditions, avoidance points, and calculation spread across frames so repaths never hitch.
+- **License:** MIT ("You may use it for commercial use." — README license section)
+- **Verdict:** commercial-safe
+- **Notes:** The lightweight tile-grid pick. Per-tile costs model "crowded sidewalk vs empty alley" naturally; async calculation keeps dozens of NPC repaths off the critical path. Good fit for block-grid district layouts.
