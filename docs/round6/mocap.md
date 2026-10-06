@@ -146,6 +146,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe as a tool via sidecar pattern** — run FreeMoCap out-of-process (subprocess + on-disk handoff); importing AGPL code in-process into the game would trigger copyleft. Recorded animations are your own data, shippable freely.
 - **Notes:** Highest-leverage "dataset" in this wave for Bannon/AshLane: custom wrestling moves, gang-sign taunts, and dance celebrations that no public corpus has. Budget: $0 + webcams. Pair with Cascadeur (below) for cleanup.
 
+## Cascadeur Basic (physics-based keyframe animation)
+
+- **URL:** https://cascadeur.com
+- **What:** Standalone physics-based character animation software (Nekki — the Shadow Fight studio's in-house tool): full-body IK rig, AI AutoPosing (set a few body points → physically accurate full-body pose), AutoPhysics interpolation, trajectory visualization. Imports/exports FBX, DAE, USD. Built for exactly our use case: hand-authoring and cleaning fight animations.
+- **License:** **Cascadeur Basic is free and allows commercial use for revenue under $100k/yr** (credit to Cascadeur required; 300-frame / 120-joint export cap). Pro ($150-300/yr) removes caps.
+- **Verdict:** ✅ **commercial-safe (tool)** within the revenue cap + attribution — animations you create/clean are yours to ship.
+- **Notes:** The cleanup station for everything in this wave: FreeMoCap recordings, retargeted AIST++/CMU clips, and hand-keyed combat moves all get physics-plausibility passes here before hitting the game. $0 to start; the $100k cap is far above current revenue.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
