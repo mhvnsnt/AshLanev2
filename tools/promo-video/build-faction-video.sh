@@ -12,6 +12,22 @@ if [ -z "$FRAMES" ] || [ -z "$AUDIO" ] || [ -z "$OUT" ]; then
   exit 1
 fi
 
+# --- QA gate: automated video QA on frames before assembly ---
+# A render that fails QA aborts the build. Set QA_SKIP=1 to bypass (emergencies only).
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ "${QA_SKIP:-0}" != "1" ] && [ -x "$SCRIPT_DIR/qa/run-qa.sh" ]; then
+  echo "Running video QA gate on $FRAMES ..."
+  if ! "$SCRIPT_DIR/qa/run-qa.sh" --frames "$FRAMES" \
+      --out "$FRAMES/qa-report" --allow-frozen "${QA_ALLOW_FROZEN:-0-5,46-50}"; then
+    echo "ERROR: video QA FAILED for $FRAMES — refusing to assemble." >&2
+    echo "See report: $FRAMES/qa-report/REPORT.md" >&2
+    exit 1
+  fi
+  echo "QA passed."
+elif [ "${QA_SKIP:-0}" = "1" ]; then
+  echo "WARNING: QA_SKIP=1 — bypassing video QA gate." >&2
+fi
+
 # Count frames
 N=$(ls "$FRAMES"/f_*.png 2>/dev/null | wc -l)
 echo "Assembling $N frames + audio -> $OUT"

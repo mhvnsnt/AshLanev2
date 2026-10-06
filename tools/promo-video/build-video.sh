@@ -5,6 +5,22 @@ set -e
 FRAMES="$1"; TITLES="$2"; THEME="$3"; OUT="$4"
 if [ -z "$OUT" ]; then echo "usage: build-video.sh <frames> <titles> <theme.wav> <out.mp4>"; exit 1; fi
 
+# --- QA gate: automated video QA on frames before assembly ---
+# A render that fails QA aborts the build. Set QA_SKIP=1 to bypass (emergencies only).
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ "${QA_SKIP:-0}" != "1" ] && [ -x "$SCRIPT_DIR/qa/run-qa.sh" ]; then
+  echo "Running video QA gate on $FRAMES ..."
+  if ! "$SCRIPT_DIR/qa/run-qa.sh" --frames "$FRAMES" \
+      --out "$FRAMES/qa-report" --allow-frozen "${QA_ALLOW_FROZEN:-0-5,46-50}"; then
+    echo "ERROR: video QA FAILED for $FRAMES — refusing to assemble." >&2
+    echo "See report: $FRAMES/qa-report/REPORT.md" >&2
+    exit 1
+  fi
+  echo "QA passed."
+elif [ "${QA_SKIP:-0}" = "1" ]; then
+  echo "WARNING: QA_SKIP=1 — bypassing video QA gate." >&2
+fi
+
 ffmpeg -y \
   -framerate 24 -i "$FRAMES/f_%05d.png" \
   -i "$THEME" \

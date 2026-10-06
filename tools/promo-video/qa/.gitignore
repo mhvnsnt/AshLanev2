@@ -1,0 +1,4 @@
+# downloaded at runtime (see README) — not committed
+*.task
+.venv/
+__pycache__/
