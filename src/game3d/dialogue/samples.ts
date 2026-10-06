@@ -284,6 +284,141 @@ export const SAMPLE_PACK: DialogueSample[] = [
     ],
   },
 
+  // ================== STREET WORLD (Urban Reign street life) ==================
+  // Not the wrestling world. Turf, parleys, corpo suits, hustles, civilians, heat.
+  {
+    fighter: "Static",
+    fighterId: "static",
+    situation: "claim",
+    context: "First night holding the corner off Cinder Plaza — addressing the block",
+    lines: [
+      "A'ight, listen up — this corner's got a new landlord, and the rent is RESPECT.",
+      "I'm a really good guy, ask anybody — but this block eats when I say it eats, and it stays quiet when I say quiet. That's the menu.",
+      "Y'all know the code: what happens on this corner stays on this corner. F*ck anybody who leaks — that's AWE behavior, and we don't do that here.",
+    ],
+  },
+  {
+    fighter: "Stick-Up",
+    fighterId: "stickup",
+    situation: "parley",
+    context: "Two crews on Scrap Street, guns down, talking before it pops off",
+    lines: [
+      "Nobody moves. We talk.",
+      "Your crew crossed the line at the market. My crew noticed. Now you got two choices: tribute, or consequences — and I don't repeat myself.",
+      "The system made me. The streets kept me. Don't make the streets bury you.",
+    ],
+  },
+  {
+    fighter: "Corner Lieutenant",
+    fighterId: "__lieutenant",
+    situation: "confront",
+    context: "Tax collection — a runner's crew hasn't paid, corner standoff at the bodega",
+    lines: [
+      "You standin' where? This is a taxed block, and your name ain't on the paid list.",
+      "I don't care who your plug is. The crew feeds who the crew trusts — and right now, the crew don't trust your wallet.",
+      "Walk away. That's the only warning with my name on it. The next one's got the crew's name on it.",
+    ],
+  },
+  {
+    fighter: "The Fixer",
+    fighterId: "__fixer",
+    situation: "corpo",
+    context: "Black car idling by the curb — buyout offer for the block, no witnesses",
+    lines: [
+      "My employers admire what you've built here. Truly. They'd like to discuss an arrangement.",
+      "Everyone has a price. I've never met the exception — but I've met people who needed convincing about theirs, and the convincing is... regrettable.",
+      "This conversation didn't happen. The check I'm leaving on your hood? That happened.",
+    ],
+  },
+  {
+    fighter: "Corner Hustler",
+    fighterId: "__hustler",
+    situation: "hustle",
+    context: "The deal goes wrong — buyer's crew shows up heavy, hustler talking fast",
+    lines: [
+      "Whoa whoa whoa — look, look, look, the pack's light 'cause the plug got pinched, not 'cause I'm playin' you!",
+      "I can make this right — I know a guy, I ALWAYS know a guy, just don't make me a headline, baby!",
+      "You didn't see me, I wasn't here — but if you need me tomorrow, I'm everybody's guy. EVERYBODY'S.",
+    ],
+  },
+  {
+    fighter: "Beat Cop",
+    fighterId: "__cop",
+    situation: "heat",
+    context: "Curfew sweep — two crews gathering on the corner, he's alone and tired",
+    lines: [
+      "Evening. Curfew's in ten, and I can count at least three reasons to start writin'.",
+      "I've seen how this ends — every time, same ending, different kids. This block's got enough ghosts.",
+      "Go home. All of you. Don't make me do paperwork — you do NOT want to see me do paperwork.",
+    ],
+  },
+  {
+    fighter: "Sombra Negra",
+    fighterId: "sombra_negra",
+    situation: "hustle",
+    context: "Hired for a street job — meeting the client in a doorway off Night Market",
+    lines: [
+      "Name the target. Name the price. Then leave — the less you know about the method, the cleaner your conscience.",
+      "Negocios son negocios. Your crew's war is not my war. Your money, however... your money is very much my business.",
+      "La trampa de plata. When it's done, you'll hear about it. You won't see it. That's what you paid for.",
+    ],
+  },
+  {
+    fighter: "Onyx",
+    fighterId: "onyx",
+    situation: "claim",
+    context: "The Painted roll up on a rival corner — theatrical takeover, no shots fired",
+    lines: [
+      "Darlings! What a LOVELY corner. Shame about the... previous management. The paint's already dry — you're just now noticing.",
+      "The Painted don't ask for blocks. We decorate them. And you, sweet thing — you're standing in our gallery now.",
+      "Smile. It'll be your last good look at the old arrangement.",
+    ],
+  },
+  {
+    fighter: "Stan Combs",
+    fighterId: "stan",
+    situation: "loyalty",
+    context: "Old head addressing the block — somebody's been talking to the cops",
+    lines: [
+      "I taught half this block how to stand. So when I say there's a rat, I know what a rat smells like.",
+      "Loyalty's earned in years and lost in seconds. Whoever's been whisperin' to the badge — you got till sundown to come see me like a man.",
+      "The block IS family out here. And family handles family business... in the family.",
+    ],
+  },
+  {
+    fighter: "Cipher",
+    fighterId: "cipher",
+    situation: "confront",
+    context: "Corner standoff at the Pier — the shine cracking, sludge creeping in mid-talk",
+    lines: [
+      "Man of the hour, baby — and the hour says you're in MY spot. Back up.",
+      "...You hear that? That static under the shine? Don't worry about it. Worry about the ten seconds it'll take me to end this.",
+      "Too sweet to be stressed. Too blessed to be bothered. But the sludge? The sludge is BORED. And you look like entertainment.",
+    ],
+  },
+  {
+    fighter: "El Toro de Oro",
+    fighterId: "toro",
+    situation: "civilian",
+    context: "A crew shaking down a shopkeeper — Toro steps between them",
+    lines: [
+      "¡BASTA! You shake down shopkeepers? Then you answer to the horns.",
+      "Señora, vaya adentro. Lock the door. What the bull does to wolves is not for gentle eyes.",
+      "Honor has no turf, but it has a POSTCODE — and this street is under my protection tonight.",
+    ],
+  },
+  {
+    fighter: "Triple X",
+    fighterId: "triplex",
+    situation: "parley",
+    context: "Back-room negotiation — rival crew thinks they're bargaining, they're not",
+    lines: [
+      "Sit. I've read your terms. They're... quaint.",
+      "You came here to negotiate territory. I've already redrawn the map — you're just now seeing the new borders.",
+      "It's not personal. It's just... the game. And you, my friend, are several moves behind. Sign, or don't. The outcome's the same.",
+    ],
+  },
+
 ];
 
 /** Samples for one fighter — for character-select flavor, bios, etc. */
