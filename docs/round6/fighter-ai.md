@@ -172,3 +172,23 @@ checked 2026-10-06. Re-verify before shipping.
   opponents and the "Warpath"-style wildcards. Evolve on desktop, run the
   tiny evolved net on mobile. Research-only until the pipeline proves out;
   classic trees/FSM ship first.
+
+---
+
+## OpenBOR (study: beat-em-up AI scripting)
+
+- **URL:** https://github.com/DCurrent/openbor
+- **What:** Open-source 2D side-scrolling beat-em-up engine (the modern
+  Beats of Rage lineage). Enemies, bosses, and allies are driven by
+  scriptable AI: aggression ranges, approach/attack/retreat behaviors,
+  group coordination hooks, difficulty-scaled stats, all exposed to mod
+  scripts.
+- **License:** BSD-3-Clause (GitHub API).
+- **Verdict:** commercial-safe (BSD; re-verify before shipping).
+- **Notes:** STUDY target #1 for AshLane. OpenBOR solved the exact problem
+  20 years ago: multiple AI brawlers sharing a 2.5D plane without
+  degenerating into a mosh pit — spacing rules, attack cooldowns so enemies
+  don't all swing at once, off-screen approach logic, and per-enemy
+  aggression tuning. Read its enemy AI scripts as the spec for our
+  multi-fighter coordination layer. Its "one attacker at a time" fairness
+  conventions are directly applicable.
