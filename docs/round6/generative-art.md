@@ -149,3 +149,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **MIT** both (LICENSE files verified).
 - **Verdict:** **commercial-safe** both.
 - **Notes:** AshLane use: pack generated/cutout sprites — sticker sheets, tag decals, HUD icon atlases, particle sprites — into atlases the engine loads as one texture. Pipeline: `rembg` cutouts → `vtracer` optional → `free-tex-packer` CLI (or spritesmith in the asset build script) → `atlas.png + atlas.json` committed to `public/sprites/`. free-tex-packer for interactive packing, spritesmith for the automated build.
+
+## EmbarkStudios texture-synthesis
+
+- **URL:** https://github.com/EmbarkStudios/texture-synthesis
+- **What:** Example-based texture synthesis in Rust (CLI + library): feed it a small exemplar (a patch of brick, concrete, asphalt, fabric) and it grows a larger tileable texture that preserves local structure — the classic Efros & Leung / "more like this please" approach, multithreaded and deterministic with `--threads 1`. Also does guided synthesis (constrain the output with a target map) and texture transfer.
+- **License:** Dual **MIT / Apache-2.0** (LICENSE-MIT + LICENSE-APACHE files; README states "licensed under either of … at your option").
+- **Verdict:** **commercial-safe** — and synthesized textures are derived from *our* exemplars, so no third-party texture licensing at all.
+- **Notes:** AshLane use: the infinite-texture machine for districts — photograph/scan one 256px patch of each surface (each district's concrete, brick, asphalt per the owner's district-identity direction) → synthesize seamless 1K/2K tileables → feed into the existing proc-texture/PBR pipeline. Deterministic mode = byte-identical rebuilds. Way cheaper than hand-painting variants and fully original (no Poly Haven dependency for custom surfaces).
