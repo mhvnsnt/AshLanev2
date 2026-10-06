@@ -81,3 +81,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** MIT.
 - **Verdict:** Commercial-safe (MIT, code + bundled LUTs).
 - **Notes:** Solves the "free LUT pack with murky license" problem — we generate our own LUTs from reference frames (e.g. match the El Toro de Oro grade) instead of downloading commercially-licensed packs. Agent-operable via its SKILL.md.
+## HyperFrames (Apache 2.0) — motion graphics as code
+- **URL:** https://github.com/heygen-com/hyperframes
+- **What:** HTML/CSS/JS → video: deterministic, frame-accurate rendering through headless Chrome (same DOM is editable, no React build step), ships agent skills. Reusable components/templates for title cards, lower thirds, stat cards.
+- **License:** Apache 2.0.
+- **Verdict:** Commercial-safe (Apache 2.0).
+- **Notes:** Remotion was evaluated and REJECTED for the core: its license is now source-available/company-license — free only for individuals and companies up to 3 people; larger orgs need a paid license (verified via license comparisons checked 2026-09-15). HyperFrames gives the same programmatic-video capability under Apache 2.0 and complements the already-wired html-to-video renderer with simpler plain-HTML input.
