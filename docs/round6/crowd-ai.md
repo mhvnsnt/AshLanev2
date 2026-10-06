@@ -52,3 +52,10 @@
 - **License:** MIT (README points to LICENSE file)
 - **Verdict:** commercial-safe
 - **Notes:** The NPC brain structure: idle → walk → watch-fight → heckle → flee. Combine with Yuka steering for movement and ink for dialogue to get complete ambient NPCs. One FSM definition shared across hundreds of NPC instances.
+
+## ink + inkjs
+- **URL:** https://github.com/inkle/ink · JS runtime: https://github.com/y-lohse/inkjs
+- **What:** inkle's narrative scripting language for branching dialogue with variables, conditions, and knots; inkjs is the zero-dependency JavaScript port (~50KB, runs in browser and node). Inky is the writer-friendly editor with live preview.
+- **License:** MIT (inkle org page lists MIT for ink; inkjs MIT)
+- **Verdict:** commercial-safe
+- **Notes:** The ambient-life dialogue engine: street-vendor barks, hustler pitches, crowd chants, NPC one-liners that react to game state (heat level, district, time of day). Compile `.ink` to JSON at build time; drive line selection from each NPC's state machine. Powers Bannon arena chants too.
