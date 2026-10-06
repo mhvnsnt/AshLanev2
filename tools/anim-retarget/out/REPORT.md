@@ -1,0 +1,112 @@
+# Animation retarget batch report
+
+PASS 88 / WARN 72 / FAIL 60 (total 220)
+
+## FAIL
+
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p2 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p2 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): tpose=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- C4D Animation Take__p2 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take (wrestling): joints=FAIL
+- C4D Animation Take (wrestling): joints=FAIL
+- C4D Animation Take__p0 (wrestling): joints=FAIL
+- C4D Animation Take__p1 (wrestling): joints=FAIL
+- UAL1_Standard/Jump_Start (ual): feet=FAIL
+- UAL2_Standard/Sword_Regular_A (ual): feet=FAIL
+- UAL2_Standard/Sword_Regular_Combo (ual): feet=FAIL
+- au (bank): joints=FAIL
+- backdrop:vic (bank): joints=FAIL
+- bodyblow (bank): joints=FAIL
+- brainbuster (bank): joints=FAIL
+- chokeslam (bank): joints=FAIL
+- corkscrew (bank): joints=FAIL
+- ddt (bank): joints=FAIL
+- ddt:vic (bank): joints=FAIL
+- defender (bank): joints=FAIL
+- evade (bank): joints=FAIL
+- feral (bank): joints=FAIL
+- feral:vic (bank): joints=FAIL
+- german (bank): joints=FAIL
+- hitback (bank): joints=FAIL
+- takedown (bank): coverage=FAIL; sanity=FAIL
+- tiger (bank): joints=FAIL
+- wrestling_brainbuster (bank): joints=FAIL
+- wrestling_chokeslam (bank): joints=FAIL
+- wrestling_ddt (bank): joints=FAIL
+- wrestling_ddt:vic (bank): joints=FAIL
+- wrestling_german (bank): joints=FAIL
+- wrestling_german:vic (bank): joints=FAIL
+- wrestling_tombstone (bank): joints=FAIL
+- wrestling_tombstone:vic (bank): joints=FAIL
+- boxing_cmu (cmu): joints=FAIL
+- punch_kick (cmu): joints=FAIL
+- punch_seq (cmu): joints=FAIL
+
+## WARN (needs human look)
+
+- C4D Animation Take__p0 (wrestling): joints=WARN
+- C4D Animation Take (wrestling): tpose=WARN; joints=WARN
+- C4D Animation Take (wrestling): joints=WARN
+- C4D Animation Take__p2 (wrestling): joints=WARN
+- C4D Animation Take__p1 (wrestling): joints=WARN
+- C4D Animation Take__p1 (wrestling): joints=WARN
+- C4D Animation Take (wrestling): joints=WARN
+- C4D Animation Take__p1 (wrestling): joints=WARN
+- C4D Animation Take__p1 (wrestling): joints=WARN
+- C4D Animation Take (wrestling): joints=WARN
+- C4D Animation Take (wrestling): joints=WARN
+- C4D Animation Take (wrestling): joints=WARN
+- UAL1_Standard/Death01 (ual): joints=WARN
+- UAL1_Standard/Fixing_Kneeling (ual): feet=WARN
+- UAL1_Standard/Interact (ual): joints=WARN
+- UAL1_Standard/Jog_Fwd_Loop (ual): sanity=WARN
+- UAL1_Standard/PickUp_Table (ual): sanity=WARN
+- UAL1_Standard/Punch_Cross (ual): sanity=WARN
+- UAL1_Standard/Punch_Jab (ual): sanity=WARN
+- UAL1_Standard/Roll (ual): sanity=WARN
+- UAL1_Standard/Sprint_Loop (ual): sanity=WARN
+- UAL1_Standard/Walk_Formal_Loop (ual): feet=WARN
+- UAL1_Standard/Walk_Loop (ual): feet=WARN
+- UAL2_Standard/ClimbUp_1m (ual): sanity=WARN
+- UAL2_Standard/Consume (ual): sanity=WARN
+- UAL2_Standard/Farm_Harvest (ual): joints=WARN
+- UAL2_Standard/Hit_Knockback (ual): sanity=WARN; joints=WARN
+- UAL2_Standard/Melee_Hook (ual): sanity=WARN
+- UAL2_Standard/NinjaJump_Start (ual): sanity=WARN
+- UAL2_Standard/Shield_Dash (ual): feet=WARN
+- UAL2_Standard/Slide_Exit (ual): sanity=WARN
+- UAL2_Standard/Slide_Start (ual): sanity=WARN
+- UAL2_Standard/Sword_Block (ual): sanity=WARN
+- UAL2_Standard/Sword_Dash (ual): sanity=WARN; joints=WARN
+- UAL2_Standard/Sword_Heavy_Combo (ual): sanity=WARN; joints=WARN; feet=WARN
+- UAL2_Standard/Sword_Regular_B (ual): sanity=WARN
+- UAL2_Standard/Sword_Regular_C (ual): sanity=WARN; joints=WARN
+- UAL2_Standard/Walk_Carry_Loop (ual): feet=WARN
+- backdrop (bank): coverage=WARN; joints=WARN
+- bigjump (bank): sanity=WARN; joints=WARN
+- ... and 32 more (see report.json)
+
+_Proof strips: out/proof/*.png_
