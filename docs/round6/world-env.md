@@ -92,3 +92,20 @@ Prelinger.
   uniform from SunCalc, lerp turbidity/rayleigh for dawn/dusk color, and
   regenerate the PMREM environment at intervals so PBR materials track the sky.
   Zero asset downloads — pure shader.
+
+## BinaryConstruct Skybox Editor
+- **URL:** https://github.com/binaryconstruct/skyboxeditor
+- **What:** Free, fully client-side (TypeScript + React + three.js/WebGL2) stellar
+  skybox editor at skyboxeditor.com — an open-source rewrite inspired by the
+  original Spacescape (Alex Peterson, MIT). Layered nebulae, star fields, hero
+  galaxies, positional suns/planets, and Schwarzschild-geodesic black holes,
+  composited on a sky sphere. Exports game-ready cubemaps (PNG), equirectangular
+  images, Radiance HDR, and OpenEXR. Deterministic seeded generation; project
+  bundles are plain zips (project.json + sprites + preview).
+- **License:** MIT (LICENSE file in root; © BinaryConstruct. Original Spacescape
+  app © Alex Peterson, MIT; bundled flare textures/presets derive from the
+  original distribution).
+- **Verdict:** commercial-safe
+- **Notes:** Author per-district night skies + menu/lore skyboxes (e.g. SWMG
+  cosmic imagery) without AI generation or paid tools. Bake once to cubemap/HDR,
+  ship the texture — no runtime dependency.
