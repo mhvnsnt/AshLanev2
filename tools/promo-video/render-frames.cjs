@@ -31,6 +31,11 @@ function serve(page) {
       if (urlPath === '/' || urlPath === '/cinematic.html') filePath = path.join(HERE, page);
       else if (urlPath === '/cinematic-faction.html') filePath = path.join(HERE, 'cinematic-faction.html');
       else if (urlPath === '/walk-test.html') filePath = path.join(HERE, 'walk-test.html');
+      else if (urlPath === '/diag-rest.html') filePath = path.join(HERE, 'diag-rest.html');
+      else if (urlPath === '/diag-clip.html') filePath = path.join(HERE, 'diag-clip.html');
+      else if (urlPath === '/diag-bones.html') filePath = path.join(HERE, 'diag-bones.html');
+      else if (urlPath === '/diag-weights.html') filePath = path.join(HERE, 'diag-weights.html');
+      else if (urlPath === '/diag-stray.html') filePath = path.join(HERE, 'diag-stray.html');
       else if (urlPath === '/real-motion.js') filePath = path.join(HERE, 'real-motion.js');
       else if (urlPath === '/faction-motion.js') filePath = path.join(HERE, 'faction-motion.js');
       else if (urlPath === '/staging.js') filePath = path.join(HERE, 'staging.js');

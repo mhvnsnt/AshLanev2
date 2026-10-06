@@ -1,0 +1,63 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>stray weight audit</title>
+<script type="importmap">{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/" } }</script></head>
+<body><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const params = new URLSearchParams(location.search);
+const MODEL = params.get('model') || 'ONYX_street.glb';
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const gltf = await loader.loadAsync('/models/' + MODEL);
+const root = gltf.scene;
+{
+  const bb = new THREE.Box3().setFromObject(root);
+  const h = bb.max.y - bb.min.y;
+  if (h > 0.01) root.scale.setScalar(1.85 / h);
+}
+root.updateWorldMatrix(true, true);
+// body regions by normalized height (after 1.85 normalization)
+function region(y) {
+  if (y < 0.95) return 'legs';
+  if (y < 1.25) return 'pelvis';
+  if (y < 1.62) return 'torso';
+  return 'head';
+}
+// bones that should NEVER dominate a region
+const STRAY = {
+  legs: /Head|Neck|Hand|Arm|ForeArm|Shoulder|Spine|Chest/i,
+  pelvis: /Head|Neck|Hand|ForeArm|Foot|Toe/i,
+  torso: /Foot|Toe|Leg|UpLeg|Hand/i,
+  head: /Foot|Toe|Leg|UpLeg|Hips/i,
+};
+const result = { model: MODEL, mesh: null, strayPct: 0, strayDetail: {}, n: 0 };
+root.traverse((o) => {
+  if (!o.isSkinnedMesh || result.mesh) return;
+  result.mesh = o.name;
+  const g = o.geometry;
+  const pos = g.attributes.position, sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const n = pos.count;
+  let stray = 0;
+  const detail = {};
+  for (let i = 0; i < n; i++) {
+    const y = pos.getY(i);
+    const r = region(y);
+    const cands = [[sw.getX(i), sj.getX(i)], [sw.getY(i), sj.getY(i)], [sw.getZ(i), sj.getZ(i)], [sw.getW(i), sj.getW(i)]];
+    cands.sort((a,b) => b[0]-a[0]);
+    if (cands[0][0] < 0.3) continue; // weak dominant = blended, skip
+    const bn = o.skeleton.bones[cands[0][1]] ? o.skeleton.bones[cands[0][1]].name.replace('mixamorig','') : '?';
+    if (STRAY[r].test(bn)) {
+      stray++;
+      const k = `${r}->${bn}`;
+      detail[k] = (detail[k] || 0) + 1;
+    }
+  }
+  result.n = n;
+  result.strayPct = +(100 * stray / n).toFixed(2);
+  result.strayDetail = Object.fromEntries(Object.entries(detail).sort((a,b)=>b[1]-a[1]).slice(0,10));
+});
+window.__stray = result;
+window.__ready = true;
+</script></body></html>

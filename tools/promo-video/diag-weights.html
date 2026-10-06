@@ -1,0 +1,71 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>weight viz</title>
+<style>html,body{margin:0;background:#111;overflow:hidden;color:#fff;font:12px monospace}#hud{position:fixed;top:8px;left:8px;background:rgba(0,0,0,.7);padding:8px;white-space:pre}</style>
+<script type="importmap">{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/" } }</script></head>
+<body><div id="hud"></div><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const params = new URLSearchParams(location.search);
+const MODEL = params.get('model') || 'ONYX_street.glb';
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const gltf = await loader.loadAsync('/models/' + MODEL);
+const root = gltf.scene;
+// normalize height
+{
+  const bb = new THREE.Box3().setFromObject(root);
+  const h = bb.max.y - bb.min.y;
+  const s = 1.85 / h;
+  root.scale.setScalar(s);
+}
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x111111);
+const camera = new THREE.PerspectiveCamera(40, 960/540, 0.1, 100);
+camera.position.set(0, 1.2, 4.2); camera.lookAt(0, 0.95, 0);
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(960, 540);
+document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x333333, 1.2));
+const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(3,5,4); scene.add(key);
+scene.add(root);
+// color palette per bone index
+const PALETTE = [];
+for (let i = 0; i < 64; i++) {
+  const h = (i * 0.61803398875) % 1;
+  PALETTE.push(new THREE.Color().setHSL(h, 0.9, 0.55));
+}
+const stats = [];
+root.traverse((o) => {
+  if (!o.isSkinnedMesh) return;
+  const g = o.geometry;
+  const pos = g.attributes.position, sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const n = pos.count;
+  const colors = new Float32Array(n * 3);
+  const boneOf = {}, legStats = { total: 0, byBone: {} };
+  for (let i = 0; i < n; i++) {
+    let bi = sj.getX(i), bw = sw.getX(i);
+    const cands = [[sw.getX(i), sj.getX(i)], [sw.getY(i), sj.getY(i)], [sw.getZ(i), sj.getZ(i)], [sw.getW(i), sj.getW(i)]];
+    cands.sort((a,b) => b[0]-a[0]);
+    bi = cands[0][1]; bw = cands[0][0];
+    const col = PALETTE[bi % 64];
+    colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
+    const y = pos.getY(i);
+    if (y < 0.9) { // leg region (normalized height)
+      legStats.total++;
+      const bn = o.skeleton.bones[bi] ? o.skeleton.bones[bi].name : '?'+bi;
+      legStats.byBone[bn] = (legStats.byBone[bn] || 0) + 1;
+    }
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  o.material = new THREE.MeshBasicMaterial({ vertexColors: true });
+  stats.push({ mesh: o.name, legVerts: legStats.total,
+    topBones: Object.entries(legStats.byBone).sort((a,b)=>b[1]-a[1]).slice(0,8)
+      .map(([k,v]) => `${k.replace('mixamorig','')}:${Math.round(100*v/legStats.total)}%`) });
+});
+document.getElementById('hud').textContent = JSON.stringify(stats, null, 1);
+window.__weightStats = stats;
+window.__renderAt = function(t) { renderer.render(scene, camera); return true; };
+window.__ready = true;
+</script></body></html>

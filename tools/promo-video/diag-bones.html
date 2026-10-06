@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>bone dump</title>
+<script type="importmap">{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/" } }</script></head>
+<body><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const params = new URLSearchParams(location.search);
+const MODEL = params.get('model') || 'ONYX_street.glb';
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const gltf = await loader.loadAsync('/models/' + MODEL);
+const root = gltf.scene;
+root.updateWorldMatrix(true, true);
+const out = [];
+const v = new THREE.Vector3();
+const q = new THREE.Quaternion();
+const s = new THREE.Vector3();
+root.traverse((o) => {
+  if (!o.isBone) return;
+  o.getWorldPosition(v); o.getWorldQuaternion(q); o.getWorldScale(s);
+  out.push({ name: o.name,
+    pos: v.toArray().map(x=>+x.toFixed(4)),
+    quat: [q.x,q.y,q.z,q.w].map(x=>+x.toFixed(4)),
+    scale: s.toArray().map(x=>+x.toFixed(4)) });
+});
+window.__bones = out;
+window.__ready = true;
+</script></body></html>
