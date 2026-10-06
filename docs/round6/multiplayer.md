@@ -134,3 +134,20 @@ Research date: 2026-10-06.
   is a product pillar; use Centrifugo (#6) if it's just lobby chat.
 
 ---
+## 8. hyperswarm — serverless P2P lobbies (DHT + hole-punching)
+- **URL:** https://github.com/holepunchto/hyperswarm
+- **What:** Distributed networking stack from Holepunch: join a 32-byte topic on
+  the public DHT, get NAT-traversed peer connections with Noise encryption —
+  no signaling server, no accounts, no infrastructure. `swarm.join(topic)` is a
+  whole lobby-discovery system in one call. Same family as trystero (round 4)
+  but DHT-based rather than tracker-based, with stronger NAT traversal.
+- **License:** **MIT** (repo LICENSE, verified via docs/dependents 2026-10-06).
+- **Verdict:** commercial-safe — with a platform caveat.
+- **Notes:** Caveat: hyperswarm needs raw UDP/TCP sockets — runs in Node,
+  Electron, or native wrappers, NOT in a plain browser tab (browser clients need
+  a WebSocket→DHT relay such as @hyperswarm/dht-relay). Fit: the native/Electron
+  build's serverless quick-match, LAN-party discovery, and dev-time lobbies with
+  zero backend cost. Pairs with the round-4 P2P netcode plan: DHT replaces the
+  tracker for peer discovery.
+
+---
