@@ -113,3 +113,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The minimal cloth/rope primitive: hanging chains, banners, net curtains, rope physics for Bannon ring ropes without pulling in a full engine. Trivial to audit and port — ideal for understanding verlet before adopting the three.js Cloth example wholesale.
 
+## voronoifracture
+- **URL:** https://github.com/glowleaf/voronoifracture
+- **What:** True Voronoi-cell 3D fracturing for three.js: surface-vertex seed sampling, convex-hull chunk generation, impact-point-biased shatter, physics motion + cleanup, glass-shatter material support.
+- **License:** CC0-1.0 (public domain dedication, per GitHub license detection).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** The most game-ready true-fracture option found for three.js — shatter-on-impact for windows, bottles, crates with no pre-baking. CC0 means zero licensing friction. Pair with cannon-es: fracture chunks become rigid bodies. Watch chunk counts on mobile (convex hulls are cheap, draw calls are not).
+
