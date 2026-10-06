@@ -208,3 +208,18 @@ Prelinger.
   / Bangers) and pair with UnrealBloomPass (already available, round 2) for the
   neon-district look. Neon is approved for ONE specific district per the owner's
   art direction — use sparingly elsewhere.
+
+## Sketchfab "low poly street lamps collection" (woulfric)
+- **URL:** https://sketchfab.com/3d-models/low-poly-street-lamps-collection-2c94ef2518904a219acea289e8fda159
+- **What:** Set of 6 low-poly street lamps for small games/scenes, made in
+  Blender, ~2K–4K faces each. Downloadable. (Also of note on Sketchfab: "Street
+  Light" by Algirdas Lalys — 358 tris, CC-BY; "Street Light" by Pyrgen — modern
+  UE5-made lamp, CC-BY.)
+- **License:** CC-BY (Creative Commons Attribution, per Sketchfab page).
+- **Verdict:** commercial-safe with attribution (CC-BY is permissive; credit the
+  author in the credits file)
+- **Notes:** building-gen.py already places simple streetlights; these give
+  varied, textured hero lamps for key streets and plazas. Download via the
+  Sketchfab channel already documented in round 2 (free account + OAuth token).
+  Verify the CC-BY license on the page at download time — Sketchfab licenses are
+  per-model.
