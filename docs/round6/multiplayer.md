@@ -361,3 +361,32 @@ Research date: 2026-10-06.
   kill communities faster than cheaters do — flag, don't auto-ban.
 
 ---
+## License ledger
+
+| # | Project | License (verified 2026-10-06) | Verdict |
+|---|---|---|---|
+| 1 | LiveKit (server + client-sdk-js) | Apache-2.0 | commercial-safe |
+| 2 | mediasoup (+ mediasoup-client) | ISC | commercial-safe |
+| 3 | Mumble / Murmur | BSD-3-Clause | commercial-safe |
+| 4 | Open Match | Apache-2.0 | commercial-safe (adopt with care — quiet upstream) |
+| 5 | Colyseus | MIT | commercial-safe |
+| 6 | Centrifugo | Apache-2.0 | commercial-safe |
+| 7 | Matrix (matrix-js-sdk + Tuwunel) | Apache-2.0 | commercial-safe |
+| 8 | hyperswarm | MIT | commercial-safe (Node/Electron only; browser needs relay) |
+| 9 | Agones | Apache-2.0 | commercial-safe (infra-stage) |
+| 10 | openskill.js | MIT | commercial-safe |
+| 11 | rrweb | MIT | commercial-safe |
+| 12 | mp4-muxer | MIT | commercial-safe |
+| 13 | Owncast | MIT | commercial-safe |
+| 14 | lichess (lila) | AGPL-3.0 | **prototype-only — reference only, do not ship** |
+| 15 | Free hosting tiers (survey) | n/a (services) | commercial-safe |
+| 16 | Managed backend free tiers (survey) | n/a (services) | commercial-safe |
+| 17 | FlacSy/badwords (MIT) + rate-limiter-flexible (ISC) + Turnstile | MIT / ISC | commercial-safe |
+| 18 | Anti-cheat basics (design notes) | n/a | commercial-safe |
+
+**Flagged, do NOT use:** Synapse/Dendrite Matrix homeservers (AGPL-3.0 since
+Nov 2023 — use Tuwunel instead); webm-muxer (deprecated — use mp4-muxer;
+successor mediabunny is MPL-2.0 = prototype-only); gumble Go Mumble lib
+(MPL-2.0); Coqui XTTS weights (non-commercial, reconfirmed from round 4);
+ffmpeg.wasm+libx264 in shipped client builds (GPL encoder concern, from
+round 5).
