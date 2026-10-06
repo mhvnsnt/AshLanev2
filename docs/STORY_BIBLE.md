@@ -276,19 +276,20 @@ Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang
 
 **These secrets must NEVER appear in:** menus, roster UI, HUD, character select, or any player-facing text. Writers and story scripts only.
 
-## KG Mudo — 9th Robed Council Member (OCCASIONAL)
+## KG Mudo (Kiko Tanaka) — 9th Robed Council Member (OCCASIONAL)
 
-Based on Great Muta / Keiji Muto. NOT a permanent council member — appears only sometimes.
+**Kiko Tanaka**, Keiji Mutoh-inspired. NOT a permanent council member — appears only sometimes.
 
-**The Attire:**
+**Street Attire (unpainted, unmasked):**
 - Multicolored spray-painted dragon tights (vibrant, many colors)
 - White fur coat/jacket with fringe
-- Reference: docs/art-refs/kg-mudo/
+- NO face paint, NO mask — gray beard, older Keiji Muto look
+- Reference: docs/art-refs/kg-mudo/ (Great Muta white fur coat photos)
 
-**The Wizard Form:**
-- White fur robe (instead of the coat)
+**Wizard Form:**
+- White fur robe (SWMG-style, instead of the coat)
 - Face shrouded like other council members
-- When revealed: NO face paint — gray beard, older Keiji Muto look
+- When revealed: it's Kiko — gray beard, no paint, no mask
 - You won't know it's him until the reveal
 
 **Plot function:** Mystery member. His identity is a reveal moment.
