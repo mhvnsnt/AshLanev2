@@ -21,7 +21,7 @@ function args() {
   return a;
 }
 
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.glb': 'model/gltf-binary', '.wasm': 'application/wasm' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.glb': 'model/gltf-binary', '.wasm': 'application/wasm', '.json': 'application/json' };
 
 function serve() {
   return new Promise(resolve => {
@@ -29,7 +29,9 @@ function serve() {
       const urlPath = decodeURIComponent(req.url.split('?')[0]);
       let filePath;
       if (urlPath === '/' || urlPath === '/cinematic.html') filePath = path.join(HERE, 'cinematic.html');
+      else if (urlPath === '/real-motion.js') filePath = path.join(HERE, 'real-motion.js');
       else if (urlPath.startsWith('/models/')) filePath = path.join(MODELS_DIR, urlPath.slice(8));
+      else if (urlPath.startsWith('/motion/')) filePath = path.join(HERE, '..', '..', 'public', 'motion', urlPath.slice(8));
       else if (urlPath.startsWith('/node_modules/')) filePath = path.join(RENDERER_NODE_MODULES, urlPath.slice(14));
       else { res.writeHead(404); res.end('nf'); return; }
       fs.readFile(filePath, (err, data) => {
