@@ -3,7 +3,7 @@
 **Faction:** Onyx's Gang — first FACTION promo (proof of concept for the faction video line)
 **Duration:** 50 seconds | **Format:** 1920x1080, 24fps
 **Pipeline:** `tools/promo-video/cinematic-faction.html` (new — street scene, multi-character)
-**Status:** DRAFT — review before rendering. No video gets built without an approved storyboard.
+**Status:** ✅ APPROVED — reviewed 2026-10-06 (resume review). No video gets built without an approved storyboard.
 
 ---
 
@@ -60,19 +60,21 @@ Night city street — NOT an arena. Procedural (no external assets):
 - **Action:** Nothing moves. Empty wet street, neon buzzing, haze drifting. No gang yet.
 - **Lighting:** Near-black. Neon signs at 40%. One distant streetlight flickers.
 - **Narrative beat:** Anticipation. Whose street is this? (Owner liked the dark-to-bright open — intentional.)
-- **Audio cue:** Night ambience, distant traffic, neon hum.
+- **Audio:** Night ambience, distant traffic, neon hum. Near-silence — the street is holding its breath.
 
 ### Shot 2 — "The Leader" (0:05–0:12)
-- **Camera:** Low tracking shot beside Onyx. Position (2.6, 1.1, 6.5) → (2.2, 1.2, 3.0), look at Onyx head height.
+- **Camera:** Frontal approach — she walks out of the dark TOWARD camera. Position (2.1, 1.05, -0.5) → (1.7, 1.2, -1.2), look at Onyx head height tracking her approach (z=7.5 → z=3.2).
 - **Action:** Onyx walks into frame from the dark (z=10 → z=2), real cmu walk mocap, unhurried. She stops center, settles into boxidle. She owns this street.
 - **Lighting:** A streetlight pool catches her as she enters it. Cold rim light on.
 - **Narrative beat:** The reveal. This is her street and her video.
+- **Audio:** Footsteps on wet asphalt fade in, low synth pulse starts under the neon hum.
 
 ### Shot 3 — "The Gang Assembles" (0:12–0:20)
 - **Camera:** Slow lateral track, widening. Position (-4.5, 1.6, 5.5) → (-5.5, 1.8, 7.5), look at gang center.
 - **Action:** One by one from the dark behind her: Hollow (12.5s), Static (14s), Echo (15.5s), Cipher (17s) — each walks in (cmu walk) and takes a flanking position. By 20s all five stand in formation: Onyx front-center, Hollow at her right shoulder, the crew fanned behind. Hold.
 - **Lighting:** Neon wash rises. Each arrival gets a subtle rim-light pop.
 - **Narrative beat:** Faction identity. Leader, general, crew — the family business.
+- **Audio:** The pulse builds — one new layer per arrival (bass, hats, synth stab, sub drop).
 
 ### Shot 4 — "Personalities" (0:20–0:26)
 - **Camera:** Quick cuts (4 × ~1.5s): close-up each member.
@@ -82,18 +84,21 @@ Night city street — NOT an arena. Procedural (no external assets):
   - Cipher (24.5–26s): capoeira hold — unpredictable technician.
 - **Lighting:** Each cut gets a colored edge (blue / orange / pink / yellow — their robe colors).
 - **Narrative beat:** Character. Five people, five threats. Not interchangeable.
+- **Audio:** Four quick hits — Static's cut gets a vocal chop, Hollow's a low boom, Echo's a slip, Cipher's a spin.
 
 ### Shot 5 — "The Rival Crew" (0:26–0:32)
 - **Camera:** Hard cut — long lens down the street. Position (0, 2.0, -2), look at (0, 1.4, -14).
 - **Action:** Three silhouettes under the flickering far streetlight. Backlit, underexposed. They've been waiting. One cracks his knuckles (boxidle variant — subtle).
 - **Lighting:** Deliberate silhouette. Flickering sodium light. Red creeping into the haze.
 - **Narrative beat:** Stakes. The gang isn't alone — someone else claims this street.
+- **Audio:** Music pulls back to pulse + flicker buzz. Knuckle crack at 30s.
 
 ### Shot 6 — "The Takeover" (0:32–0:46)
 - **Camera:** Wide, slowly pushing in. Position (3.0, 2.4, 9.0) → (2.0, 1.8, 5.5), look at (0, 1.3, -2). Both crews in frame.
-- **Action:** The gang advances (walk, 32–36s). Crews meet at mid-street (z≈-4). Standoff hold (36–38s). Then Hollow hits a **PAIRED SUPLEX** on the lead rival — real atk/vic mocap, synced (38–42s): the rival goes up and over, lands flat (fallflat), the other two rivals flinch into hit reactions. The gang stands over the street (42–46s). Onyx doesn't move — she never had to.
+- **Action:** The gang advances (walk, 32–36s). Crews meet at mid-street (z≈-3). Standoff hold (36–38s). Then Hollow hits a **PAIRED SUPLEX** on the lead rival — real atk/vic mocap, synced (38–44s): Hollow at (0.8, 0, -3.0), rival1 at (0.8, 0, -3.6) — GRAPPLING DISTANCE (0.6m). The rival goes up and over, lands flat (fallflat), the other two rivals flinch into hit reactions. The gang stands over the street (44–46s). Onyx doesn't move — she never had to.
 - **Lighting:** Full intensity, red push. Haze maximum. Neon strobing subtly with the impact.
 - **Narrative beat:** The payoff. This is what the gang DOES. The street is theirs.
+- **Audio:** Beat drops at 38s. Impact thump synced to the slam (~42.7s). Rival crew's nerve breaks — audible.
 
 ### Shot 7 — "Title Cards" (0:46–0:50)
 - **Camera:** Hold on the gang formation, slow fade.
@@ -102,6 +107,17 @@ Night city street — NOT an arena. Procedural (no external assets):
 - **Narrative beat:** Branding. Text overlay:
   - **"ONYX'S GANG"** (green/white, large)
   - **"ASHLANE"** (gray, smaller, below)
+- **Audio:** Theme resolves. Final hit at 49s, fade to black.
+
+---
+
+## Review sign-off (2026-10-06 resume review)
+
+- Shot 2 camera corrected to the implemented frontal approach (more dramatic than the side-track draft).
+- Shot 6 suplex staging fixed: attacker/receiver at grappling distance (0.6m), was 1.5m — would not have read as contact.
+- Audio design added per shot (was shot-1 only).
+- Title cards confirmed: make-titles.py pattern, composited in post (build-video.sh faction timings).
+- Remaining risk: paired suplex root/bone sync — verified in test frames before full render (see QA below).
 
 ---
 

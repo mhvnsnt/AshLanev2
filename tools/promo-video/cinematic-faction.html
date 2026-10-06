@@ -66,6 +66,7 @@ function buildingTexture(litRatio, hue) {
     }
   }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
   return t;
 }
 const bTexA = buildingTexture(0.28, '#ffd9a0');
@@ -76,7 +77,11 @@ let bi = 0;
 for (let z = 14; z > -36; z -= 10) {
   for (const sx of [-1, 1]) {
     const h = 9 + Math.random() * 14, w = 8 + Math.random() * 3;
-    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 9), (bi++ % 2) ? bMatA : bMatB);
+    const tex = ((bi++ % 2) ? bTexA : bTexB).clone();
+    tex.needsUpdate = true;
+    tex.repeat.set(Math.max(1, Math.round(w / 5)), Math.max(1, Math.round(h / 5)));
+    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 9),
+      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9 }));
     b.position.set(sx * (9.5 + Math.random() * 2), h / 2, z + (Math.random() - 0.5) * 2);
     scene.add(b);
   }
@@ -107,7 +112,7 @@ for (const s of signs) { s.m.position.set(...s.p); s.m.rotation.y = s.ry; scene.
 
 // Streetlight poles + pools
 const poleMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1e, roughness: 0.7, metalness: 0.6 });
-const lampPositions = [[-5.5, 8], [5.5, -2], [-5.5, -14]];
+const lampPositions = [[-2.5, 6], [5.5, -2], [-5.5, -14]];
 for (const [x, z] of lampPositions) {
   const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 6.5, 10), poleMat);
   pole.position.set(x, 3.25, z); scene.add(pole);
@@ -168,7 +173,7 @@ function streetSpot(x, z) {
   scene.add(s); scene.add(s.target);
   return s;
 }
-const spotA = streetSpot(-5.5, 8);    // over Onyx's entrance
+const spotA = streetSpot(-2.5, 6);    // over Onyx's entrance walk
 const spotB = streetSpot(5.5, -2);     // mid street
 const spotC = streetSpot(-5.5, -14);   // over the rivals (flickers)
 
@@ -248,7 +253,7 @@ C.hollow.choreo = [
 C.hollow.visible = [12.5, 50];
 C.hollow.rootTrack = [
   { t: 12.5, pos: walkFrom.hollow }, { t: 16, pos: [1.2, 0, 2.8] },
-  { t: 32, pos: [1.2, 0, 2.8] }, { t: 38, pos: [0.8, 0, -2.5] }, { t: 50, pos: [0.8, 0, -2.5] },
+  { t: 32, pos: [1.2, 0, 2.8] }, { t: 38, pos: [0.8, 0, -3.0] }, { t: 50, pos: [0.8, 0, -3.0] },
 ];
 
 C.static.choreo = [
@@ -296,10 +301,10 @@ C.rival1.choreo = [
 ];
 C.rival1.visible = [26, 50];
 C.rival1.rootTrack = [
-  { t: 26, pos: [0, 0, -14] }, { t: 38, pos: [0.8, 0, -4] },
+  { t: 26, pos: [0, 0, -14] }, { t: 38, pos: [0.8, 0, -3.6] },
   // suplex lift arc (synced to clip: heave ~41.1s, slam ~42.7s)
-  { t: 39.5, pos: [0.8, 0.25, -4] }, { t: 41.1, pos: [0.8, 1.2, -4.2] },
-  { t: 42.7, pos: [0.8, 0.05, -5.2] }, { t: 44, pos: [0.8, 0, -5.2] }, { t: 50, pos: [0.8, 0, -5.2] },
+  { t: 39.5, pos: [0.8, 0.25, -3.6] }, { t: 41.1, pos: [0.8, 1.2, -3.8] },
+  { t: 42.7, pos: [0.8, 0.05, -4.8] }, { t: 44, pos: [0.8, 0, -4.8] }, { t: 50, pos: [0.8, 0, -4.8] },
 ];
 C.rival2.choreo = [
   { t0: 26, t1: 32, clip: 'boxidle', mode: 'loop' },
@@ -335,9 +340,10 @@ function shot(t) {
   if (t < 5) {           // 1: empty street
     a = 0; b = 5;
     p0 = V3(0, 2.2, 14); p1 = V3(0, 2.0, 12); l0 = l1 = V3(0, 1.5, 0);
-  } else if (t < 12) {   // 2: the leader
+  } else if (t < 12) {   // 2: the leader — she walks out of the dark toward camera
     a = 5; b = 12;
-    p0 = V3(2.6, 1.1, 6.5); p1 = V3(2.2, 1.2, 3.0); l0 = l1 = V3(0, 1.4, 2);
+    p0 = V3(2.1, 1.05, -0.5); p1 = V3(1.7, 1.2, -1.2);
+    l0 = V3(0, 1.5, 7.5); l1 = V3(0, 1.4, 3.2);
   } else if (t < 20) {   // 3: the gang assembles
     a = 12; b = 20;
     p0 = V3(-4.5, 1.6, 5.5); p1 = V3(-5.5, 1.8, 7.5); l0 = l1 = V3(0, 1.4, 2.5);
