@@ -66,3 +66,16 @@ Prelinger.
 - **Notes:** Reference design for wiring sun angle → sky + light + stars in one
   place. Pair with SunCalc below for astronomically correct sun positions; use
   three.js Sky addon for prettier skies.
+
+## SunCalc (mourner)
+- **URL:** https://github.com/mourner/suncalc
+- **What:** Tiny (~2KB) JS library for sun/moon position, sunlight phases
+  (sunrise, sunset, dawn/dusk/twilight times), and lunar phase for any
+  lat/long + date. `SunCalc.getPosition(time, lat, lng)` → altitude/azimuth.
+  The standard astronomy math behind countless day/night systems.
+- **License:** BSD-2-Clause (confirmed via multiple downstream ASSETS/LICENSE
+  manifests citing mourner/suncalc as BSD-2-Clause).
+- **Verdict:** commercial-safe
+- **Notes:** Feed its altitude/azimuth into the three.js sun light + Sky addon
+  uniforms for a real-time day/night cycle that matches the player's actual
+  location and time. Also usable for gameplay: night-only missions, shop hours.
