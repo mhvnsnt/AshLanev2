@@ -106,6 +106,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe (THREE.IK, MIT)** — archived 2018 but the math doesn't rot; ⚠️ **prototype-only (fullik) until its LICENSE is confirmed**.
 - **Notes:** Foot IK is the mandatory companion to motion matching and retargeted mocap: lock feet to the ground plane, kill foot-skate on locomotion, plant feet for wrestling grapples. FABRIK is cheap enough to run per-frame on multiple fighters.
 
+## Rokoko Studio Live for Blender (retarget engine)
+
+- **URL:** https://github.com/Rokoko/rokoko-studio-live-blender · battle-tested port: https://github.com/mesh2motion/mesh2motion-assets (motion-capture/blender-plugin, NOTICE.md)
+- **What:** Official Rokoko Blender plugin: streams mocap into Blender in real time and retargets between arbitrary rigs (multi-actor). The retarget engine — helper bones in a throwaway copy of the source armature, constraints on the target, chunked bake, F-curve stitch + cleanup — is the proven recipe; Mesh2Motion ported exactly that mechanism (dropping Rokoko's UI/auto-detection) for their mocopi->M2M retargeter, with Blender 4.4/5.0 slotted-action fixes.
+- **License:** The retarget code is **LGPL-3.0-or-later**, © Rokoko Electronics ApS (per Mesh2Motion's NOTICE.md citing Rokoko sources core/utils.py, operators/retargeting.py). Some community forks badge MIT — the LGPL attribution from the porter is the authoritative record for the retarget engine.
+- **Verdict:** ✅ **commercial-safe as a tool** — LGPL governs the addon code, not the animations it bakes; output clips are yours. Keep the LGPL attribution if redistributing the addon itself.
+- **Notes:** Don't re-derive retargeting from scratch: this engine's constraint-bake-stitch pipeline is the reference for hardening tools/anim-retarget/. The Mesh2Motion port is the cleaner codebase to study (fixed bone maps instead of auto-detection).
+
 ## License ledger
 
 | Project | License (source) | Verdict |
@@ -117,3 +125,4 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 | LaFAN1 | Ubisoft license.txt, non-commercial (BY-NC-ND) | prototype-only |
 | AIST++ | CC BY 4.0 annotations (Google); AIST video DB separate terms | commercial-safe (attribution) |
 | KIT Whole-Body Motion DB | research-community terms, no commercial grant | prototype-only |
+| Rokoko Studio Live Blender | LGPL-3.0 retarget engine (Mesh2Motion NOTICE.md) | commercial-safe (tool) |
