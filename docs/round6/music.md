@@ -111,3 +111,10 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ❌ **Prototype-only until the LICENSE file is read and confirmed** (historically MIT, but don't trust memory).
 - **Notes:** If confirmed MIT: strong fit for adaptive arrangements — compose entrance themes / fight music as data, switch sections on game events. Re-verify before any ship use.
 
+## 16. libopenmpt (+ chiptune.js) — tracker/module music playback
+- **URL:** https://lib.openmpt.org/libopenmpt/ · https://github.com/OpenMPT/openmpt · Web wrapper: https://github.com/DrSnuggles/chiptune
+- **What:** Renders tracker music (MOD, XM, S3M, IT, MPTM + dozens of legacy formats) to PCM. Compiles to WebAssembly for the browser (chipsound player pattern). chiptune.js (MIT) is the WebAudio wrapper.
+- **License:** **BSD-3-Clause** (libopenmpt); chiptune.js **MIT**.
+- **Verdict:** ✅ Commercial-safe (BSD-3 / MIT).
+- **Notes:** Tracker modules are TINY (KBs vs MBs for MP3) and loop perfectly — the classic game-music format. Compose original .xm/.it modules (OpenMPT tracker is free) → ship as modules → decode at runtime. Ideal for lofi/chiptune district beds and menu music with zero streaming cost.
+
