@@ -182,3 +182,74 @@ The downed opponent chooses: stay down (can't be re-launched), tech roll
 meaty (hit on wakeup), whiff-punish the getup kick, re-splat, back off.
 Grounded opponents cannot be launched — this single rule shapes the entire
 ground game.
+
+---
+
+## 3. YAKUZA (Sega, PS2 2005 → Dragon Engine present)
+
+### 3.1 Heat: the contextual super system
+
+- **Heat gauge** fills by landing attacks, grabs, taunts; some styles charge it
+  differently (Brawler block charges, Rush quickstep charges Climax).
+- **Heat Actions**: contextual cinematic finishers. Trigger = gauge level +
+  *situation*: enemy near wall (Wall Crush), grabbed near car, holding a
+  specific weapon (bat/knife/katana/umbrella each have their own), enemy
+  downed (ground finishers), enemy wielding a weapon (disarm-and-punish).
+- **Damage variety rule**: repeating the same Heat Action deals *less* — the
+  game rewards situational awareness over spamming.
+- **Extreme Heat (0/Kiwami+)**: temporary powered mode — more damage, harder
+  to knock down, exclusive Heat Actions.
+- **Boss heat**: bosses can glow and regenerate — counter with heat items or
+  burst them down.
+- Feel: Heat turns *positioning* into a resource. "Near a wall with a bat and
+  full gauge" is a different game state than open ground.
+
+### 3.2 Weapon economy (durability as design)
+
+- Street weapons: bats, knives, traffic cones, bikes, signs — picked up,
+  swung, **each hit costs durability**, break after N hits.
+- **Weapon Heat Actions cost only 1 durability** — the economy pushes you to
+  finish with style rather than chip away.
+- Finishing a fight with a weapon Heat Action costs **zero** durability for
+  that action.
+- Special weapons break the rules in specific ways (some never lose durability
+  on normal use, some only on Heat, some only when blocking) — chase items.
+- Repair economy: good weapons cost serious money to repair — weapons are a
+  *budget decision*, not just a pickup.
+- Feel: weapons are *fireworks* — spectacular, temporary, worth saving for the
+  right moment.
+
+### 3.3 Grab/throw states
+
+- Grabs lead to: free hits, throws (directional), or Heat Action setups.
+- **Wall grabs**: grab near wall/car → environmental Heat Action.
+- **Disarm grabs**: grab a weapon-wielding enemy → take their weapon, punish.
+- Throw-the-guy-off-the-pier style: some Heat Actions *remove* enemies from
+  the fight (ring-outs by context).
+
+### 3.4 Style stances (0/Kiwami/LAD)
+
+- **Brawler**: balanced; block charges heat.
+- **Rush**: fast, weak, quickstep evades; Climax heat charges on evade.
+- **Beast**: slow, super-armor-ish, auto-picks-up weapons, environmental
+  destruction focus.
+- **Dragon**: the mastered hybrid; Komaki/Majima-learned techniques gate
+  weapon Heat Actions (sword school, stick mastery).
+- Stance-switching mid-fight = adapting to the situation (crowd → Beast,
+  duelist → Rush).
+
+### 3.5 Physics states (Dragon Engine)
+
+- Ragdoll-ish knockback with *weight*: enemies crumple over objects, slide,
+  bounce off walls with readable arcs.
+- Environmental takedowns read as *physical events*, not canned animations —
+  the comedy and impact come from the simulation.
+
+### 3.6 Early vs recent
+
+- **Early (1/2/Kenzan)**: simpler combos, Heat Actions already contextual,
+  weapons everywhere, boss patterns basic.
+- **Recent (0/Kiwami/6/LAD)**: style systems, Extreme Heat, deeper economy,
+  Dragon Engine physics, substory-gated techniques (beat X to learn Y).
+- Constant: the *situation* is the move list. Yakuza's depth is in reading the
+  room, not memorizing inputs.
