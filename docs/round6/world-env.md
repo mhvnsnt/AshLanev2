@@ -109,3 +109,16 @@ Prelinger.
 - **Notes:** Author per-district night skies + menu/lore skyboxes (e.g. SWMG
   cosmic imagery) without AI generation or paid tools. Bake once to cubemap/HDR,
   ship the texture — no runtime dependency.
+
+## procedural-stars-threejs (CK42BB)
+- **URL:** https://github.com/CK42BB/procedural-stars-threejs
+- **What:** Companion to the weather skill above: procedural night skies in
+  three.js — starfields (2K–20K stars), Milky Way, nebulae, celestial phenomena,
+  meteor showers. Sky mood presets (Pristine Mountain, Full Moon Night, Suburban,
+  Meteor Shower, Deep Space, Fantasy). WebGPU compute with WebGL2 fallback.
+- **License:** MIT ("MIT — use freely in your projects").
+- **Verdict:** commercial-safe
+- **Notes:** Use for the night side of the day/night cycle — crossfade from the
+  Sky addon at dusk to this starfield at night. The "Suburban" preset fits
+  AshLane's urban night (light-polluted, faint Milky Way); "Fantasy" for SWMG
+  cosmic set-pieces.
