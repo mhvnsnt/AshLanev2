@@ -22,3 +22,10 @@ Skipped as done/duplicates of rounds 1–5: Rapier (proof done), `impact-particl
 - **Verdict:** COMMERCIAL-SAFE.
 - **Notes:** The only browser path to real Bullet soft-body cloth without GPL baggage (Bullet itself is zlib). WASM payload is heavy for low-end mobile, so quarantine to desktop/high-tier or lazy-load; cannon-es covers the light tier. Soft-body cloth = jackets/coats flapping on AshLane fighters.
 
+## three.js physics examples (cloth, fracture, decals)
+- **URL:** https://github.com/mrdoob/three.js/tree/dev/examples (demos: `webgl_animation_cloth`, `webgl_physics_convex_break`, `webgl_decals`)
+- **What:** First-party three.js example scenes that ARE the reference implementations: Verlet-integration cloth (`Cloth` in examples/jsm), ConvexObjectBreaker rigid-fracture helper, and DecalGeometry for scorch/blood/damage decals.
+- **License:** MIT (three.js LICENSE).
+- **Verdict:** COMMERCIAL-SAFE.
+- **Notes:** Zero-dependency starting points already matched to our three.js version. Cloth demo is the cheapest cloth win on mobile (verlet, no physics engine). ConvexObjectBreaker is the classic crate/barrel shatter for AshLane destructibles; DecalGeometry handles scorch marks and blood decals on floors/walls.
+
