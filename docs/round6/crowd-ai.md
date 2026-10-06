@@ -80,3 +80,10 @@
 - **License:** MIT (repo page license field, LICENSE file at root)
 - **Verdict:** commercial-safe
 - **Notes:** The index behind any crowd sim: neighbor queries for separation/flocking, "NPCs near the fight", vendor-customer matching, and distance-culling ambient AI each frame. Rebuild or incrementally update per tick — cheap at our entity counts.
+
+## miniplex
+- **URL:** https://github.com/hmans/miniplex
+- **What:** Minimal TypeScript ECS: entities are plain objects, components are properties, archetype queries (`world.with("position", "velocity")`), optional React glue. ~1KB, zero dependencies, strong DX focus.
+- **License:** MIT (npm registry metadata — verify the LICENSE file in the repo before shipping)
+- **Verdict:** commercial-safe (pending license-file verification)
+- **Notes:** Entity management for hundreds of ambient NPCs, pedestrians, and vehicles: query archetypes per frame without framework overhead. Keep authoritative sim truth in flat data (per the R5 netcode determinism notes) — ECS owns the drawn things, not the rollback state.
