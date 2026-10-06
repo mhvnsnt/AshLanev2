@@ -23,6 +23,7 @@ import json
 import math
 import os
 import re
+import struct
 import sys
 
 import numpy as np
@@ -468,7 +469,21 @@ def main():
     args = ap.parse_args()
 
     print(f"[defect_gates] loading {args.glb}")
-    model = load_model(args.glb)
+    # Fuzz-found (AFL++, 2026-10-06): malformed GLB structure used to crash
+    # the gate with an unhandled traceback. An ingest gate must turn a
+    # malformed file into a FAIL verdict, never a crash.
+    try:
+        model = load_model(args.glb)
+    except (ValueError, TypeError, KeyError, IndexError, struct.error,
+            json.JSONDecodeError) as e:
+        print(f"[defect_gates] FAIL: unparseable GLB: {type(e).__name__}: {e}")
+        if args.out:
+            with open(args.out, "w") as f:
+                json.dump({"tool": "defect_gates", "glb": args.glb,
+                           "verdict": "FAIL",
+                           "reason": f"unparseable GLB: {type(e).__name__}: {e}",
+                           "gates": []}, f, indent=2)
+        return 1
     all_anims = ar.extract_animations(model["glb"])
     print(f"[defect_gates] {len(all_anims)} animations, {len(model['joint_nodes'])} joints, "
           f"{sum(len(p['pos']) for p in model['prims'])} verts")

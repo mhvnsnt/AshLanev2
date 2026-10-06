@@ -1,0 +1,590 @@
+{
+  "tool": "pose_qa",
+  "images": 38,
+  "passed": 35,
+  "flagged": 3,
+  "results": [
+    {
+      "file": "AARON_RUBEN.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.981,
+        "head_top_y": 0.185,
+        "ankle_bottom_y": 0.808,
+        "shoulder_span_x": 0.181,
+        "shoulder_tilt_deg": 1.2,
+        "knee_l_deg": 171.0,
+        "knee_r_deg": 177.0,
+        "elbow_l_deg": 178.7,
+        "elbow_r_deg": 159.7
+      }
+    },
+    {
+      "file": "BANNON_muscular_skinned.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.982,
+        "head_top_y": 0.196,
+        "ankle_bottom_y": 0.814,
+        "shoulder_span_x": 0.172,
+        "shoulder_tilt_deg": 0.2,
+        "knee_l_deg": 169.4,
+        "knee_r_deg": 176.3,
+        "elbow_l_deg": 177.4,
+        "elbow_r_deg": 155.1
+      }
+    },
+    {
+      "file": "BRUTUS.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.976,
+        "head_top_y": 0.184,
+        "ankle_bottom_y": 0.808,
+        "shoulder_span_x": 0.192,
+        "shoulder_tilt_deg": 1.7,
+        "knee_l_deg": 168.8,
+        "knee_r_deg": 178.9,
+        "elbow_l_deg": 177.9,
+        "elbow_r_deg": 150.5
+      }
+    },
+    {
+      "file": "CAIN_ELIAS_gear.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.918,
+        "head_top_y": 0.174,
+        "ankle_bottom_y": 0.844,
+        "shoulder_span_x": 0.167,
+        "shoulder_tilt_deg": 4.8,
+        "knee_l_deg": 173.7,
+        "knee_r_deg": 179.1,
+        "elbow_l_deg": 178.4,
+        "elbow_r_deg": 160.3
+      }
+    },
+    {
+      "file": "CAIN_ELIAS_snakeskin.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.975,
+        "head_top_y": 0.187,
+        "ankle_bottom_y": 0.829,
+        "shoulder_span_x": 0.163,
+        "shoulder_tilt_deg": 2.8,
+        "knee_l_deg": 176.4,
+        "knee_r_deg": 176.1,
+        "elbow_l_deg": 178.3,
+        "elbow_r_deg": 159.5
+      }
+    },
+    {
+      "file": "CIPHER_rigged.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.99,
+        "head_top_y": 0.178,
+        "ankle_bottom_y": 0.825,
+        "shoulder_span_x": 0.167,
+        "shoulder_tilt_deg": 0.6,
+        "knee_l_deg": 173.0,
+        "knee_r_deg": 174.2,
+        "elbow_l_deg": 176.2,
+        "elbow_r_deg": 170.0
+      }
+    },
+    {
+      "file": "CODY_gear_skinned.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.991,
+        "head_top_y": 0.188,
+        "ankle_bottom_y": 0.815,
+        "shoulder_span_x": 0.174,
+        "shoulder_tilt_deg": 0.1,
+        "knee_l_deg": 171.4,
+        "knee_r_deg": 179.2,
+        "elbow_l_deg": 171.7,
+        "elbow_r_deg": 177.2
+      }
+    },
+    {
+      "file": "CODY_sober.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.991,
+        "head_top_y": 0.187,
+        "ankle_bottom_y": 0.812,
+        "shoulder_span_x": 0.157,
+        "shoulder_tilt_deg": 1.0,
+        "knee_l_deg": 179.8,
+        "knee_r_deg": 178.3,
+        "elbow_l_deg": 173.2,
+        "elbow_r_deg": 161.6
+      }
+    },
+    {
+      "file": "CODY_stressed.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.987,
+        "head_top_y": 0.182,
+        "ankle_bottom_y": 0.823,
+        "shoulder_span_x": 0.153,
+        "shoulder_tilt_deg": 3.1,
+        "knee_l_deg": 178.2,
+        "knee_r_deg": 179.6,
+        "elbow_l_deg": 165.1,
+        "elbow_r_deg": 174.5
+      }
+    },
+    {
+      "file": "ECHO.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.977,
+        "head_top_y": 0.176,
+        "ankle_bottom_y": 0.818,
+        "shoulder_span_x": 0.157,
+        "shoulder_tilt_deg": 0.9,
+        "knee_l_deg": 170.4,
+        "knee_r_deg": 177.7,
+        "elbow_l_deg": 174.8,
+        "elbow_r_deg": 177.7
+      }
+    },
+    {
+      "file": "EDWIN_KENNEDY.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.987,
+        "head_top_y": 0.176,
+        "ankle_bottom_y": 0.819,
+        "shoulder_span_x": 0.16,
+        "shoulder_tilt_deg": 2.3,
+        "knee_l_deg": 180.0,
+        "knee_r_deg": 178.3,
+        "elbow_l_deg": 172.8,
+        "elbow_r_deg": 164.7
+      }
+    },
+    {
+      "file": "EL_TORO_DE_ORO.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.983,
+        "head_top_y": 0.232,
+        "ankle_bottom_y": 0.815,
+        "shoulder_span_x": 0.143,
+        "shoulder_tilt_deg": 2.5,
+        "knee_l_deg": 178.9,
+        "knee_r_deg": 174.4,
+        "elbow_l_deg": 165.6,
+        "elbow_r_deg": 172.8
+      }
+    },
+    {
+      "file": "HALL_NIGHTER.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.979,
+        "head_top_y": 0.169,
+        "ankle_bottom_y": 0.811,
+        "shoulder_span_x": 0.142,
+        "shoulder_tilt_deg": 1.6,
+        "knee_l_deg": 170.6,
+        "knee_r_deg": 177.0,
+        "elbow_l_deg": 171.4,
+        "elbow_r_deg": 164.0
+      }
+    },
+    {
+      "file": "HOLLOW.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.988,
+        "head_top_y": 0.202,
+        "ankle_bottom_y": 0.819,
+        "shoulder_span_x": 0.146,
+        "shoulder_tilt_deg": 2.2,
+        "knee_l_deg": 179.3,
+        "knee_r_deg": 177.4,
+        "elbow_l_deg": 163.2,
+        "elbow_r_deg": 179.4
+      }
+    },
+    {
+      "file": "JAGER.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.982,
+        "head_top_y": 0.179,
+        "ankle_bottom_y": 0.81,
+        "shoulder_span_x": 0.15,
+        "shoulder_tilt_deg": 0.2,
+        "knee_l_deg": 176.1,
+        "knee_r_deg": 179.5,
+        "elbow_l_deg": 180.0,
+        "elbow_r_deg": 171.9
+      }
+    },
+    {
+      "file": "KOBRA.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.977,
+        "head_top_y": 0.171,
+        "ankle_bottom_y": 0.817,
+        "shoulder_span_x": 0.157,
+        "shoulder_tilt_deg": 2.1,
+        "knee_l_deg": 172.0,
+        "knee_r_deg": 177.8,
+        "elbow_l_deg": 174.9,
+        "elbow_r_deg": 165.3
+      }
+    },
+    {
+      "file": "MAIME_skinned.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.977,
+        "head_top_y": 0.204,
+        "ankle_bottom_y": 0.809,
+        "shoulder_span_x": 0.151,
+        "shoulder_tilt_deg": 0.0,
+        "knee_l_deg": 175.9,
+        "knee_r_deg": 179.1,
+        "elbow_l_deg": 175.9,
+        "elbow_r_deg": 163.7
+      }
+    },
+    {
+      "file": "MAIME_tattered_skinned.png",
+      "verdict": "FLAG",
+      "reasons": [
+        "no_person"
+      ],
+      "metrics": {}
+    },
+    {
+      "file": "MASTER_SENSEI.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.989,
+        "head_top_y": 0.195,
+        "ankle_bottom_y": 0.812,
+        "shoulder_span_x": 0.149,
+        "shoulder_tilt_deg": 3.5,
+        "knee_l_deg": 174.9,
+        "knee_r_deg": 177.0,
+        "elbow_l_deg": 159.2,
+        "elbow_r_deg": 179.3
+      }
+    },
+    {
+      "file": "NPC_FINXSSE.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.984,
+        "head_top_y": 0.183,
+        "ankle_bottom_y": 0.821,
+        "shoulder_span_x": 0.147,
+        "shoulder_tilt_deg": 1.2,
+        "knee_l_deg": 177.1,
+        "knee_r_deg": 177.3,
+        "elbow_l_deg": 175.2,
+        "elbow_r_deg": 177.2
+      }
+    },
+    {
+      "file": "ONYX_corset_skinned.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.971,
+        "head_top_y": 0.199,
+        "ankle_bottom_y": 0.818,
+        "shoulder_span_x": 0.126,
+        "shoulder_tilt_deg": 8.1,
+        "knee_l_deg": 177.0,
+        "knee_r_deg": 174.4,
+        "elbow_l_deg": 171.6,
+        "elbow_r_deg": 177.8
+      }
+    },
+    {
+      "file": "ONYX_skinned.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.925,
+        "head_top_y": 0.193,
+        "ankle_bottom_y": 0.815,
+        "shoulder_span_x": 0.134,
+        "shoulder_tilt_deg": 2.7,
+        "knee_l_deg": 180.0,
+        "knee_r_deg": 177.7,
+        "elbow_l_deg": 179.1,
+        "elbow_r_deg": 173.9
+      }
+    },
+    {
+      "file": "ONYX_straightjacket.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.978,
+        "head_top_y": 0.189,
+        "ankle_bottom_y": 0.803,
+        "shoulder_span_x": 0.129,
+        "shoulder_tilt_deg": 4.8,
+        "knee_l_deg": 179.6,
+        "knee_r_deg": 175.9,
+        "elbow_l_deg": 176.2,
+        "elbow_r_deg": 175.7
+      }
+    },
+    {
+      "file": "ONYX_street.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.827,
+        "head_top_y": 0.182,
+        "ankle_bottom_y": 0.816,
+        "shoulder_span_x": 0.051,
+        "shoulder_tilt_deg": null,
+        "knee_l_deg": 158.3,
+        "knee_r_deg": 130.2
+      }
+    },
+    {
+      "file": "PABLO.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.926,
+        "head_top_y": 0.176,
+        "ankle_bottom_y": 0.814,
+        "shoulder_span_x": 0.154,
+        "shoulder_tilt_deg": 0.1,
+        "knee_l_deg": 176.1,
+        "knee_r_deg": 178.3,
+        "elbow_l_deg": 179.8,
+        "elbow_r_deg": 157.6
+      }
+    },
+    {
+      "file": "SOMBRA_NEGRA_rigged.png",
+      "verdict": "FLAG",
+      "reasons": [
+        "no_person"
+      ],
+      "metrics": {}
+    },
+    {
+      "file": "STAN_COMBS_gear.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.991,
+        "head_top_y": 0.185,
+        "ankle_bottom_y": 0.82,
+        "shoulder_span_x": 0.151,
+        "shoulder_tilt_deg": 0.5,
+        "knee_l_deg": 177.2,
+        "knee_r_deg": 178.3,
+        "elbow_l_deg": 158.7,
+        "elbow_r_deg": 174.0
+      }
+    },
+    {
+      "file": "STATIC.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.985,
+        "head_top_y": 0.181,
+        "ankle_bottom_y": 0.828,
+        "shoulder_span_x": 0.145,
+        "shoulder_tilt_deg": 3.4,
+        "knee_l_deg": 171.2,
+        "knee_r_deg": 177.7,
+        "elbow_l_deg": 157.1,
+        "elbow_r_deg": 178.5
+      }
+    },
+    {
+      "file": "STICKUP.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.983,
+        "head_top_y": 0.178,
+        "ankle_bottom_y": 0.82,
+        "shoulder_span_x": 0.139,
+        "shoulder_tilt_deg": 0.2,
+        "knee_l_deg": 177.7,
+        "knee_r_deg": 177.0,
+        "elbow_l_deg": 173.4,
+        "elbow_r_deg": 174.7
+      }
+    },
+    {
+      "file": "TARZANIAN_DEVIL_skinned.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.986,
+        "head_top_y": 0.19,
+        "ankle_bottom_y": 0.835,
+        "shoulder_span_x": 0.15,
+        "shoulder_tilt_deg": 2.6,
+        "knee_l_deg": 169.7,
+        "knee_r_deg": 179.6,
+        "elbow_l_deg": 179.5,
+        "elbow_r_deg": 161.6
+      }
+    },
+    {
+      "file": "TITAN.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.972,
+        "head_top_y": 0.047,
+        "ankle_bottom_y": 0.804,
+        "shoulder_span_x": 0.2,
+        "shoulder_tilt_deg": 2.3,
+        "knee_l_deg": 173.1,
+        "knee_r_deg": 176.9,
+        "elbow_l_deg": 158.3,
+        "elbow_r_deg": 150.5
+      }
+    },
+    {
+      "file": "TITAN_unmasked.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.978,
+        "head_top_y": 0.04,
+        "ankle_bottom_y": 0.796,
+        "shoulder_span_x": 0.218,
+        "shoulder_tilt_deg": 3.2,
+        "knee_l_deg": 167.0,
+        "knee_r_deg": 179.4,
+        "elbow_l_deg": 165.1,
+        "elbow_r_deg": 115.9
+      }
+    },
+    {
+      "file": "TRIPLE_XXX.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.987,
+        "head_top_y": 0.054,
+        "ankle_bottom_y": 0.828,
+        "shoulder_span_x": 0.19,
+        "shoulder_tilt_deg": 3.9,
+        "knee_l_deg": 175.4,
+        "knee_r_deg": 177.8,
+        "elbow_l_deg": 173.5,
+        "elbow_r_deg": 152.9
+      }
+    },
+    {
+      "file": "TYNESHIA.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.987,
+        "head_top_y": 0.102,
+        "ankle_bottom_y": 0.777,
+        "shoulder_span_x": 0.149,
+        "shoulder_tilt_deg": 5.5,
+        "knee_l_deg": 178.8,
+        "knee_r_deg": 173.4,
+        "elbow_l_deg": 166.4,
+        "elbow_r_deg": 179.6
+      }
+    },
+    {
+      "file": "TYNESHIA_street.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.982,
+        "head_top_y": 0.102,
+        "ankle_bottom_y": 0.779,
+        "shoulder_span_x": 0.157,
+        "shoulder_tilt_deg": 4.9,
+        "knee_l_deg": 179.6,
+        "knee_r_deg": 169.6,
+        "elbow_l_deg": 167.6,
+        "elbow_r_deg": 179.0
+      }
+    },
+    {
+      "file": "VIPER.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.987,
+        "head_top_y": 0.077,
+        "ankle_bottom_y": 0.792,
+        "shoulder_span_x": 0.174,
+        "shoulder_tilt_deg": 4.1,
+        "knee_l_deg": 179.1,
+        "knee_r_deg": 178.2,
+        "elbow_l_deg": 174.5,
+        "elbow_r_deg": 163.8
+      }
+    },
+    {
+      "file": "WRECK_PATTERSON.png",
+      "verdict": "PASS",
+      "reasons": [],
+      "metrics": {
+        "visibility": 0.987,
+        "head_top_y": 0.031,
+        "ankle_bottom_y": 0.854,
+        "shoulder_span_x": 0.186,
+        "shoulder_tilt_deg": 4.6,
+        "knee_l_deg": 179.6,
+        "knee_r_deg": 175.3,
+        "elbow_l_deg": 164.3,
+        "elbow_r_deg": 172.9
+      }
+    },
+    {
+      "file": "contact-sheet.png",
+      "verdict": "FLAG",
+      "reasons": [
+        "no_person"
+      ],
+      "metrics": {}
+    }
+  ]
+}

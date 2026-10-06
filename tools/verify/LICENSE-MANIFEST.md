@@ -19,3 +19,23 @@ GPL/AGPL-viral code quarantined out of ship paths; audit before ship.
 No GPL/AGPL-licensed code is imported or vendored by `tools/verify/`.
 `ffmpeg` is only shelled out to; nothing is statically linked or copied.
 Pre-ship: re-audit this manifest + confirm the `qc` module's provenance.
+
+## Game integrations — AshLanev2 (wired 2026-10-06)
+
+| Tool / package | License | Role | Viral risk |
+|---|---|---|---|
+| `@dimforge/rapier3d-compat` ^0.21.0 (npm, `src/game3d/physics/ragdoll.ts`) | Apache-2.0 | WASM rigid-body physics: ragdoll KOs, hit reactions, props | none — permissive; WASM blob, no copyleft |
+| `playwright` + `playwright-core` (npm dev, `scripts/playtest.mjs`) | Apache-2.0 | headless playtest harness (menu→select→combat captures) | none — dev-only, not shipped |
+| MediaPipe Pose via `mediapipe` 1.1.0 (pip, `.venv`) | Apache-2.0 | `pose_qa.py` automated pose gate on model renders (CPU) | none — permissive; dev/QA-only |
+| Poly Haven textures `concrete_floor_02`, `asphalt_02` (1k, `public/textures/pbr/`) | CC0-1.0 | district ground materials | none — public domain; receipts in `*.LICENSE.txt` |
+| Poly Haven HDRI `qwantani_afternoon` (2k, `public/textures/pbr/`) | CC0-1.0 | image-based lighting | none — public domain; receipt in `*.LICENSE.txt` |
+| `src/integrations-staged/posthog.ts` (dormant) | in-repo (no dep) | PostHog analytics drop-in; zero bundle cost until key set | none — dormant, not imported |
+| `src/integrations-staged/sentry.ts` (dormant) | in-repo (no dep) | Sentry crash-reporting drop-in; `@sentry/browser` intentionally NOT installed | none — dormant, not imported |
+
+**Staged-activation rule:** PostHog/Sentry stay dormant until free-tier accounts
+exist. Workers NEVER create accounts — the key harvester owns signups.
+Activation steps: `src/integrations-staged/README.md`.
+
+**GPL/AGPL quarantine:** none of the above is GPL/AGPL. If a GPL/AGPL tool is
+ever pulled for prototyping, it goes in `tools/<name>/` with a
+`GPL-QUARANTINE.txt` marker and MUST NOT be imported by `src/` or `public/`.
