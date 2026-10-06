@@ -65,7 +65,10 @@ const FADE = 0.6;
  *   name, rest, bones, root (THREE.Object3D), basePos: THREE.Vector3,
  *   visible: [t0, t1] | null (null = always),
  *   choreo: [{ t0, t1, clip, bank='bank', role='atk', mode='loop'|'hold'|'once', holdT }],
- *   rootTrack: [{ t, pos: [x,y,z] }] — keyframed staging positions (lerped)
+ *   rootTrack: [{ t, pos: [x,y,z] }] — keyframed staging positions (lerped).
+ *     y is LIFT ABOVE THE GROUNDED STANCE (0 = feet exactly on the ground).
+ *     Shared staging (staging.js) applies the per-model ground offset;
+ *     never write c.root.position directly.
  * }]
  */
 export function makeCastDirector(banks, cast) {
@@ -156,7 +159,11 @@ export function makeCastDirector(banks, cast) {
         if (!vis) continue;
         poseChar(c, t);
         const p = rootAt(c, t);
-        c.root.position.set(p.x, p.y, p.z);
+        // Shared staging: p.y is lift above the grounded stance. This preserves
+        // the per-model ground offset (feet ~0.9m below the hips-origin).
+        // The old code did c.root.position.set(p.x, p.y, p.z) here, which sank
+        // every character waist-deep through the floor. Never revert this.
+        c.staging.place(p.x, p.y, p.z);
       }
     },
   };

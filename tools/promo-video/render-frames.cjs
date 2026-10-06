@@ -30,8 +30,10 @@ function serve(page) {
       let filePath;
       if (urlPath === '/' || urlPath === '/cinematic.html') filePath = path.join(HERE, page);
       else if (urlPath === '/cinematic-faction.html') filePath = path.join(HERE, 'cinematic-faction.html');
+      else if (urlPath === '/walk-test.html') filePath = path.join(HERE, 'walk-test.html');
       else if (urlPath === '/real-motion.js') filePath = path.join(HERE, 'real-motion.js');
       else if (urlPath === '/faction-motion.js') filePath = path.join(HERE, 'faction-motion.js');
+      else if (urlPath === '/staging.js') filePath = path.join(HERE, 'staging.js');
       else if (urlPath === '/reskin.js') filePath = path.join(HERE, 'reskin.js');
       else if (urlPath.startsWith('/models/')) filePath = path.join(MODELS_DIR, urlPath.slice(8));
       else if (urlPath.startsWith('/motion/')) filePath = path.join(HERE, '..', '..', 'public', 'motion', urlPath.slice(8));

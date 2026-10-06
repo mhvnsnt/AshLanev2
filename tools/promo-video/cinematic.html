@@ -121,19 +121,18 @@ const gltf = await loader.loadAsync('/models/' + MODEL);
 const root = gltf.scene;
 scene.add(root);
 
-// Center on XZ, face +Z
-const bbox = new THREE.Box3().setFromObject(root);
-const center = bbox.getCenter(new THREE.Vector3());
-const size = bbox.getSize(new THREE.Vector3());
-root.position.x -= center.x; root.position.z -= center.z;
-root.position.y -= bbox.min.y; // feet on the stage
-const BASE_Y = root.position.y;
-const HIPS_Y = center.y; // approx char center height
-const CHAR_H = size.y;
+import { loadMotionBanks, makeDirector } from './real-motion.js';
+import { CharacterStaging } from './staging.js';
 
-// Facing: thinnest horizontal axis faces camera, plus manual override ?ry=
-if (size.x > size.z) root.rotation.y = Math.PI / 2;
-root.rotation.y += parseFloat(params.get('ry') || '0');
+// ---------- SHARED STAGING (tools/promo-video/staging.js) ----------
+// One code path for ground alignment + facing across all promos.
+// El Toro faces his walk direction (+Z toward camera); ?ry= stays a manual trim.
+const staging = new CharacterStaging(root);
+staging.centerXZ().syncY();
+staging.face(new THREE.Vector3(0, 0, 1));
+staging.setYaw(staging.yaw + parseFloat(params.get('ry') || '0'));
+// (legacy note: the old thin-axis heuristic is superseded by face(); for -X-facing
+//  cast models face(+Z) yields exactly the yaw the heuristic produced when it fired.)
 
 // Collect bones
 const bones = {};
@@ -161,7 +160,8 @@ function pose(t) {
   // NOTE: all bone posing now comes from real mocap clips via director.poseAt(t)
   // above. Only the root staging translation remains scripted (staging, not
   // procedural bone animation).
-  root.position.y = BASE_Y;
+  // Shared staging: feet stay on the stage (replaces the old BASE_Y restore).
+  staging.syncY();
 
   // --- forward walk translation ---
   if (lastT >= 0 && wA > 0.001) {

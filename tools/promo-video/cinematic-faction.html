@@ -17,6 +17,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { repairSkinWeights, NEEDS_RESKIN } from './reskin.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { loadMotionBanks, makeCastDirector } from './faction-motion.js';
+import { CharacterStaging } from './staging.js';
 import { asphaltMaterial, concreteMaterial, brickBuildingMaterial, windowGridTexture } from './env-textures.js';
 
 const DUR = 50;
@@ -201,10 +202,15 @@ async function loadChar(file, tint) {
       if (o.isSkinnedMesh) repairSkinWeights(o, 12);
     });
   }
-  const bbox = new THREE.Box3().setFromObject(root);
-  const center = bbox.getCenter(new THREE.Vector3());
-  root.position.x -= center.x; root.position.z -= center.z;
-  root.position.y -= bbox.min.y;
+  // Shared staging: ONE code path for ground alignment + facing (staging.js).
+  // Feet would sit ~0.9m under the street without the ground offset — the
+  // previous version overwrote root.position.y every frame and sank the cast.
+  const staging = new CharacterStaging(root); // forward auto-detected from the skeleton
+  staging.centerXZ().syncY(); // feet on y=0, footprint centered
+  const bones = {};
+  root.traverse(o => { if (o.isBone) bones[o.name.replace(/^mixamorig:?/, '')] = o; });
+  const rest = {};
+  for (const k in bones) rest[k] = bones[k].quaternion.clone();
   if (tint) {
     root.traverse(o => {
       if (o.isMesh) {
@@ -215,29 +221,28 @@ async function loadChar(file, tint) {
     });
   }
   root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
-  const bones = {};
-  root.traverse(o => { if (o.isBone) bones[o.name.replace(/^mixamorig:?/, '')] = o; });
-  const rest = {};
-  for (const k in bones) rest[k] = bones[k].quaternion.clone();
-  return { root, bones, rest };
+  return { root, bones, rest, staging };
 }
 
+// faceDir: world direction the mesh faces. staging.js converts this to yaw using
+// the model's verified local forward (-X). Gang walks toward -Z (camera);
+// rivals walk toward +Z (toward the gang).
 const defs = [
-  { name: 'onyx',   file: 'ONYX_street.glb',      base: [0, 0, 2],     face: Math.PI },
-  { name: 'hollow', file: 'HOLLOW.glb',           base: [1.2, 0, 2.8],  face: Math.PI },
-  { name: 'static', file: 'STATIC.glb',           base: [-1.2, 0, 2.8],  face: Math.PI },
-  { name: 'echo',   file: 'ECHO.glb',             base: [2.2, 0, 3.6],   face: Math.PI },
-  { name: 'cipher', file: 'CIPHER_rigged.glb',    base: [-2.2, 0, 3.6],  face: Math.PI },
-  { name: 'rival1', file: 'CAIN_ELIAS_gear.glb',  base: [0, 0, -14],     face: 0, tint: true },
-  { name: 'rival2', file: 'CAIN_ELIAS_gear.glb',  base: [-1.6, 0, -14.5], face: 0, tint: true },
-  { name: 'rival3', file: 'CAIN_ELIAS_gear.glb',  base: [1.6, 0, -14.5],  face: 0, tint: true },
+  { name: 'onyx',   file: 'ONYX_street.glb',      base: [0, 0, 2],     faceDir: [0, 0, -1] },
+  { name: 'hollow', file: 'HOLLOW.glb',           base: [1.2, 0, 2.8],  faceDir: [0, 0, -1] },
+  { name: 'static', file: 'STATIC.glb',           base: [-1.2, 0, 2.8],  faceDir: [0, 0, -1] },
+  { name: 'echo',   file: 'ECHO.glb',             base: [2.2, 0, 3.6],   faceDir: [0, 0, -1] },
+  { name: 'cipher', file: 'CIPHER_rigged.glb',    base: [-2.2, 0, 3.6],  faceDir: [0, 0, -1] },
+  { name: 'rival1', file: 'CAIN_ELIAS_gear.glb',  base: [0, 0, -14],     faceDir: [0, 0, 1], tint: true },
+  { name: 'rival2', file: 'CAIN_ELIAS_gear.glb',  base: [-1.6, 0, -14.5], faceDir: [0, 0, 1], tint: true },
+  { name: 'rival3', file: 'CAIN_ELIAS_gear.glb',  base: [1.6, 0, -14.5],  faceDir: [0, 0, 1], tint: true },
 ];
 
 const cast = [];
 for (const d of defs) {
-  const { root, bones, rest } = await loadChar(d.file, d.tint);
-  root.rotation.y = d.face;
-  cast.push({ name: d.name, root, bones, rest, basePos: new THREE.Vector3(...d.base), face: d.face });
+  const { root, bones, rest, staging } = await loadChar(d.file, d.tint);
+  staging.face(new THREE.Vector3(...d.faceDir));
+  cast.push({ name: d.name, root, bones, rest, staging, basePos: new THREE.Vector3(...d.base) });
 }
 const C = Object.fromEntries(cast.map(c => [c.name, c]));
 
@@ -310,9 +315,12 @@ C.rival1.choreo = [
 C.rival1.visible = [26, 50];
 C.rival1.rootTrack = [
   { t: 26, pos: [0, 0, -14] }, { t: 38, pos: [0.8, 0, -3.6] },
-  // suplex lift arc (synced to clip: heave ~41.1s, slam ~42.7s)
-  { t: 39.5, pos: [0.8, 0.25, -3.6] }, { t: 41.1, pos: [0.8, 1.2, -3.8] },
-  { t: 42.7, pos: [0.8, 0.05, -4.8] }, { t: 44, pos: [0.8, 0, -4.8] }, { t: 50, pos: [0.8, 0, -4.8] },
+  // suplex lift arc (synced to clip: heave ~41.1s, slam ~42.7s).
+  // y = LIFT above the grounded stance (shared staging adds the 0.925 ground
+  // offset). Peak: hips ~1.8m up, vic inverted overhead. Slam: hips ~0.15m,
+  // body flat on the asphalt. Tune against test renders, not guesswork.
+  { t: 39.5, pos: [0.8, 0.35, -3.6] }, { t: 41.1, pos: [0.8, 0.9, -3.8] },
+  { t: 42.7, pos: [0.8, -0.78, -4.8] }, { t: 44, pos: [0.8, -0.78, -4.8] }, { t: 50, pos: [0.8, -0.78, -4.8] },
 ];
 C.rival2.choreo = [
   { t0: 26, t1: 32, clip: 'boxidle', mode: 'loop' },
@@ -422,6 +430,63 @@ window.__renderAt = function (t) {
   lights(t);
   renderer.render(scene, camera);
   return true;
+};
+
+// ============ AUTOMATED DEFECT GATES (AGENTS.md verification law) ============
+// Computed from the actual animation data — not eyeballs. Run across the whole
+// timeline via tools/promo-video/gates-check.js (dense sampling, fails loudly).
+function trackVel(c, t) {
+  const tr = c.rootTrack;
+  const at = (tt) => {
+    if (!tr || !tr.length) return c.basePos.clone();
+    if (tt <= tr[0].t) return new THREE.Vector3(...tr[0].pos);
+    for (let i = 0; i < tr.length - 1; i++) {
+      const a = tr[i], b = tr[i + 1];
+      if (tt >= a.t && tt <= b.t) {
+        const f = (tt - a.t) / Math.max(1e-6, b.t - a.t);
+        return new THREE.Vector3(
+          a.pos[0] + (b.pos[0] - a.pos[0]) * f,
+          a.pos[1] + (b.pos[1] - a.pos[1]) * f,
+          a.pos[2] + (b.pos[2] - a.pos[2]) * f);
+      }
+    }
+    return new THREE.Vector3(...tr[tr.length - 1].pos);
+  };
+  return at(t + 0.15).sub(at(t - 0.15)).divideScalar(0.3);
+}
+
+window.__gates = function (t) {
+  director.poseAt(t);
+  const out = {};
+  const up = new THREE.Vector3();
+  const hipW = new THREE.Vector3(), chestW = new THREE.Vector3();
+  for (const c of cast) {
+    const vis = !c.visible || (t >= c.visible[0] && t <= c.visible[1]);
+    if (!vis) { out[c.name] = { visible: false }; continue; }
+    const vel = trackVel(c, t);
+    // Skip the crab check when the body isn't upright (suplex/inverted/falling):
+    // facing is undefined when the torso isn't vertical.
+    let upright = true;
+    const hips = c.bones['Hips'], chest = c.bones['Spine2'] || c.bones['Spine'];
+    if (hips && chest) {
+      hips.getWorldPosition(hipW); chest.getWorldPosition(chestW);
+      up.copy(chestW).sub(hipW);
+      const ul = up.length();
+      if (ul > 1e-4) { up.divideScalar(ul); upright = up.y > 0.5; }
+    }
+    // Skip when vertical staging dominates (lifts, slams) — not locomotion.
+    const vy = Math.abs(vel.y);
+    const vh = Math.hypot(vel.x, vel.z);
+    const ang = (upright && vy < vh) ? c.staging.facingVsVelocityDeg(vel) : null;
+    out[c.name] = {
+      visible: true,
+      minFootY: +c.staging.minFootY(c.bones).toFixed(3),
+      facingVsVelocityDeg: ang === null ? null : +ang.toFixed(1),
+      speed: +vh.toFixed(2),
+      upright,
+    };
+  }
+  return out;
 };
 
 window.__ready = true;
