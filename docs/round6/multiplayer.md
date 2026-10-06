@@ -287,3 +287,30 @@ Research date: 2026-10-06.
   keep shrinking.
 
 ---
+## 16. Managed backend free tiers — data layer (Oct 2026)
+- **URL:** vendor pricing pages (figures from 2026-04/09 curated research)
+- **What:** Where to put accounts/leaderboards/chat history/rate-limit counters
+  for $0. No card required on any of these.
+- **License:** n/a (services). **Verdict:** commercial-safe.
+- **Findings:**
+  - **Supabase:** 500 MB Postgres, 2 projects, 50k MAU auth, 1 GB file storage,
+    5 GB egress. ⚠️ Projects **pause after 7 days idle** (wake on request).
+    Best all-in-one (auth + DB + realtime + storage).
+  - **Neon:** serverless Postgres, 0.5 GB/project, 100 projects, 100 CU-hrs,
+    scales to zero after 5 min idle, auto-wakes ~1s. Best pure-Postgres.
+  - **Turso:** libSQL/SQLite at the edge — 100 DBs, 5 GB storage, 500M row
+    reads/mo. Best for read-heavy edge data (leaderboard reads).
+  - **Upstash Redis:** 256 MB, 500k commands/mo, HTTP API (no persistent
+    connections — works from edge/serverless). Best for: rate-limit counters,
+    presence, matchmaking queues, session cache. `@upstash/ratelimit` gives
+    sliding-window limiting in ~5 lines.
+  - **Cloudflare D1:** SQLite at edge, 5 GB total, 5M rows read/day.
+    Workers free: 100k req/day. R2 object storage: 10 GB, **$0 egress**
+    (replay clips, voice/profile uploads).
+  - **MongoDB Atlas M0:** 512 MB shared cluster, forever-free.
+- **Notes:** Recommended $0 data stack: Supabase (accounts/auth) OR Neon
+  (Postgres) + Upstash Redis (rate limits, presence, queues) + R2 (replay/voice
+  files). Nakama can keep its own Postgres on the Oracle box (#15) and use
+  Upstash only for cross-instance counters when we scale past one box.
+
+---
