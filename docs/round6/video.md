@@ -87,3 +87,9 @@ Everything below is RESEARCH; no code wired yet. Licenses recorded per entry wit
 - **License:** Apache 2.0.
 - **Verdict:** Commercial-safe (Apache 2.0).
 - **Notes:** Remotion was evaluated and REJECTED for the core: its license is now source-available/company-license — free only for individuals and companies up to 3 people; larger orgs need a paid license (verified via license comparisons checked 2026-09-15). HyperFrames gives the same programmatic-video capability under Apache 2.0 and complements the already-wired html-to-video renderer with simpler plain-HTML input.
+## Auto-Editor (MIT) — automated trailer cutting
+- **URL:** https://github.com/WyattBlue/auto-editor
+- **What:** CLI for automatic video editing: silence removal, motion-based cutting, per-segment speed (silent parts at 999x = cut), JSON dry-run of cut decisions. Exports EDLs for Premiere Pro, DaVinci Resolve, Final Cut Pro, Shotcut, Kdenlive.
+- **License:** MIT.
+- **Verdict:** Commercial-safe (MIT).
+- **Notes:** Automates the rough-cut stage of the 50-second promos: drop in the staged capture, get a tight cut on speech/motion beats, then hand the EDL to the grading pipeline. Companion option: `kiy0ni/auto-video-editor` (newer rewrite with Whisper word-timestamps + caption export) — evaluate both.
