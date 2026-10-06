@@ -18,6 +18,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 
 ---
 
+## KIT Whole-Body Human Motion Database
+
+- **URL:** https://motion-database.humanoids.kit.edu/ · motion-language subset: https://motion-annotation.humanoids.kit.edu/dataset/
+- **What:** ~4,000+ high-quality whole-body mocap recordings (Vicon, C3D + MMM XML normalized format) with video previews, searchable by motion description. Includes grasping/object-interaction sets and the KIT Motion-Language subset (3,911 motions + 6,353 natural-language annotations, 3.9 GB) — a text-annotated corpus like a smaller HumanML3D. Master Motor Map (MMM) normalizes everything to a reference skeleton independent of capture system.
+- **License:** Free account required; site FAQ: "we aim to make content freely available to the whole scientific community." Research-oriented terms — no commercial grant stated. MMM reference implementation is GPL.
+- **Verdict:** ⚠️ **prototype-only** — research-community terms, no commercial license. Good local corpus for retargeting tests and text-to-motion experiments; do not ship.
+- **Notes:** MMM XML is a clean normalized format worth supporting in the retargeter's importer list (alongside BVH/FBX/C3D). KIT-ML annotations pair with HumanML3D for text-driven move prototyping.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
