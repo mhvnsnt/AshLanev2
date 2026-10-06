@@ -114,6 +114,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ✅ **commercial-safe as a tool** — LGPL governs the addon code, not the animations it bakes; output clips are yours. Keep the LGPL attribution if redistributing the addon itself.
 - **Notes:** Don't re-derive retargeting from scratch: this engine's constraint-bake-stitch pipeline is the reference for hardening tools/anim-retarget/. The Mesh2Motion port is the cleaner codebase to study (fixed bone maps instead of auto-detection).
 
+## Blender retargeting addons (Rigify / Mr Mannequins Tools / Auto-Rig Pro)
+
+- **URL:** Rigify — bundled with Blender (blender.org) · Mr Mannequins Tools — https://github.com/JamesTKane/mr-mannequins-tools (James Taylor) · Auto-Rig Pro — https://blendermarket.com/products/auto-rig-pro (~$40)
+- **What:** Three tiers of Blender-side retargeting/rigging. **Rigify**: Blender's built-in auto-rig generator — full humanoid meta-rig with IK/FK, bendy bones, face rig; the standard free baseline. **Mr Mannequins Tools**: free addon for retargeting any mocap onto the Unreal mannequin (and back) — bone-map driven, batch-friendly. **Auto-Rig Pro**: the paid workhorse ($40) — smart auto-rig, one-click Mixamo/UE retarget, corrective shape keys, export presets; the tool most indie studios actually use.
+- **License:** Rigify = **GPL** (bundled with Blender — tool use is fine; GPL covers the addon code, not the rigs/animations you bake). Mr Mannequins Tools = **GPL** (Blender addon). Auto-Rig Pro = **proprietary paid**, commercial use allowed with purchase.
+- **Verdict:** ✅ **commercial-safe as tools** (all three) — output rigs/animations are yours. Budget note: Auto-Rig Pro is the only paid item in this whole wave (~$40 one-time).
+- **Notes:** Pipeline recommendation: Rigify (free) for in-house rigs, Mr Mannequins Tools for UE-mannequin-sourced mocap, Auto-Rig Pro if retarget volume justifies $40. All three feed baked actions into tools/anim-retarget/.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
@@ -126,3 +134,4 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 | AIST++ | CC BY 4.0 annotations (Google); AIST video DB separate terms | commercial-safe (attribution) |
 | KIT Whole-Body Motion DB | research-community terms, no commercial grant | prototype-only |
 | Rokoko Studio Live Blender | LGPL-3.0 retarget engine (Mesh2Motion NOTICE.md) | commercial-safe (tool) |
+| Rigify / Mr Mannequins / Auto-Rig Pro | GPL / GPL / proprietary paid (~$40) | commercial-safe (tools) |
