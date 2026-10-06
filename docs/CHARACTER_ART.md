@@ -35,11 +35,16 @@ with dramatic lighting and a background that reflects their faction/territory.
 
 | File | Character | Robe Color | Role |
 |------|-----------|------------|------|
-| `buffalo-bill-robed.webp` | Buffalo Bill | Scarlet red (bright, neon) | **Secret leader** |
+| `buffalo-bill-robed.webp` | Buffalo Bill | Scarlet red | **Secret leader** |
 | `onyx-robed.webp` | Onyx | Green (sometimes) | Public face (not secret leader) |
+| `theory-robed.webp` | Theory | Purple | **Secret leader** |
+| `cipher-robed.webp` | Cipher | Yellow | Painted member |
+| `echo-robed.webp` | Echo | Pink | Painted member |
+| `static-robed.webp` | Static | Deep blue | Painted member |
+| `hollow-robed.webp` | Hollow | Orange | Hollows leader |
 | `sombra-negra-robed.webp` | Sombra Negra | Black/purple | TBD |
 
-**Theory:** Secret leader. Robe color TBD. Owner has her model. Not yet generated.
+**Robe colors LOCKED (owner 2026-10-05).** All variants generated and in `public/portraits/`.
 
 **Style rules for robed variants:**
 - Face completely shrouded in shadow
