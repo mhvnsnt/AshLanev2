@@ -29,11 +29,16 @@
 - **Don't change what we have** — add this as underlying atmosphere
 - Think: what if the Hollows district had that pitch-black + neon purple menace? What if certain night scenes hit that 90s CGI nostalgia?
 
+## Owner Corrections (2026-10-05)
+- Do NOT go low-poly/PS1/retro. He wants MODERN, HIGH graphics.
+- Take the THEMES (palette, mood, mashup energy), not the polygon count.
+- HIGH GRAPHICS + MOBILE OPTIMIZED: LOD, instancing, frustum culling, efficient shaders — smart optimization, never quality reduction.
+
 ## Implementation Areas
 - Lighting: neon purple/blue/green accent washes in key districts
 - Atmosphere: slow, heavy, slightly menacing — not chaotic
 - Cultural mashup: street culture injected into imposing visuals (already our direction)
-- 90s CGI callbacks: low-fi render aesthetic as a visual mode/filter option
+- Modern high-fidelity: neon lighting and atmosphere at full quality. NO low-poly, NO PS1-style rendering, NO pixelation (owner correction 2026-10-05). Premium look with smart mobile optimization (LOD, instancing, adaptive light counts).
 
 ---
 *Owner's material. Do not invent Malakor lore beyond what's here.*
