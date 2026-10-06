@@ -56,6 +56,7 @@ export type Body = {
   grounded: boolean;
   alive: boolean;
   slam: boolean;
+  wallAimed: boolean; // UR-feel 4/5: throw deliberately aimed at a wall
   facingLeft: boolean;
   yState: string;
   yFrame: number;
@@ -435,6 +436,7 @@ function blankBody(sim: Sim, partial: Pick<Body, "kind" | "x" | "z"> & Partial<B
     grounded: true,
     alive: true,
     slam: false,
+    wallAimed: false,
     facingLeft: false,
     yState: "standing",
     yFrame: 0,
@@ -1946,6 +1948,23 @@ function throwEnemy(sim: Sim, e: Body) {
   }
   sim.rearLock = false;
   grantXp(sim, 12);
+  // UR-feel 4/5: WALL AIM — if the throw direction points at a nearby wall or
+  // hard surface, steer the victim into it for a guaranteed wall slam.
+  const throwSpeed = Math.hypot(vx, vz);
+  if (throwSpeed > 0.5) {
+    const wall = wallInDirection(sim, e.x, e.z, vx, vz, 6);
+    if (wall) {
+      const wx = (wall.box.minX + wall.box.maxX) / 2;
+      const wz = (wall.box.minZ + wall.box.maxZ) / 2;
+      const wdx = wx - e.x, wdz = wz - e.z;
+      const wd = Math.hypot(wdx, wdz) || 1;
+      const blend = 0.4;
+      const boost = 1.25;
+      vx = (vx * (1 - blend) + (wdx / wd) * throwSpeed * boost * blend) * 1.1;
+      vz = (vz * (1 - blend) + (wdz / wd) * throwSpeed * boost * blend) * 1.1;
+      e.wallAimed = true;
+    }
+  }
   e.state = "throw";
   e.slam = true;
   e.iframe = 0.08;
@@ -2013,7 +2032,14 @@ function wallSlam(sim: Sim, b: Body) {
   }
   b.poise = SPEC.poiseGrunt;
   b.state = "launch";
-  b.stateT = 0.25;
+  // UR-feel 4/5: a deliberately wall-aimed throw crumples — longer launch,
+  // then an extended down state on landing.
+  b.stateT = b.wallAimed ? 0.6 : 0.25;
+  if (b.wallAimed) {
+    sim.banner = "Wall slam!";
+    sim.bannerT = 1.2;
+    b.wallAimed = false;
+  }
 }
 
 function crack(sim: Sim, box: Box | null): boolean {
@@ -2041,13 +2067,33 @@ function nearestHard(sim: Sim, b: Body) {
     if (box.role === "door" && (sim.doorBroke || sim.door > 0.45)) continue;
     const cx = Math.min(Math.max(b.x, box.minX), box.maxX);
     const cz = Math.min(Math.max(b.z, box.minZ), box.maxZ);
-    const d = Math.hypot(b.x - cx, b.z - cz);
-    if (d < bestD) {
+    if (Math.hypot(b.x - cx, b.z - cz) < bestD) {
       best = box;
-      bestD = d;
+      bestD = Math.hypot(b.x - cx, b.z - cz);
     }
   }
   return best;
+}
+
+/**
+ * UR-feel 4/5: raycast from (x,z) along (dx,dz) for a hard wall/box.
+ * Returns the box and distance, or null. Used for deliberate wall-aimed throws.
+ */
+function wallInDirection(sim: Sim, x: number, z: number, dx: number, dz: number, maxDist: number): { box: Box; dist: number } | null {
+  const m = Math.hypot(dx, dz) || 1;
+  const nx = dx / m, nz = dz / m;
+  for (let d = 0.5; d <= maxDist; d += 0.5) {
+    const px = x + nx * d, pz = z + nz * d;
+    for (const box of sim.boxes) {
+      if (box.kind === "plat" || box.kind === "spring" || box.kind === "goal" || box.kind === "open" || box.kind === "rope") continue;
+      if (box.kind === "gate" && sim.streetClear) continue;
+      if (box.role === "door" && (sim.doorBroke || sim.door > 0.45)) continue;
+      if (px >= box.minX && px <= box.maxX && pz >= box.minZ && pz <= box.maxZ) {
+        return { box, dist: d };
+      }
+    }
+  }
+  return null;
 }
 
 function resolveXZ(sim: Sim, b: Body): "" | "hard" | "soft" | "rope" {
