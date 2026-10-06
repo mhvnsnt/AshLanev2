@@ -324,3 +324,33 @@ checked 2026-10-06. Re-verify before shipping.
   always above the inhuman threshold. This is what makes losing feel fair
   and winning feel earned. Also the basis for the "replay AI decision"
   debug view.
+
+---
+
+## Tag-partner, referee & boss AI — design patterns
+
+- **URL:** N/A — design patterns synthesized from beat-em-up/fighting-game
+  AI conventions (OpenBOR ally AI, arcade tag-team design, boss-phase
+  design).
+- **What:** Three special AI roles beyond the 1v1 opponent:
+  TAG PARTNER — stays at ring/apron edge, tags in on player command or
+  when player health is low; while tagged out, runs a support behavior
+  (distract one enemy, toss the player a weapon/health, cut off
+  ring-escape). Never steals the player's kill — assist, don't carry.
+  REFEREE (Bannon) — a neutral agent: positions for line-of-sight on pins
+  and submissions, counts pinfalls with human-plausible speed, gets
+  "distracted" or knocked down per match script, enforces rope breaks.
+  Referee positioning is its own steering problem (Yuka arrive + keep
+  distance from wrestlers).
+  BOSS — phase-based: phase 1 teaches the pattern (limited move pool),
+  phase 2 adds one new tool, desperation phase below 25% HP (new super,
+  faster tick, but *fair* — still frame-data-legal). Telegraphs scale with
+  damage: bigger attacks get bigger wind-ups.
+- **License:** N/A (design patterns, our implementation).
+- **Verdict:** commercial-safe.
+- **Notes:** Tag-partner AI is the highest-risk feel item — a bad partner
+  feels worse than no partner. Rule: partner acts on *player intent*
+  (call-for-help button, tag command), not its own initiative, with a
+  "do something useful" idle fallback. Boss phases map to Yuka StateMachine
+  superstates or XState hierarchical states. Referee counts must be
+  frame-exact and visible — players WILL notice a fast count.
