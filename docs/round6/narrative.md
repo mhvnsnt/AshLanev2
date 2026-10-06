@@ -97,3 +97,63 @@ prototype-only. Unclear = prototype-only.
 - **Notes:** Quality/progress-tracking ("qualities") system is a neat model for
   faction reputation meters in a hypertext UI. Lightweight; good reference for
   a web-native story UI layer.
+
+## Inform 7
+
+- **URL:** https://github.com/ganelson/inform
+- **What:** The natural-language authoring system for parser interactive
+  fiction ("The Kitchen is a room..."). Compiles to Glulx/Z-machine; full
+  world model (rooms, things, people, rules, actions). The most sophisticated
+  open IF world-simulation available.
+- **License:** Artistic License 2.0 (LICENSE file — OSI-approved,
+  GPL-compatible permissive license).
+- **Verdict:** commercial-safe
+- **Notes:** Parser IF isn't our genre, but Inform 7's RULEBOOK architecture
+  (before/check/carry-out/after/report rules) is the best-studied design for
+  emergent mission logic and NPC behavior. Study-only for AshLane; do not port
+  the toolchain.
+
+## Ren'Py (+ renpy-js)
+
+- **URL:** https://github.com/renpy/renpy (engine),
+  https://github.com/lee101/renpy-js (TS reimplementation)
+- **What:** The standard visual-novel engine (Python): dialogue scripting,
+  branching menus, rollback (rewind choices), save/load, screen language,
+  transitions. renpy-js is an independent clean-room TypeScript
+  reimplementation of the engine + language + toolchain that runs entirely in
+  the browser.
+- **License:** MIT (Ren'Py is MIT-licensed per Wikipedia and its license page
+  renpy.org/doc/html/license.html; renpy-js README: "License: [MIT](LICENSE)").
+- **Verdict:** commercial-safe
+- **Notes:** renpy-js is the sleeper hit for AshLane: a TS Ren'Py that runs in
+  the browser means story-mode cutscenes/dialogue could be authored in
+  Ren'Py script and rendered in our three.js page. Verify its maturity before
+  depending on it (prototype first).
+
+## Monogatari
+
+- **URL:** https://github.com/Monogatari/Monogatari
+- **What:** Web visual-novel engine (TypeScript) — script-driven scenes,
+  dialogue, choices, sprites, particles, save slots, multi-language; designed
+  to bring VNs to the browser natively.
+- **License:** MIT (GitHub API: spdx MIT).
+- **Verdict:** commercial-safe
+- **Notes:** Directly embeddable in a three.js page for JCPW backstage /
+  story interludes. Simpler and more web-native than renpy-js; evaluate both
+  for the story-mode presentation layer.
+
+## TyranoScript
+
+- **URL:** https://tyranoscript.jp/ (official; GitHub mirrors e.g.
+  https://github.com/evanburchard/tyranoscript are stale forks)
+- **What:** Japanese browser visual-novel engine — tag-based scenario script
+  (`[bg]`, `[chara_show]`, `[if]`, `[iscript]` for embedded JS), character
+  sprites, branching, saves. Huge commercial VN catalog built on it.
+- **License:** Terms of use (not OSI): "Free for individuals or for businesses.
+  Free to use as you wish, including commercially. Modifications and
+  improvements are permitted." (evanburchard/tyranoscript README).
+- **Verdict:** commercial-safe (explicit commercial-use grant in terms of use;
+  not an OSI license — keep the terms text on file)
+- **Notes:** Tag-script style is a proven format for writer-authored
+  cutscenes. The `[iscript]` escape hatch (inline JS in scripts) is the right
+  pattern for triggering three.js camera/fight events from dialogue.
