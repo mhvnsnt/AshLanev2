@@ -253,3 +253,40 @@ ground game.
   Dragon Engine physics, substory-gated techniques (beat X to learn Y).
 - Constant: the *situation* is the move list. Yakuza's depth is in reading the
   room, not memorizing inputs.
+
+---
+
+## 4. CAPCOM LINEAGE (Street Fighter II → III → IV → V → VI, Final Fight)
+
+### 4.1 The state vocabulary Capcom invented
+
+| State | Notes |
+|---|---|
+| **Blockstun** | Blocking still locks you briefly — pressure is real |
+| **Chip damage** | Blocked specials still hurt (small); blocking isn't free |
+| **Dizzy/Stun** | Hidden (SF2/4) or visible (3S/V) meter; fills on hits, drains after ~1s untouched; full = free punish combo. Throws add stun. Mash + wiggle to recover faster (SF2). 3S dizzy doesn't auto-knockdown → bonus juggles possible |
+| **Juggle** | Airborne-hit rules per game; some moves juggle, most don't — the *juggle flag* is a per-move property |
+| **Throw tech** | Simultaneous throw → both pushed apart, no damage (3S) |
+| **Super meter** | Built by whiffing mediums+, specials, hitting, being hit (3S). Spent on supers |
+| **Super/Ultra/Critical Art** | Cinematic, high damage; later games: *no stun damage* (avoids accidental dizzy mid-super) |
+| **V-Reversal (SFV)** | Metered defensive reversal; also *empties your stun gauge* — defense that manages the dizzy economy |
+| **Drive (SF6)** | Unified resource: parry, rush-cancel, overdrive — one meter, many states |
+
+### 4.2 Design lessons
+
+- **Stun as a visible meter (3S/SFV)** turns dizzy into *shared information* —
+  both players play around it. Hidden stun (SF2/4) is scarier but feels cheaper.
+- **Juggle as a per-move flag** (not a global system) gives designers surgical
+  control: only chosen moves extend air combos.
+- **Supers dealing no stun** is a kindness rule: don't let the reward system
+  interfere with itself.
+- **V-Reversal emptying stun** links defense to the dizzy economy — blocking
+  your way out of trouble is a *decision*, not a stall.
+
+### 4.3 Final Fight lineage (the brawler side)
+
+- Walk in 8 directions on a belt plane; facing is binary (left/right).
+- Grab-from-behind states, piledriver-style throws, weapon pickups (pipes,
+  knives) with simple durability.
+- Crowd control via knockback arcs — one swing hits a *line*, positioning is
+  everything.
