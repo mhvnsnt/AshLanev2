@@ -263,7 +263,7 @@ The Painted (Onyx's gang) has SECRET leaders behind the scenes:
 - **Theory is another secret leader.** She operates alongside/behind Onyx. Her model is already generated (owner).
 
 **The Robed Council:** The inner circle wears different colored robes (SWMG-inspired but NOT called Shadow Wizard Money Gang — proprietary name TBD):
-- Buffalo Bill: scarlet red
+- Buffalo Bill: scarlet red — street name "ASHES" when robed
 - Onyx: green (sometimes)
 - Theory: purple robe
 - Cipher: yellow robe
