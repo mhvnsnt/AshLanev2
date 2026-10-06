@@ -217,3 +217,135 @@ Everything here is free to use. License notes flag what's commercial-safe vs res
 - `icosa-puller.py` — Download CC 3D models from Icosa Gallery. `--query "..." --limit N`.
 
 Both tested and working. No API keys needed.
+
+---
+
+# ROUND 2 — Deeper Free / Public Domain / Open Source Research
+
+**Rule (unchanged): only CC0 / public-domain / permissive (MIT/Apache/BSD/Unlicense/OFL/QAL-for-games) goes in the game build.** CC-BY is allowed with written attribution in credits. Everything below was license-checked at research time — re-verify before shipping.
+
+## 9. Kenney.nl — CC0 Game Asset Packs ⭐ WIRE IN NOW
+- **URL:** https://kenney.nl/assets
+- **What:** 60,000+ cohesive game assets — UI packs, SFX, music jingles, low-poly 3D kits, game icons, input prompts.
+- **License:** CC0 — confirmed commercial-safe on the official support page (https://kenney.nl/support): "all game assets are public domain licensed (CC0)... free to use them, even in commercial projects." No attribution required.
+- **Access:** No official API, but asset pages carry direct zip links: `https://kenney.nl/media/pages/assets/{slug}/{hash}-{ts}/kenney_{slug}.zip` (pattern verified live). Script scrapes the asset page for the href.
+- **AshLane use:** UI packs for menus/HUD, interface sounds, impact sounds, input-prompt icons, city/car low-poly kits for background detail.
+- **Script:** `tools/free-apis/kenney-puller.py` — `python3 kenney-puller.py --pack interface-sounds --out ./kenney` / `--list`
+- **Status:** ✅ TESTED — pulled 104 files from `interface-sounds` pack successfully.
+
+## 10. KayKit — CC0 3D Packs (GitHub) ⭐ WIRE IN NOW
+- **URL:** https://github.com/KayKit-Game-Assets | https://kaykit.com
+- **What:** Stylized low-poly 3D packs — city builder bits, animated characters, dungeon, furniture, restaurant (club/bar interiors), skeletons (enemies).
+- **License:** CC0 — commercial-safe, no attribution required.
+- **Access:** GitHub repos, `git clone` or codeload zip. Each pack ships `gltf/`, `fbx/`, `obj/` variants — use the glTF ones.
+- **AshLane use:** City Builder Bits for city background buildings, Restaurant Bits for club interiors, animated character packs for crowd NPCs, Dungeon Remastered for subway/tunnel tiles.
+- **Script:** `tools/free-apis/kaykit-puller.py` — `python3 kaykit-puller.py --pack KayKit-City-Builder-Bits-1.0 --out ./kaykit` / `--list`
+- **Status:** ✅ TESTED — pulled 215 files / 41 GLB-glTF models from City Builder Bits.
+
+## 11. poly.pizza — CC0 Model Index (Kenney + Quaternius + Poly archive)
+- **URL:** https://poly.pizza | **API:** `api.poly.pizza/v1.1/search/<query>`
+- **What:** Searchable CC0 model index covering the old Google Poly archive, Quaternius, and Kenney packs with direct GLB download URLs.
+- **License:** Per-model CC0 / CC-BY (verify the `license` field per model).
+- **Access:** Free API key at poly.pizza/settings (`x-auth-token` header).
+- **AshLane use:** Single-model discovery channel when Kenney/KayKit/Icosa don't have a specific prop.
+- **Status:** Documented — needs free API key to test.
+
+## 12. CMU Mocap as FBX — cMonkeys Huge FBX Mocap Library ⭐ WIRE IN NOW
+- **URL:** https://archive.org/details/Huge_FBX_Mocap_Library
+- **What:** 2,534 FBX mocap animations — FBX conversion of the CMU Graphics Lab database, organized by CMU subject number. Ready for game engines (no BVH conversion needed).
+- **License:** CMU original data: "You may include this data in commercially-sold products, but you may not resell this data directly, even in converted form." Acknowledgment required: "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217." Converter adds no extra restrictions.
+- **Access:** Direct download: `https://archive.org/download/Huge_FBX_Mocap_Library/Huge%20FBX%20Mocap%20Library/mocap%20animations/{subject}/{file}.fbx`
+- **AshLane use:** Boxing (subject 13 = 42 clips), martial arts (16), stunts (14) — feed the animation retargeting pipeline.
+- **Script:** `tools/free-apis/cmu-mocap-puller.py` — `--list-subjects`, `--subject 13 --out ./mocap`, `--combat`
+- **Status:** ✅ TESTED — listed subjects, downloaded valid FBX 6.1.0 files from subject 13 (boxing).
+
+## 13. MoCap Online — Free Pack (explicit commercial license)
+- **URL:** https://mocaponline.com (free pack)
+- **What:** Professional optical-mocap animation pack — locomotion, combat, NPCs, idles — with an explicit commercial license, no subscription.
+- **License:** Commercial-safe per the free pack terms (verify current terms on their site at download time).
+- **AshLane use:** Highest-quality free mocap option for core combat moves; complements CMU.
+- **Status:** Documented — download the free pack manually.
+
+## 14. Mixamo — Verdict (use as tool, not as committed assets)
+- **URL:** https://www.mixamo.com
+- **License findings:** Adobe's terms permit Mixamo animations/models **inside a finished commercial game**. They **prohibit redistributing the raw files** standalone (asset packs, npm packages, public repos of raw FBX).
+- **AshLane policy:** Use Mixamo for auto-rigging characters and previewing animations locally. Do NOT commit raw Mixamo FBX files to the repo. Requires free Adobe login; downloads are manual.
+- **Related tool:** `squall01337/mixamo-llm-mocap` (MIT, GitHub) — turns any video into a Mixamo-rig FK animation via Blender MCP, agent-operable. Two-fighter support. Potential pipeline addition for custom moves.
+- **Status:** Documented — policy set.
+
+## 15. Quaternius — QAL v1.0 (license updated 2026-08-28)
+- **URL:** https://quaternius.com | Packs: https://quaternius.com/packs.html
+- **License:** ⚠️ Changed from CC0 to the **Quaternius Asset License (QAL) v1.0**: free for commercial games, no credit required, but you may **not resell or redistribute the assets themselves** standalone. (https://quaternius.com/license.html — read in full 2026-10-06.)
+- **AshLane policy:** Commercial-safe for in-game use. Keep provenance notes. Universal Animation Library (250+ humanoid anims) already in the game — pull more packs (environments, creatures, props) as needed.
+- **Status:** Documented — license change noted.
+
+## 16. CC0 Music Puller ⭐ WIRE IN NOW
+- **Script:** `tools/free-apis/music-puller.py`
+- **Sources:**
+  - **Incompetech (Kevin MacLeod)** — incompetech.com — huge catalog, direct MP3 download. **CC-BY 4.0** — commercial-safe WITH attribution ("Music: Kevin MacLeod (incompetech.com)"). Curated combat/menu/urban packs in the script.
+  - **Kenney Music Jingles** — CC0, 85 stingers — via `kenney-puller.py`.
+  - **Tallbeard Abstraction Music** — https://tallbeardstudios.github.io/AbstractionMusic/ — 200+ CC0 game music loops.
+- **AshLane use:** Menu music, combat BGM, stingers for KOs / round ends.
+- **Status:** ✅ TESTED — downloaded Incompetech tracks (CC-BY credit noted for the credits screen).
+- **Also:** OpenGameArt.org — filter `license:"Creative Commons 0"` for CC0 music (the `webband` project ships a CC0-curated, loudness-normalized set as a model to copy).
+
+## 17. Procedural Audio (no downloads needed)
+- **jsfxr** — https://github.com/chr15m/jsfxr — **Unlicense** (public domain). Procedural retro SFX synthesis in the browser. AshLane use: UI bleeps, hit sweeteners, pickup sounds — generated at runtime.
+- **Tone.js** — https://tonejs.github.io — **MIT**. WebAudio framework for interactive/adaptive music. AshLane use: dynamic combat music that intensifies with fight heat, procedural ambient beds per district.
+- **Status:** Documented — both MIT/Unlicense, wire into game audio engine when ready.
+
+## 18. Street-Style OFL Fonts ⭐ WIRE IN NOW
+- **Script:** `tools/free-apis/street-fonts-puller.py` — `--list`, `--out ./fonts`
+- **Fonts (all Google Fonts, SIL OFL / Apache 2.0 — commercial-safe, embedding allowed):**
+  - Street/graffiti: **Rock Salt** (tags), **Permanent Marker** (accents), **Rubik Spray Paint** (spray headers), **Bangers** (KO text), **Bungee Shade** (menu headers), **Rye** (faction boards)
+  - Heavy/HUD: **Anton**, **Black Ops One** (stencil), **Archivo Black**, **Bebas Neue**, **Russo One**
+  - Body: **Inter**, **JetBrains Mono**
+- **Access:** Public Google Fonts CSS API (no key). Script resolves latin-subset TTFs via fonts.googleapis.com.
+- **AshLane use:** Character cards, graffiti tags, HUD, nameplates, menus.
+- **Status:** ✅ TESTED — all 13 fonts downloaded as valid TrueType files.
+
+## 19. game-icons.net — 4,000+ SVG Game Icons (CC-BY)
+- **URL:** https://game-icons.net | Repo: `game-icons/icons` (GitHub)
+- **License:** **CC-BY 3.0** — commercial-safe WITH attribution (credit the author, add line to credits/ATTRIBUTION.md).
+- **AshLane use:** Move/skill icons, inventory, faction symbols, HUD pictograms. Customizable SVGs.
+- **Status:** Documented — remember the attribution line.
+
+## 20. Procedural PBR Textures (open source generators)
+- **pixy.js** — https://github.com/mebiusbox/pixy.js — **MIT**. Procedural shader library (65+ effect types) powering ShaderBrew. AshLane use: generate grime, rust, concrete, neon-glow maps in-engine.
+- **materialab** — https://github.com/kumikumi/materialab — procedural PBR materials as GLSL code, exports PNG sets for glTF. Live demo in browser. AshLane use: generate district-specific wall/floor materials.
+- **TexGen Pro** — https://github.com/darealtoga/texture-generator — browser PBR map generator (normal/roughness/AO/height from any base image). AshLane use: derive full PBR sets from single photos.
+- **ShaderBrew** — https://github.com/web3dev1337/shaderbrew — WebGL procedural texture editor + 119 sprite sheets for particles. ⚠️ License not verifiable from the repo root at research time — **research-only until license is confirmed**; its pixy.js dependency is MIT.
+- **Status:** Documented — pixy.js/materialab/TexGen are the safe bets.
+
+## 21. Particles, Post-Processing, Crowd (open source, three.js)
+- **three.js EffectComposer** (UnrealBloomPass, SSAO, Vignette, etc.) — **MIT** (part of three.js). AshLane use: neon bloom for faction lighting, film grain, vignette. Already available — just wire it.
+- **Boids (Ben Eater)** — https://github.com/beneater/boids — **MIT**. Classic flocking demo. AshLane use: crowd movement base — adapt for arena crowd flow.
+- **crowds-system-js** — https://github.com/boona13/crowds-system-js — **MIT**. 2D crowd playground with character sprites. AshLane use: reference for crowd state machines (cheer/boo/wave).
+- **SeedThree** — https://github.com/SkyeShark/SeedThree — **MIT**. Procedural trees/grass for WebGPU. AshLane use: park/green districts, rooftop gardens.
+- **three.quarks** — three.js particle system plugin — reported MIT, **verify in repo before use**.
+- **Status:** Documented — EffectComposer and boids are the immediate wins.
+
+## 22. Public Domain Films & Archive.org (in-game flavor)
+- **Prelinger Archive** — https://archive.org/details/prelinger — thousands of ephemeral films, **all public domain**. AshLane use: in-game TVs / bar screens playing vintage footage, loading-screen flavor.
+- **Public-domain features** (verify PD status per title): *House on Haunted Hill* (1959), *Night of the Ghouls*, classic noir/horror collections at https://archive.org/details/sci-fi-horror. AshLane use: drive-in theater level, club projector visuals.
+- **Public-domain characters/stories** (inspiration, not assets): Sherlock Holmes (fully PD), Lovecraft mythos, classic pulp heroes. AshLane use: faction lore flavor, fighter archetype inspiration.
+- **Access:** archive.org advancedsearch API + direct download. `https://archive.org/advancedsearch.php?q=...&output=json`
+- **Status:** Documented — all public domain, safe for in-game screens.
+
+## Scripts in `tools/free-apis/` (round 1 + round 2)
+| Script | Source | License | Status |
+|---|---|---|---|
+| `sfx-downloader.py` | Openverse/Freesound | CC0 | ✅ tested (R1) |
+| `icosa-puller.py` | Icosa Gallery | CC per-asset | ✅ tested (R1) |
+| `kenney-puller.py` | Kenney.nl | CC0 | ✅ tested (R2) |
+| `kaykit-puller.py` | KayKit GitHub | CC0 | ✅ tested (R2) |
+| `music-puller.py` | Incompetech/Kenney/Tallbeard | CC-BY/CC0 | ✅ tested (R2) |
+| `cmu-mocap-puller.py` | archive.org (CMU conv.) | commercial-OK + ack | ✅ tested (R2) |
+| `street-fonts-puller.py` | Google Fonts | OFL/Apache | ✅ tested (R2) |
+
+## Do NOT ship (reconfirmed R2)
+- **BBC Sound Effects** — RemArc license, non-commercial only.
+- **Sketchfab raw downloads in public repos** — dying API; use Icosa/poly.pizza.
+- **Raw Mixamo FBX in the repo** — redistribution violation; in-game use only.
+- **Quaternius assets as standalone redistributables** — QAL prohibits; in-game use fine.
+- **ShaderBrew** — license unverified; research-only until confirmed.
