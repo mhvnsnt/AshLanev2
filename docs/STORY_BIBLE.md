@@ -113,7 +113,7 @@ the interesting part is what isn't for sale.**
 
 ## 5. Main Character — BUFFALO BILL
 
-**Buffalo Bill** — based on Bill Sabre (wrestler). Late 30s. Big boss energy.
+**Buffalo Bill** — based on BILL $ABER. Late 30s. Big boss energy.
 The Ashes' leader — the man holding the district together by force of will.
 Left the district years ago after a falling-out; comes home for a funeral and
 finds Kennedy Corp demolition notices on every door.
@@ -255,9 +255,11 @@ structure, numerology engine, OTR personas), `canon/godwithin/the Flame (backgro
 `docs/design/THE-BASTARD-GOD-WITHIN-MODE-INTEGRATION.md` (mode-nesting design
 law). Nothing ported — everything paralleled.*
 
-## Narrative Secrets — The Painted Leadership (PLOT TWIST — never shown in-game)
+## Narrative Secrets — Onyx's Gang Leadership (PLOT TWIST — never shown in-game)
 
-The Painted (Onyx's gang) has SECRET leaders behind the scenes:
+> ⚠️ FACTION NAME UNCONFIRMED: A previous agent called this group "The Painted." The owner has NOT approved this name. Using neutral "Onyx's gang" until he decides.
+
+Onyx's gang has SECRET leaders behind the scenes:
 
 - **Buffalo Bill is the secret leader.** Publicly he's his own boss, industry-adjacent, not directly tied to the gang. Secretly he runs the whole operation. This is a late-story reveal.
 - **Theory is another secret leader.** She operates alongside/behind Onyx. Her model is already generated (owner).
@@ -276,9 +278,11 @@ Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang
 
 **These secrets must NEVER appear in:** menus, roster UI, HUD, character select, or any player-facing text. Writers and story scripts only.
 
-## KG Mudo (Kiko Tanaka) — 9th Robed Council Member (OCCASIONAL)
+## KG Mudo — 9th Robed Council Member (OCCASIONAL)
 
-**Kiko Tanaka**, Keiji Mutoh-inspired. NOT a permanent council member — appears only sometimes.
+> ⚠️ NAME CLARIFICATION: A previous agent conflated KG Mudo with Kiko Tanaka. They are DIFFERENT characters. Kiko Tanaka is "The Ghost" — a JPCW book-canon psychological threat. KG Mudo is a separate Great Muta-inspired character.
+
+**KG Mudo**, Keiji Mutoh-inspired. NOT a permanent council member — appears only sometimes.
 
 **Street Attire (unpainted, unmasked):**
 - Multicolored spray-painted dragon tights (vibrant, many colors)
