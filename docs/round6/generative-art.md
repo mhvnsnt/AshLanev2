@@ -165,3 +165,35 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** Recipe is ours (**MIT** when written); every component is OFL or MIT — **commercial-safe** end to end.
 - **Verdict:** **commercial-safe** — fully original output, no training-data murk at all.
 - **Notes:** AshLane use: `tools/gen-art/graffiti-tag.py` (or .ts) — input: word + faction palette + seed → output: transparent PNG tag + SVG master. This is how the game gets *unlimited* wall tags, throw-ups, and sticker slaps that are stylistically coherent (same font set, same drip model) instead of 50 unrelated AI images. Faction tagging system: each faction gets a font + palette + drip profile. Also generates the "drip tag" menu wordmarks.
+
+## License ledger
+
+| Project | License (from LICENSE file / published terms, 2026-10-06) | Verdict |
+|---|---|---|
+| rembg | MIT | commercial-safe |
+| BiRefNet | MIT | commercial-safe |
+| Real-ESRGAN | BSD-3-Clause (code + weights, attribution) | commercial-safe |
+| realesr-ncnn-vulkan | MIT | commercial-safe |
+| chaiNNer | GPL-3.0 | prototype-only (build-time tool) |
+| Hugging Face diffusers | Apache-2.0 | commercial-safe (library) |
+| SD checkpoints (1.5/2.1/XL) | CreativeML Open RAIL-M | prototype-only |
+| FLUX.1-schnell weights | Apache-2.0 | commercial-safe |
+| SD WebUI (AUTOMATIC1111) | AGPL-3.0 | prototype-only (local server tool) |
+| ComfyUI | GPL-3.0 | prototype-only (headless tool) |
+| InvokeAI | Apache-2.0 | commercial-safe (tool) |
+| Pollinations.ai | ToS: user owns output, commercial OK subject to model licenses | prototype-only for shipped art |
+| AI Horde | non-profit, non-commercial ethos | prototype-only |
+| vtracer | MIT | commercial-safe |
+| potrace | GPL-2.0 | commercial-safe as build-time tool |
+| resvg / @resvg/resvg-js | Apache-2.0 | commercial-safe |
+| opentype.js | MIT | commercial-safe |
+| Logoipsum | custom Fair Use License (placeholders only, no trademarks) | prototype-only |
+| simple-icons | CC0-1.0 | commercial-safe |
+| Pixelorama | MIT | commercial-safe |
+| LibreSprite | GPL-2.0 | prototype-only (editor tool) |
+| free-tex-packer | MIT | commercial-safe |
+| spritesmith | MIT | commercial-safe |
+| EmbarkStudios texture-synthesis | MIT / Apache-2.0 (dual) | commercial-safe |
+| Graffiti/tag pipeline recipe | MIT (ours); components OFL/MIT | commercial-safe |
+
+**Pipeline at a glance:** generate (diffusers / ComfyUI workflows / Pollinations drafts / InvokeAI canvas) → upscale (Real-ESRGAN) → cutout (rembg/BiRefNet) → vectorize (vtracer/potrace) → type/logos (opentype.js + OFL fonts → graffiti-tag generator) → rasterize (resvg) → pack (free-tex-packer/spritesmith) → textures (EmbarkStudios synthesis). Pixelorama/LibreSprite for hand touch-ups; chaiNNer/A1111 as interactive workstations.
