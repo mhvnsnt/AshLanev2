@@ -217,6 +217,107 @@ export function cleanStrayWeights(skinnedMesh) {
 }
 
 /**
+ * repairArmpitWeights — targeted re-skin of the armpit transition zone.
+ *
+ * DEFECT (2026-10-06, owner-verified): "arm flaps/wings" — when the arm raises,
+ * a giant sail/web of stretched mesh bridges the arm to the torso (bat wing).
+ * cleanStrayWeights() does NOT fix this: the webbing verts have PLAUSIBLE but
+ * CHAOTIC blends (e.g. Spine2 0.71 + Shoulder 0.29, or LeftArm 1.0 next to
+ * Spine2 1.0 on adjacent verts). The XFER transfer's blend band across the
+ * armpit is wide and noisy instead of a narrow smooth falloff, so rotating the
+ * arm drags a huge region of torso skin with it.
+ *
+ * FIX: for verts within R of the shoulder joint (currently dominated by
+ * shoulder/arm/spine bones), discard the transfer weights and reassign by
+ * inverse-square distance to BONE SEGMENTS (not joint points — that's why
+ * autoSkinByDistance collapsed torsos). Segments used: ipsilateral
+ * Shoulder->Arm, Arm->ForeArm, plus Spine1->Spine2->Neck. The Shoulder bone is
+ * never animated by our mocap retarget (no shoulder slot in SLOT_TO_BONE), so
+ * verts bound to it stay glued to the torso — no sail.
+ *
+ * Laterality is enforced: left-zone verts only see left-side arm segments.
+ * Verts dominated by Head/Neck/Hand are left untouched.
+ *
+ * Returns { reassigned: <verts> }.
+ */
+export function repairArmpitWeights(skinnedMesh, radius = 0.28) {
+  const g = skinnedMesh.geometry;
+  const pos = g.attributes.position;
+  const sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  if (!sj || !sw) return { reassigned: 0 };
+  const bones = skinnedMesh.skeleton.bones;
+  const nb = bones.length;
+  skinnedMesh.updateWorldMatrix(true, true);
+  const wm = skinnedMesh.matrixWorld;
+
+  const canon = (nm) => (nm || '').replace(/^mixamorig:?/, '');
+  const bname = bones.map((b) => canon(b.name));
+  const bpos = bones.map((b) => { const v = new THREE.Vector3(); b.getWorldPosition(v); return v; });
+  const find = (n) => bname.indexOf(n);
+  // segments: [proximalBoneIdx, distalBoneIdx, assignedBoneIdx]
+  function seg(a, b, assign) {
+    const ia = find(a), ib = find(b), ic = find(assign || b);
+    if (ia < 0 || ib < 0 || ic < 0) return null;
+    return { a: bpos[ia], b: bpos[ib], bone: ic };
+  }
+  // point-to-segment squared distance + parametric t
+  function segDist2(p, s) {
+    const abx = s.b.x - s.a.x, aby = s.b.y - s.a.y, abz = s.b.z - s.a.z;
+    const apx = p.x - s.a.x, apy = p.y - s.a.y, apz = p.z - s.a.z;
+    const len2 = abx * abx + aby * aby + abz * abz;
+    let t = len2 > 1e-12 ? (apx * abx + apy * aby + apz * abz) / len2 : 0;
+    t = Math.max(0, Math.min(1, t));
+    const cx = s.a.x + abx * t - p.x, cy = s.a.y + aby * t - p.y, cz = s.a.z + abz * t - p.z;
+    return cx * cx + cy * cy + cz * cz;
+  }
+
+  const v = new THREE.Vector3();
+  const DOMINANT_OK = /^(LeftShoulder|RightShoulder|LeftArm|RightArm|LeftForeArm|RightForeArm|Spine|Spine1|Spine2)$/;
+  let reassigned = 0;
+
+  for (const side of ['Left', 'Right']) {
+    const iSh = find(side + 'Shoulder');
+    if (iSh < 0) continue;
+    // ipsilateral segments only (laterality enforced)
+    const segs = [
+      seg(side + 'Shoulder', side + 'Arm', side + 'Shoulder'),
+      seg(side + 'Arm', side + 'ForeArm', side + 'Arm'),
+      seg('Spine1', 'Spine2', 'Spine2'),
+      seg('Spine2', 'Neck', 'Spine2'),
+    ].filter(Boolean);
+    if (!segs.length) continue;
+    const shP = bpos[iSh];
+    const r2 = radius * radius;
+
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i).applyMatrix4(wm);
+      const dx = v.x - shP.x, dy = v.y - shP.y, dz = v.z - shP.z;
+      if (dx * dx + dy * dy + dz * dz > r2) continue;
+      // only touch verts currently dominated by shoulder/arm/spine bones
+      let dw = -1, db = -1;
+      const ws = [sw.getX(i), sw.getY(i), sw.getZ(i), sw.getW(i)];
+      const js = [sj.getX(i), sj.getY(i), sj.getZ(i), sj.getW(i)];
+      for (let k = 0; k < 4; k++) if (ws[k] > dw) { dw = ws[k]; db = js[k]; }
+      if (db < 0 || db >= nb || !DOMINANT_OK.test(bname[db])) continue;
+      // reassign by inverse-square segment distance
+      const ds = segs.map((s) => [segDist2(v, s), s.bone]);
+      ds.sort((a, b2) => a[0] - b2[0]);
+      const k = Math.min(3, ds.length);
+      let wsum = 0;
+      for (let j = 0; j < k; j++) wsum += 1 / Math.max(1e-10, ds[j][0]);
+      const ji = [0, 0, 0, 0], ww = [0, 0, 0, 0];
+      for (let j = 0; j < k; j++) { ji[j] = ds[j][1]; ww[j] = (1 / Math.max(1e-10, ds[j][0])) / wsum; }
+      sj.setXYZW(i, ji[0], ji[1], ji[2], ji[3]);
+      sw.setXYZW(i, ww[0], ww[1], ww[2], ww[3]);
+      reassigned++;
+    }
+  }
+  sj.needsUpdate = true;
+  sw.needsUpdate = true;
+  return { reassigned };
+}
+
+/**
  * autoSkinByDistance — replace broken transfer weights with distance-based skinning.
  *
  * Decisive fix for the BANNON_XFER_MESH transfer catastrophe (30-63% stray
@@ -311,3 +412,147 @@ export const DO_NOT_TOUCH_WEIGHTS = new Set([
   'MARKS.glb',
   'SOMBRA_NEGRA.glb',
 ]);
+
+/**
+ * repairArmSkinningV2 — full arm-chain re-skin.
+ * Polyline: Shoulder -> Elbow -> Wrist -> HandTip.
+ * - Verts inside tube: clean segment weights with joint blends.
+ * - Verts outside tube but holding arm weight (the fold): move to Shoulder.
+ * - Finger verts (Unused17/18/19 dominant): untouched.
+ */
+export function repairArmSkinningV2(skinnedMesh, side) {
+  const g = skinnedMesh.geometry;
+  const pos = g.attributes.position;
+  const sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const bones = skinnedMesh.skeleton.bones;
+  skinnedMesh.updateWorldMatrix(true, true);
+  const wm = skinnedMesh.matrixWorld;
+  const canon = (nm) => (nm || '').replace(/^mixamorig:?/, '');
+  const bname = bones.map((b) => canon(b.name));
+  const bpos = bones.map((b) => { const v = new THREE.Vector3(); b.getWorldPosition(v); return v; });
+  const find = (n) => bname.indexOf(n);
+  const iSh = find(side + 'Shoulder'), iArm = find(side + 'Arm'),
+        iFo = find(side + 'ForeArm'), iHa = find(side + 'Hand');
+  if (iSh < 0 || iArm < 0 || iFo < 0 || iHa < 0) return { fixed: 0 };
+  // extend past hand for fingers: hand tip = hand pos + (hand - wrist) normalized * 0.15
+  const handTip = bpos[iHa].clone().add(bpos[iHa].clone().sub(bpos[iFo]).normalize().multiplyScalar(0.15));
+  const segs = [
+    { a: bpos[iSh], b: bpos[iArm], r: 0.080, j0: iSh, j1: iArm },
+    { a: bpos[iArm], b: bpos[iFo], r: 0.065, j0: iArm, j1: iFo },
+    { a: bpos[iFo], b: bpos[iHa], r: 0.055, j0: iFo, j1: iHa },
+    { a: bpos[iHa], b: handTip, r: 0.050, j0: iHa, j1: iHa },
+  ];
+  const v = new THREE.Vector3();
+  let fixed = 0;
+  const n = pos.count;
+  const fingerRe = /Unused1[789]/;
+  for (let i = 0; i < n; i++) {
+    const js = [sj.getX(i), sj.getY(i), sj.getZ(i), sj.getW(i)];
+    const ws = [sw.getX(i), sw.getY(i), sw.getZ(i), sw.getW(i)];
+    // skip finger verts
+    let domW = -1, domJ = -1;
+    for (let k = 0; k < 4; k++) if (ws[k] > domW) { domW = ws[k]; domJ = js[k]; }
+    if (fingerRe.test(bname[domJ] || '')) continue;
+    // arm-chain weight?
+    let armW = 0;
+    for (let k = 0; k < 4; k++) {
+      const nm = bname[js[k]];
+      if (nm === side+'Shoulder' || nm === side+'Arm' || nm === side+'ForeArm' || nm === side+'Hand') armW += ws[k];
+    }
+    if (armW < 0.05) continue;
+    v.fromBufferAttribute(pos, i).applyMatrix4(wm);
+    // closest point on polyline
+    let best = null;
+    for (let si = 0; si < segs.length; si++) {
+      const s = segs[si];
+      const abx = s.b.x - s.a.x, aby = s.b.y - s.a.y, abz = s.b.z - s.a.z;
+      const len2 = abx*abx + aby*aby + abz*abz;
+      let t = len2 > 1e-12 ? ((v.x-s.a.x)*abx + (v.y-s.a.y)*aby + (v.z-s.a.z)*abz) / len2 : 0;
+      const tc = Math.max(0, Math.min(1, t));
+      const cx = s.a.x + abx*tc - v.x, cy = s.a.y + aby*tc - v.y, cz = s.a.z + abz*tc - v.z;
+      const d2 = cx*cx + cy*cy + cz*cz;
+      if (!best || d2 < best.d2) best = { s, si, d2, t: tc };
+    }
+    const dist = Math.sqrt(best.d2);
+    if (dist < best.s.r) {
+      // ON the arm: clean weights with joint blend
+      const t = best.t, s = best.s;
+      let w1 = 0;
+      // blend across the joint at segment start (except first segment start)
+      if (best.si > 0 && t < 0.3) w1 = 0; // handled by previous segment's end blend
+      // blend toward next joint at segment end
+      let bA = s.j0, bB = s.j1, wb = 1;
+      if (t > 0.7 && best.si < segs.length - 1) {
+        // blend to next segment's bone
+        const nb = segs[best.si + 1].j1;
+        const f = (t - 0.7) / 0.3;
+        bA = s.j1; bB = nb; wb = 1 - f;
+        sj.setXYZW(i, bA, bB, 0, 0);
+        sw.setXYZW(i, wb, 1 - wb, 0, 0);
+      } else if (t < 0.3 && best.si > 0) {
+        const pb = segs[best.si - 1].j0;
+        const f = t / 0.3;
+        bA = pb; bB = s.j0; wb = 1 - f;
+        sj.setXYZW(i, bA, bB, 0, 0);
+        sw.setXYZW(i, wb, 1 - wb, 0, 0);
+      } else {
+        // mid-segment: single bone, except first segment blends shoulder->arm
+        if (best.si === 0) {
+          const f = Math.min(1, t / 0.35);
+          sj.setXYZW(i, iSh, iArm, 0, 0);
+          sw.setXYZW(i, 1 - f, f, 0, 0);
+        } else {
+          sj.setXYZW(i, s.j1, 0, 0, 0);
+          sw.setXYZW(i, 1, 0, 0, 0);
+        }
+      }
+      fixed++;
+    } else if (dist < best.s.r + 0.12) {
+      // FOLD: near arm but off it, holding arm weight -> to Shoulder
+      let shW = 0, armW2 = 0;
+      const oj = [], ow = [];
+      for (let k = 0; k < 4; k++) {
+        const nm = bname[js[k]];
+        if (nm === side+'Shoulder' || nm === 'Spine2' || nm === 'Spine1') shW += ws[k];
+        else if (nm === side+'Arm' || nm === side+'ForeArm' || nm === side+'Hand') armW2 += ws[k];
+        else { oj.push(js[k]); ow.push(ws[k]); }
+      }
+      if (armW2 > 0.10) {
+        const newSh = Math.min(1, shW + armW2);
+        const ji = [iSh, 0, 0, 0], ww = [newSh, 0, 0, 0];
+        for (let k = 0; k < oj.length && k+1 < 4; k++) { ji[k+1] = oj[k]; ww[k+1] = ow[k]; }
+        let sum = ww[0]+ww[1]+ww[2]+ww[3] || 1;
+        sj.setXYZW(i, ji[0], ji[1], ji[2], ji[3]);
+        sw.setXYZW(i, ww[0]/sum, ww[1]/sum, ww[2]/sum, ww[3]/sum);
+        fixed++;
+      }
+    }
+  }
+  // STRIP PASS: the Shoulder bone never rotates. Any Shoulder weight on an
+  // arm-dominated vert tears on rotation. Strip Shoulder weight < 0.35 from
+  // verts dominated by arm-chain bones (>0.6). Keeps blend only where the
+  // shoulder genuinely dominates (trapezius).
+  for (let i = 0; i < n; i++) {
+    const js = [sj.getX(i), sj.getY(i), sj.getZ(i), sj.getW(i)];
+    const ws = [sw.getX(i), sw.getY(i), sw.getZ(i), sw.getW(i)];
+    let domW = -1, domN = '';
+    let shW = 0, shK = -1;
+    for (let k = 0; k < 4; k++) {
+      const nm = bname[js[k]] || '';
+      if (ws[k] > domW) { domW = ws[k]; domN = nm; }
+      if (nm === side+'Shoulder') { shW += ws[k]; shK = k; }
+    }
+    const armDom = (domN === side+'Arm' || domN === side+'ForeArm' || domN === side+'Hand');
+    if (armDom && domW > 0.6 && shW > 0.01 && shW < 0.35) {
+      // move shoulder weight to dominant arm bone
+      const ww = [ws[0], ws[1], ws[2], ws[3]];
+      ww[shK] = 0;
+      for (let k = 0; k < 4; k++) if ((bname[js[k]]||'') === domN) ww[k] += shW;
+      let sum = ww[0]+ww[1]+ww[2]+ww[3] || 1;
+      sw.setXYZW(i, ww[0]/sum, ww[1]/sum, ww[2]/sum, ww[3]/sum);
+      fixed++;
+    }
+  }
+  sj.needsUpdate = true; sw.needsUpdate = true;
+  return { fixed };
+}

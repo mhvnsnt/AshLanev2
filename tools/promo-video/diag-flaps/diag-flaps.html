@@ -1,0 +1,274 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>flap diag v2</title>
+<script type="importmap">{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/" } }</script>
+<style>body{margin:0;background:#222}canvas{display:block}</style>
+</head><body><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { cleanStrayWeights, repairArmpitWeights, repairArmSkinningV2 } from '/reskin.js';
+
+// BANNON_XFER_MESH frame: faces +X, left = +Z, up = +Y, origin mid-body.
+const params = new URLSearchParams(location.search);
+const MODEL = params.get('model') || 'BANNON_muscular_skinned.glb';
+const POSE = params.get('pose') || 'rest'; // rest | arm45 | arm90
+const SIDE = params.get('side') || 'left';
+const ANALYSIS = params.get('analysis') === '1';
+const ARMPIT_FIX = params.get('armpitfix') === '1';
+const ARMSKIN_FIX = params.get('armskin') === '1';
+
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const gltf = await loader.loadAsync('/models/' + MODEL);
+const root = gltf.scene;
+{
+  const bb = new THREE.Box3().setFromObject(root);
+  const h = bb.max.y - bb.min.y;
+  if (h > 0.01) root.scale.setScalar(1.85 / h);
+}
+root.updateWorldMatrix(true, true);
+
+let skinned = null;
+root.traverse(o => { if (o.isSkinnedMesh && !skinned) skinned = o; });
+cleanStrayWeights(skinned); // production applies this at load
+if (ARMPIT_FIX) {
+  const r = repairArmpitWeights(skinned);
+  console.log('FLAPDIAG armpitFix=' + JSON.stringify(r));
+}
+if (ARMSKIN_FIX) {
+  const rL = repairArmSkinningV2(skinned, 'Left');
+  const rR = repairArmSkinningV2(skinned, 'Right');
+  console.log('FLAPDIAG armSkinFix L=' + JSON.stringify(rL) + ' R=' + JSON.stringify(rR));
+}
+skinned.skeleton.pose(); // bind pose = rest. Do NOT zero rotations.
+root.updateWorldMatrix(true, true);
+
+const bones = {};
+skinned.skeleton.bones.forEach(b => { bones[b.name.replace(/^mixamorig:?/, '')] = b; });
+const bn = (n) => bones[n];
+const shBone = bn(SIDE === 'left' ? 'LeftShoulder' : 'RightShoulder');
+const armBone = bn(SIDE === 'left' ? 'LeftArm' : 'RightArm');
+
+// pose: raise arm outward about WORLD X axis (arm extends along Z)
+let raiseDeg = POSE === 'arm45' ? 45 : POSE === 'arm90' ? 90 : 0;
+if (armBone && raiseDeg) {
+  const dir = SIDE === 'left' ? -1 : 1; // left arm (+Z) needs -X rotation to go up
+  armBone.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), dir * THREE.MathUtils.degToRad(raiseDeg));
+}
+root.updateWorldMatrix(true, true);
+
+// ---------- armpit-region analysis ----------
+if (ANALYSIS) {
+  // CPU-skinning displacement: for each vert, |pos(arm90) - pos(rest)|.
+  // Sail verts = large displacement on verts that are NOT on the arm itself.
+  // Reset to rest first (the page pose may already have raised the arm).
+  skinned.skeleton.pose();
+  root.updateWorldMatrix(true, true);
+  const g = skinned.geometry;
+  const posA = g.attributes.position, sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const n = posA.count;
+  const bones = skinned.skeleton.bones, nb = bones.length;
+  const bindInv = skinned.skeleton.boneInverses;
+  const tmp = new THREE.Vector3(), acc = new THREE.Vector3(), bp = new THREE.Vector3();
+  const bm = new THREE.Matrix4();
+  function skinnedPositions() {
+    const out = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      tmp.fromBufferAttribute(posA, i);
+      acc.set(0, 0, 0);
+      for (let k = 0; k < 4; k++) {
+        const w = k === 0 ? sw.getX(i) : k === 1 ? sw.getY(i) : k === 2 ? sw.getZ(i) : sw.getW(i);
+        if (w < 1e-6) continue;
+        const bi = k === 0 ? sj.getX(i) : k === 1 ? sj.getY(i) : k === 2 ? sj.getZ(i) : sj.getW(i);
+        bm.multiplyMatrices(bones[bi].matrixWorld, bindInv[bi]);
+        bp.copy(tmp).applyMatrix4(bm);
+        acc.addScaledVector(bp, w);
+      }
+      // to world
+      acc.applyMatrix4(skinned.matrixWorld);
+      out[i * 3] = acc.x; out[i * 3 + 1] = acc.y; out[i * 3 + 2] = acc.z;
+    }
+    return out;
+  }
+  root.updateWorldMatrix(true, true);
+  const restP = skinnedPositions();
+  // pose arm90
+  armBone.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), (SIDE === 'left' ? -1 : 1) * THREE.MathUtils.degToRad(90));
+  root.updateWorldMatrix(true, true);
+  const raisedP = skinnedPositions();
+  // find high-displacement verts, report their rest pos + bone influences
+  const movers = [];
+  for (let i = 0; i < n; i++) {
+    const dx = raisedP[i*3] - restP[i*3], dy = raisedP[i*3+1] - restP[i*3+1], dz = raisedP[i*3+2] - restP[i*3+2];
+    const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    if (d > 0.10) {
+      const inf = [];
+      for (let k = 0; k < 4; k++) {
+        const w = k === 0 ? sw.getX(i) : k === 1 ? sw.getY(i) : k === 2 ? sw.getZ(i) : sw.getW(i);
+        const bi = k === 0 ? sj.getX(i) : k === 1 ? sj.getY(i) : k === 2 ? sj.getZ(i) : sj.getW(i);
+        if (w > 0.01) inf.push(skinned.skeleton.bones[bi].name.replace(/^mixamorig:?/, '') + ':' + w.toFixed(2));
+      }
+      movers.push({ i, d: +d.toFixed(3),
+        rest: [restP[i*3].toFixed(2), restP[i*3+1].toFixed(2), restP[i*3+2].toFixed(2)].join(','),
+        inf: inf.join(' ') });
+    }
+  }
+  movers.sort((a, b) => b.d - a.d);
+  console.log('FLAPDIAG moverCount(d>0.10)=' + movers.length);
+  // histogram by dominant bone
+  const byDom = {};
+  for (const m of movers) {
+    const dom = (m.inf.split(' ')[0] || '?').split(':')[0];
+    byDom[dom] = (byDom[dom] || 0) + 1;
+  }
+  console.log('FLAPDIAG moversByDominantBone=' + JSON.stringify(byDom));
+  console.log('FLAPDIAG topMovers=' + JSON.stringify(movers.slice(0, 15)));
+  window.__analysisDone = true;
+}
+
+
+// ---------- displacement heatmap mode ----------
+if (params.get('heatmap') === '1') {
+  skinned.skeleton.pose();
+  root.updateWorldMatrix(true, true);
+  const g = skinned.geometry;
+  const posA = g.attributes.position, sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const n = posA.count;
+  const sbones = skinned.skeleton.bones, nb = sbones.length;
+  const bindInv = skinned.skeleton.boneInverses;
+  const tmp = new THREE.Vector3(), acc = new THREE.Vector3(), bp = new THREE.Vector3();
+  const bm = new THREE.Matrix4();
+  function skinPos() {
+    const out = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      tmp.fromBufferAttribute(posA, i); acc.set(0,0,0);
+      for (let k = 0; k < 4; k++) {
+        const w = [sw.getX(i),sw.getY(i),sw.getZ(i),sw.getW(i)][k];
+        if (w < 1e-9) continue;
+        const bi = [sj.getX(i),sj.getY(i),sj.getZ(i),sj.getW(i)][k];
+        bm.multiplyMatrices(sbones[bi].matrixWorld, bindInv[bi]);
+        bp.copy(tmp).applyMatrix4(bm); acc.addScaledVector(bp, w);
+      }
+      out[i*3]=acc.x; out[i*3+1]=acc.y; out[i*3+2]=acc.z;
+    }
+    return out;
+  }
+  const restP = skinPos();
+  const armB = bn('LeftArm');
+  armB.rotateOnWorldAxis(new THREE.Vector3(1,0,0), -Math.PI/2);
+  root.updateWorldMatrix(true, true);
+  const raisedP = skinPos();
+  skinned.skeleton.pose(); // back to rest for rendering
+  if (raiseDeg) { /* re-apply page pose below */ }
+  root.updateWorldMatrix(true, true);
+  const colors = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const dx = raisedP[i*3]-restP[i*3], dy = raisedP[i*3+1]-restP[i*3+1], dz = raisedP[i*3+2]-restP[i*3+2];
+    const d = Math.sqrt(dx*dx+dy*dy+dz*dz);
+    // blue=static, green=moderate, red=high displacement
+    const t = Math.min(1, d / 0.5);
+    colors[i*3] = t; colors[i*3+1] = Math.min(1, 0.2 + (1-t)*0.5); colors[i*3+2] = 1-t;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  skinned.material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8 });
+  console.log('FLAPDIAG heatmap applied');
+}
+
+
+// ---------- cluster highlight mode ----------
+if (params.get('cluster') === '1') {
+  const mask = await (await fetch('/cluster_mask.json')).json();
+  const g = skinned.geometry;
+  const n = g.attributes.position.count;
+  const colors = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    if (mask[i]) { colors[i*3]=1; colors[i*3+1]=0; colors[i*3+2]=0; }
+    else { colors[i*3]=0.7; colors[i*3+1]=0.7; colors[i*3+2]=0.7; }
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  skinned.material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8 });
+}
+
+
+// ---------- hide-bone mode: make verts dominated by X invisible to identify parts ----------
+if (params.get('hidebone')) {
+  const hideNames = params.get('hidebone').split(',');
+  const g = skinned.geometry;
+  const sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const n = sj.count;
+  const jn = skinned.skeleton.bones.map(b => b.name.replace(/^mixamorig:?/, ''));
+  const idx = g.index.array;
+  const keep = [];
+  for (let t = 0; t < idx.length; t += 3) {
+    let hide = false;
+    for (let k = 0; k < 3; k++) {
+      const vi = idx[t+k];
+      let dw = -1, db = -1;
+      const ws = [sw.getX(vi),sw.getY(vi),sw.getZ(vi),sw.getW(vi)];
+      const js = [sj.getX(vi),sj.getY(vi),sj.getZ(vi),sj.getW(vi)];
+      for (let m = 0; m < 4; m++) if (ws[m] > dw) { dw = ws[m]; db = js[m]; }
+      if (hideNames.includes(jn[db])) { hide = true; break; }
+    }
+    if (!hide) { keep.push(idx[t], idx[t+1], idx[t+2]); }
+  }
+  g.setIndex(keep);
+  console.log('FLAPDIAG hidebone: kept ' + keep.length/3 + ' tris');
+}
+
+
+// ---------- bonecolor mode: color verts by dominant bone ----------
+if (params.get('bonecolor') === '1') {
+  const g = skinned.geometry;
+  const sj = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+  const n = sj.count;
+  const jn = skinned.skeleton.bones.map(b => b.name.replace(/^mixamorig:?/, ''));
+  // distinct colors per bone
+  const palette = {};
+  const cols = [[1,0,0],[0,1,0],[0,0,1],[1,1,0],[1,0,1],[0,1,1],[1,0.5,0],[0.5,0,1],[0,0.5,1],[1,0,0.5]];
+  let ci = 0;
+  const colors = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    let dw = -1, db = -1;
+    const ws = [sw.getX(i),sw.getY(i),sw.getZ(i),sw.getW(i)];
+    const js = [sj.getX(i),sj.getY(i),sj.getZ(i),sj.getW(i)];
+    for (let m = 0; m < 4; m++) if (ws[m] > dw) { dw = ws[m]; db = js[m]; }
+    const nm = jn[db];
+    if (!(nm in palette)) { palette[nm] = cols[ci % cols.length]; ci++; }
+    const c = palette[nm];
+    colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  skinned.material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8 });
+  console.log('FLAPDIAG bonecolor palette=' + JSON.stringify(Object.keys(palette)));
+}
+
+// ---------- render ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(900, 900);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x303030);
+scene.add(root);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x333333, 1.6));
+const dir1 = new THREE.DirectionalLight(0xffffff, 2.2); dir1.position.set(3, 4, 4); scene.add(dir1);
+const dir2 = new THREE.DirectionalLight(0xffffff, 0.8); dir2.position.set(-3, 2, -4); scene.add(dir2);
+
+const cam = new THREE.PerspectiveCamera(35, 1, 0.01, 50);
+{
+  const sp = new THREE.Vector3(); shBone.getWorldPosition(sp);
+  const zSide = SIDE === 'left' ? 1 : -1;
+  const WIDE = params.get('wide') === '1';
+  if (WIDE) {
+    // full-torso view to see the sail extent
+    cam.position.set(sp.x + 1.6, sp.y + 0.1, sp.z + zSide * 1.1);
+    cam.lookAt(sp.x, sp.y - 0.35, 0);
+  } else {
+    // front-side three-quarter view of the armpit: front (+X), out to the arm side (+Z for left)
+    cam.position.set(sp.x + 0.75, sp.y + 0.30, sp.z + zSide * 0.80);
+    cam.lookAt(sp.x - 0.05, sp.y - 0.20, sp.z + zSide * 0.05);
+  }
+}
+renderer.render(scene, cam);
+window.__rendered = true;
+</script></body></html>
