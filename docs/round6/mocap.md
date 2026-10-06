@@ -74,6 +74,14 @@ Skipped per rounds 1–5 (already covered in `docs/FREE_APIS_AND_PUBLIC_DOMAIN.m
 - **Verdict:** ⚠️ **prototype-only** — research-framed terms and CC BY-SA 3.0 share-alike; use locally for retargeting/segmentation experiments, do not ship clips.
 - **Notes:** Pre-cut labeled clips (1,500 cuts / ~50 min) are ideal for training the motion-bank indexer and testing clip-trimming heuristics. ASF/AMC importer needed (same family as CMU).
 
+## orangeduck/Motion-Matching (Learned Motion Matching reference)
+
+- **URL:** https://github.com/orangeduck/Motion-Matching
+- **What:** Daniel Holden's reference implementation of Motion Matching + Learned Motion Matching (SIGGRAPH 2020) in C++ with a raylib demo compilable to WebAssembly. Builds a pose database from mocap, searches it every frame for the pose best matching current state + desired trajectory — no hand-authored transitions. Includes decompressor/stepper/projector training scripts that compress a 590 MB database to ~8.5 MB (~70x).
+- **License:** **Code = MIT** (repo LICENSE, verified on repo page). The bundled demo database is from a dataset under **CC BY-NC-ND 4.0** — explicitly "unlike the code, which is licensed under MIT" (repo README).
+- **Verdict:** ✅ **commercial-safe (code)** — port the MIT search/database/feature code to TS for our runtime; ⚠️ **prototype-only (bundled data)** — rebuild the pose database from commercial-safe corpora (CMU, Mesh2Motion CC0, AIST++).
+- **Notes:** The single most important animation-tech entry in this wave: motion matching kills the state-machine authoring bottleneck for locomotion. Deterministic by construction (database lookup). Pair with foot-IK (below) for planted feet.
+
 ## License ledger
 
 | Project | License (source) | Verdict |
