@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+  canvas { display: block; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const params = new URLSearchParams(location.search);
+const DUR = 50;
+const W = 1920, H = 1080;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020204);
+scene.fog = new THREE.FogExp2(0x020204, 0.028);
+
+const camera = new THREE.PerspectiveCamera(42, W/H, 0.05, 120);
+
+// ================= ARENA =================
+// Floor (dark arena floor)
+const floor = new THREE.Mesh(
+  new THREE.CircleGeometry(30, 48),
+  new THREE.MeshStandardMaterial({ color: 0x0a0a0c, roughness: 0.9, metalness: 0.1 })
+);
+floor.rotation.x = -Math.PI/2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+// ---- Wrestling Ring ----
+const ring = new THREE.Group();
+const RING = 3.0; // half-size
+
+// Canvas
+const canvas = new THREE.Mesh(
+  new THREE.BoxGeometry(RING*2, 0.12, RING*2),
+  new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.85 })
+);
+canvas.position.y = 0.9;
+canvas.receiveShadow = true;
+ring.add(canvas);
+
+// Canvas logo (bull)
+// Apron skirt
+const apronMat = new THREE.MeshStandardMaterial({ color: 0x0d0d10, roughness: 0.7 });
+const apron = new THREE.Mesh(new THREE.BoxGeometry(RING*2+0.3, 0.85, RING*2+0.3), apronMat);
+apron.position.y = 0.45;
+ring.add(apron);
+
+// Posts
+const postMat = new THREE.MeshStandardMaterial({ color: 0x888899, roughness: 0.35, metalness: 0.8 });
+const postGeo = new THREE.CylinderGeometry(0.07, 0.07, 1.6, 12);
+const postPos = [[-1,-1],[1,-1],[-1,1],[1,1]];
+for (const [sx, sz] of postPos) {
+  const p = new THREE.Mesh(postGeo, postMat);
+  p.position.set(sx*(RING+0.25), 1.7, sz*(RING+0.25));
+  p.castShadow = true;
+  ring.add(p);
+}
+
+// Turnbuckles
+const buckleMat = new THREE.MeshStandardMaterial({ color: 0xcc2222, roughness: 0.5 });
+const buckleGeo = new THREE.BoxGeometry(0.22, 0.22, 0.12);
+for (const [sx, sz] of postPos) {
+  for (const h of [1.25, 1.65, 2.05]) {
+    const b = new THREE.Mesh(buckleGeo, buckleMat);
+    b.position.set(sx*(RING+0.18), h, sz*(RING+0.18));
+    b.lookAt(0, h, 0);
+    ring.add(b);
+  }
+}
+
+// Ropes (3 levels)
+const ropeMat = new THREE.MeshStandardMaterial({ color: 0xcc3333, roughness: 0.6 });
+for (const h of [1.25, 1.65, 2.05]) {
+  const pts = [];
+  const r = RING + 0.22;
+  for (let i = 0; i <= 32; i++) {
+    const a = (i/32) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r));
+  }
+  // Square ropes, not circle - use 4 sides
+  const ropePts = [];
+  const c = RING + 0.22;
+  const corners = [[-c,-c],[c,-c],[c,c],[-c,c],[-c,-c]];
+  for (let s = 0; s < 4; s++) {
+    const [x1,z1] = corners[s], [x2,z2] = corners[s+1];
+    for (let i = 0; i <= 8; i++) {
+      const t = i/8;
+      ropePts.push(new THREE.Vector3(x1+(x2-x1)*t, h - Math.sin(t*Math.PI)*0.03, z1+(z2-z1)*t));
+    }
+  }
+  const ropeGeo = new THREE.BufferGeometry().setFromPoints(ropePts);
+  const rope = new THREE.Line(ropeGeo, new THREE.LineBasicMaterial({ color: 0xdd4444 }));
+  // Use tube for thickness
+  const curve = new THREE.CatmullRomCurve3(ropePts);
+  const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.035, 8), ropeMat);
+  tube.castShadow = true;
+  ring.add(tube);
+}
+
+// Ring steps
+const steps = new THREE.Mesh(
+  new THREE.BoxGeometry(1.2, 0.45, 0.8),
+  new THREE.MeshStandardMaterial({ color: 0x333338, roughness: 0.7 })
+);
+steps.position.set(RING+1.2, 0.225, 0);
+steps.castShadow = true;
+ring.add(steps);
+
+scene.add(ring);
+
+// ---- Entrance Ramp ----
+const ramp = new THREE.Mesh(
+  new THREE.BoxGeometry(3, 0.15, 14),
+  new THREE.MeshStandardMaterial({ color: 0x151518, roughness: 0.8 })
+);
+ramp.position.set(0, 0.075, RING + 8);
+ramp.receiveShadow = true;
+scene.add(ramp);
+
+// Ramp rails (light strips)
+const railMat = new THREE.MeshBasicMaterial({ color: 0xffaa33 });
+for (const sx of [-1.6, 1.6]) {
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 14), railMat);
+  rail.position.set(sx, 0.2, RING + 8);
+  scene.add(rail);
+}
+
+// ---- Seating Bowl (dark tiers) ----
+const seatMat = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.95 });
+for (let tier = 0; tier < 3; tier++) {
+  const r = 16 + tier * 4.5;
+  const y = 1.5 + tier * 2.4;
+  const seats = new THREE.Mesh(
+    new THREE.CylinderGeometry(r+4, r, 2.2, 32, 1, true),
+    seatMat
+  );
+  seats.position.y = y;
+  scene.add(seats);
+}
+
+// ---- CROWD (instanced simple people) ----
+const CROWD_N = 400;
+const bodyGeo = new THREE.CapsuleGeometry(0.22, 0.55, 4, 8);
+const headGeo = new THREE.SphereGeometry(0.16, 10, 8);
+const crowdMat = new THREE.MeshStandardMaterial({ roughness: 0.9 });
+
+// Random shirt colors (dark, varied)
+const crowdColors = [0x334455, 0x553333, 0x335533, 0x444444, 0x553f2a, 0x2a3a55, 0x552a4a, 0x3a3a3a];
+const bodies = new THREE.InstancedMesh(bodyGeo, crowdMat, CROWD_N);
+const heads = new THREE.InstancedMesh(headGeo, new THREE.MeshStandardMaterial({ roughness: 0.8 }), CROWD_N);
+bodies.castShadow = false;
+heads.castShadow = false;
+
+const dummy = new THREE.Object3D();
+const color = new THREE.Color();
+const crowdData = []; // {x,y,z, phase, baseY}
+
+for (let i = 0; i < CROWD_N; i++) {
+  const tier = Math.floor(Math.random() * 3);
+  const r = 16.5 + tier * 4.5 + Math.random() * 3;
+  const a = Math.random() * Math.PI * 2;
+  const x = Math.cos(a) * r;
+  const z = Math.sin(a) * r;
+  // Skip the entrance ramp area (behind, |x|<4 and z>2)
+  if (Math.abs(x) < 5 && z > 2) { 
+    const side = x >= 0 ? 1 : -1;
+    dummy.position.set(side * (5 + Math.random()*2), 0, z);
+  } else {
+    dummy.position.set(x, 0, z);
+  }
+  const y = 2.3 + tier * 2.4;
+  dummy.position.y = y;
+  dummy.rotation.y = Math.atan2(-dummy.position.x, -dummy.position.z);
+  const s = 0.85 + Math.random() * 0.3;
+  dummy.scale.set(s, s, s);
+  dummy.updateMatrix();
+  bodies.setMatrixAt(i, dummy.matrix);
+  
+  // Head
+  dummy.position.y = y + 0.75 * s;
+  dummy.updateMatrix();
+  heads.setMatrixAt(i, dummy.matrix);
+  
+  color.setHex(crowdColors[Math.floor(Math.random() * crowdColors.length)]);
+  bodies.setColorAt(i, color);
+  // Skin tones for heads
+  const skins = [0xc9a180, 0x8d5a3b, 0x5c3a24, 0xe0b890, 0x6b4423];
+  color.setHex(skins[Math.floor(Math.random() * skins.length)]);
+  heads.setColorAt(i, color);
+  
+  crowdData.push({ x: dummy.position.x, y, z: dummy.position.z, phase: Math.random()*Math.PI*2, s, tier });
+}
+scene.add(bodies);
+scene.add(heads);
+
+// Crowd animation state
+let crowdExcite = 0; // 0=calm, 1=wild
+
+function animateCrowd(t) {
+  for (let i = 0; i < CROWD_N; i++) {
+    const d = crowdData[i];
+    const bounce = Math.sin(t * (3 + crowdExcite * 4) + d.phase) * (0.03 + crowdExcite * 0.12);
+    const sway = Math.sin(t * 1.5 + d.phase) * 0.05 * crowdExcite;
+    dummy.position.set(d.x + sway, d.y + bounce, d.z);
+    dummy.rotation.y = Math.atan2(-d.x, -d.z) + sway * 2;
+    dummy.scale.set(d.s, d.s, d.s);
+    dummy.updateMatrix();
+    bodies.setMatrixAt(i, dummy.matrix);
+    dummy.position.y = d.y + 0.75 * d.s + bounce;
+    dummy.updateMatrix();
+    heads.setMatrixAt(i, dummy.matrix);
+  }
+  bodies.instanceMatrix.needsUpdate = true;
+  heads.instanceMatrix.needsUpdate = true;
+}
+
+// ================= LIGHTING =================
+scene.add(new THREE.AmbientLight(0xffffff, 0.0));
+const amb = scene.children.find(c => c.isAmbientLight);
+
+// Volumetric beam shader
+const beamVert = `
+varying vec2 vUv;
+varying vec3 vPos;
+void main() {
+  vUv = uv;
+  vPos = position;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`;
+const beamFrag = `
+uniform vec3 uColor;
+uniform float uIntensity;
+uniform float uTime;
+varying vec2 vUv;
+varying vec3 vPos;
+void main() {
+  // Soft edges: fade at cone silhouette
+  float edge = smoothstep(0.0, 0.35, vUv.x) * smoothstep(1.0, 0.65, vUv.x);
+  // Fade along length (bright at top, fading down)
+  float len = smoothstep(0.0, 0.25, vUv.y) * smoothstep(1.0, 0.3, vUv.y);
+  // Subtle animated density
+  float dens = 0.85 + 0.15 * sin(uTime * 2.0 + vUv.y * 10.0);
+  float a = edge * len * uIntensity * dens;
+  gl_FragColor = vec4(uColor, a);
+}`;
+
+const beams = [];
+const beamUniformsList = [];
+function makeBeam(color) {
+  const geo = new THREE.ConeGeometry(2.2, 16, 24, 1, true);
+  const uni = {
+    uColor: { value: new THREE.Color(color) },
+    uIntensity: { value: 0 },
+    uTime: { value: 0 },
+  };
+  const mat = new THREE.ShaderMaterial({
+    vertexShader: beamVert,
+    fragmentShader: beamFrag,
+    uniforms: uni,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  beamUniformsList.push(uni);
+  beams.push(mesh);
+  scene.add(mesh);
+  return mesh;
+}
+
+// 6 overhead beams
+const beamPositions = [
+  [0, 0], [5, 2], [-5, 2], [3, -4], [-3, -4], [0, 6]
+];
+const beamMeshes = beamPositions.map(([x, z], i) => {
+  const m = makeBeam(0xffffff);
+  m.position.set(x, 9, z);
+  // Slight tilt
+  m.rotation.z = x * 0.02;
+  m.rotation.x = -z * 0.02;
+  return m;
+});
+
+// Moving head spotlights
+const spots = [];
+const spotColors = [0xffd0a0, 0x88bbff, 0xff6666, 0x88ffaa];
+for (let i = 0; i < 4; i++) {
+  const s = new THREE.SpotLight(spotColors[i], 0, 40, 0.35, 0.4, 1.0);
+  const a = (i / 4) * Math.PI * 2;
+  s.position.set(Math.cos(a) * 10, 11, Math.sin(a) * 10);
+  s.castShadow = i < 2;
+  if (s.castShadow) s.shadow.mapSize.set(1024, 1024);
+  s.target.position.set(0, 1, 0);
+  scene.add(s); scene.add(s.target);
+  spots.push(s);
+}
+
+// Crowd wash (dim blue for audience visibility)
+const crowdWash = new THREE.HemisphereLight(0x223355, 0x080808, 0);
+scene.add(crowdWash);
+
+// Haze particles
+const HAZE_N = 400;
+const hazeGeo = new THREE.BufferGeometry();
+const hazePos = new Float32Array(HAZE_N * 3);
+for (let i = 0; i < HAZE_N; i++) {
+  hazePos[i*3] = (Math.random()-0.5) * 24;
+  hazePos[i*3+1] = Math.random() * 10;
+  hazePos[i*3+2] = (Math.random()-0.5) * 24;
+}
+hazeGeo.setAttribute('position', new THREE.BufferAttribute(hazePos, 3));
+const haze = new THREE.Points(hazeGeo, new THREE.PointsMaterial({
+  color: 0x8899bb, size: 0.06, transparent: true, opacity: 0,
+  blending: THREE.AdditiveBlending, depthWrite: false
+}));
+scene.add(haze);
+
+// ================= CHARACTERS =================
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const clips = {}; // name -> {dur, times, atk}
+
+async function loadClip(name) {
+  if (clips[name]) return clips[name];
+  const r = await fetch('/clips/' + name);
+  clips[name] = await r.json();
+  return clips[name];
+}
+
+// Bone helpers
+function collectBones(root) {
+  const bones = {};
+  root.traverse(o => {
+    if (o.isBone) {
+      let n = o.name;
+      if (n.startsWith('mixamorig:')) n = n.slice(10);
+      else if (n.startsWith('mixamorig')) n = n.slice(9);
+      bones[n] = o;
+    }
+  });
+  return bones;
+}
+
+// Procedural walk - carefully tuned for Mixamo bone axes
+// Verified against retargeted mocap for correct axis conventions
+// Bone local rotation = rest * swing (swing applied in bone local space)
+function proceduralWalk(bones, rest, t) {
+  const freq = 1.9; // steps per second
+  const ph = t * freq * Math.PI * 2;
+  
+  const eulerQ = (ex, ey, ez) => new THREE.Quaternion().setFromEuler(new THREE.Euler(ex, ey, ez));
+  const R = (bone, ex, ey, ez) => rest[bone].clone().multiply(eulerQ(ex, ey, ez));
+  const pose = new Map();
+  
+  // Legs: alternate swing
+  const legSwing = 0.38; // ~22 degrees
+  const kneeBend = 0.5;  // max knee bend
+  
+  // Left leg forward when sin(ph) > 0
+  const lSwing = Math.sin(ph) * legSwing;
+  pose.set('LeftUpLeg', R('LeftUpLeg', -lSwing, 0, 0.03));
+  const lKnee = Math.max(0, Math.sin(ph + 0.6)) * kneeBend + 0.08;
+  pose.set('LeftLeg', R('LeftLeg', lKnee, 0, 0));
+  pose.set('LeftFoot', R('LeftFoot', lSwing * 0.5 - 0.1, 0, 0));
+  
+  // Right leg (opposite phase)
+  const rSwing = Math.sin(ph + Math.PI) * legSwing;
+  pose.set('RightUpLeg', R('RightUpLeg', -rSwing, 0, -0.03));
+  const rKnee = Math.max(0, Math.sin(ph + Math.PI + 0.6)) * kneeBend + 0.08;
+  pose.set('RightLeg', R('RightLeg', rKnee, 0, 0));
+  pose.set('RightFoot', R('RightFoot', rSwing * 0.5 - 0.1, 0, 0));
+  
+  // Hips: slight sway
+  pose.set('Hips', R('Hips', 0.02, Math.sin(ph)*0.04, Math.sin(ph)*0.03));
+  
+  // Spine: slight forward lean
+  pose.set('Spine', R('Spine', 0.08, 0, Math.sin(ph)*0.02));
+  pose.set('Spine2', R('Spine2', 0.05, Math.sin(ph+Math.PI)*0.03, 0));
+  
+  // Arms: opposite swing to legs, elbows bent
+  const armSwing = 0.28;
+  pose.set('LeftArm', R('LeftArm', -Math.sin(ph + Math.PI) * armSwing, 0, 0.12));
+  pose.set('LeftForeArm', R('LeftForeArm', -0.35, 0, 0));
+  pose.set('RightArm', R('RightArm', -Math.sin(ph) * armSwing, 0, -0.12));
+  pose.set('RightForeArm', R('RightForeArm', -0.35, 0, 0));
+  
+  // Head: stable
+  pose.set('Head', R('Head', -0.05, 0, 0));
+  if (rest['Neck']) pose.set('Neck', R('Neck', -0.03, 0, 0));
+  
+  return pose;
+}
+
+function sampleClip(clip, boneMap, t) {
+  // Returns Map<bonesName, Quaternion>
+  const out = new Map();
+  const times = clip.times;
+  const dur = clip.dur;
+  const lt = ((t % dur) + dur) % dur;
+  let i = 0;
+  while (i < times.length - 2 && times[i+1] < lt) i++;
+  const t0 = times[i], t1 = times[i+1];
+  const f = Math.max(0, Math.min(1, (lt - t0) / Math.max(1e-6, t1 - t0)));
+  for (const srcBone in clip.atk) {
+    const dstBone = boneMap ? boneMap[srcBone] : srcBone;
+    if (!dstBone) continue;
+    const keys = clip.atk[srcBone];
+    const a = keys[i], b = keys[Math.min(i+1, keys.length-1)];
+    const qa = new THREE.Quaternion(a[0],a[1],a[2],a[3]);
+    const qb = new THREE.Quaternion(b[0],b[1],b[2],b[3]);
+    out.set(dstBone, qa.slerp(qb, f));
+  }
+  return out;
+}
+
+function applyPose(bones, rest, poseMap, blend = 1) {
+  for (const k in bones) bones[k].quaternion.copy(rest[k]);
+  if (blend <= 0) return;
+  const tmp = new THREE.Quaternion();
+  for (const [bone, q] of poseMap) {
+    if (bones[bone] && rest[bone]) {
+      if (blend >= 1) bones[bone].quaternion.copy(q);
+      else {
+        tmp.copy(rest[bone]).slerp(q, blend);
+        bones[bone].quaternion.copy(tmp);
+      }
+    }
+  }
+}
+
+// Load characters
+console.log('Loading characters...');
+const toroGltf = await loader.loadAsync('/models/EL_TORO_DE_ORO.glb');
+const toro = toroGltf.scene;
+scene.add(toro);
+const toroBones = collectBones(toro);
+const toroRest = {};
+for (const k in toroBones) toroRest[k] = toroBones[k].quaternion.clone();
+// Ground him
+{
+  const bb = new THREE.Box3().setFromObject(toro);
+  toro.position.y -= bb.min.y;
+}
+const TORO_BASE_Y = toro.position.y;
+toro.traverse(o => { if (o.isMesh) { o.castShadow = true; } });
+
+// Opponent: load Toro GLB again (separate instance, same working rig)
+// Cain model has corrupted skinning - cannot use
+const cainGltf = await loader.loadAsync('/models/EL_TORO_DE_ORO.glb');
+const cain = cainGltf.scene;
+scene.add(cain);
+const cainBones = collectBones(cain);
+const cainRest = {};
+for (const k in cainBones) cainRest[k] = cainBones[k].quaternion.clone();
+// Darken the opponent (shadowy rival with red tint)
+cain.traverse(o => {
+  if (o.isMesh) {
+    o.castShadow = true;
+    if (o.material) {
+      o.material = o.material.clone();
+      o.material.color.multiplyScalar(0.4); // darken
+      o.material.color.r = Math.min(1, o.material.color.r * 1.5); // red tint
+    }
+  }
+});
+{
+  const bb = new THREE.Box3().setFromObject(cain);
+  cain.position.y = 0.96 + (0 - bb.min.y);
+}
+cain.position.set(1.2, cain.position.y, -1.0);
+cain.rotation.y = Math.PI; // face entrance
+const CAIN_BASE_Y = cain.position.y;
+
+// Load mocap clips
+console.log('Loading mocap...');
+const tauntClip = await loadClip('taunt-kofi.json');
+const spreadClip = await loadClip('arms-spread.json');
+console.log('Clips loaded');
+
+// ================= TIMELINE =================
+const sstep = (a,b,x) => { const t = Math.min(1, Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); };
+const lerp = (a,b,t) => a + (b-a)*t;
+
+// Toro state
+let toroZ = RING + 14; // start at back of ramp
+const TORO_RING_Z = 2.0; // where he stops near ring
+
+function toroPose(t) {
+  // Reset
+  for (const k in toroBones) toroBones[k].quaternion.copy(toroRest[k]);
+  toro.position.y = TORO_BASE_Y;
+
+  // --- 5-14s: Walk down ramp (procedural, verified Mixamo axes) ---
+  if (t >= 5 && t < 14) {
+    const wt = t - 5;
+    const pose = proceduralWalk(toroBones, toroRest, wt);
+    applyPose(toroBones, toroRest, pose, 1);
+    // Move forward
+    const prog = (t - 5) / 9;
+    toroZ = lerp(RING + 14, TORO_RING_Z + 3.5, prog);
+    // Bob slightly with steps
+    toro.position.y = TORO_BASE_Y + Math.abs(Math.sin(wt * 1.9 * Math.PI * 2)) * 0.03;
+  }
+  // --- 14-22s: At ringside, power stance (use taunt base, held) ---
+  else if (t >= 14 && t < 22) {
+    // Strong idle: subtle weight shift, arms ready
+    const bt = (t - 14) * 0.8;
+    const pose = proceduralWalk(toroBones, toroRest, bt * 0.15); // very slow, almost still
+    applyPose(toroBones, toroRest, pose, sstep(14, 15, t) * 0.6);
+    toroZ = TORO_RING_Z + 4.2 - sstep(16, 18, t) * 0.8;
+  }
+  // --- 22-30s: Taunt (real Kofi taunt mocap) ---
+  else if (t >= 22 && t < 30) {
+    const tt = (t - 22);
+    const pose = sampleClip(tauntClip, null, tt); // already Mixamo names
+    // tauntClip uses canonical Mixamo names directly
+    const mapped = new Map();
+    for (const [k, v] of pose) mapped.set(k, v);
+    applyPose(toroBones, toroRest, mapped, sstep(22, 22.8, t) * (1 - sstep(29, 30, t)));
+  }
+  // --- 30-50s: Face-off (Toro enters ring, confronts opponent) ---
+  else if (t >= 30) {
+    const bt = (t - 30) * 0.5;
+    const pose = proceduralWalk(toroBones, toroRest, bt);
+    applyPose(toroBones, toroRest, pose, sstep(30, 31, t) * 0.7);
+    // Step into ring during 30-38, then hold face-off
+    toroZ = lerp(TORO_RING_Z + 2.0, 0.5, sstep(30, 36, t));
+    toro.position.y = TORO_BASE_Y + sstep(33, 36, t) * 0.96; // step up onto canvas
+  }
+
+  toro.position.z = toroZ;
+  // Face forward (toward ring/camera)
+  toro.rotation.y = 0;
+}
+
+function cainPose(t) {
+  for (const k in cainBones) cainBones[k].quaternion.copy(cainRest[k]);
+  cain.position.y = CAIN_BASE_Y;
+
+  // Opponent waits in ring - menacing idle
+  const idleT = t * 0.3;
+  const pose = proceduralWalk(cainBones, cainRest, idleT);
+  const blendAmt = t < 22 ? 0.4 : (t < 38 ? 0.55 : 0.65);
+  applyPose(cainBones, cainRest, pose, blendAmt);
+
+  if (t >= 38) {
+    cain.rotation.y = Math.PI + 0.3; // face Toro
+  }
+}
+
+// ================= CAMERA =================
+function shot(t) {
+  const P = (x,y,z) => new THREE.Vector3(x,y,z);
+  // Toro z position for framing
+  const tz = toro.position.z;
+
+  if (t < 5) {
+    // Dark arena wide
+    const k = sstep(0, 5, t);
+    return { pos: P(lerp(-9, -7, k), lerp(7, 6, k), lerp(13, 11, k)), look: P(0, 2, 2) };
+  } else if (t < 14) {
+    // Track Toro walking down ramp — camera beside ramp, not behind
+    const k = sstep(5, 14, t);
+    return {
+      pos: P(lerp(5.0, 4.0, k), lerp(2.4, 2.0, k), tz + lerp(4.5, 4.0, k)),
+      look: P(0, 1.4, tz - 1.5)
+    };
+  } else if (t < 22) {
+    // Orbit around Toro at ringside
+    const a = lerp(0.5, 2.0, sstep(14, 22, t));
+    const r = 6.0;
+    return {
+      pos: P(Math.sin(a)*r, 2.2, tz + Math.cos(a)*r),
+      look: P(0, 1.3, tz - 0.5)
+    };
+  } else if (t < 30) {
+    // Taunt close-up, then cut to Cain
+    if (t < 26) {
+      const k = sstep(22, 26, t);
+      return {
+        pos: P(lerp(2.2, 1.8, k), lerp(1.9, 1.75, k), tz + lerp(3.2, 2.6, k)),
+        look: P(0, 1.45, tz)
+      };
+    } else {
+      // Cut to opponent in ring - from the side, clear of posts
+      return {
+        pos: P(0, 2.8, -6.5),
+        look: P(1.2, 1.5, -1.0)
+      };
+    }
+  } else {
+    // 30-50s: Face-off — Toro enters ring, confrontation
+    const k = sstep(30, 46, t);
+    return {
+      pos: P(lerp(2.5, 3.5, k), lerp(2.8, 2.0, k), lerp(8.5, 5.5, k)),
+      look: P(0.3, 1.3, lerp(2.0, 0, k))
+    };
+  }
+}
+
+// ================= LIGHTING TIMELINE =================
+const GOLD = new THREE.Color(0xffb347), RED = new THREE.Color(0xff2211),
+      BLUE = new THREE.Color(0x4488ff), WHITE = new THREE.Color(0xfff5e8);
+
+function lights(t) {
+  // Base: very dark
+  amb.intensity = lerp(0.015, 0.06, sstep(0, 6, t));
+
+  // Beams
+  beamUniformsList.forEach((u, i) => {
+    u.uTime.value = t;
+    // Beams activate at entrance
+    let inten = 0;
+    if (t >= 4) {
+      inten = sstep(4, 7, t) * 0.35;
+      // Pulse during signature
+      if (t >= 30 && t < 38) inten *= 1.6;
+      // Full during face-off
+      if (t >= 38) inten = 0.5;
+      // Color shift
+      if (i % 2 === 0) u.uColor.value.copy(GOLD).lerp(RED, sstep(22, 30, t) * 0.7);
+      else u.uColor.value.copy(WHITE).lerp(BLUE, sstep(14, 22, t) * 0.5);
+    }
+    // Flicker slightly
+    u.uIntensity.value = inten * (0.92 + 0.08 * Math.sin(t * 7 + i * 2.1));
+  });
+
+  // Moving spots follow Toro
+  const tz = toro.position.z;
+  spots.forEach((s, i) => {
+    const active = sstep(4, 6, t);
+    s.intensity = active * (180 + 60 * Math.sin(t * 0.8 + i));
+    // Sweep targets
+    const sa = t * 0.4 + i * (Math.PI/2);
+    if (t < 14) {
+      // Follow Toro on ramp
+      s.target.position.set(Math.sin(sa)*1.5, 1.2, tz + Math.cos(sa)*1.5);
+    } else if (t < 38) {
+      // Orbit around Toro
+      s.target.position.set(Math.sin(sa)*2, 1.0 + Math.sin(t+i)*0.5, tz + Math.cos(sa)*2 - 1);
+    } else {
+      // Face-off: light both
+      s.target.position.set(Math.sin(sa)*1.5, 1.2, Math.cos(sa)*1.5);
+    }
+    // Color chase
+    const cols = [GOLD, RED, BLUE, WHITE];
+    s.color.copy(cols[i]).lerp(cols[(i+1)%4], 0.5 + 0.5*Math.sin(t*0.5 + i));
+  });
+
+  // Crowd wash comes up with excitement
+  crowdWash.intensity = 0.15 * sstep(5, 10, t) + 0.25 * crowdExcite;
+
+  // Haze
+  haze.material.opacity = 0.35 * sstep(3, 8, t);
+
+  // Crowd excitement follows narrative
+  if (t < 5) crowdExcite = 0.1;
+  else if (t < 14) crowdExcite = lerp(0.1, 0.5, sstep(5, 14, t));
+  else if (t < 22) crowdExcite = 0.6;
+  else if (t < 30) crowdExcite = 0.8;
+  else if (t < 38) crowdExcite = 1.0;
+  else crowdExcite = 0.9;
+}
+
+// ================= MAIN RENDER =================
+window.__renderAt = function(t) {
+  toroPose(t);
+  cainPose(t);
+  animateCrowd(t);
+  lights(t);
+
+  // Haze drift
+  const pa = hazeGeo.attributes.position.array;
+  for (let i = 0; i < HAZE_N; i++) {
+    pa[i*3+1] += 0.004;
+    pa[i*3] += Math.sin(t*0.3 + i) * 0.003;
+    if (pa[i*3+1] > 10) pa[i*3+1] = 0;
+  }
+  hazeGeo.attributes.position.needsUpdate = true;
+
+  const s = shot(t);
+  camera.position.copy(s.pos);
+  camera.lookAt(s.look);
+
+  renderer.render(scene, camera);
+  return true;
+};
+
+window.__ready = true;
+window.__dur = DUR;
+console.log('Arena cinematic ready');
+</script>
+</body>
+</html>
