@@ -53,3 +53,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (MIT) — as a tool, not shipped in the game.
 - **Notes:** Dev-tooling entry: use for tutorial videos, move-lab recordings, and playtest footage so viewers see inputs. Windows-only binary — fine for capture machines. For the in-game equivalent (input display in training mode), pair Xelu glyphs (#5) with the HUD store's input feed — don't ship a keylogger-adjacent overlay in the client.
 - **AshLane use:** Tutorial/promo video production (visible inputs), move-lab capture.
+
+## 7. Ikemen GO
+- **URL:** https://github.com/ikemen-engine/Ikemen-GO · default screenpack https://github.com/ikemen-engine/Ikemen-GO-Screenpack
+- **What:** Open-source fighting-game engine (M.U.G.E.N-compatible) — and, for our purposes, a complete working reference of fighting-game UI: title → character select → versus screen → fight HUD (lifebars, combo counters, round announcements) → results, all data-driven from the "screenpack"/motif definition files.
+- **License:** **Engine MIT** (LICENCE.txt). ⚠️ **Default screenpack/motif is CC-BY 3.0** — study the layout/code freely, but its art assets need attribution and can't be rebranded as ours. Links FFmpeg (LGPL v2.1) — irrelevant for UI reference. Verified from repo license section (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe as reference + MIT code; screenpack art = CC-BY (attribute or redraw).
+- **Notes:** The highest-value artifact is the screenpack *system*: every screen is a declarative layout (positions, fonts, animations, state transitions) — exactly the architecture AshLane's menu kit needs. Study: character-select grid flow, versus-screen animation timing, lifebar/combo-counter anchoring, round-announcement sequencing. Redraw all art in Concrete Jungle style; borrow the structure, not the pixels.
+- **AshLane use:** Fighting-game UI architecture reference — character select, versus screen, HUD layout, screenpack data-driven UI pattern.
