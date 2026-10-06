@@ -9,6 +9,7 @@ import { sfxBack, sfxFight, wireMenuSfx } from "@/game3d/menu-sfx";
 import { AshlaneLogo, FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
 import { StreetBackdrop } from "@/game3d/menu-backdrop";
+import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
 import type { FactionId } from "@/game3d/char-gen";
 import "@/game3d/menu-theme.css";
 
@@ -206,7 +207,7 @@ export function AshlaneApp() {
       <div className="relative min-h-0 flex-1 px-3 pb-3">
         <div className="stage h-full overflow-hidden rounded-2xl border border-line">
           <canvas ref={canvasRef} className="h-full w-full" />
-          {hud.running && hud.banner ? <p className="al-banner pointer-events-none absolute inset-x-0 top-4 text-center text-xl">{hud.banner}</p> : null}
+          {hud.running && hud.banner ? <><VsSplash /><p className="al-banner pointer-events-none absolute inset-x-0 top-4 text-center text-xl">{hud.banner}</p></> : null}
           {playing && hud.face ? <p className="pointer-events-none absolute inset-x-0 top-12 text-center font-display text-xs uppercase tracking-widest text-cream">{hud.face}</p> : null}
           {hud.combo > 1 && playing ? <p className="al-title pointer-events-none absolute right-4 top-4 text-2xl text-ember">{hud.combo} HIT</p> : null}
           {playing && hud.flow > 8 ? <p className="pointer-events-none absolute right-4 top-12 al-hud-chip">FLOW {hud.flow}</p> : null}
@@ -216,6 +217,7 @@ export function AshlaneApp() {
 
           {!hud.running ? (
             <div ref={sheetRef} className="sheet veil al-sheet al-sheet-clear">
+              <MenuArt screen={menu} />
               <StreetBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
@@ -558,6 +560,7 @@ export function AshlaneApp() {
 
           {suite && hud.running ? (
             <div className="sheet veil al-sheet al-concrete">
+              <MenuArt screen="style" />
               <div className="al-sheet-inner mx-auto w-full max-w-sm px-4 py-6">
                 <p className="al-kicker">Dress for the fight</p>
                 <h2 className="al-title text-3xl mt-1">Customize</h2>
@@ -601,6 +604,7 @@ export function AshlaneApp() {
                         onClick={() => setPlayerEmblem(playerEmblem === emblem.id ? null : emblem.id)}
                         title={emblem.label}
                       >
+                        <FactionBanner faction={emblem.id} />
                         <FactionEmblem faction={emblem.id} size={48} />
                         <span className="al-emblem-label">{emblem.label}</span>
                       </button>
