@@ -37,3 +37,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe (Apache-2.0; keep the license notice with the icons).
 - **Notes:** The line/fill duality maps perfectly onto menu active/inactive and HUD on/off states (e.g. `volume-up-line` vs `volume-up-fill`). Neutral geometric style takes the Concrete Jungle theme well (tint + texture does the work). Largest Apache-licensed set — good default when Phosphor lacks a glyph.
 - **AshLane use:** Menu chrome icons, HUD toggles, settings glyphs (active/inactive pairs).
+
+## 5. Xelu's Controller & Keyboard Prompts
+- **URL:** https://thoseawesomeguys.com/prompts/ (official pack by Nicolae "Xelu" Berbece)
+- **What:** 600+ button/key prompt icons — Xbox 360/One/Series, PS3/PS4/PS5, Switch Pro/Joy-Con, Steam Controller, plus full keyboard keycap sets. PNG (with light/dark variants) + SVG sources. The standard free prompt set used across indie games.
+- **License:** **CC0 1.0 public domain** — the pack's bundled readme/LICENSE.txt states CC0, commercial use permitted, attribution optional. Confirmed by multiple downstream packagers shipping the unmodified LICENSE.txt (checked 2026-10-06).
+- **Verdict:** ✅ Commercial-safe (CC0 — no attribution required).
+- **Notes:** Critical for the remappable-controls work (R4 accessibility module): render the *detected pad's* glyphs (Xbox A vs PlayStation Cross vs Switch B are different buttons in the same position — see the position-not-letters rule). Keyboard keycaps cover the tutorial/tooltip layer. Light + dark variants theme with Concrete Jungle palettes.
+- **AshLane use:** Input prompts, control-remap screen, tutorial tooltips, pause-menu legends.
