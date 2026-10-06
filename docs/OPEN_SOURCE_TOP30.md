@@ -504,7 +504,7 @@ Urban-Reign-like was found — this is a gap AshLane itself fills.
   graduate from clip-blending to database search. Pairs with MediaPipe-captured custom data (§3C.2).
 - Fits: AshLane locomotion, Bannon.
 
-### 3C.2 MediaPipe — Apache-2.0 ✅
+### 3C.2 MediaPipe — Apache-2.0 ✅ ✅ WIRED (2026-10-06)
 - https://github.com/google/mediapipe
 - Google's pose estimation: 33 body landmarks, runs **in the browser via WASM** (~30fps CPU),
   Apache-2.0 models + code. (RTMPose, also Apache-2.0, is the faster alternative if we need it.)
@@ -512,6 +512,11 @@ Urban-Reign-like was found — this is a gap AshLane itself fills.
   retarget to the 58-bone skeleton. Zero-cost custom animation capture, no suits. This is the
   "generative animation" feedstock for motion matching.
 - Fits: AshLane animation pipeline, Asset Doctor.
+- **Wired:** `src/game3d/mediapipe-mocap.ts` — landmarks → 20 bone directions →
+  swing-only world-space retargeting onto any rig. Demo page at `/mocap` (webcam +
+  live character + record-to-JSON). Headless proof in `tools/mediapipe-mocap/proof/`.
+  Verified: T-pose self-delta 0.0000°, rest round-trip 0.00°, bone quaternions exact.
+  Docs: `tools/mediapipe-mocap/README.md`.
 
 ## 3D. Performance (mobile)
 
