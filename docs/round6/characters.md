@@ -134,3 +134,13 @@
 
 ---
 
+## 14. AccuRIG (Reallusion / ActorCore)
+
+- **URL:** https://actorcore.reallusion.com/auto-rig
+- **What:** Free automatic character rigger (Windows): 5-step workflow, 19 body bones + fully articulated fingers, joint masking for tricky poses (hands in pockets), pose offset correction, manual joint refinement. Exports FBX/USD/iAvatar to UE/Unity/Blender/Maya/Omniverse. AccuRIG 2.0 adds in-app browsing of 4,500+ ActorCore mocap clips to test on your rig.
+- **License:** **Freeware (lifetime free), proprietary Reallusion EULA.** Free ActorCore account required to export. Rigs you generate on your own meshes are your output. The ActorCore motion/character libraries are mostly PAID — separate purchase, not part of the free tool.
+- **Verdict:** ✅ FREE TOOL, commercial-safe as a build-time rigger (proprietary EULA, not open-source). Best free alternative to Mixamo's auto-rigger with better finger control — directly relevant to our finger-bone gap. Windows-only is the pipeline friction (run in a VM or spare box, or keep it manual-workstation-only).
+- **Notes:** Pair with our weight-transfer lane: AccuRIG for fast skeleton placement, then transfer/refine weights to the game skeleton. Don't confuse the free tool with the paid motion library.
+
+---
+
