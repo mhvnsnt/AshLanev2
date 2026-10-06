@@ -335,3 +335,29 @@ Research date: 2026-10-06.
   curate the list, don't ship defaults blind.
 
 ---
+## 18. Anti-cheat basics — server-side design (no single project)
+- **URL:** n/a — design pattern; touches Nakama (round 3), rollback checksums
+  (round 4), rate-limiter-flexible (#17)
+- **What:** For a web game, kernel-level anti-cheat (Vanguard/EAC) is off the
+  table — the defense is architecture:
+  1. **Server-authoritative everything that matters.** Nakama/Colyseus validate
+     match results, currency, unlocks. Client is a rendering terminal.
+  2. **Rollback checksums double as cheat detection** (round-4 netcode plan):
+     periodic state hashes per tick — a desync that isn't network jitter is a
+     tampered client. Log it, flag the account, require replays for disputes.
+  3. **Input sanity validation:** reject impossible inputs server-side
+     (teleport distances, inhuman APM, damage values outside move tables).
+  4. **Rate-limit + anomaly scoring:** #17's limiters on matchmaking/report
+     endpoints; statistical flags (win-rate outliers, impossible reaction times)
+     feed manual review, not auto-bans.
+  5. **Replay escrow for ranked:** top-tier ranked matches auto-upload input
+     logs (tiny — inputs @60Hz as bitmasks); disputes get deterministic replay.
+  6. **Don't fight the client binary:** WebGL/JS is inherently inspectable —
+     obfuscation buys weeks, not security. Spend the budget on 1–5.
+- **License:** n/a. **Verdict:** commercial-safe (it's our own code + already-
+  cleared libs).
+- **Notes:** Ranked integrity roadmap: launch with 1+2+3 (cheap), add 5 when
+  ranked has stakes, 4 when there's a human to review flags. False-positive bans
+  kill communities faster than cheaters do — flag, don't auto-ban.
+
+---
