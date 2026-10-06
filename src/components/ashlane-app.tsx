@@ -9,6 +9,7 @@ import { sfxBack, sfxFight, wireMenuSfx } from "@/game3d/menu-sfx";
 import { FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
 import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
+import { StreetScene, FighterSelectCard, MenuHero, ChainDivider, Sticker, SwatchBar, TapeCorners } from "@/game3d/menu-v4";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
 import type { FactionId } from "@/game3d/char-gen";
 import "@/game3d/menu-theme.css";
@@ -218,6 +219,7 @@ export function AshlaneApp() {
           {!hud.running ? (
             <div ref={sheetRef} className="sheet veil al-sheet al-sheet-clear">
               <MenuArt screen={menu} />
+              <StreetScene seed={menu === "main" ? 7 : menu === "style" ? 21 : menu === "arenas" ? 42 : 13} />
               <LaneBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
@@ -232,6 +234,8 @@ export function AshlaneApp() {
                 </p>
                 {menu === "main" ? (
                   <div className="mt-5 flex flex-col gap-2.5 al-menu-enter">
+                    <MenuHero onPick={(id) => { api.current?.setWho(id); setMenu("style"); }} />
+                    <ChainDivider label="Choose your violence" />
                     <button type="button" className="al-btn al-btn-primary al-pulse al-rise" onClick={() => setMenu("story")}>
                       <span className="al-btn-icon"><MenuIcon name="story" />Story — take the jobs</span>
                     </button>
@@ -415,13 +419,16 @@ export function AshlaneApp() {
                         </div>
                       );
                     })()}
-                    <div className="al-fighter-grid">
+                    <ChainDivider label="The roster" />
+                    <div className="v4-fighter-grid">
                       {ROSTER.map((fighter) => (
-                        <FighterCard
+                        <FighterSelectCard
                           key={fighter.id}
                           fighter={fighter}
                           selected={hud.who === fighter.name}
                           onSelect={() => api.current?.setWho(fighter.id)}
+                          factionEmblem={<FactionEmblem faction={FIGHTER_FACTIONS[fighter.id] ?? "unaffiliated"} size={18} />}
+                          stats={fighterStats(fighter.id)}
                         />
                       ))}
                     </div>
@@ -576,13 +583,15 @@ export function AshlaneApp() {
                     <button type="button" className="al-chip flex-1" data-on={hud.build === "chibi" ? "1" : undefined} onClick={() => api.current?.setBuild("chibi")}>Ward size</button>
                   </div>
                   {suiteWho === null ? (
-                    <div className="al-fighter-grid">
+                    <div className="v4-fighter-grid">
                       {ROSTER.map((fighter) => (
-                        <FighterCard
+                        <FighterSelectCard
                           key={fighter.id}
                           fighter={fighter}
                           selected={hud.who === fighter.name}
                           onSelect={() => { setSuiteWho(fighter.id); api.current?.setWho(fighter.id); }}
+                          factionEmblem={<FactionEmblem faction={FIGHTER_FACTIONS[fighter.id] ?? "unaffiliated"} size={18} />}
+                          stats={fighterStats(fighter.id)}
                         />
                       ))}
                     </div>
