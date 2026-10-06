@@ -10,3 +10,9 @@
 - **License:** MIXED. Loc's own open-content policy describes the room as "free to use and reuse motion pictures" — but per LOC, the room mixes public-domain titles with copyrighted titles included by permission (copyrighted ones are stream-only). The per-item "Rights and Access"/"Rights Advisory" statement is authoritative.
 - **Verdict:** Commercial-safe ONLY for titles whose Rights Advisory says "public domain" or "no known copyright restrictions." Per-title check required; stream-only titles are prototype-only.
 - **Notes:** Higher curation quality than archive.org; ProRes masters useful for grading. Watch underlying rights (music, underlying literary works) even on PD prints.
+## NASA Image and Video Library
+- **URL:** https://images.nasa.gov (usage terms: https://www.nasa.gov/nasa-brand-center/images-and-media/)
+- **What:** 140,000+ searchable NASA images, videos and audio (launches, missions, Earth science); multiple resolutions, downloadable caption files on videos, embed support.
+- **License:** NASA content "generally not subject to copyright in the United States" (federal). Restrictions: NASA insignia/worm/seal may NOT be used without permission; don't imply NASA endorsement; third-party material marked on NASA pages stays with its owner; identifiable people raise publicity/privacy rights.
+- **Verdict:** Commercial-safe in the US for genuine NASA-produced media with guidelines observed (no logos, no endorsement, credit NASA). Verify per item for third-party-marked content.
+- **Notes:** Complements the round-2 NASA 3D resources entry (models). Great for futuristic district interstitials and "broadcast" texture in promos.
