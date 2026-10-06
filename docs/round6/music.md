@@ -146,3 +146,30 @@ Categories: CC/royalty-free music libraries · adaptive/interactive music engine
 - **Verdict:** ✅ Commercial-safe (MIT) as a **build-time tool**.
 - **Notes:** Use offline: prompt → curate → render loops/stems at build time; ship the audio, not the model. Complements Magenta.js (different generation style). Note: the hobby repo is no longer actively maintained (the team pivoted to Producer AI) — pin a working commit/checkpoint. Generated output from our own prompts is original work.
 
+## License ledger
+
+| # | Project | License | Verdict |
+|---|---|---|---|
+| 1 | Free Music Archive | Per-track CC — use CC0/CC-BY only | ✅ Commercial-safe w/ attribution (CC-BY subset) |
+| 2 | ccMixter / dig.ccmixter.org | Mixed per track | ⚠️ Mixed — CC-BY tracks ship-safe w/ attribution; NC tracks prototype-only |
+| 3 | filmmusic.io | CC-BY 4.0 | ✅ Commercial-safe w/ attribution |
+| 4 | FreePD | CC0 1.0 | ✅ Commercial-safe, no attribution |
+| 5 | Musopen | Per-recording (PDM / CC-BY / CC-BY-NC-SA) | ⚠️ Mixed — PDM safe; CC-BY w/ attribution; NC prototype-only |
+| 6 | Mixkit Music | Mixkit Free License — **excludes games** | ❌ Do NOT ship |
+| 7 | Purple Planet Music | Royalty-free, attribution required | ✅ Commercial-safe w/ attribution |
+| 8 | TeknoAXE | CC-BY 4.0 / 3.0 per track | ✅ Commercial-safe w/ attribution |
+| 9 | Newgrounds Audio Portal | Per-artist (old default CC BY-NC-SA 3.0) | ⚠️ Prototype-only unless artist permits commercial |
+| 10 | Demucs | MIT | ✅ Commercial-safe (build-time tool) |
+| 11 | Spleeter | MIT | ✅ Commercial-safe (build-time tool) |
+| 12 | Howler.js | MIT | ✅ Commercial-safe (ship in client) |
+| 13 | Scribbletune | MIT | ✅ Commercial-safe |
+| 14 | Magenta.js | Apache-2.0 | ✅ Commercial-safe |
+| 15 | Band.js | UNVERIFIED (NOASSERTION) | ❌ Prototype-only until LICENSE confirmed |
+| 16 | libopenmpt / chiptune.js | BSD-3 / MIT | ✅ Commercial-safe (ship in client) |
+| 17 | Meyda | MIT | ✅ Commercial-safe (ship in client) |
+| 18 | FMOD Studio | Proprietary | ❌ Prototype-only (paid license for commercial) |
+| 19 | LMMS | GPL-2.0 tool; output is composer's own | ✅ Commercial-safe (original compositions) |
+| 20 | Riffusion | MIT | ✅ Commercial-safe (build-time tool) |
+
+**Standing rules carried forward:** CC-BY = ship with attribution on the credits screen. Non-commercial = prototype-only, never ship. GPL/AGPL tools may be used at build time only, never bundled in the game client. Re-verify every license before shipping.
+
