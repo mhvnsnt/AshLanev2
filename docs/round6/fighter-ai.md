@@ -63,3 +63,21 @@ checked 2026-10-06. Re-verify before shipping.
   like "PinOpponent" decompose into IrishWhip -> Grapple -> Slam -> Pin.
   Tiny codebase = easy to audit and fork for frame-budget planning
   (plan once per N frames, cache).
+
+---
+
+## ddap (Desire-Driven Adaptive Planning)
+
+- **URL:** https://github.com/TandemWolf/ddap
+- **What:** TypeScript GOAP library with optimized A* search, plan caching,
+  early termination, priority queues, desire hierarchies (multi-tier goal
+  priorities), skill-progression system, batch async agent management, and
+  debug tooling for plan inspection. Claims <1ms tick for simple agents.
+  `npm install ddap`.
+- **License:** MIT (GitHub API: MIT).
+- **Verdict:** commercial-safe.
+- **Notes:** The heavier, production-flavored alternative to goap-minimal.
+  Desire hierarchies map directly to a fighting game: survival > damage >
+  style/heat. AshLane use: boss AI that re-plans mid-fight (goal shifts from
+  "DealDamage" to "Survive" below 30% HP), tag partners with assist desires.
+  Plan caching matters on mobile — budget planning to every Nth frame.
