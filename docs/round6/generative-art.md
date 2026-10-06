@@ -125,3 +125,11 @@ Research-only wave: a REAL generative 2D-art pipeline for AshLane (Urban Reign/D
 - **License:** **CC0-1.0** (LICENSE file — the *drawings* are public domain).
 - **Verdict:** **commercial-safe** (CC0) — with the standard trademark caveat: CC0 covers copyright in the icon artwork, not trademark rights in the brand. Fine for UI/social icons; don't imply endorsement.
 - **Notes:** AshLane use: menu/social icons, settings-screen glyphs, fake in-world brand parodies (remixed, not verbatim — parody marks get redrawn through vtracer anyway). The per-icon brand hex colors double as reference palettes. Pairs with the Round-2 game-icons.net set (CC-BY, needs attribution) — simple-icons needs none.
+
+## Pixelorama
+
+- **URL:** https://github.com/Orama-Interactive/Pixelorama
+- **What:** Full-featured open-source pixel-art editor (Godot-based): animation timeline, onion skinning, layers, palette management, indexed color mode, tilemap editing. The practical free alternative to Aseprite for sprite work.
+- **License:** **MIT** (LICENSE file).
+- **Verdict:** **commercial-safe** — MIT tool; art we make in it is ours, no strings.
+- **Notes:** AshLane use: hand-authored pixel sprites for HUD icons, retro mini-game segments, loading-screen pixel art, and cleaning up AI-generated sprite drafts. The indexed-palette workflow pairs with the graffiti pipeline (limit a piece to 8 faction colors → instant sticker-sheet look). Runs on the owner's machine at zero cost; project files are open formats.
