@@ -184,7 +184,7 @@ export interface RetargetOptions {
   keepName?: boolean;
 }
 
-function collectRest(root: THREE.Object3D) {
+export function collectRest(root: THREE.Object3D) {
   const quats = new Map<string, THREE.Quaternion>();
   const names: string[] = [];
   root.traverse((obj) => {
