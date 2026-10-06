@@ -61,3 +61,11 @@ AshLane menu direction ("Concrete Jungle"): street-art kit — graffiti logo, te
 - **Verdict:** ✅ Commercial-safe as reference + MIT code; screenpack art = CC-BY (attribute or redraw).
 - **Notes:** The highest-value artifact is the screenpack *system*: every screen is a declarative layout (positions, fonts, animations, state transitions) — exactly the architecture AshLane's menu kit needs. Study: character-select grid flow, versus-screen animation timing, lifebar/combo-counter anchoring, round-announcement sequencing. Redraw all art in Concrete Jungle style; borrow the structure, not the pixels.
 - **AshLane use:** Fighting-game UI architecture reference — character select, versus screen, HUD layout, screenpack data-driven UI pattern.
+
+## 8. Game UI Database
+- **URL:** https://www.gameuidatabase.com — by Edd Coates (Double Eleven senior UI artist); also the book *The Game UI Bible* (Lost In Cult).
+- **What:** 80,000+ game UI screenshots (v2.0, 1,000+ games), filterable by screen type (title screen, character select, HUD, pause, results…), UI elements, textures, patterns, color, animation. Search "fighting" for Tekken/Street Fighter/MK screen teardowns.
+- **License:** **Reference-only** — screenshots are copyrighted by their respective games. Look, study, take notes; **do not lift art**.
+- **Verdict:** ⚠️ Research-only by nature (inspiration, not assets). No license to record — nothing ships from here.
+- **Notes:** The fastest way to answer "how does Tekken 8 lay out its character select?" or "how do fighting games stage versus screens?" with real pixels. Pair with #7 (Ikemen GO) — Game UI Database shows the *what*, Ikemen shows the *how*. Especially useful for the Concrete Jungle theme pass: filter by textures/materials (concrete, graffiti, metal) to see how shipped games dress street-style UI.
+- **AshLane use:** UI/UX research — character select, versus screens, HUD layouts, street-style menu dressing from shipped fighters.
