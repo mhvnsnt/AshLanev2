@@ -1,0 +1,4 @@
+asset: qwantani_afternoon_2k.hdr
+license: CC0-1.0
+source: https://polyhaven.com/
+fetched: 2026-10-06T20:30:41Z

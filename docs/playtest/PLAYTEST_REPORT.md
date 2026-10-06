@@ -76,3 +76,94 @@ STORY button (`01-main-menu.png`).
 3. Remove HUD debug strings ("commit…", "DROPPED").
 4. Fix SSR hydration mismatch.
 5. Then re-playtest with real rigs + animations and judge animation quality.
+## 2026-10-06 — automated harness run (2026-10-06-2117)
+
+**Verdict:** FAIL — 0/1 steps passed, 1 JS errors, 0 failed requests.
+
+| Step | Result | Detail |
+|---|---|---|
+| harness completed | FAIL | page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL
+Call log:
+  - navigating to "--no-build/", wai |
+
+- Combat pixel-diff: undefined
+- Roam pixel-diff: undefined
+- Ragdoll KO proof: null
+- JS errors:
+  - HARNESS: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL
+Call log:
+  - navigating to "--no-build/", waiting until "domcontentloaded"
+
+- Failed requests: none
+
+Captures: `docs/playtest/2026-10-06-2117/` (01-menu … 07-ragdoll-ko.png + playtest.webm)
+
+## 2026-10-06 — automated harness run (2026-10-06-2117)
+
+**Verdict:** FAIL — 0/2 steps passed, 2 JS errors, 1 failed requests.
+
+| Step | Result | Detail |
+|---|---|---|
+| boot: menu renders | FAIL | 1 js errors |
+| harness completed | FAIL | locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Fighters' }).first()
+ |
+
+- Combat pixel-diff: undefined
+- Roam pixel-diff: undefined
+- Ragdoll KO proof: null
+- JS errors:
+  - CONSOLE: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED
+  - HARNESS: locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Fighters' }).first()
+
+- Failed requests:
+  - GET https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@500;600;700&family=Silkscreen:wght@400;700&display=swa :: net::ERR_TUNNEL_CONNECTION_FAILED
+
+Captures: `docs/playtest/2026-10-06-2117/` (01-menu … 07-ragdoll-ko.png + playtest.webm)
+
+## 2026-10-06 — automated harness run (2026-10-06-2119)
+
+**Verdict:** FAIL — 0/4 steps passed, 2 JS errors, 0 failed requests.
+
+| Step | Result | Detail |
+|---|---|---|
+| boot: menu renders | FAIL | 1 js errors |
+| menu -> fighter select | FAIL |  |
+| fighter select -> pick fighter | FAIL |  |
+| harness completed | FAIL | only RGBA PNG supported, got colorType 2 |
+
+- Combat pixel-diff: undefined
+- Roam pixel-diff: undefined
+- Ragdoll KO proof: null
+- JS errors:
+  - CONSOLE: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED
+  - HARNESS: only RGBA PNG supported, got colorType 2
+- Failed requests: none
+
+Captures: `docs/playtest/2026-10-06-2119/` (01-menu … 07-ragdoll-ko.png + playtest.webm)
+
+## 2026-10-06 — automated harness run (2026-10-06-2144)
+
+**Verdict:** FAIL — 4/6 steps passed, 1 JS errors, 0 failed requests.
+
+| Step | Result | Detail |
+|---|---|---|
+| boot: menu renders | FAIL | 1 js errors |
+| menu -> fighter select | PASS |  |
+| fighter select -> pick fighter | PASS | BannonPOWSPDTGH |
+| combat: canvas animates on input | PASS | 18728 px changed (5.69%) (threwDown clicked: null) |
+| roam: canvas animates on input | PASS | 113673 px changed (34.53%) (roam clicked: Cinder Ward) |
+| ragdoll-demo: fighter KO'd with Rapier ragdoll | FAIL | displaced=0.00 err=route /ragdoll-demo not in this build (stale PWA?) — rebuild to include it |
+
+- Combat pixel-diff: {"changed":18728,"pct":5.69}
+- Roam pixel-diff: {"changed":113673,"pct":34.53}
+- Ragdoll KO proof: {"ok":false,"displaced":0,"error":"route /ragdoll-demo not in this build (stale PWA?) — rebuild to include it"}
+- JS errors:
+  - CONSOLE: Failed to load resource: net::ERR_TIMED_OUT
+- Failed requests: none
+
+Captures: `docs/playtest/2026-10-06-2144/` (01-menu … 07-ragdoll-ko.png + playtest.webm)
+

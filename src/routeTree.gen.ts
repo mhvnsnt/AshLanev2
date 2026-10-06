@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MocapRouteImport } from './routes/mocap'
+import { Route as RagdollDemoRouteImport } from './routes/ragdoll-demo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const MocapRoute = MocapRouteImport.update({
   path: '/mocap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RagdollDemoRoute = RagdollDemoRouteImport.update({
+  id: '/ragdoll-demo',
+  path: '/ragdoll-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mocap': typeof MocapRoute
+  '/ragdoll-demo': typeof RagdollDemoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mocap': typeof MocapRoute
+  '/ragdoll-demo': typeof RagdollDemoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/mocap': typeof MocapRoute
+  '/ragdoll-demo': typeof RagdollDemoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mocap'
+  fullPaths: '/' | '/mocap' | '/ragdoll-demo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mocap'
-  id: '__root__' | '/' | '/mocap'
+  to: '/' | '/mocap' | '/ragdoll-demo'
+  id: '__root__' | '/' | '/mocap' | '/ragdoll-demo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MocapRoute: typeof MocapRoute
+  RagdollDemoRoute: typeof RagdollDemoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MocapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ragdoll-demo': {
+      id: '/ragdoll-demo'
+      path: '/ragdoll-demo'
+      fullPath: '/ragdoll-demo'
+      preLoaderRoute: typeof RagdollDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MocapRoute: MocapRoute,
+  RagdollDemoRoute: RagdollDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

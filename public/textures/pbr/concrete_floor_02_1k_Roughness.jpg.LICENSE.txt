@@ -1,0 +1,4 @@
+asset: concrete_floor_02_1k_Roughness.jpg
+license: CC0-1.0
+source: https://polyhaven.com/
+fetched: 2026-10-06T20:28:55Z

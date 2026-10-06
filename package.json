@@ -18,9 +18,11 @@
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/game3d/round6-ai.test.ts",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "playtest": "node scripts/playtest.mjs"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.21.0",
     "@electric-sql/pglite": "^0.5.4",
     "@heroiclabs/nakama-js": "^2.8.0",
     "@hookform/resolvers": "^5.7.0",
