@@ -93,3 +93,92 @@ and reversals all respect regions.
 - Throw/smash opponents into **cars, crates, shelves, tables** for bonus damage.
 - Wall run → flip-off kick for agile characters.
 - Big open arenas (alleys, car parks), not tiny rings.
+
+---
+
+## 2. TEKKEN 1–8 (Namco/Bandai Namco, 1994–2024)
+
+### 2.1 The state machine, evolved
+
+**T1–T3: the foundation.** Neutral, high/low block (hold back / down-back),
+sidestep (introduced T3), 10-hit strings, basic juggles from launchers.
+Throws: 1-break / 2-break by input. Ground game: face-up / face-down,
+getup kicks (3 = low, 4 = mid), tech rolls.
+
+**T4: walls and positioning.** First walled stages. Uneven terrain. The wall
+game begins — positioning becomes a resource.
+
+**T5: juggle refinement.** Juggle finishers that "spike" the opponent into the
+ground (no tech roll). Crush system matures: high-crush and low-crush moves
+evade specific heights. Stances deepen.
+
+**T6: Bound (B!).** Hitting an airborne opponent with a Bound move slams them
+groundward and *re-extends* the juggle — the combo continues after a
+ground spike. Rules: **one Bound per combo**; low parries also cause Bound.
+Breakable floors/walls: slamming through a floor drops both fighters to a
+lower level and the combo can continue. Wall splat (W!): knockback into wall
+→ opponent stuck → ~3 follow-up hits by speed (fast mids get more).
+
+**TTT2:** Tag Assault extends Bound combos with partner; rage (comeback damage
+buff at low HP).
+
+**T7: Screw (Tornado).** Bound replaced by Screw — airborne opponent spins
+(tailspin), thrown *backward* instead of downward. Consequences: Screw does
+not work next to walls, cannot cause floor breaks. **Once per combo.** Rage
+Art (armored cinematic super, one input for all characters) and Rage Drive
+(enhanced move) as comeback mechanics. Power crush (armor through attacks).
+Screw lost if the move was already used as a wall/balcony break.
+
+**T8: Heat + Tornado.** Screw renamed Tornado. The **Heat system**: 10-second
+aggression window (blue flames), activated by Heat Burst (power crush, +1 on
+block) or Heat Engagers (auto-dash to opponent on hit). During Heat: chip
+damage on *every* attack, enhanced moves per character, Heat Smash (consumes
+all Heat, big damage, can trigger Hard Wall/Floor Break in one hit).
+Recoverable health (white bar refills by landing hits, adapted from Tag).
+Rage Art stays (unified input). **Hard Floor Break** (new): needs two hits
+instead of one. Wall Blast / Floor Blast stage gimmicks.
+
+### 2.2 Sub-state catalog (applies across the series)
+
+| State | Notes |
+|---|---|
+| **Standing block** | Hold back; blocks highs/mids, chip damage |
+| **Crouch block** | Down-back; blocks lows, vulnerable to mids |
+| **Sidestep (SSL/SSR)** | T3+; evades linear moves, loses to homing |
+| **Crush** | Move-specific: high-crush beats highs, low-crush beats lows |
+| **Counter hit (CH)** | Hitting during opponent's startup → bonus damage/frames, some moves gain launcher properties only on CH |
+| **Launcher** | Puts opponent airborne → juggle |
+| **Juggle** | Airborne combo; damage scales per hit |
+| **Bound (T6/TT2)** | Ground-spike re-extends juggle; 1/combo |
+| **Screw/Tornado (T7/T8)** | Tailspin re-extends juggle; 1/combo; no wall/floor interaction |
+| **Wall splat (W!)** | Knockback into wall → stuck, ~3 follow-up hits |
+| **Wall break** | Strong impact on splatted opponent → wall breaks, extra hits, new area |
+| **Balcony break** | Knock through railing → drop to lower level, combo continues |
+| **Floor break** | Slam down → floor breaks, both drop, combo continues |
+| **Hard floor break (T8)** | Two hits required |
+| **Ground: face up / face down** | Different getup options each |
+| **Tech roll** | Quick ground recovery, direction choice |
+| **Getup kicks** | 3 (low) / 4 (mid) from ground; punishable |
+| **Spring kick** | b+3+4 or f+1+2; fast wakeup attack, punishable on whiff |
+| **Toe kick (d+4)** | Tiny ground poke, very negative — a trap option |
+| **Throw break** | 1 or 2 input at grab moment |
+| **Low parry** | d/f on low → Bound (T6+) / spike |
+| **Power crush** | Armor through mids/highs while attacking |
+| **Rage** | Low-HP damage buff (T6–T7), then Rage Art/Drive |
+| **Heat (T8)** | 10s aggression state, chip on everything, Heat Smash finisher |
+| **Recoverable HP (T8)** | White bar; landing hits refills it |
+
+### 2.3 The "one of each" combo grammar
+
+Tekken combos read as: **launcher → filler → extender (Bound/Screw/Tornado,
+once) → ender**, with optional **wall carry → wall splat → wall combo** and
+optional **break (wall/floor/balcony)**. Each extender is a *single-use token*
+per combo — the design lesson is *scarcity creates routing decisions*.
+
+### 2.4 Okizeme (wake-up game)
+
+The downed opponent chooses: stay down (can't be re-launched), tech roll
+(direction), getup kick (3/4), spring kick, stand up. The attacker chooses:
+meaty (hit on wakeup), whiff-punish the getup kick, re-splat, back off.
+Grounded opponents cannot be launched — this single rule shapes the entire
+ground game.
