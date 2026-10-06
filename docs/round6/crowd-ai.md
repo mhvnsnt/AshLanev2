@@ -87,3 +87,10 @@
 - **License:** MIT (npm registry metadata — verify the LICENSE file in the repo before shipping)
 - **Verdict:** commercial-safe (pending license-file verification)
 - **Notes:** Entity management for hundreds of ambient NPCs, pedestrians, and vehicles: query archetypes per frame without framework overhead. Keep authoritative sim truth in flat data (per the R5 netcode determinism notes) — ECS owns the drawn things, not the rollback state.
+
+## three-mesh-bvh
+- **URL:** https://github.com/gkjohnson/three-mesh-bvh
+- **What:** Bounding Volume Hierarchy for three.js: accelerated raycasting (500 rays vs 80k-poly mesh at 60fps per their benchmark), shapecast, sphere/distance queries, serialization, WebWorker generation, BatchedMesh support.
+- **License:** MIT (repo page license field, LICENSE file at root)
+- **Verdict:** commercial-safe
+- **Notes:** The NPC perception backbone: line-of-sight checks for Yuka vision components, "can this pedestrian see the fight", awareness raycasts against district geometry. Without it, per-NPC raycasts against city meshes don't scale. Also accelerates hit detection against crowds.
