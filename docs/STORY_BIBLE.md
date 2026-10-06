@@ -275,3 +275,21 @@ The Painted (Onyx's gang) has SECRET leaders behind the scenes:
 Faces shrouded, glowing eyes only. They are NOT called 'Shadow Wizard Money Gang' in-game — that's the visual inspiration, not the name.
 
 **These secrets must NEVER appear in:** menus, roster UI, HUD, character select, or any player-facing text. Writers and story scripts only.
+
+## KG Mudo — 9th Robed Council Member (OCCASIONAL)
+
+Based on Great Muta / Keiji Muto. NOT a permanent council member — appears only sometimes.
+
+**The Attire:**
+- Multicolored spray-painted dragon tights (vibrant, many colors)
+- White fur coat/jacket with fringe
+- Reference: docs/art-refs/kg-mudo/
+
+**The Wizard Form:**
+- White fur robe (instead of the coat)
+- Face shrouded like other council members
+- When revealed: NO face paint — gray beard, older Keiji Muto look
+- You won't know it's him until the reveal
+
+**Plot function:** Mystery member. His identity is a reveal moment.
+
