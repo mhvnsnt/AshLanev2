@@ -17,6 +17,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { repairSkinWeights, NEEDS_RESKIN } from './reskin.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { loadMotionBanks, makeCastDirector } from './faction-motion.js';
+import { asphaltMaterial, concreteMaterial, brickBuildingMaterial, windowGridTexture } from './env-textures.js';
 
 const DUR = 50;
 const W = window.innerWidth || 1920, H = window.innerHeight || 1080;
@@ -35,15 +36,32 @@ scene.fog = new THREE.FogExp2(0x030308, 0.045);
 const camera = new THREE.PerspectiveCamera(42, W / H, 0.05, 120);
 
 // ================= STREET ENVIRONMENT =================
-// Wet asphalt
+// Wet asphalt — CC0 PBR (Poly Haven asphalt_03)
 const asphalt = new THREE.Mesh(
   new THREE.PlaneGeometry(30, 70),
-  new THREE.MeshStandardMaterial({ color: 0x0b0b10, roughness: 0.35, metalness: 0.55 })
+  asphaltMaterial(3, 8)
 );
 asphalt.rotation.x = -Math.PI / 2;
 asphalt.position.z = -10;
 asphalt.receiveShadow = true;
 scene.add(asphalt);
+
+// Concrete sidewalks (CC0 PBR) flanking the street
+for (const sx of [-1, 1]) {
+  const walk = new THREE.Mesh(
+    new THREE.PlaneGeometry(4.5, 70),
+    concreteMaterial(1.5, 10)
+  );
+  walk.rotation.x = -Math.PI / 2;
+  walk.position.set(sx * 8.2, 0.02, -10);
+  walk.receiveShadow = true;
+  scene.add(walk);
+  // curb
+  const curb = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, 70), concreteMaterial(0.5, 12));
+  curb.position.set(sx * 5.85, 0.11, -10);
+  curb.castShadow = true; curb.receiveShadow = true;
+  scene.add(curb);
+}
 
 // Center dashes
 const dashMat = new THREE.MeshBasicMaterial({ color: 0x8a7a2a });
@@ -54,36 +72,19 @@ for (let z = 12; z > -34; z -= 4) {
   scene.add(dash);
 }
 
-// Buildings (both sides) with lit windows via canvas texture
-function buildingTexture(litRatio, hue) {
-  const c = document.createElement('canvas'); c.width = 128; c.height = 256;
-  const g = c.getContext('2d');
-  g.fillStyle = '#0a0a0f'; g.fillRect(0, 0, 128, 256);
-  for (let y = 8; y < 248; y += 22) {
-    for (let x = 8; x < 120; x += 20) {
-      const lit = Math.random() < litRatio;
-      g.fillStyle = lit ? hue : '#111118';
-      g.fillRect(x, y, 12, 14);
-    }
-  }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
-  t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  return t;
-}
-const bTexA = buildingTexture(0.28, '#ffd9a0');
-const bTexB = buildingTexture(0.18, '#9fd8ff');
-const bMatA = new THREE.MeshStandardMaterial({ map: bTexA, roughness: 0.9 });
-const bMatB = new THREE.MeshStandardMaterial({ map: bTexB, roughness: 0.9 });
+// Buildings (both sides) — CC0 PBR brick facades (Poly Haven red_brick_03)
+// with emissive lit-window grids so windows actually glow.
+const winTexA = windowGridTexture(0.3);
+const winTexB = windowGridTexture(0.18);
+const bMatA = brickBuildingMaterial(winTexA, 0xffc37a, 2, 3);
+const bMatB = brickBuildingMaterial(winTexB, 0x9fd8ff, 2, 3);
 let bi = 0;
 for (let z = 14; z > -36; z -= 10) {
   for (const sx of [-1, 1]) {
     const h = 9 + Math.random() * 14, w = 8 + Math.random() * 3;
-    const tex = ((bi++ % 2) ? bTexA : bTexB).clone();
-    tex.needsUpdate = true;
-    tex.repeat.set(Math.max(1, Math.round(w / 5)), Math.max(1, Math.round(h / 5)));
-    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 9),
-      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9 }));
+    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 9), (bi++ % 2) ? bMatA : bMatB);
     b.position.set(sx * (9.5 + Math.random() * 2), h / 2, z + (Math.random() - 0.5) * 2);
+    b.castShadow = true; b.receiveShadow = true;
     scene.add(b);
   }
 }

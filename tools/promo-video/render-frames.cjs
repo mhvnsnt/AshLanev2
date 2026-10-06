@@ -36,6 +36,8 @@ function serve(page) {
       else if (urlPath.startsWith('/models/')) filePath = path.join(MODELS_DIR, urlPath.slice(8));
       else if (urlPath.startsWith('/motion/')) filePath = path.join(HERE, '..', '..', 'public', 'motion', urlPath.slice(8));
       else if (urlPath.startsWith('/node_modules/')) filePath = path.join(RENDERER_NODE_MODULES, urlPath.slice(14));
+      else if (urlPath === '/env-textures.js') filePath = path.join(HERE, 'env-textures.js');
+      else if (urlPath.startsWith('/textures/')) filePath = path.join(HERE, '..', '..', 'public', 'textures', urlPath.slice(10));
       else { res.writeHead(404); res.end('nf'); return; }
       fs.readFile(filePath, (err, data) => {
         if (err) { res.writeHead(404); res.end('nf: ' + urlPath); return; }

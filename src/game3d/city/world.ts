@@ -27,6 +27,7 @@ import {
 } from "./territory";
 import { buildUnderground, type Underground } from "./underground";
 import { buildCitySky, type CitySky } from "./city-sky";
+import { asphaltMaterial } from "../env-textures";
 
 export interface CityDistrictInstance {
   id: CityDistrictId;
@@ -250,7 +251,7 @@ function buildConnectors(
   group: THREE.Group,
   colliders: Collider[]
 ): void {
-  const roadMat = new THREE.MeshLambertMaterial({ color: 0x232326 });
+  const roadMat = asphaltMaterial(2, 8);
   const pairs: [CityDistrictId, CityDistrictId][] = [
     ["projects", "neon-district"], ["neon-district", "marquee-mile"],
     ["neon-district", "industrial"], ["neon-district", "waterfront"],
