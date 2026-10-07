@@ -10,6 +10,9 @@ import { FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
 import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
+import { getSelectableArenas } from "@/game3d/stages/arena-manifest";
+import { CITY_DISTRICTS, CITY_DISTRICT_IDS } from "@/game3d/city/districts";
+import { assetUrl } from "@/game3d/asset-base";
 import type { FactionId } from "@/game3d/char-gen";
 import "@/game3d/menu-theme.css";
 
@@ -73,7 +76,11 @@ function fighterStats(id: string): { pow: number; spd: number; tgh: number } {
   };
 }
 
-const ARENAS: { id: string; label: string; note: string }[] = [
+/* All 51 arenas from the arena manifest (src/game3d/stages/arena-manifest.ts),
+   grouped by open-world district on the arenas menu. */
+const SELECTABLE_ARENAS = getSelectableArenas();
+
+const ARENAS_LEGACY: { id: string; label: string; note: string }[] = [
   { id: "ward", label: "Cinder ward", note: "The whole lane." },
   { id: "dock", label: "Dock", note: "Blue rain. You see less of the street." },
   { id: "pit", label: "Pit", note: "Warm lamps. The fog sits low." },
@@ -282,23 +289,54 @@ export function AshlaneApp() {
                 ) : null}
                 {menu === "arenas" ? (
                   <div className="mt-4 flex flex-col gap-2.5">
-                    <div className="al-section"><span className="al-section-title">Pick a block</span></div>
-                    <p className="text-sm text-cream-dim">Exhibition and Practice use a ring in the middle of it. Ward still walks the whole lane.</p>
-                    {ARENAS.map((place, i) => (
-                      <button
-                        key={place.id}
-                        type="button"
-                        data-on={arena === place.id ? "1" : undefined}
-                        className={`al-card al-rise al-rise-${Math.min(i + 1, 5)}`}
-                        onClick={() => setArena(place.id)}
-                      >
-                        <span className="al-card-title">
-                          {place.label}
-                          {arena === place.id ? " — locked in" : ""}
-                        </span>
-                        <span className="al-card-sub">{place.note}</span>
-                      </button>
-                    ))}
+                    <div className="al-section"><span className="al-section-title">Pick a block — {SELECTABLE_ARENAS.length} arenas</span></div>
+                    <p className="text-sm text-cream-dim">Exhibition and Practice fight on the picked arena. Every arena is anchored in the open world — the hook under each card says where it shows up.</p>
+                    {CITY_DISTRICT_IDS.map((d) => {
+                      const list = SELECTABLE_ARENAS.filter((a) => a.district === d);
+                      if (list.length === 0) return null;
+                      return (
+                        <div key={d}>
+                          <div className="al-section"><span className="al-section-title">{CITY_DISTRICTS[d].name}</span></div>
+                          <div className="al-arena-grid">
+                            {list.map((a) => (
+                              <button
+                                key={a.id}
+                                type="button"
+                                data-on={arena === a.id ? "1" : undefined}
+                                className="al-card"
+                                onClick={() => setArena(a.id)}
+                              >
+                                <img src={assetUrl(a.art)} alt={a.name} className="al-arena-thumb" loading="lazy" />
+                                <span className="al-card-title">
+                                  {a.name}
+                                  {arena === a.id ? " — locked in" : ""}
+                                </span>
+                                <span className="al-card-sub">{a.area} · {a.blurb}</span>
+                                <span className="al-card-sub al-arena-hook">{a.hook}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div className="al-section"><span className="al-section-title">Classic blocks</span></div>
+                    <div className="al-arena-grid">
+                      {ARENAS_LEGACY.map((place) => (
+                        <button
+                          key={place.id}
+                          type="button"
+                          data-on={arena === place.id ? "1" : undefined}
+                          className="al-card"
+                          onClick={() => setArena(place.id)}
+                        >
+                          <span className="al-card-title">
+                            {place.label}
+                            {arena === place.id ? " — locked in" : ""}
+                          </span>
+                          <span className="al-card-sub">{place.note}</span>
+                        </button>
+                      ))}
+                    </div>
                     <button type="button" className="al-btn al-btn-primary" onClick={() => api.current?.startBout("exhibit", arena)}>
                       <span>Exhibition here</span>
                     </button>

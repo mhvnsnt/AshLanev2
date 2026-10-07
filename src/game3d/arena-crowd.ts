@@ -11,11 +11,12 @@
  */
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { CROWD_ARENA_IDS } from "./stages/arena-manifest";
 
 export type CrowdReaction = "hit" | "knockdown" | "ko" | "round";
 
 /** Stage ids that get the tiered-stands arena crowd (see applyStage in view.ts). */
-export const ARENA_STAGES = ["pit"] as const;
+export const ARENA_STAGES: readonly string[] = ["pit", ...CROWD_ARENA_IDS];
 
 const CLOTHING = [
   0xe4572e, 0x5c6b73, 0x3e5c4a, 0x6a3a4a, 0x3a465c, 0xd9a441, 0x7a4a8c,
