@@ -40,6 +40,18 @@ const HALLOWEEN_PROPS = [
   // ... 26 total in public/models/seasonal/halloween/
 ] as const;
 
+/** Christmas prop models (CC0, Polygonal Mind via open-source-3d-assets registry). */
+const CHRISTMAS_PROPS = [
+  "xmastree.glb", "minitree.glb",
+  "wreath01.glb", "wreath02.glb", "wreath03.glb", "wreath04.glb", "wreaths05.glb",
+  "present01.glb", "present02.glb", "present03.glb",
+  "presentsackxmas01.glb", "presentsackxmas02.glb",
+  "lights01.glb", "lights02.glb", "lamp01.glb",
+  "candle.glb", "fireplace.glb",
+  "candycane.glb", "snowball.glb", "star.glb",
+  "sockxmas.glb", "noelcap.glb",
+] as const;
+
 export const SEASONAL_SETS: readonly SeasonalSet[] = [
   {
     id: "halloween",
@@ -50,8 +62,8 @@ export const SEASONAL_SETS: readonly SeasonalSet[] = [
   {
     id: "christmas",
     label: "Christmas",
-    months: [11], // December — props hunted in the next parts wave
-    props: [],
+    months: [11], // December only
+    props: CHRISTMAS_PROPS.map((f) => `models/seasonal/christmas/${f}`),
   },
 ];
 

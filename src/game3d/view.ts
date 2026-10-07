@@ -30,6 +30,7 @@ import {
 import { buildSky, applySkyLights, type BuiltSky, type DistrictId } from "./sky";
 import { assetUrl } from "./asset-base";
 import { BRAWLERS, brawlerUrl } from "./brawlers";
+import { activeSeasonalPropUrls } from "./seasonal";
 // Round 3 visuals: post-processing chain, GPU impact particles, arena crowd.
 import { PostFx, graphics } from "./postfx";
 import { ImpactParticles } from "./impact-particles";
@@ -403,6 +404,31 @@ export function createView(canvas: HTMLCanvasElement) {
     ward: "alleys", dock: "strip", pit: "alleys",
     high: "rooftops", yard: "warehouses", under: "subway",
   };
+  // Seasonal decorations (owner 2026-10-07, GTA-style): month-gated props.
+  const seasonalGroup = new THREE.Group();
+  scene.add(seasonalGroup);
+  function refreshSeasonal() {
+    // Clear previous season's props
+    for (const child of [...seasonalGroup.children]) {
+      seasonalGroup.remove(child);
+    }
+    const urls = activeSeasonalPropUrls();
+    if (!urls.length) return;
+    // Place a few props in a loose ring around the arena (deterministic)
+    const n = Math.min(urls.length, 8);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const r = 14 + (i % 3) * 4;
+      const url = urls[i % urls.length];
+      loader.loadAsync(url).then((gltf) => {
+        const obj = gltf.scene;
+        obj.position.set(Math.cos(a) * r, 0, Math.sin(a) * r);
+        obj.rotation.y = a + Math.PI / 2;
+        seasonalGroup.add(obj);
+      }).catch(() => { /* seasonal prop optional — never break the stage */ });
+    }
+  }
+
   function applyStage(id: string) {
     if (id === stageId) return;
     stageId = id;
@@ -452,6 +478,8 @@ export function createView(canvas: HTMLCanvasElement) {
     groundMat.map = floor;
     groundMat.color.setHex(0xffffff);
     groundMat.needsUpdate = true;
+    // Seasonal decorations refresh with each stage
+    refreshSeasonal();
   }
 
   /**
