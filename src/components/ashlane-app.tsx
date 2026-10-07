@@ -15,8 +15,14 @@ import {
   ComboBadge,
   EmblemImage,
   EmblemPickerGrid,
+  MapMarker,
 } from "@/components/ui-art-components";
 import { ConceptGallery } from "@/components/concept-gallery";
+import { UI_ART } from "@/game3d/ui-art";
+
+function art(key: keyof typeof UI_ART): string {
+  return assetUrl(UI_ART[key]);
+}
 import { getSelectableArenas } from "@/game3d/stages/arena-manifest";
 import { CITY_DISTRICTS, CITY_DISTRICT_IDS } from "@/game3d/city/districts";
 import { assetUrl } from "@/game3d/asset-base";
@@ -225,7 +231,12 @@ export function AshlaneApp() {
           {hud.running && hud.splash ? <VsSplash onSkip={() => api.current?.clearSplash()} /> : null}
           {hud.running && hud.banner ? <p className="al-banner pointer-events-none absolute inset-x-0 top-4 text-center text-xl">{hud.banner}</p> : null}
           {playing && hud.face ? <p className="pointer-events-none absolute inset-x-0 top-12 text-center font-display text-xs uppercase tracking-widest text-cream">{hud.face}</p> : null}
-          {hud.combo > 1 && playing ? <p className="al-title pointer-events-none absolute right-4 top-4 text-2xl text-ember">{hud.combo} HIT</p> : null}
+          {hud.combo > 1 && playing ? (
+            <div className="pointer-events-none absolute right-4 top-4 flex flex-col items-center">
+              <ComboBadge count={hud.combo} />
+              <span className="al-title text-2xl text-ember">{hud.combo} HIT</span>
+            </div>
+          ) : null}
           {playing && hud.flow > 8 ? <p className="pointer-events-none absolute right-4 top-12 al-hud-chip">FLOW {hud.flow}</p> : null}
           {playing ? (
             <p className="pointer-events-none absolute bottom-3 left-4 max-w-[70%] text-sm text-cream-dim">{objective(hud)}</p>
@@ -237,7 +248,7 @@ export function AshlaneApp() {
               <LaneBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
-                  <AshlaneTag variant="red" />
+                  <img src={art("logo-main")} alt="AshLane" className="al-logo-art" />
                   <p className="al-logo-sub">
                     <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
@@ -304,7 +315,12 @@ export function AshlaneApp() {
                       if (list.length === 0) return null;
                       return (
                         <div key={d}>
-                          <div className="al-section"><span className="al-section-title">{CITY_DISTRICTS[d].name}</span></div>
+                          <div className="al-section">
+                            <span className="al-section-title flex items-center gap-2">
+                              <MapMarker kind="arena" size={20} />
+                              {CITY_DISTRICTS[d].name}
+                            </span>
+                          </div>
                           <div className="al-arena-grid">
                             {list.map((a) => (
                               <button
@@ -876,7 +892,10 @@ function FighterCard({
       aria-label={`Select ${fighter.name}`}
     >
       <span className="al-fc-portrait" aria-hidden="true">
-        <FighterPortrait fighterId={fighter.id} name={fighter.name} faction={faction} size={148} />
+        <span className="al-fc-frame">
+          <img src={art("frame-chain")} alt="" aria-hidden="true" className="al-fc-frame-img" />
+          <FighterPortrait fighterId={fighter.id} name={fighter.name} faction={faction} size={148} />
+        </span>
       </span>
       <span className="al-fc-body">
         <span className="al-fc-name">{fighter.name}</span>

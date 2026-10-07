@@ -104,6 +104,12 @@ export function LoadingArt() {
   return (
     <div className="al-loading-art" aria-hidden="true">
       <img src={menuArtUrl("menu/menu-loading.webp")} alt="" className="al-loading-art-img" />
+      <img
+        src={menuArtUrl("ui/loading-frame.webp")}
+        alt=""
+        aria-hidden="true"
+        className="al-loading-art-frame"
+      />
       <div className="al-loading-art-veil" />
     </div>
   );
