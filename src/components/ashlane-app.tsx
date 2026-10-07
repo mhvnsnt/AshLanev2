@@ -244,14 +244,14 @@ export function AshlaneApp() {
           ) : null}
 
           {!hud.running ? (
-            <div ref={sheetRef} className="sheet veil al-sheet al-sheet-clear">
+            <div ref={sheetRef} className="sheet veil al-sheet al-sheet-ghost">
               <MenuArt screen={menu} />
               <LaneBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
                   <img src={art("logo-main")} alt="AshLane" className="al-logo-art" />
                   <p className="al-logo-sub">
-                    <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
+                    <SpellbookTag text="Concrete Jungle" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
                 </div>
                 <ChainDivider />

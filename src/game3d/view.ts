@@ -145,6 +145,10 @@ export function createView(canvas: HTMLCanvasElement) {
   const rim = new THREE.DirectionalLight(0xe4572e, 0.28);
   rim.position.set(12, 6, -10);
   scene.add(rim);
+  // Owner 2026-10-07: player-following fill light — dark spots are never
+  // pitch black; a soft warm light travels with the player.
+  const playerFill = new THREE.PointLight(0xffe0b3, 14, 18, 1.7);
+  scene.add(playerFill);
 
   // Malakor visual layer — underlying atmosphere (modern high-fidelity neon,
   // never retro). Grade once; per-stage intensity handled in applyStage().
@@ -1209,6 +1213,9 @@ export function createView(canvas: HTMLCanvasElement) {
     crowd.update(dt, sim.time, camera.position, sim.reduced);
     // Environment quality bar: atmosphere tick + jiggle (after all mixers).
     if (!sim.reduced) envQ.tick(dt);
+    // Player-following fill light — keeps the player readable in dark spots.
+    const pp = sim.bodies[0];
+    if (pp) playerFill.position.set(pp.x, pp.y + 3.2, pp.z);
     postfx.render();
   }
 
