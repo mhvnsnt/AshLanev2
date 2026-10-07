@@ -4,6 +4,9 @@ node_modules/
 .env
 .env.*
 __pycache__/
+.venv/
+venv/
+.output/
 tools/free-apis/.piper/
 
 # Voice likeness reference clips — NEVER commit (local only, see tools/voice/REFERENCE_LEDGER.md)
