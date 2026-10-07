@@ -825,7 +825,7 @@ export function setMode(sim: Sim, mode: Mode) {
   sim.banner = intro(mode);
   sim.bannerT = 2.4;
   sim.splash = intro(mode);
-  sim.splashT = 2.4;
+  sim.splashT = 1;
 }
 
 export function warp(sim: Sim, mode: Mode) {
@@ -839,7 +839,7 @@ export function warp(sim: Sim, mode: Mode) {
   sim.banner = intro(mode);
   sim.bannerT = 1.6;
   sim.splash = intro(mode);
-  sim.splashT = 1.6;
+  sim.splashT = 1;
 }
 
 function intro(mode: Mode) {
@@ -926,7 +926,7 @@ export function startStory(sim: Sim, index: number) {
   sim.banner = `${mission.title}. ${placeName(mission.drop)}`;
   sim.bannerT = 2.4;
   sim.splash = `${mission.title}. ${placeName(mission.drop)}`;
-  sim.splashT = 2.4;
+  sim.splashT = 1;
   sim.stage = mission.stage;
 }
 
@@ -1006,7 +1006,7 @@ export function startBout(sim: Sim, kind: "exhibit" | "practice", stage: string)
   sim.banner = kind === "practice" ? "Practice. The bag does not swing." : "Exhibition.";
   sim.bannerT = 2;
   sim.splash = kind === "practice" ? "Practice. The bag does not swing." : "Throwdown.";
-  sim.splashT = 2;
+  sim.splashT = 1;
 }
 
 function burst(sim: Sim, x: number, y: number, z: number, color: number) {
@@ -3652,6 +3652,7 @@ export function step(sim: Sim, input: FrameInput, dt: number) {
   // before any early return (paused / hitstop / not-running). The VsSplash
   // overlay keys off hud.splash, so if these decrements are skipped the
   // overlay never unmounts and covers the 3D canvas indefinitely.
+  // Splash is Yakuza-style: ~1s, then gone (skippable via Escape/click).
   sim.bannerT -= dt;
   if (sim.bannerT <= 0) sim.banner = "";
   sim.splashT -= dt;
