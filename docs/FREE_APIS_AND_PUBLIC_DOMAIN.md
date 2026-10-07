@@ -357,7 +357,7 @@ Both tested and working. No API keys needed.
 - **What:** Neural text-to-speech, runs fully offline. https://github.com/OHF-Voice/piper
 - **License:** MIT (binary + voices from rhasspy/piper-voices, model card tagged MIT) — commercial-safe.
 - **Integration:** `tools/free-apis/piper-voice.py` — `--character announcer|cipher|onyx|hype` `--text "..."` `--out out.wav`. Auto-downloads binary+voice on first run into `tools/free-apis/.piper/` (NOT committed). Generate at build time, commit the WAVs.
-- **Character presets:** announcer → en_US-ryan-medium (clear male); cipher → en_US-joe-medium slowed (menace); onyx → en_US-lessac-medium (female); hype → ryan-medium fast.
+- **Character presets:** announcer → en_US-ryan-medium (clear male); cipher → en_US-joe-medium slowed (menace) [SUPERSEDED 2026-10-07: Cipher's voice is now feral 2026 Blackheart Lio Rush — zoned out, whisper-to-shriek, word-loops; regenerate the cipher preset on the new direction, keep `cipher_menacing.wav` as the archived old take]; onyx → en_US-lessac-medium (female); hype → ryan-medium fast.
 - **Status:** ✅ TESTED — 5 voice lines generated and verified as valid WAVs in `tools/free-apis/samples/`: announcer_ko, announcer_round_one, cipher_menacing, crowd_hype, onyx_taunt.
 - **AshLane use:** announcer calls, KO shouts, character taunts, crowd hype stingers, menu VO. Zero runtime cost (baked WAVs).
 

@@ -26,7 +26,13 @@ Black woman, white chola/vamp facepaint, spiked leather. Her Life Path isn't unk
 
 ---
 
-### CIPHER — "The Undefined"
+### CIPHER — "The Undefined" (canonical, owner-locked 2026-10-07)
+
+**Based on: Lio Rush's 2026 "Blackheart" persona** (AEW, March 2026–) — demonic alter ego, rain/umbrella motif, shaved head, contact lenses, black liquid from mouth, face/body paint.
+
+**Voice:** zoned out, spaced out, sounds controlled by an unseen being; manic and feral, somewhat comedic; whisper-to-shriek delivery (Gollum-like); loops single words ("bet bet bet", "cuts cuts cuts", "no no no"); third-person entity "he" ("he sees you", "he knows", "he's listening"); first-person plural "WE" ("WE are obsessed"); catchphrase shape "The Rain! The rain...cuts...deep!".
+
+**Behavior/mannerisms:** paranoid, erratic; feral crouch, crawls; manic grin; grabs his head; writhes when hurt holding the injury; professing about rain.
 
 Anti-Pattern Brawler. His Life Path recalculates to a different digit every time it's read. His offense is genuinely non-deterministic move-to-move — real RNG in attack selection. You cannot gameplan for him because there is no pattern.
 
@@ -37,6 +43,8 @@ Anti-Pattern Brawler. His Life Path recalculates to a different digit every time
 **Finisher:** *The Undefined* — randomizes between three finishers, no tell.
 
 **AshLane style mapping:** `drunken` (unpredictable sway, off-balance strikes) / `street`
+
+**DIALOGUE SOURCE LAW:** ONLY `bannon-video-pipe/repo/assets/dialogue/bannon_dialogue.json` feral Cipher/Blackheart sets (`cipher` + `cipher_01`) are authorized. The old `character_lines.json` cipher "speedster" set ("I move too fast...", "Blink and you'll miss me!", "Too slow!", "Checkmate", etc.) is REJECTED (owner 2026-10-07) — removed and never copied forward.
 
 ---
 
