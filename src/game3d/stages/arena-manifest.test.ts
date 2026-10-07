@@ -20,11 +20,12 @@ import {
   getSelectableArenas,
   getVersusArenas,
 } from "./arena-manifest.ts";
+import type { CityDistrictId } from "../city/districts.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = join(here, "..", "..", "..");
 
-const DISTRICTS = new Set([
+const DISTRICTS = new Set<CityDistrictId>([
   "neon-district", "marquee-mile", "civic", "projects", "industrial",
   "waterfront", "underground", "outskirts", "suburbs",
 ]);
