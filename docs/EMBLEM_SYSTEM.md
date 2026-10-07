@@ -96,3 +96,41 @@ See "Emblem Picker" section in ashlane-app.tsx.
 
 ---
 *Style established 2026-10-05. Owner-approved. Extend, don't replace.*
+
+---
+
+## Art Emblems (2026-10-07 — art-wiring)
+
+The SVG system above stays (owner-approved, "extend don't replace"). Added alongside it:
+**38 sliced PNG emblems** from the canon faction-emblem sheets, wired via
+`src/game3d/ui-art.ts` (`EMBLEMS`) and rendered by `EmblemImage` /
+`EmblemPickerGrid` in `src/components/ui-art-components.tsx`.
+
+### The 32 canon emblems
+
+| Sheet | Emblems (ids) |
+|-------|---------------|
+| 1 — AshLane core | `ashes`, `combine`, `hollows`, `dynasty-authority`, `halcyon-kennedy`, `kennedy-security` |
+| 2 — AshLane extras | `unaffiliated`, `onyx-crew`, `circuit`, `old-guard`, `pit`, `hollow-points` |
+| 3 — wrestling companies | `awe`, `jpcw`, `nwc`, `lucha-temple`, `slaughterhouse`, `hollywood` |
+| 4 — book factions | `corporate-structure`, `dynasty`, `resistance`, `sanctuary`, `straight-shooters`, `iron-directorate` |
+| 5 — book factions 2 | `administration`, `gallery`, `noise`, `temple`, `pit-jack-slade`, `agents-of-chaos` |
+| 6 — book factions 3 | `independent-variables`, `gamer-regime` |
+
+Sheet order was confirmed by visually reading each sheet (row-major).
+The two Pits are distinct canon entries: `pit` (wrestling-factions) and
+`pit-jack-slade` (Book 5, Jack Slade's Pit) — never merged.
+
+### The 6 generic emblems
+
+`generic-wizard-hat`, `generic-crown`, `generic-dice`, `generic-skull`,
+`generic-dragon`, `generic-moon` — from menu-kit sheet 28. These stay
+**generic and unassigned** by owner directive: selectable as personal/menu
+emblems, never attached to a canon faction.
+
+### Canon rules (hard)
+
+- Names come only from `FACTION_CATALOG.md` — never invented.
+- Onyx's group is "Onyx's Crew" / "Onyx's crew" — never "gang", never "The Painted".
+- "Corporate Authority" does not exist — never used.
+- Slicing: `~/workspace/art-wiring/slice-emblems.py` (circular crop, transparent WebP → `public/emblems/`).

@@ -10,6 +10,20 @@ import { FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
 import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
+import {
+  ArtMeter,
+  ChainDivider,
+  ComboBadge,
+  EmblemImage,
+  EmblemPickerGrid,
+  MapMarker,
+} from "@/components/ui-art-components";
+import { ConceptGallery } from "@/components/concept-gallery";
+import { UI_ART } from "@/game3d/ui-art";
+
+function art(key: keyof typeof UI_ART): string {
+  return assetUrl(UI_ART[key]);
+}
 import { getSelectableArenas } from "@/game3d/stages/arena-manifest";
 import { CITY_DISTRICTS, CITY_DISTRICT_IDS } from "@/game3d/city/districts";
 import { assetUrl } from "@/game3d/asset-base";
@@ -107,6 +121,7 @@ export function AshlaneApp() {
   const [pendingWho, setPendingWho] = useState<string | null>(null);
   const [suiteWho, setSuiteWho] = useState<string | null>(null);
   const [playerEmblem, setPlayerEmblem] = useState<FactionId | null>(null);
+  const [playerArtEmblem, setPlayerArtEmblem] = useState<string | null>(null);
   const [menu, setMenu] = useState<"main" | "jobs" | "style" | "library" | "story" | "arenas">("main");
   const [arena, setArena] = useState("ward");
   const [slot, setSlot] = useState<Slot>("jab");
@@ -193,8 +208,8 @@ export function AshlaneApp() {
         </div>
         {hud.running ? (
           <div className="flex items-center gap-3">
-            <Meter label="HP" value={hud.hp / hud.maxHp} tone="ember" />
-            <Meter label="KI" value={hud.meter / 100} tone="brass" />
+            <ArtMeter label="HP" value={hud.hp / hud.maxHp} variant="hp" />
+            <ArtMeter label="KI" value={hud.meter / 100} variant="super" />
             <p className="font-display text-[10px] leading-tight text-cream-dim">
               H {Math.round(hud.headDmg)}
               <br />
@@ -217,7 +232,12 @@ export function AshlaneApp() {
           {hud.running && hud.splash ? <VsSplash onSkip={() => api.current?.clearSplash()} /> : null}
           {hud.running && hud.banner ? <p className="al-banner pointer-events-none absolute inset-x-0 top-4 text-center text-xl">{hud.banner}</p> : null}
           {playing && hud.face ? <p className="pointer-events-none absolute inset-x-0 top-12 text-center font-display text-xs uppercase tracking-widest text-cream">{hud.face}</p> : null}
-          {hud.combo > 1 && playing ? <p className="al-title pointer-events-none absolute right-4 top-4 text-2xl text-ember">{hud.combo} HIT</p> : null}
+          {hud.combo > 1 && playing ? (
+            <div className="pointer-events-none absolute right-4 top-4 flex flex-col items-center">
+              <ComboBadge count={hud.combo} />
+              <span className="al-title text-2xl text-ember">{hud.combo} HIT</span>
+            </div>
+          ) : null}
           {playing && hud.flow > 8 ? <p className="pointer-events-none absolute right-4 top-12 al-hud-chip">FLOW {hud.flow}</p> : null}
           {playing ? (
             <p className="pointer-events-none absolute bottom-3 left-4 max-w-[70%] text-sm text-cream-dim">{objective(hud)}</p>
@@ -229,12 +249,12 @@ export function AshlaneApp() {
               <LaneBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
-                  <AshlaneTag variant="red" />
+                  <img src={art("logo-main")} alt="AshLane" className="al-logo-art" />
                   <p className="al-logo-sub">
                     <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
                 </div>
-                <div className="al-rip mt-1" aria-hidden="true" />
+                <ChainDivider />
                 <p className="mt-3 text-sm leading-relaxed text-cream-dim">
                   <span className="font-headline uppercase text-brass">{MISSIONS.length} jobs.</span> Hold stick back to guard. Lows and launchers break it. Stick sideways and jump is an au. Throw them into a wall, then hit for a wall follow. Hold a direction as you land to tech. Spin stays on L.
                 </p>
@@ -296,7 +316,12 @@ export function AshlaneApp() {
                       if (list.length === 0) return null;
                       return (
                         <div key={d}>
-                          <div className="al-section"><span className="al-section-title">{CITY_DISTRICTS[d].name}</span></div>
+                          <div className="al-section">
+                            <span className="al-section-title flex items-center gap-2">
+                              <MapMarker kind="arena" size={20} />
+                              {CITY_DISTRICTS[d].name}
+                            </span>
+                          </div>
                           <div className="al-arena-grid">
                             {list.map((a) => (
                               <button
@@ -541,6 +566,8 @@ export function AshlaneApp() {
                     >
                       <span>Assign {clip} to {slot}</span>
                     </button>
+                    <div className="al-section mt-4"><span className="al-section-title">Concept-art gallery</span></div>
+                    <ConceptGallery />
                     <button type="button" className="al-btn al-btn-ghost" onClick={() => { sfxBack(); setMenu("main"); }}>
                       <span>← Back</span>
                     </button>
@@ -653,6 +680,8 @@ export function AshlaneApp() {
                       </button>
                     ))}
                   </div>
+                  <div className="al-section"><span className="al-section-title">Art Emblems (canon + generic)</span></div>
+                  <EmblemPickerGrid selected={playerArtEmblem} onSelect={setPlayerArtEmblem} />
                   <div className="al-section"><span className="al-section-title">Kit</span></div>
                   {STYLES.map((style) => (
                     <button key={style.id} type="button" data-on={hud.style === style.id ? "1" : undefined} className="al-card" onClick={() => api.current?.setStyle(style.id)}>
@@ -864,7 +893,10 @@ function FighterCard({
       aria-label={`Select ${fighter.name}`}
     >
       <span className="al-fc-portrait" aria-hidden="true">
-        <FighterPortrait fighterId={fighter.id} name={fighter.name} faction={faction} size={148} />
+        <span className="al-fc-frame">
+          <img src={art("frame-chain")} alt="" aria-hidden="true" className="al-fc-frame-img" />
+          <FighterPortrait fighterId={fighter.id} name={fighter.name} faction={faction} size={148} />
+        </span>
       </span>
       <span className="al-fc-body">
         <span className="al-fc-name">{fighter.name}</span>
