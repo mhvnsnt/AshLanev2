@@ -156,7 +156,7 @@ export function createView(canvas: HTMLCanvasElement) {
   // particles, and the tiered-stands arena crowd (pit stage).
   const postfx = new PostFx(renderer, scene, camera, { phone });
   // Environment quality bar: atmosphere, god rays, wind, jiggle (tier-scaled).
-  const envQ = new EnvQuality(scene, { phone });
+  const envQ = new EnvQuality(scene, { phone, renderer, camera });
   envQualityRef = envQ;
   const particles = new ImpactParticles();
   scene.add(particles.points);
@@ -405,6 +405,9 @@ export function createView(canvas: HTMLCanvasElement) {
     if (id === "city") return;
     // Environment quality bar: per-look atmosphere + district override.
     envQ.setStage(lookKey, arenaDef?.district);
+    // Wet reflective ground for the neon-market key-art look.
+    const wet = arenaDef?.district === "neon-district" || arenaDef?.district === "marquee-mile";
+    envQ.treatGround(groundMat, wet);
     // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
     // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
     // horizon glow, light rig, and Malakor accents where defined.
