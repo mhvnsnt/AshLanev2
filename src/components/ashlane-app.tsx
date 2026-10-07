@@ -12,6 +12,7 @@ import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
 import {
   ArtMeter,
+  ChainDivider,
   ComboBadge,
   EmblemImage,
   EmblemPickerGrid,
@@ -253,7 +254,7 @@ export function AshlaneApp() {
                     <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
                 </div>
-                <div className="al-rip mt-1" aria-hidden="true" />
+                <ChainDivider />
                 <p className="mt-3 text-sm leading-relaxed text-cream-dim">
                   <span className="font-headline uppercase text-brass">{MISSIONS.length} jobs.</span> Hold stick back to guard. Lows and launchers break it. Stick sideways and jump is an au. Throw them into a wall, then hit for a wall follow. Hold a direction as you land to tech. Spin stays on L.
                 </p>
