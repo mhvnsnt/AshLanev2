@@ -10,6 +10,7 @@
  * additive: they layer over the existing stage looks in view.ts.
  */
 import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 export type QualityTier = "high" | "medium" | "low";
 
@@ -97,20 +98,31 @@ export function registerSway(
 
 const RAY_VERT = `
 varying vec2 vUv;
+varying vec3 vNormal;
+varying vec3 vWorldPos;
 void main() {
   vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  vNormal = normalize(normalMatrix * normal);
+  vec4 wp = modelMatrix * vec4(position, 1.0);
+  vWorldPos = wp.xyz;
+  gl_Position = projectionMatrix * viewMatrix * wp;
 }`;
 const RAY_FRAG = `
 uniform vec3 uColor; uniform float uIntensity; uniform float uTime;
+uniform vec3 uCamPos;
 varying vec2 vUv;
+varying vec3 vNormal;
+varying vec3 vWorldPos;
 void main() {
   // Fade along the cone length (bright at the light source, gone at the
-  // floor) and soften the silhouette edges. ConeGeometry uv.y = 1 at apex.
-  float axial = pow(vUv.y, 1.6);
-  float edge = smoothstep(0.0, 0.25, vUv.x) * smoothstep(1.0, 0.75, vUv.x);
+  // floor). ConeGeometry uv.y = 1 at apex.
+  float axial = pow(vUv.y, 1.8);
+  // Soften the silhouette: fade where the surface turns edge-on to the eye.
+  vec3 vdir = normalize(uCamPos - vWorldPos);
+  float ndv = abs(dot(normalize(vNormal), vdir));
+  float soft = pow(ndv, 1.4);
   float flicker = 0.92 + 0.08 * sin(uTime * 2.1 + vUv.y * 6.0);
-  float a = axial * edge * uIntensity * flicker;
+  float a = axial * soft * uIntensity * flicker;
   gl_FragColor = vec4(uColor, a);
 }`;
 
@@ -137,6 +149,11 @@ export class GodRayField {
     }
   }
 
+  /** Feed the camera position each frame for the silhouette-softening term. */
+  updateCamera(p: THREE.Vector3): void {
+    for (const m of this.mats) m.uniforms.uCamPos.value.copy(p);
+  }
+
   /** Replace the ray set (called per stage). */
   setRays(specs: GodRaySpec[]): void {
     // Reuse existing meshes where possible — no per-stage allocation churn.
@@ -150,6 +167,7 @@ export class GodRayField {
           uColor: { value: new THREE.Color(0xffffff) },
           uIntensity: { value: 0.3 },
           uTime: windUniforms.uTime,
+          uCamPos: { value: new THREE.Vector3() },
         },
         transparent: true,
         blending: THREE.AdditiveBlending,
@@ -378,7 +396,22 @@ const ATMOSPHERE: Record<string, AtmosphereConfig> = {
   },
 };
 
-/** District overrides — the key-art looks. */
+/** Soft radial glow texture (shared) for lantern halos — no square edges. */
+let glowTex: THREE.Texture | null = null;
+function getGlowTexture(): THREE.Texture {
+  if (glowTex) return glowTex;
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const g = c.getContext("2d")!;
+  const grad = g.createRadialGradient(32, 32, 2, 32, 32, 32);
+  grad.addColorStop(0, "rgba(255,255,255,1)");
+  grad.addColorStop(0.35, "rgba(255,255,255,0.45)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  glowTex = new THREE.CanvasTexture(c);
+  return glowTex;
+}
 const DISTRICT_ATMOSPHERE: Record<string, Partial<AtmosphereConfig>> = {
   // Neon market key art: warm lantern glow + teal neon + steam.
   "neon-district": {
@@ -430,10 +463,13 @@ export class StageAtmosphere {
   private pCount = 0;
   private rise = 0.3;
   private budget: TierBudget = TIER_BUDGET.high;
+  /** Per-stage prop group (lanterns, banners) — rebuilt on setStage. */
+  private props = new THREE.Group();
 
   constructor(private scene: THREE.Scene) {
     this.rays = new GodRayField();
     scene.add(this.rays.group);
+    scene.add(this.props);
     // Pre-create accent light pool (max 6). Unused stay at intensity 0.
     for (let i = 0; i < 6; i++) {
       const l = new THREE.PointLight(0xffffff, 0, 30, 1.9);
@@ -446,6 +482,10 @@ export class StageAtmosphere {
     this.budget = TIER_BUDGET[t];
     this.rays.setBudget(this.budget.godRays);
     this.rebuildParticles(Math.min(this.pCount, this.budget.particles));
+  }
+
+  updateRaysCamera(p: THREE.Vector3): void {
+    this.rays.updateCamera(p);
   }
 
   /** Apply atmosphere for a stage look + optional district override. */
@@ -474,6 +514,94 @@ export class StageAtmosphere {
     this.rays.setRays(cfg.rays);
     this.rise = cfg.particleRise;
     this.rebuildParticles(Math.min(cfg.particleCount, this.budget.particles), cfg.particleColor);
+    this.buildProps(district);
+  }
+
+  /**
+   * District prop dressing — the key-art signatures. Neon market /
+   * marquee-mile get hanging lantern strings + wind-swayed cloth banners;
+   * stadium/civic gets hanging work lamps (god rays already placed).
+   */
+  private buildProps(district?: string): void {
+    // Clear previous props.
+    while (this.props.children.length > 0) {
+      const c = this.props.children.pop()!;
+      c.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (m.isMesh) {
+          m.geometry.dispose();
+          const mt = m.material as THREE.Material | THREE.Material[];
+          (Array.isArray(mt) ? mt : [mt]).forEach((x) => x.dispose());
+        }
+      });
+    }
+    if (this.budget.godRays <= 0 && district !== "neon-district" && district !== "marquee-mile") return;
+    const market = district === "neon-district" || district === "marquee-mile";
+    const lampCount = market ? Math.min(14, 4 + this.budget.godRays) : 0;
+    const bannerCount = market ? Math.min(10, 3 + this.budget.godRays) : 0;
+    // Lanterns: warm emissive spheres on catenary strings.
+    const lanternGeo = new THREE.SphereGeometry(0.16, 10, 8);
+    for (let s = 0; s < 2; s++) {
+      const zc = s === 0 ? -4 : 5;
+      const n = Math.ceil(lampCount / 2);
+      for (let i = 0; i < n; i++) {
+        const t = i / Math.max(1, n - 1);
+        const x = -11 + t * 22;
+        const y = 5.6 - Math.sin(t * Math.PI) * 0.9; // catenary sag
+        const warm = (i + s) % 3 !== 2;
+        const mat = new THREE.MeshBasicMaterial({
+          color: warm ? 0xffb347 : 0x7df2d8,
+          fog: false,
+        });
+        const m = new THREE.Mesh(lanternGeo, mat);
+        m.position.set(x, y, zc + Math.sin(t * 9 + s) * 0.4);
+        this.props.add(m);
+        // Glow sprite halo (radial texture — no square edges).
+        const glow = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: getGlowTexture(),
+            color: warm ? 0xff9a3c : 0x2dd4bf,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            fog: false,
+          }),
+        );
+        glow.scale.setScalar(1.1);
+        glow.position.copy(m.position);
+        this.props.add(glow);
+      }
+      // String wire.
+      const wireGeo = new THREE.BufferGeometry();
+      const wp = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) {
+        const t = i / Math.max(1, n - 1);
+        wp[i * 3] = -11 + t * 22;
+        wp[i * 3 + 1] = 5.75 - Math.sin(t * Math.PI) * 0.9;
+        wp[i * 3 + 2] = zc;
+      }
+      wireGeo.setAttribute("position", new THREE.BufferAttribute(wp, 3));
+      this.props.add(
+        new THREE.Line(wireGeo, new THREE.LineBasicMaterial({ color: 0x11131a, fog: false })),
+      );
+    }
+    // Cloth banners with wind sway (key-art signature).
+    const bannerCols = [0x1f6f5c, 0xd8b13a, 0x2a7f6e, 0xc25a3a];
+    for (let i = 0; i < bannerCount; i++) {
+      const w = 0.7 + Math.random() * 0.4;
+      const h = 1.4 + Math.random() * 0.8;
+      const geo = new THREE.PlaneGeometry(w, h, 4, 6);
+      geo.translate(0, -h / 2, 0); // hang from top edge
+      const mat = new THREE.MeshLambertMaterial({
+        color: bannerCols[i % bannerCols.length],
+        side: THREE.DoubleSide,
+      });
+      const b = new THREE.Mesh(geo, mat);
+      b.position.set(-10 + (i / Math.max(1, bannerCount - 1)) * 20, 5.4, -8 + (i % 3) * 7);
+      registerSway(b, { amp: 0.22, freq: 1.1 + Math.random() * 0.8 });
+      this.props.add(b);
+    }
   }
 
   private rebuildParticles(count: number, color = 0xffffff): void {
@@ -545,14 +673,52 @@ export class EnvQuality {
   readonly budget: TierBudget;
   readonly atmosphere: StageAtmosphere;
   readonly jiggle = new JiggleSystem();
+  /** Procedural IBL for PBR/wet surfaces (shared, one-time cost). */
+  readonly envMap: THREE.Texture | null;
+  private camera: THREE.Camera | null = null;
   private time = 0;
 
-  constructor(scene: THREE.Scene, opts: { phone: boolean }) {
+  constructor(
+    scene: THREE.Scene,
+    opts: { phone: boolean; renderer?: THREE.WebGLRenderer; camera?: THREE.Camera },
+  ) {
     this.tier = detectTier(opts.phone);
     this.budget = TIER_BUDGET[this.tier];
     this.atmosphere = new StageAtmosphere(scene);
     this.atmosphere.setTier(this.tier);
+    if (opts.camera) this.camera = opts.camera;
     if (this.tier === "low") this.jiggle.strength = 0.5;
+    // Image-based lighting: RoomEnvironment PMREM, one-time bake.
+    this.envMap = null;
+    if (opts.renderer) {
+      try {
+        const pmrem = new THREE.PMREMGenerator(opts.renderer);
+        const tex = pmrem.fromScene(new RoomEnvironment(), 0.06).texture;
+        pmrem.dispose();
+        (this as { envMap: THREE.Texture | null }).envMap = tex;
+      } catch {
+        /* IBL unavailable — materials fall back gracefully */
+      }
+    }
+  }
+
+  /**
+   * Treat the arena ground: dry asphalt vs wet reflective (neon-market
+   * key art). Works on the existing MeshPhongMaterial in place.
+   */
+  treatGround(mat: THREE.MeshPhongMaterial, wet: boolean): void {
+    if (this.envMap) {
+      mat.envMap = this.envMap;
+      mat.envMapIntensity = wet ? 1.1 : 0.3;
+    }
+    if (wet) {
+      mat.shininess = 120;
+      mat.specular = new THREE.Color(0x8fa8c0);
+    } else {
+      mat.shininess = 22;
+      mat.specular = new THREE.Color(0x3d5166);
+    }
+    mat.needsUpdate = true;
   }
 
   setStage(lookKey: string, district?: string): void {
@@ -562,6 +728,7 @@ export class EnvQuality {
   tick(dt: number): void {
     this.time += dt;
     this.atmosphere.tick(dt, this.time);
+    if (this.camera) this.atmosphere.updateRaysCamera(this.camera.position);
     this.jiggle.update(dt);
   }
 }
