@@ -1380,3 +1380,41 @@
   position: relative;
   z-index: 1;
 }
+
+/* ---- Sliced menu-kit art components (art-wiring) ---- */
+.al-artmeter { display: flex; flex-direction: column; gap: 2px; }
+.al-artmeter-label { font-family: var(--font-display, inherit); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cream-dim, #b8a88a); }
+.al-artmeter-wrap { position: relative; width: 160px; }
+.al-artmeter-frame { display: block; width: 100%; height: auto; }
+/* Fill sits inside the classic bar's inner region (measured from the art). */
+.al-artmeter-track { position: absolute; left: 6.5%; right: 3.5%; top: 33%; bottom: 16%; overflow: hidden; border-radius: 2px; background: rgba(10, 6, 14, 0.85); }
+.al-artmeter-fill { height: 100%; background: linear-gradient(90deg, #7b2ff7, #a855f7 60%, #d8b4fe); transition: width 120ms linear; }
+.al-artmeter-fill.super { background: linear-gradient(90deg, #f59e0b, #fbbf24 60%, #fde68a); }
+.al-emblem-img { border-radius: 50%; object-fit: cover; }
+.al-combo-badge { width: 84px; height: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); }
+.al-timer-medallion { position: relative; width: 92px; }
+.al-timer-medallion img { display: block; width: 100%; height: auto; }
+.al-timer-digits { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display, inherit); font-weight: 700; font-size: 20px; color: #f5e6c8; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.al-rank-badge { width: 120px; height: auto; }
+.al-map-marker { object-fit: contain; }
+.al-weapon-icon, .al-pickup-icon { object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+.al-circle-btn { padding: 0; border: 0; background: none; cursor: pointer; }
+.al-circle-btn img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform 80ms ease; }
+.al-circle-btn:hover img { transform: scale(1.06); }
+.al-circle-btn:active img { transform: scale(0.94); }
+.al-art-btn { position: relative; padding: 0; border: 0; background: none; cursor: pointer; min-width: 180px; }
+.al-art-btn-bg { display: block; width: 100%; height: auto; }
+.al-art-btn:hover .al-art-btn-bg { filter: brightness(1.15); }
+.al-art-btn:active .al-art-btn-bg { filter: brightness(0.85); }
+.al-art-btn-label { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #f5e6c8; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.al-sticker { object-fit: contain; }
+.al-chain-divider { display: block; width: 100%; max-width: 560px; height: auto; margin: 8px auto; }
+/* Concept-art gallery */
+.al-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.al-gallery-item { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line, #2a2430); background: #14101a; }
+.al-gallery-item img { display: block; width: 100%; height: 120px; object-fit: cover; }
+.al-gallery-cap { display: block; padding: 6px 8px; font-size: 11px; color: var(--cream-dim, #b8a88a); }
+.al-gallery-tag { position: absolute; top: 6px; left: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; background: rgba(10,6,14,0.75); color: #d8b4fe; padding: 2px 8px; border-radius: 999px; }
+.al-vs-splash-medallion { position: absolute; left: 50%; top: 50%; width: min(38vmin, 320px); transform: translate(-50%, -50%); z-index: 2; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7)); }
+.al-lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: rgba(5,4,8,0.92); padding: 24px; cursor: zoom-out; }
+.al-lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; }

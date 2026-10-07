@@ -37,7 +37,7 @@ export type FactionId =
   | "combine"
   | "hollows"
   | "unaffiliated"
-  | "painted"
+  | "onyx_crew"
   | "authority";
 
 const FACTION_ART: Record<FactionId, string> = {
@@ -45,7 +45,7 @@ const FACTION_ART: Record<FactionId, string> = {
   combine: "menu/faction-combine.webp",
   hollows: "menu/faction-hollows.webp",
   unaffiliated: "menu/faction-unaffiliated.webp",
-  onyx_gang: "menu/faction-onyx-gang.webp",
+  onyx_crew: "menu/faction-onyx-crew.webp",
   authority: "menu/faction-authority.webp",
 };
 
@@ -65,8 +65,10 @@ export function MenuArt({ screen }: { screen: MenuScreen }) {
 }
 
 /** Wide banner strip for a faction — used behind emblem pickers / faction rows. */
-export function FactionBanner({ faction }: { faction: FactionId }) {
-  const src = menuArtUrl(FACTION_ART[faction]);
+export function FactionBanner({ faction }: { faction: string }) {
+  const src = menuArtUrl(
+    (FACTION_ART as Record<string, string>)[faction] ?? FACTION_ART.unaffiliated
+  );
   return (
     <div className="al-faction-banner" aria-hidden="true">
       <img src={src} alt="" className="al-faction-banner-img" loading="lazy" />
@@ -86,6 +88,12 @@ export function VsSplash({ onSkip }: { onSkip?: () => void }) {
       aria-label={onSkip ? "Skip intro" : undefined}
     >
       <img src={menuArtUrl("menu/menu-vs.webp")} alt="" className="al-vs-splash-img" />
+      <img
+        src={menuArtUrl("ui/vs-medallion.webp")}
+        alt=""
+        aria-hidden="true"
+        className="al-vs-splash-medallion"
+      />
       <div className="al-vs-splash-veil" />
     </div>
   );

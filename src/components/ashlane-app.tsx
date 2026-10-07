@@ -10,6 +10,13 @@ import { FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
 import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
+import {
+  ArtMeter,
+  ComboBadge,
+  EmblemImage,
+  EmblemPickerGrid,
+} from "@/components/ui-art-components";
+import { ConceptGallery } from "@/components/concept-gallery";
 import { getSelectableArenas } from "@/game3d/stages/arena-manifest";
 import { CITY_DISTRICTS, CITY_DISTRICT_IDS } from "@/game3d/city/districts";
 import { assetUrl } from "@/game3d/asset-base";
@@ -107,6 +114,7 @@ export function AshlaneApp() {
   const [pendingWho, setPendingWho] = useState<string | null>(null);
   const [suiteWho, setSuiteWho] = useState<string | null>(null);
   const [playerEmblem, setPlayerEmblem] = useState<FactionId | null>(null);
+  const [playerArtEmblem, setPlayerArtEmblem] = useState<string | null>(null);
   const [menu, setMenu] = useState<"main" | "jobs" | "style" | "library" | "story" | "arenas">("main");
   const [arena, setArena] = useState("ward");
   const [slot, setSlot] = useState<Slot>("jab");
@@ -193,8 +201,8 @@ export function AshlaneApp() {
         </div>
         {hud.running ? (
           <div className="flex items-center gap-3">
-            <Meter label="HP" value={hud.hp / hud.maxHp} tone="ember" />
-            <Meter label="KI" value={hud.meter / 100} tone="brass" />
+            <ArtMeter label="HP" value={hud.hp / hud.maxHp} variant="hp" />
+            <ArtMeter label="KI" value={hud.meter / 100} variant="super" />
             <p className="font-display text-[10px] leading-tight text-cream-dim">
               H {Math.round(hud.headDmg)}
               <br />
@@ -541,6 +549,8 @@ export function AshlaneApp() {
                     >
                       <span>Assign {clip} to {slot}</span>
                     </button>
+                    <div className="al-section mt-4"><span className="al-section-title">Concept-art gallery</span></div>
+                    <ConceptGallery />
                     <button type="button" className="al-btn al-btn-ghost" onClick={() => { sfxBack(); setMenu("main"); }}>
                       <span>← Back</span>
                     </button>
@@ -653,6 +663,8 @@ export function AshlaneApp() {
                       </button>
                     ))}
                   </div>
+                  <div className="al-section"><span className="al-section-title">Art Emblems (canon + generic)</span></div>
+                  <EmblemPickerGrid selected={playerArtEmblem} onSelect={setPlayerArtEmblem} />
                   <div className="al-section"><span className="al-section-title">Kit</span></div>
                   {STYLES.map((style) => (
                     <button key={style.id} type="button" data-on={hud.style === style.id ? "1" : undefined} className="al-card" onClick={() => api.current?.setStyle(style.id)}>
