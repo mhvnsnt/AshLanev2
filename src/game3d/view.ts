@@ -29,6 +29,7 @@ import {
 } from "./malakor";
 import { buildSky, applySkyLights, type BuiltSky, type DistrictId } from "./sky";
 import { assetUrl } from "./asset-base";
+import { BRAWLERS, brawlerUrl } from "./brawlers";
 // Round 3 visuals: post-processing chain, GPU impact particles, arena crowd.
 import { PostFx, graphics } from "./postfx";
 import { ImpactParticles } from "./impact-particles";
@@ -323,6 +324,12 @@ export function createView(canvas: HTMLCanvasElement) {
     void loadRig(assetUrl("models/cast/ECHO.glb"), "bones", castMoveset("ECHO.glb"));
     void loadRig(assetUrl("models/cast/KOBRA.glb"), "skull", castMoveset("KOBRA.glb"));
     void loadRig(assetUrl("models/cast/CODY_gear_skinned.glb"), "minion", castMoveset("CODY_gear_skinned.glb"));
+    // Wave 7a background brawlers (owner 2026-10-07): Quaternius CC0 animated
+    // humanoids with fight clips — street NPC / background fighter pool.
+    for (const b of BRAWLERS) {
+      const url = brawlerUrl(b.id);
+      if (url) void loadRig(url, b.id, b.id);
+    }
   });
   void loadMotionBank().then(() => {
     rigKey = "";
