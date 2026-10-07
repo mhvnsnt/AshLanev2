@@ -66,6 +66,8 @@ import {
   parseDialogue, startDialogue, dialogueNext, dialogueChoose,
   type DialogueState, type DialogueEvent,
 } from "./federated/dialogue";
+import { InkRunner, BeatsRunner, type Beat } from "./dialogue/dialogue-runtime";
+import { InkDialogueSession } from "./dialogue/ink-adapter";
 import {
   createDarts, dealBlackjack, rackPool,
   type DartsState, type BlackjackState, type PoolBall,
@@ -126,6 +128,8 @@ export interface GameServices {
   questProgress: QuestProgress | null;
   /** active dialogue state (mount.ts renders the overlay) */
   dialogue: DialogueState | null;
+  /** active ink/beats dialogue session (same overlay UI, Round 6) */
+  inkSession: InkDialogueSession | null;
   /** parry state per body id */
   counters: Map<number, CounterState>;
   /** urban-mayhem style id per body id */
@@ -188,6 +192,7 @@ export function createServices(): GameServices {
     quest: null,
     questProgress: null,
     dialogue: null,
+    inkSession: null,
     counters: new Map(),
     styles: new Map(),
     npcBrains: new Map(),
@@ -308,10 +313,40 @@ export function questTrackerLabel(s: GameServices): string | null {
 export function openDialogue(s: GameServices, src: string, node = "Start"): DialogueEvent {
   const script = parseDialogue(src);
   s.dialogue = startDialogue(script, node);
+  s.inkSession = null;
   return dialogueNext(s.dialogue);
 }
 
+/**
+ * Open a compiled ink story (ink JSON string/object, or raw .ink source which
+ * gets compiled with the bundled inkjs compiler) in the same dialogue UI.
+ * Round 6 wiring: inkjs (MIT, inkle) narrative runtime.
+ */
+export function openInkDialogue(s: GameServices, source: string | object): DialogueEvent {
+  let json: string | object = source;
+  if (typeof source === "string" && !source.trimStart().startsWith("{")) {
+    // Raw .ink source — compile with the bundled inkjs compiler.
+    // Dynamic import keeps the compiler out of the main bundle.
+    throw new Error("openInkDialogue: pass compiled ink JSON (see tools/dialogue/compile-ink.mjs); raw .ink goes through the build step");
+  }
+  s.dialogue = null;
+  s.inkSession = new InkDialogueSession(new InkRunner(json));
+  return s.inkSession.next();
+}
+
+/** Open a beats-format script (dialogue-runtime.ts) in the dialogue UI. */
+export function openBeatsDialogue(s: GameServices, beats: Beat[], startId: string, vars?: Record<string, string | number | boolean>): DialogueEvent {
+  s.dialogue = null;
+  s.inkSession = new InkDialogueSession(new BeatsRunner(beats, startId, vars));
+  return s.inkSession.next();
+}
+
 export function advanceDialogue(s: GameServices): DialogueEvent {
+  if (s.inkSession) {
+    const ev = s.inkSession.next();
+    if (ev.kind === "end") s.inkSession = null;
+    return ev;
+  }
   if (!s.dialogue) return { kind: "end" };
   const ev = dialogueNext(s.dialogue);
   if (ev.kind === "end") s.dialogue = null;
@@ -319,6 +354,11 @@ export function advanceDialogue(s: GameServices): DialogueEvent {
 }
 
 export function chooseDialogue(s: GameServices, idx: number): DialogueEvent {
+  if (s.inkSession) {
+    const ev = s.inkSession.choose(idx);
+    if (ev.kind === "end") s.inkSession = null;
+    return ev;
+  }
   if (!s.dialogue) return { kind: "end" };
   const ev = dialogueChoose(s.dialogue, idx);
   if (ev.kind === "end") s.dialogue = null;

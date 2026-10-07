@@ -34,6 +34,7 @@ import { PostFx, graphics } from "./postfx";
 import { ImpactParticles } from "./impact-particles";
 import { ArenaCrowd } from "./arena-crowd";
 import { mountCityBinding, cityFogFor, type CityBinding } from "./city/game-bind";
+import { getArena } from "./stages/arena-manifest";
 
 type Fighter = {
   id: number;
@@ -295,16 +296,20 @@ export function createView(canvas: HTMLCanvasElement) {
     loadRig(assetUrl("models/humanoid/Zombie_Female.glb"), "zombief", "zombief"),
     loadRig(assetUrl("models/humanoid/mannequin.glb"), "mannequin", "mannequin"),
   ]).then(() => {
-    void loadRig(assetUrl("models/kaykit/Knight.glb"), "knight", "knight");
-    void loadRig(assetUrl("models/kaykit/Rogue.glb"), "rogue", "runner");
-    void loadRig(assetUrl("models/kaykit/Barbarian.glb"), "brute", "brute");
-    void loadRig(assetUrl("models/kaykit/Rogue_Hooded.glb"), "hood", "hood");
-    void loadRig(assetUrl("models/kaykit/Mage.glb"), "hex", "hex");
+    // FIX 2026-10-06 (owner): NO KayKit characters anywhere in AshLane.
+    // Enemy/crowd rigs now use custom humanoid cast GLBs (58-bone Mixamo)
+    // with cast movesets (full-size scale + UAL retarget path in makeRig).
+    // Slot names kept so people()/rigFor()/mixed() pools keep working.
+    void loadRig(assetUrl("models/cast/EL_TORO_DE_ORO.glb"), "knight", castMoveset("EL_TORO_DE_ORO.glb"));
+    void loadRig(assetUrl("models/cast/VIPER.glb"), "rogue", castMoveset("VIPER.glb"));
+    void loadRig(assetUrl("models/cast/TITAN.glb"), "brute", castMoveset("TITAN.glb"));
+    void loadRig(assetUrl("models/cast/HOLLOW.glb"), "hood", castMoveset("HOLLOW.glb"));
+    void loadRig(assetUrl("models/cast/MASTER_SENSEI.glb"), "hex", castMoveset("MASTER_SENSEI.glb"));
     void loadRig(assetUrl("models/humanoid/drifter.glb"), "drifter", "drifter");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Warrior.glb"), "skel", "skeleton");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Rogue.glb"), "bones", "bones");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Mage.glb"), "skull", "skull");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Minion.glb"), "minion", "minion");
+    void loadRig(assetUrl("models/cast/STATIC.glb"), "skel", castMoveset("STATIC.glb"));
+    void loadRig(assetUrl("models/cast/ECHO.glb"), "bones", castMoveset("ECHO.glb"));
+    void loadRig(assetUrl("models/cast/KOBRA.glb"), "skull", castMoveset("KOBRA.glb"));
+    void loadRig(assetUrl("models/cast/CODY_gear_skinned.glb"), "minion", castMoveset("CODY_gear_skinned.glb"));
   });
   void loadMotionBank().then(() => {
     rigKey = "";
@@ -381,6 +386,10 @@ export function createView(canvas: HTMLCanvasElement) {
   function applyStage(id: string) {
     if (id === stageId) return;
     stageId = id;
+    // Manifest arenas reuse a proven procedural look + sky: any arena id
+    // renders without new 3D geometry.
+    const arenaDef = getArena(id);
+    const lookKey = arenaDef?.lookLike ?? id;
     // Round 3 visuals: arena crowd only shows on arena stages (pit).
     crowd.setStage(id);
     // The open city brings its own sky, ground, and fog — skip arena dressing.
@@ -388,7 +397,7 @@ export function createView(canvas: HTMLCanvasElement) {
     // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
     // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
     // horizon glow, light rig, and Malakor accents where defined.
-    const skyId = STAGE_SKY[id] ?? "alleys";
+    const skyId = STAGE_SKY[id] ?? arenaDef?.sky ?? "alleys";
     if (stageSky) {
       scene.remove(stageSky.group);
       stageSky.dispose();
@@ -399,22 +408,22 @@ export function createView(canvas: HTMLCanvasElement) {
     // keep weather-system day blend wired to the new sky dome
     (stageSky as BuiltSky & { setDay: (v: number) => void }).setDay(0.65);
     const look =
-      id === "dock"
+      lookKey === "dock"
         ? { fog: 0x163044, sky: 0xb7d4ea, near: 16, far: 70 }
-        : id === "pit"
+        : lookKey === "pit"
           ? { fog: 0x6a3a28, sky: 0xf2c09a, near: 14, far: 62 }
-          : id === "high"
+          : lookKey === "high"
           ? { fog: 0x8ea4be, sky: 0xf7fbff, near: 24, far: 96 }
-          : id === "yard"
+          : lookKey === "yard"
             ? { fog: 0x3d5230, sky: 0xd7efb0, near: 18, far: 80 }
-            : id === "under"
+            : lookKey === "under"
               ? { fog: 0x1a2830, sky: 0x7f96a4, near: 12, far: 52 }
               : { fog: 0x243044, sky: 0xd7e6f8, near: 22, far: 90 };
     // legacy ground-skin switch (kept — sky system handles fog/lights above)
-    sun.intensity = id === "under" ? 1.15 : 1.55;
+    sun.intensity = lookKey === "under" ? 1.15 : 1.55;
     // Malakor atmosphere retunes fog + accent lights for this stage.
     malakor.setStage(id, look.fog);
-    const floor = id === "dock" ? dockSkin : id === "pit" ? pitSkin : asphalt;
+    const floor = lookKey === "dock" ? dockSkin : lookKey === "pit" ? pitSkin : asphalt;
     groundMat.map = floor;
     groundMat.color.setHex(0xffffff);
     groundMat.needsUpdate = true;
@@ -716,7 +725,11 @@ export function createView(canvas: HTMLCanvasElement) {
   function addSign() {
     const tex = signTex();
     const board = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.5), new THREE.MeshBasicMaterial({ map: tex }));
-    board.position.set(-6.92, 3.4, -4.88);
+    // FIX 2026-10-06 (owner): was at (-6.92,3.4,-4.88) hanging half off the
+    // building corner (bldg1 x1=-7). Now seated ON TOP of bldg1's street wall
+    // (KayKit wall prop is 4u tall x1.2 scale = wall top y=4.8), centered over
+    // the door (x=-12.5), bottom edge resting on the wall top.
+    board.position.set(-12.5, 5.55, -4.9);
     board.rotation.y = 0;
     scene.add(board);
   }

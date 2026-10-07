@@ -29,6 +29,7 @@ export type Handle = {
   startBout: (kind: "exhibit" | "practice", stage: string) => void;
   startStory: (index: number) => void;
   quit: () => void;
+  clearSplash: () => void;
   assignClip: (slot: Slot, clip: string) => void;
   setStick: (x: number, y: number) => void;
   setBtn: (name: "attack" | "grab" | "blast" | "jump" | "dash" | "use", down: boolean) => void;
@@ -92,6 +93,12 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
     if (WATCH.has(e.code)) e.preventDefault();
     keys.add(e.code);
     unlock();
+    // Escape skips the VsSplash fight-intro overlay instantly.
+    if (e.code === "Escape" && sim.splash) {
+      sim.splash = "";
+      sim.splashT = 0;
+      push(snapshot(sim));
+    }
   };
   const onKeyUp = (e: KeyboardEvent) => keys.delete(e.code);
   const clearKeys = () => keys.clear();
@@ -334,6 +341,11 @@ export function mount(canvas: HTMLCanvasElement, push: (hud: ReturnType<typeof s
         getMusic().stop();
         stopCrowd();
       } catch {}
+      push(snapshot(sim));
+    },
+    clearSplash() {
+      sim.splash = "";
+      sim.splashT = 0;
       push(snapshot(sim));
     },
     assignClip(slot, clip) {

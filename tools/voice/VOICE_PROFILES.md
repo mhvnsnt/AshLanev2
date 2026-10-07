@@ -10,7 +10,7 @@ flip the flag in `voices.json`.
 
 ## Leads
 
-### Static — AI — `en_US-danny-low` @ 0.82x
+### Static — AI (CLONED) — Chatterbox zero-shot from `tools/voice/refs/static.wav`
 - **Based on:** Enzo Amore (owner-confirmed).
 - **Vocal DNA:** Fast-talking North Jersey. High energy, machine-gun cadence,
   sells every syllable. Brags, chirps, never shuts up. Drops "how you doin'?",
@@ -18,6 +18,10 @@ flip the flag in `voices.json`.
 - **Never:** quiet, humble, slow. Static whispers only to set up a scream.
 - **Signature situations:** backstage shoot promos ("f*ck AWE" energy),
   pre-match taunts, post-win victory laps.
+- **Engine note:** Piper approximation RETIRED per owner verdict 2026-10-06
+  ("not some random British guy's voice pretending to be Enzo Amore").
+  Reference: 14s direct-to-camera roast clip, see `REFERENCE_LEDGER.md`.
+  Prototype-only until pre-ship likeness audit.
 
 ### Bannon — AI — `en_US-bryce-medium` @ 1.0x
 - **Based on:** original (AshLane protagonist).

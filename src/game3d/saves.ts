@@ -178,3 +178,84 @@ export function exportSaveFile(save: GameSaveV2): void {
   a.click();
   URL.revokeObjectURL(a.href);
 }
+
+// ---------------------------------------------------------------------------
+// Compressed save export/import — fflate (MIT, https://github.com/101arrowz/fflate)
+// Round 7 wiring. Optional dependency (same pattern as idb-keyval above):
+// gzip when installed (`npm i fflate`), raw JSON bytes when it's not.
+// ---------------------------------------------------------------------------
+
+export interface SaveExportPayload {
+  exportedAt: number;
+  save: GameSaveV2;
+}
+
+const GZIP_MAGIC_0 = 0x1f;
+const GZIP_MAGIC_1 = 0x8b;
+
+type Fflate = typeof import("fflate");
+
+let fflatePromise: Promise<Fflate | null> | null = null;
+
+function fflateOrNull(): Promise<Fflate | null> {
+  if (!fflatePromise) {
+    fflatePromise = import("fflate").catch(() => null);
+  }
+  return fflatePromise;
+}
+
+/**
+ * Serialize a save to bytes for export/transfer. Gzip-compressed when fflate
+ * is installed (~70% smaller than JSON), plain UTF-8 JSON bytes otherwise.
+ * The gzip magic header lets importSaveCompressed auto-detect either form.
+ */
+export async function exportSaveCompressed(save: GameSaveV2): Promise<Uint8Array> {
+  const payload: SaveExportPayload = { exportedAt: Date.now(), save };
+  const json = new TextEncoder().encode(JSON.stringify(payload));
+  const ff = await fflateOrNull();
+  return ff ? ff.gzipSync(json, { level: 6 }) : json;
+}
+
+/**
+ * Parse bytes produced by exportSaveCompressed. Auto-detects gzip vs raw
+ * JSON via the magic header. Throws on corrupt/unparseable data.
+ */
+export async function importSaveCompressed(bytes: Uint8Array): Promise<SaveExportPayload> {
+  let raw = bytes;
+  if (bytes.length >= 2 && bytes[0] === GZIP_MAGIC_0 && bytes[1] === GZIP_MAGIC_1) {
+    const ff = await fflateOrNull();
+    if (!ff) {
+      throw new Error(
+        "Save is gzip-compressed but fflate is not installed — run `npm i fflate`",
+      );
+    }
+    try {
+      raw = ff.gunzipSync(bytes);
+    } catch {
+      throw new Error("Save data is corrupt (gzip decompression failed)");
+    }
+  }
+  try {
+    const payload = JSON.parse(new TextDecoder().decode(raw)) as SaveExportPayload;
+    if (!payload || typeof payload.exportedAt !== "number" || !payload.save) {
+      throw new Error("missing fields");
+    }
+    return payload;
+  } catch {
+    throw new Error("Save data is corrupt (not valid save JSON)");
+  }
+}
+
+/** Download the save as a .json.gz file (browser). Falls back to .json. */
+export async function exportSaveFileCompressed(save: GameSaveV2): Promise<void> {
+  const bytes = await exportSaveCompressed(save);
+  const gzipped = bytes.length >= 2 && bytes[0] === GZIP_MAGIC_0 && bytes[1] === GZIP_MAGIC_1;
+  const blob = new Blob([bytes.buffer as ArrayBuffer], {
+    type: gzipped ? "application/gzip" : "application/json",
+  });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `ashlane-save-${new Date().toISOString().slice(0, 10)}.${gzipped ? "json.gz" : "json"}`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}

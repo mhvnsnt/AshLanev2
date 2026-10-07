@@ -75,10 +75,16 @@ export function FactionBanner({ faction }: { faction: FactionId }) {
   );
 }
 
-/** VS splash shown behind the fight-intro banner. */
-export function VsSplash() {
+/** VS splash shown behind the fight-intro banner. Click/Escape skips it. */
+export function VsSplash({ onSkip }: { onSkip?: () => void }) {
   return (
-    <div className="al-vs-splash" aria-hidden="true">
+    <div
+      className={"al-vs-splash" + (onSkip ? " al-vs-splash-skip" : "")}
+      aria-hidden={onSkip ? undefined : "true"}
+      onClick={onSkip}
+      role={onSkip ? "button" : undefined}
+      aria-label={onSkip ? "Skip intro" : undefined}
+    >
       <img src={menuArtUrl("menu/menu-vs.webp")} alt="" className="al-vs-splash-img" />
       <div className="al-vs-splash-veil" />
     </div>

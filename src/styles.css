@@ -1,23 +1,33 @@
 @import "tailwindcss";
 @import "./game3d/menu-theme.css";
 
+
 @theme {
-  --color-ink: #12100e;
-  --color-ink-2: #1e1914;
-  --color-cream: #f3e6d4;
-  --color-cream-dim: #a89884;
-  --color-ember: #e4572e;
-  --color-brass: #f0b429;
-  --color-line: #3a2e26;
-  --color-asphalt: #1a1714;
+  /* ---- ASHLANE v3 palette: Malakor/SWMG shadow under, street over ----
+     pitch black × neon purple/blue/toxic green + gold; blood red = fight */
+  --color-ink: #0a0910;
+  --color-ink-2: #141118;
+  --color-cream: #e8e0d0;
+  --color-cream-dim: #a89880;
+  --color-ember: #c1121f;
+  --color-brass: #d4af37;
+  --color-line: #2b2530;
+  --color-asphalt: #121014;
   --color-blood: #c1121f;
   --color-rust: #8a3b1c;
-  --color-concrete: #6b6560;
-  --color-neon: #ffdd33;
-  --color-smoke: #2a2521;
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Silkscreen", ui-monospace, monospace;
-  --font-headline: "Anton", "Arial Black", sans-serif;
+  --color-concrete: #8a8580;
+  --color-neon: #a3e635;
+  --color-smoke: #1b1712;
+  --color-wizard: #7b2ff7;
+  --color-arcane: #4d9de0;
+  /* ---- street type system ---- */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Black Ops One", "Anton", sans-serif;
+  --font-headline: "Anton", "Archivo Black", "Arial Black", sans-serif;
+  --font-tag: "Permanent Marker", "Rock Salt", cursive;
+  --font-spray: "Rubik Spray Paint", "Permanent Marker", Impact, sans-serif;
+  --font-comic: "Bangers", "Anton", sans-serif;
+  --font-scratch: "Rock Salt", "Permanent Marker", cursive;
   --radius: 0.9rem;
 }
 @layer base {
