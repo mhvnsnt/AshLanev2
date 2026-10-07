@@ -35,6 +35,12 @@ import { ImpactParticles } from "./impact-particles";
 import { ArenaCrowd } from "./arena-crowd";
 import { mountCityBinding, cityFogFor, type CityBinding } from "./city/game-bind";
 import { getArena } from "./stages/arena-manifest";
+// Environment quality bar (owner 2026-10-06): cinematic atmosphere, god rays,
+// wind, jiggle — performance-scaled across quality tiers.
+import { EnvQuality, JiggleSystem } from "./env-quality";
+
+/** Module-level ref so makeRig (defined below createView) can register jiggle. */
+let envQualityRef: EnvQuality | null = null;
 
 type Fighter = {
   id: number;
@@ -149,6 +155,9 @@ export function createView(canvas: HTMLCanvasElement) {
   // Round 3 visuals: post-processing chain (bloom + vignette), GPU impact
   // particles, and the tiered-stands arena crowd (pit stage).
   const postfx = new PostFx(renderer, scene, camera, { phone });
+  // Environment quality bar: atmosphere, god rays, wind, jiggle (tier-scaled).
+  const envQ = new EnvQuality(scene, { phone });
+  envQualityRef = envQ;
   const particles = new ImpactParticles();
   scene.add(particles.points);
   const crowd = new ArenaCrowd({ center: { x: 0, z: 0 }, baseRadius: 5.4 });
@@ -394,6 +403,8 @@ export function createView(canvas: HTMLCanvasElement) {
     crowd.setStage(id);
     // The open city brings its own sky, ground, and fog — skip arena dressing.
     if (id === "city") return;
+    // Environment quality bar: per-look atmosphere + district override.
+    envQ.setStage(lookKey, arenaDef?.district);
     // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
     // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
     // horizon glow, light rig, and Malakor accents where defined.
@@ -1166,6 +1177,8 @@ export function createView(canvas: HTMLCanvasElement) {
     // post-processed frame (bloom + vignette when graphics.postFx is on).
     particles.update(dt * beat);
     crowd.update(dt, sim.time, camera.position, sim.reduced);
+    // Environment quality bar: atmosphere tick + jiggle (after all mixers).
+    if (!sim.reduced) envQ.tick(dt);
     postfx.render();
   }
 
@@ -1190,7 +1203,7 @@ export function createView(canvas: HTMLCanvasElement) {
     resize,
     dispose,
     // Round 3 visuals — mount.ts hooks combat SFX + crowd reactions here.
-    fx: { particles, crowd, postFx: postfx, graphics },
+    fx: { particles, crowd, postFx: postfx, graphics, env: envQ },
   };
 }
 
@@ -1517,6 +1530,12 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
     group.add(gear);
   }
   const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.72, 0.08), new THREE.MeshBasicMaterial({ color: barColor }));
+  // Environment quality bar: jiggle physics on matching bones (tasteful,
+  // subtle). Bone-name lookup is a silent no-op when bones don't exist.
+  if (envQualityRef) {
+    const kind = /f$/.test(moveset) ? "female" : bulk > 1.15 ? "heavy" : "standard";
+    envQualityRef.jiggle.register(model, JiggleSystem.humanoidSpecs(kind));
+  }
   const fighter: Fighter = {
     id: 0,
     group,
