@@ -536,12 +536,36 @@ export function createView(canvas: HTMLCanvasElement) {
       [assetUrl("models/kenney/pets/animal-cat.glb"), 40, -16, 0.42, false],
     ];
     for (const [url, x, z, height, solid] of dress) dropPiece(sim, url, x, z, height, solid);
+    // Environment quality: weapon PBR upgrade — env reflections on metal.
+    const upgradeWeaponMats = (root: THREE.Object3D) => {
+      if (!envQ.envMap) return;
+      root.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (!mesh.isMesh || !mesh.material) return;
+        const list = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        for (const m of list) {
+          const sm = m as THREE.MeshStandardMaterial;
+          if ("envMap" in sm) {
+            sm.envMap = envQ.envMap;
+            sm.envMapIntensity = 0.9;
+            if ("metalness" in sm && (sm as unknown as { metalness: number }).metalness > 0.5) {
+              (sm as unknown as { roughness: number }).roughness = Math.min(
+                (sm as unknown as { roughness: number }).roughness, 0.45,
+              );
+            }
+            sm.needsUpdate = true;
+          }
+        }
+      });
+    };
     void loader.loadAsync(assetUrl("models/kenney/arms/weapon-sword.glb")).then((gltf) => {
       swordTpl = gltf.scene;
+      upgradeWeaponMats(swordTpl);
       propKey = "";
     });
     void loader.loadAsync(assetUrl("models/kenney/arms/weapon-spear.glb")).then((gltf) => {
       spearTpl = gltf.scene;
+      upgradeWeaponMats(spearTpl);
       propKey = "";
     });
     void loader.loadAsync(assetUrl("models/gen/cart.glb")).then((gltf) => {
@@ -957,6 +981,9 @@ export function createView(canvas: HTMLCanvasElement) {
       for (const m of f.mats) m.dispose();
     }
     fighters.length = 0;
+    // Env quality: drop stale jiggle/secondary registrations for removed models.
+    envQ.jiggle.clear();
+    envQ.secondary.clear();
     for (const b of sim.bodies) {
       const rig = rigFor(b, sim);
       const cast = b.kind === "player" && rig?.moveset.startsWith("cast:");
@@ -1523,7 +1550,12 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
   model.traverse((obj) => {
     if (obj.name === HAND_SLOT) slots.push(obj);
   });
-  const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.72, 6), new THREE.MeshLambertMaterial({ color: 0xb7c0c8 }));
+  const gearMat = new THREE.MeshStandardMaterial({ color: 0xb7c0c8, metalness: 0.85, roughness: 0.35 });
+  if (envQualityRef?.envMap) {
+    gearMat.envMap = envQualityRef.envMap;
+    gearMat.envMapIntensity = 0.9;
+  }
+  const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.72, 6), gearMat);
   gear.rotation.z = Math.PI / 3;
   gear.visible = false;
   const slot = slots[0];
@@ -1538,6 +1570,8 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
   if (envQualityRef) {
     const kind = /f$/.test(moveset) ? "female" : bulk > 1.15 ? "heavy" : "standard";
     envQualityRef.jiggle.register(model, JiggleSystem.humanoidSpecs(kind));
+    // Secondary motion: tassels, chains, pendants, coat tails, hair bones.
+    envQualityRef.secondary.register(model);
   }
   const fighter: Fighter = {
     id: 0,
