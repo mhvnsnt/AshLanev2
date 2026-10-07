@@ -11,6 +11,85 @@
  */
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import {
+  createSpringBone,
+  stepSpringBone,
+  SPRING_PRESETS,
+  type SpringBone,
+} from "./federated/springbones";
+
+/** Bone-name patterns → spring preset for secondary motion. */
+const ATTACH_PATTERNS: [RegExp, keyof typeof SPRING_PRESETS][] = [
+  [/dread|braid|plait/i, "dreads"],
+  [/ponytail|hairtail|hair/i, "ponytail"],
+  [/chain|necklace|pendant|tassel|charm/i, "chain"],
+  [/cape|cloak|coat|scarf|skirt|cloth|hem/i, "cloth"],
+];
+
+const _e = new THREE.Euler();
+const _q = new THREE.Quaternion();
+const _wp = new THREE.Vector3();
+const _pp = new THREE.Vector3();
+
+/**
+ * Secondary motion for character attachments (tassels, chains, pendants,
+ * coat tails, scarves, hair bones) using the existing federated spring-bone
+ * integrator. Bone-name driven; silent no-op when a model has no matching
+ * bones. Applied post-mixer as a local rotation on top of the animation,
+ * so it can never corrupt the underlying skeleton or mesh.
+ */
+export class SecondaryMotion {
+  private items: {
+    bone: THREE.Bone;
+    spring: SpringBone;
+    prev: THREE.Vector3;
+  }[] = [];
+  strength = 1;
+
+  /** Scan a fighter model for attachment bones. Returns match count. */
+  register(root: THREE.Object3D): number {
+    let n = 0;
+    root.traverse((o) => {
+      const bone = o as THREE.Bone;
+      if (!bone.isBone) return;
+      const hit = ATTACH_PATTERNS.find(([re]) => re.test(bone.name));
+      if (!hit) return;
+      // Avoid double-registering the same bone.
+      if (this.items.some((it) => it.bone === bone)) return;
+      const spring = createSpringBone(0, [0, -1, 0], SPRING_PRESETS[hit[1]]);
+      bone.getWorldPosition(_wp);
+      this.items.push({ bone, spring, prev: _wp.clone() });
+      n++;
+    });
+    return n;
+  }
+
+  /** Remove all registrations (call when fighters are rebuilt). */
+  clear(): void {
+    this.items.length = 0;
+  }
+
+  /** Step after the animation mixers; adds offset rotation in local space. */
+  update(dt: number): void {
+    if (this.strength <= 0 || this.items.length === 0) return;
+    const clamped = Math.min(dt, 1 / 20);
+    for (const it of this.items) {
+      it.bone.getWorldPosition(_wp);
+      _pp.copy(_wp).sub(it.prev);
+      it.prev.copy(_wp);
+      // Parent inertia: world-space travel this frame drives the spring.
+      const pm = Math.min(_pp.length(), 0.5);
+      if (_pp.lengthSq() > 0) _pp.multiplyScalar(pm / _pp.length());
+      stepSpringBone(it.spring, clamped, _pp.x, _pp.y, _pp.z);
+      const ox = it.spring.offset[0] * this.strength;
+      const oz = it.spring.offset[2] * this.strength;
+      if (Math.abs(ox) + Math.abs(oz) < 0.0004) continue;
+      _e.set(oz * 2.4, 0, -ox * 2.4);
+      _q.setFromEuler(_e);
+      it.bone.quaternion.multiply(_q);
+    }
+  }
+}
 
 export type QualityTier = "high" | "medium" | "low";
 
@@ -220,6 +299,8 @@ interface JiggleBone {
   base: THREE.Vector3;
   vel: THREE.Vector3;
   off: THREE.Vector3;
+  /** previous frame's offset — applied as a delta so we never fight the mixer */
+  prevOff: THREE.Vector3;
   stiffness: number;
   damping: number;
   max: number;
@@ -250,6 +331,7 @@ export class JiggleSystem {
         base: b.position.clone(),
         vel: new THREE.Vector3(),
         off: new THREE.Vector3(),
+        prevOff: new THREE.Vector3(),
         stiffness: s.stiffness ?? 90,
         damping: s.damping ?? 7,
         max: s.max ?? 0.035,
@@ -302,12 +384,16 @@ export class JiggleSystem {
       j.vel.z += (-k * j.off.z - c * j.vel.z - az * 0.012 * j.bias.z) * dtc;
       j.off.addScaledVector(j.vel, dtc);
       if (j.off.length() > j.max) j.off.setLength(j.max);
-      j.obj.position.copy(j.base).add(j.off);
+      // Apply the frame's offset DELTA on top of the mixer's position —
+      // never overwrite it, so animation is never frozen or fought.
+      tmp.copy(j.off).sub(j.prevOff);
+      j.prevOff.copy(j.off);
+      j.obj.position.add(tmp);
     }
   }
 
   clear(): void {
-    for (const j of this.bones) j.obj.position.copy(j.base);
+    for (const j of this.bones) j.obj.position.sub(j.prevOff);
     this.bones = [];
   }
 }
@@ -673,6 +759,8 @@ export class EnvQuality {
   readonly budget: TierBudget;
   readonly atmosphere: StageAtmosphere;
   readonly jiggle = new JiggleSystem();
+  /** Bone-based secondary motion (tassels, chains, hair bones, coat tails). */
+  readonly secondary = new SecondaryMotion();
   /** Procedural IBL for PBR/wet surfaces (shared, one-time cost). */
   readonly envMap: THREE.Texture | null;
   private camera: THREE.Camera | null = null;
@@ -730,5 +818,7 @@ export class EnvQuality {
     this.atmosphere.tick(dt, this.time);
     if (this.camera) this.atmosphere.updateRaysCamera(this.camera.position);
     this.jiggle.update(dt);
+    // Secondary motion runs post-mixer (tick is called after all mixers).
+    this.secondary.update(dt);
   }
 }
