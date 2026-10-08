@@ -205,7 +205,7 @@ export const ROSTER: LaneFighter[] = [
     name: "Sombra Negra",
     martial: "lucha",
     bio: "The Finisher Thief. Steals your finisher mid-match and beats you with it — your best self, turned.",
-    attires: [a("main", "Main Attire", "SOMBRA_NEGRA_rigged.glb")],
+    attires: [a("main", "Main Attire", "SOMBRA_NEGRA.glb")],
   },
   // CC0 modular base bodies (Quaternius). Hair/beard/brows attach via
   // attachPart() in ./quaternius.ts — same 65-joint rig, no remap needed.

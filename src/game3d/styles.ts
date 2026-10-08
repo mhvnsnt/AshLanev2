@@ -196,6 +196,28 @@ export const MARTIAL: { id: string; label: string; note: string; clips: Partial<
       sweep: "1H_Melee_Attack_Slice_Horizontal",
     },
   },
+  {
+    id: "boxing",
+    label: "Boxing",
+    note: "Hands only. The jab sets up the cross.",
+    clips: {
+      jab: "Unarmed_Melee_Attack_Punch_A",
+      cross: "Unarmed_Melee_Attack_Punch_B",
+      launch: "Unarmed_Melee_Attack_Punch_A",
+      sweep: "Unarmed_Melee_Attack_Punch_B",
+    },
+  },
+  {
+    id: "street",
+    label: "Street",
+    note: "No form. Whatever lands, lands.",
+    clips: {
+      jab: "Unarmed_Melee_Attack_Punch_A",
+      cross: "Unarmed_Melee_Attack_Punch_B",
+      launch: "Unarmed_Melee_Attack_Kick",
+      sweep: "Unarmed_Melee_Attack_Kick",
+    },
+  },
 ];
 
 export const STANCES: { id: string; label: string; note: string; idle: string }[] = [
