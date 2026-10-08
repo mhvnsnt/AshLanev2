@@ -16,7 +16,98 @@ import bpy
 import json
 import sys
 import os
+import shutil
+import subprocess
+import tempfile
 from mathutils import Vector
+
+# Surface-Heat-Diffuse-Skinning fallback (MIT, vendored in surface-heat/).
+# Voxel heat-diffusion skinning used when Blender's Bone Heat fails
+# (raises, or yields zero total weight) on messy multi-piece meshes.
+SHD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surface-heat")
+SHD_BIN = os.path.join(SHD_DIR, "addon", "surface_heat_diffuse_skinning", "bin", "Linux", "shd")
+
+
+def surface_heat_skin(mesh_obj, arm_obj, resolution=96, timeout=1200):
+    """Skin mesh_obj to arm_obj via the vendored shd binary.
+
+    Writes world-space mesh/bone data to a temp dir, runs shd headlessly,
+    reads back per-vertex weights into vertex groups. Returns True when
+    non-trivial weights were applied. Safe to call on an already-parented
+    mesh; never raises (returns False on any failure).
+    """
+    if not (os.path.isfile(SHD_BIN) and os.access(SHD_BIN, os.X_OK)):
+        print("  surface-heat: binary missing/not executable, skipping")
+        return False
+    tmpdir = tempfile.mkdtemp(prefix="shd_")
+    try:
+        mesh_txt = os.path.join(tmpdir, "mesh.txt")
+        bone_txt = os.path.join(tmpdir, "bone.txt")
+        weight_txt = os.path.join(tmpdir, "weight.txt")
+
+        # Mesh data in world space (same format as the shd Blender addon)
+        with open(mesh_txt, "w", encoding="utf-8") as f:
+            f.write("# surface heat diffuse mesh export.\n")
+            for v in mesh_obj.data.vertices:
+                co = mesh_obj.matrix_world @ v.co
+                f.write(f"v,{co[0]},{co[1]},{co[2]}\n")
+            for poly in mesh_obj.data.polygons:
+                f.write("f," + ",".join(str(i) for i in poly.vertices) + "\n")
+
+        # Bone data: deform bones only, world-space head/tail
+        bpy.context.view_layer.objects.active = arm_obj
+        bpy.ops.object.mode_set(mode="EDIT")
+        bones = []
+        for b in arm_obj.data.edit_bones:
+            if b.use_deform:
+                h = arm_obj.matrix_world @ b.head
+                t = arm_obj.matrix_world @ b.tail
+                bones.append((b.name, h, t))
+        bpy.ops.object.mode_set(mode="OBJECT")
+        if not bones:
+            print("  surface-heat: no deform bones, skipping")
+            return False
+        with open(bone_txt, "w", encoding="utf-8") as f:
+            f.write("# surface heat diffuse bone export.\n")
+            for name, h, t in bones:
+                f.write(f"b,{name},{h[0]},{h[1]},{h[2]},{t[0]},{t[1]},{t[2]}\n")
+
+        # resolution, loops, samples, influence, falloff, sharpness, solidify
+        args = [SHD_BIN, "mesh.txt", "bone.txt", "weight.txt",
+                str(resolution), "5", "64", "8", "0.2", "3", "n"]
+        r = subprocess.run(args, cwd=tmpdir, capture_output=True,
+                           text=True, timeout=timeout)
+        if r.returncode != 0 or not os.path.isfile(weight_txt):
+            print(f"  surface-heat: binary failed rc={r.returncode}")
+            return False
+
+        bone_names = []
+        applied = 0
+        with open(weight_txt, encoding="utf-8") as f:
+            for line in f:
+                toks = line.strip().split(",")
+                if not toks:
+                    continue
+                if toks[0] == "b":
+                    name = toks[1].replace("\\;", ",")
+                    bone_names.append(name)
+                    if mesh_obj.vertex_groups.get(name) is None:
+                        mesh_obj.vertex_groups.new(name=name)
+                elif toks[0] == "w" and len(toks) >= 4:
+                    vidx, bidx, w = int(toks[1]), int(toks[2]), float(toks[3])
+                    if w > 1e-6 and bidx < len(bone_names):
+                        mesh_obj.vertex_groups[bone_names[bidx]].add([vidx], w, "REPLACE")
+                        applied += 1
+        print(f"  surface-heat: {applied} weight entries on {len(bone_names)} bones")
+        return applied > 0
+    except subprocess.TimeoutExpired:
+        print("  surface-heat: timed out")
+        return False
+    except Exception as e:
+        print(f"  surface-heat: error {e}")
+        return False
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
 # Parse args after --
 argv = sys.argv
@@ -228,6 +319,12 @@ for m in meshes:
         if t < 1e-6:
             m.vertex_groups.remove(idx_of[gi])
     if not m.vertex_groups:
+        # Bone Heat failed entirely: try Surface-Heat-Diffuse-Skinning
+        # (voxel heat diffusion) before giving up on this mesh.
+        if surface_heat_skin(m, arm_obj):
+            print(f"  {m.name}: skinned via surface-heat fallback "
+                  f"({len(m.vertex_groups)} weighted groups)")
+            continue
         # No weights: unparent, keep world transform; props ride along statically
         mat = m.matrix_world.copy()
         m.parent = None
