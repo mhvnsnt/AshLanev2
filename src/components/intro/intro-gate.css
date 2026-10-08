@@ -1,0 +1,94 @@
+/* IntroGate styles — fullscreen gate, video stage, skip control. */
+.intro-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0b0a09;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.intro-gate-inner {
+  text-align: center;
+  padding: 2rem;
+}
+
+.intro-gate-title {
+  font-family: "Anton", "Outfit", sans-serif;
+  font-size: clamp(3rem, 12vw, 7rem);
+  letter-spacing: 0.08em;
+  color: #f5efe4;
+  text-shadow: 0 0 32px rgba(255, 120, 40, 0.35), 0 4px 0 #1a1512;
+  line-height: 1;
+}
+
+.intro-gate-tag {
+  font-family: "Outfit", sans-serif;
+  font-size: clamp(0.8rem, 3vw, 1.1rem);
+  letter-spacing: 0.55em;
+  text-indent: 0.55em;
+  color: #c98a3d;
+  margin-top: 0.75rem;
+}
+
+.intro-gate-prompt {
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: #fff;
+  margin-top: 3rem;
+  animation: intro-pulse 1.6s ease-in-out infinite;
+}
+
+.intro-gate-loading {
+  animation: none;
+  opacity: 0.7;
+}
+
+@keyframes intro-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.intro-gate[data-phase="video"] {
+  cursor: default;
+  background: #000;
+}
+
+.intro-gate-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.intro-gate-skip {
+  position: absolute;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 2;
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  text-indent: 0.25em;
+  color: #fff;
+  background: rgba(20, 16, 12, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  padding: 0.7rem 1.3rem;
+  cursor: pointer;
+}
+
+.intro-gate-skip:active {
+  background: rgba(60, 44, 28, 0.9);
+}

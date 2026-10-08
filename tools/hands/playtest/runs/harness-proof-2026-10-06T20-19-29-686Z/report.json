@@ -1,0 +1,61 @@
+{
+ "name": "harness-proof",
+ "url": "http://127.0.0.1:8931/target.html",
+ "headed": false,
+ "video": true,
+ "startedAt": "2026-10-06T20:19:29.755Z",
+ "finishedAt": "2026-10-06T20:19:35.341Z",
+ "steps": [
+  {
+   "n": 1,
+   "do": "goto",
+   "label": "",
+   "ms": 283,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 2,
+   "do": "waitReady",
+   "label": "surface-ready",
+   "ms": 483,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 3,
+   "do": "shot",
+   "label": "",
+   "ms": 622,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 4,
+   "do": "startCast",
+   "label": "",
+   "ms": 100,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 5,
+   "do": "probe",
+   "label": "snapshot",
+   "ms": 128,
+   "ok": false,
+   "err": "window is not defined"
+  }
+ ],
+ "screenshots": [
+  "shots/p01_loaded.png",
+  "shots/error-step5.png"
+ ],
+ "pageErrors": [],
+ "consoleErrors": [],
+ "requestFailures": [],
+ "probes": {},
+ "videoPath": null,
+ "ok": false,
+ "fatal": "window is not defined"
+}

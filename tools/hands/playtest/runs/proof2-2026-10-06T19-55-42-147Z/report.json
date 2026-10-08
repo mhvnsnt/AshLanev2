@@ -1,0 +1,48 @@
+{
+ "name": "proof2",
+ "url": "http://127.0.0.1:8080/AshLanev2/?debug=1&autostart=bout&kind=exhibit&stage=ward",
+ "headed": false,
+ "video": false,
+ "startedAt": "2026-10-06T19:55:42.233Z",
+ "finishedAt": "2026-10-06T19:58:51.713Z",
+ "steps": [
+  {
+   "n": 1,
+   "do": "goto",
+   "label": "",
+   "ms": 1169,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 2,
+   "do": "waitReady",
+   "label": "bout-ready",
+   "ms": 184401,
+   "ok": false,
+   "err": "waitForReady timeout (bout-ready): last=undefined"
+  }
+ ],
+ "screenshots": [
+  "shots/error-step2.png"
+ ],
+ "pageErrors": [],
+ "consoleErrors": [
+  "CONSOLE: Failed to load resource: net::ERR_FAILED",
+  "CONSOLE: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "CONSOLE: Failed to load resource: net::ERR_EMPTY_RESPONSE",
+  "CONSOLE: Failed to load resource: net::ERR_EMPTY_RESPONSE",
+  "CONSOLE: Failed to load resource: net::ERR_CONNECTION_REFUSED"
+ ],
+ "requestFailures": [
+  "https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@500;600;700&family=Silkscreen:wght@400;700&display=swap :: net::ERR_FAILED",
+  "https://grok.com/grok-app-builder/extensions.js :: net::ERR_TUNNEL_CONNECTION_FAILED",
+  "http://127.0.0.1:8080/AshLanev2/@tanstack-start/styles.css?routes=__root__%2C%2F :: net::ERR_EMPTY_RESPONSE",
+  "http://127.0.0.1:8080/AshLanev2/src/styles.css :: net::ERR_EMPTY_RESPONSE",
+  "http://127.0.0.1:8080/AshLanev2/@react-refresh :: net::ERR_CONNECTION_REFUSED"
+ ],
+ "probes": {},
+ "videoPath": null,
+ "ok": false,
+ "fatal": "waitForReady timeout (bout-ready): last=undefined"
+}

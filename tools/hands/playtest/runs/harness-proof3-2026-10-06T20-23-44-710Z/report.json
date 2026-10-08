@@ -1,0 +1,144 @@
+{
+ "name": "harness-proof3",
+ "url": "http://127.0.0.1:8931/target.html",
+ "headed": false,
+ "video": true,
+ "startedAt": "2026-10-06T20:23:44.869Z",
+ "finishedAt": "2026-10-06T20:24:09.366Z",
+ "steps": [
+  {
+   "n": 1,
+   "do": "goto",
+   "label": "",
+   "ms": 376,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 2,
+   "do": "waitReady",
+   "label": "surface-ready",
+   "ms": 588,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 3,
+   "do": "shot",
+   "label": "",
+   "ms": 479,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 4,
+   "do": "startCast",
+   "label": "",
+   "ms": 21,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 5,
+   "do": "probe",
+   "label": "snapshot",
+   "ms": 34,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 6,
+   "do": "probe",
+   "label": "fighters",
+   "ms": 145,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 7,
+   "do": "eval",
+   "label": "drive-input",
+   "ms": 58,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 8,
+   "do": "sleep",
+   "label": "",
+   "ms": 2506,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 9,
+   "do": "shot",
+   "label": "",
+   "ms": 709,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 10,
+   "do": "probe",
+   "label": "snapshot-after",
+   "ms": 850,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 11,
+   "do": "press",
+   "label": "",
+   "ms": 2132,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 12,
+   "do": "stopCast",
+   "label": "",
+   "ms": 11384,
+   "ok": true,
+   "err": null
+  }
+ ],
+ "screenshots": [
+  "shots/p01_loaded.png",
+  "shots/p02_driven.png"
+ ],
+ "pageErrors": [],
+ "consoleErrors": [],
+ "requestFailures": [],
+ "probes": {
+  "snapshot": {
+   "running": true,
+   "mode": "belt",
+   "hp": 100,
+   "combo": 0
+  },
+  "fighters": [
+   {
+    "id": 0,
+    "kind": "player",
+    "name": "proof",
+    "x": 1.5,
+    "y": 0,
+    "z": 2.5,
+    "yaw": 0.1,
+    "hp": 99,
+    "maxHp": 100,
+    "state": "free",
+    "stateT": 0.5
+   }
+  ],
+  "snapshot-after": {
+   "running": true,
+   "mode": "belt",
+   "hp": 97,
+   "combo": 3
+  }
+ },
+ "videoPath": "run.mp4",
+ "ok": true
+}

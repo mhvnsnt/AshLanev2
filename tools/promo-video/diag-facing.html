@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8">
+<style>html,body{margin:0;padding:0;background:#111;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">
+{ "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(1920, 540);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x111111);
+const camera = new THREE.PerspectiveCamera(40, 1920/540, 0.1, 100);
+camera.position.set(0, 1.7, 7.5);
+camera.lookAt(0, 1.1, 0);
+scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+const key = new THREE.DirectionalLight(0xffffff, 1.6);
+key.position.set(2, 5, 6); scene.add(key);
+const grid = new THREE.GridHelper(30, 30, 0x444444, 0x222222);
+grid.position.y = 0; scene.add(grid);
+// +Z axis marker (red line toward camera/default "forward")
+const zAxis = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 3),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+zAxis.position.set(-9.5, 0.03, 1.5); scene.add(zAxis);
+
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const MODELS_DIR = '/models/';
+const files = ['ONYX_street.glb','HOLLOW.glb','STATIC.glb','ECHO.glb','CIPHER_rigged.glb','CAIN_ELIAS_gear.glb'];
+const report = [];
+let i = 0;
+for (const f of files) {
+  const gltf = await loader.loadAsync(MODELS_DIR + f);
+  const root = gltf.scene;
+  const bbox = new THREE.Box3().setFromObject(root);
+  const size = bbox.getSize(new THREE.Vector3());
+  const center = bbox.getCenter(new THREE.Vector3());
+  report.push({ file: f, minY: bbox.min.y.toFixed(3), maxY: bbox.max.y.toFixed(3),
+    sizeX: size.x.toFixed(2), sizeY: size.y.toFixed(2), sizeZ: size.z.toFixed(2),
+    centerY: center.y.toFixed(2) });
+  // place in a row, feet on ground via bbox offset (diag only)
+  root.position.set(-7.5 + i * 3, -bbox.min.y, 0);
+  scene.add(root);
+  i++;
+}
+console.log('DIAG-REPORT ' + JSON.stringify(report));
+window.__renderAt = function() {
+  renderer.render(scene, camera);
+  return true;
+};
+window.__ready = true;
+</script>
+</body>
+</html>

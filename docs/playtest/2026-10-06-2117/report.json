@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-06T21:17:50.862Z",
+  "build": "reused",
+  "steps": [
+    {
+      "name": "boot: menu renders",
+      "ok": false,
+      "detail": "1 js errors"
+    },
+    {
+      "name": "harness completed",
+      "ok": false,
+      "detail": "locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Fighters' }).first()\n"
+    }
+  ],
+  "errors": [
+    "CONSOLE: Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "HARNESS: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Fighters' }).first()\n"
+  ],
+  "failedRequests": [
+    "GET https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@500;600;700&family=Silkscreen:wght@400;700&display=swa :: net::ERR_TUNNEL_CONNECTION_FAILED"
+  ],
+  "diffs": {},
+  "ragdoll": null,
+  "verdict": "FAIL"
+}
