@@ -19,6 +19,7 @@ import {
   MapMarker,
 } from "@/components/ui-art-components";
 import { ConceptGallery } from "@/components/concept-gallery";
+import { CustomizerPanel } from "@/components/customizer-panel";
 import { UI_ART } from "@/game3d/ui-art";
 
 function art(key: keyof typeof UI_ART): string {
@@ -122,7 +123,7 @@ export function AshlaneApp() {
   const [suiteWho, setSuiteWho] = useState<string | null>(null);
   const [playerEmblem, setPlayerEmblem] = useState<FactionId | null>(null);
   const [playerArtEmblem, setPlayerArtEmblem] = useState<string | null>(null);
-  const [menu, setMenu] = useState<"main" | "jobs" | "style" | "library" | "story" | "arenas">("main");
+  const [menu, setMenu] = useState<"main" | "jobs" | "style" | "library" | "story" | "arenas" | "customizer">("main");
   const [arena, setArena] = useState("ward");
   const [slot, setSlot] = useState<Slot>("jab");
   const [clip, setClip] = useState("Unarmed_Melee_Attack_Punch_A");
@@ -297,6 +298,9 @@ export function AshlaneApp() {
                         Fighters
                       </button>
                     </div>
+                    <button type="button" className="al-btn al-rise al-rise-4" onClick={() => setMenu("customizer")}>
+                      <span className="al-btn-icon"><MenuIcon name="trophy" />Customize a fighter</span>
+                    </button>
                     <div className="grid grid-cols-2 gap-2.5">
                       <button type="button" className="al-btn al-rise al-rise-4" onClick={() => begin("belt")}>
                         <span className="al-btn-icon"><MenuIcon name="fight" />Scrap street</span>
@@ -572,6 +576,9 @@ export function AshlaneApp() {
                       <span>← Back</span>
                     </button>
                   </div>
+                ) : null}
+                {menu === "customizer" ? (
+                  <CustomizerPanel onBack={() => setMenu("main")} />
                 ) : null}
                 <p className="mt-3 text-sm text-cream-dim">WASD run · Space jump · J hit · K grab or dash · L spin · Shift dash · drag to look in the plaza</p>
                 <details className="tune mt-4">

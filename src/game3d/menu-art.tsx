@@ -21,7 +21,8 @@ export type MenuScreen =
   | "arenas"
   | "style"
   | "library"
-  | "jobs";
+  | "jobs"
+  | "customizer";
 
 const SCREEN_ART: Record<MenuScreen, string> = {
   main: "menu/menu-hero.webp",
@@ -30,6 +31,7 @@ const SCREEN_ART: Record<MenuScreen, string> = {
   style: "menu/menu-fighters.webp",
   library: "menu/menu-loading.webp",
   jobs: "menu/menu-story.webp",
+  customizer: "menu/menu-fighters.webp",
 };
 
 export type FactionId =
