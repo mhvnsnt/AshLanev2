@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 """LANE-3DLIMB QC: wear every asset on CIPHER, pose, render.
 Usage: env -u PYTHONPATH blender -b -P qc_wearables.py -- <cipher.glb> <modelsdir> <outdir> [asset_filter]
+
+The <cipher.glb> must be importable by Blender 4.0: the stock
+public/models/cast/CIPHER_rigged.glb declares EXT_meshopt_compression in
+extensionsRequired without using it, which the importer rejects. Pre-strip it:
+  python3 scripts/strip_meshopt_required.py public/models/cast/CIPHER_rigged.glb /tmp/cipher_decoded.glb
+and pass /tmp/cipher_decoded.glb as <cipher.glb>.
+
+QC CHECKLIST (permanent - added 2026-10-09 after the fixup lane found defects
+the original checklist missed):
+- Heeled footwear: heel present and visible.
+- Footwear: full foot enclosure, no heel/toe poke-through, no float at ankle
+  in BOTH poses.
+- Gloves L/R: symmetric shape and coverage in both poses.
+- Frame contains only character + wearable (no importer helpers, no scene junk).
 """
 import bpy, sys, os, math
 from mathutils import Vector
@@ -9,11 +23,82 @@ SRC, MODELSDIR, OUTDIR = sys.argv[-3], sys.argv[-2], sys.argv[-1]
 FILTER = os.environ.get('QC_FILTER', '')
 os.makedirs(OUTDIR, exist_ok=True)
 
+def del_import_helpers():
+    """Delete Blender glTF-importer helper objects ('Icosphere' bone-shape
+    helpers, parked in the glTF_not_exported collection). They are not part of
+    any GLB asset; leaving them pollutes the scene. See pendant lane note:
+    docs/CHAIN_PENDANT_FIX.md 'Importer artifact note' (do NOT 'fix' again -
+    the helpers are never in the exported files)."""
+    n = 0
+    for o in [o for o in bpy.data.objects if o.name.startswith('Icosphere')]:
+        bpy.data.objects.remove(o, do_unlink=True)
+        n += 1
+    return n
+
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
+del_import_helpers()
 CHARM = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 BODY = max((o for o in bpy.data.objects if o.type == 'MESH'),
            key=lambda o: len(o.data.vertices))
+
+def fix_character_weights():
+    """CIPHER_rigged.glb ships with confused skin weights around the wrists:
+    wrist verts carry thigh/hip/spine weights (the T-pose parks the hands
+    against the thighs, confusing the auto-weighter). When the arms pose,
+    those verts stay behind while the hand moves, stretching triangles into
+    long copper 'blade' artifacts in every render. This is a test-rig defect,
+    NOT a wearable defect - fix it at runtime so QC frames contain only
+    character + wearable. Reassigns wrist-region verts' non-arm weights to the
+    nearest arm bone. Runs once; in-memory only, never saved to the GLB."""
+    def seg_dist(p, a, b):
+        ab = b - a
+        t = max(0.0, min(1.0, (p - a).dot(ab) / max(ab.length_squared, 1e-9)))
+        return (p - (a + ab * t)).length
+    AW = CHARM.matrix_world
+    targets = []
+    for side in ('Left', 'Right'):
+        for bn in ('Hand', 'ForeArm', 'Arm', 'Shoulder'):
+            b = CHARM.data.bones.get(f'mixamorig:{side}{bn}')
+            if b:
+                targets.append((f'mixamorig:{side}{bn}',
+                                AW @ b.head_local, AW @ b.tail_local))
+    for vg in BODY.vertex_groups:
+        n = vg.name
+        if 'Finger' in n or 'Thumb' in n:
+            b = CHARM.data.bones.get(n)
+            if b:
+                targets.append((n, AW @ b.head_local, AW @ b.tail_local))
+    WRONG = ('UpLeg', 'Leg', 'Hips', 'Spine', 'Spine1', 'Spine2',
+             'Neck', 'Head', 'ToeBase', 'Foot')
+    fixed = 0
+    BW = BODY.matrix_world
+    for v in BODY.data.vertices:
+        co = BW @ v.co
+        best, bd = None, 1e9
+        for bn, a, b in targets:
+            d = seg_dist(co, a, b)
+            if d < bd:
+                bd, best = d, bn
+        if bd < 0.08:
+            moves = []
+            for g in v.groups:
+                gn = BODY.vertex_groups[g.group].name
+                if any(w in gn for w in WRONG) and g.weight > 0.08:
+                    moves.append((gn, g.weight))
+            for gn, w in moves:
+                BODY.vertex_groups[gn].remove([v.index])
+                BODY.vertex_groups[best].add([v.index], w, 'ADD')
+                fixed += 1
+    for v in BODY.data.vertices:
+        tot = sum(g.weight for g in v.groups)
+        if tot > 0 and abs(tot - 1.0) > 0.001:
+            for g in v.groups:
+                g.weight /= tot
+    print('character weight fix: reassigned', fixed, 'verts')
+    return fixed
+
+fix_character_weights()
 gz = min((BODY.matrix_world @ v.co).z for v in BODY.data.vertices)
 
 # ---- scene: light backdrop, ground, 3-point light
@@ -93,7 +178,10 @@ ASSETS = [
 def import_glb(path):
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=path)
-    return [o for o in bpy.data.objects if o not in before]
+    del_import_helpers()
+    # del_import_helpers() invalidates removed objects; rebuild the list
+    return [o for o in bpy.data.objects
+            if o not in before and not o.name.startswith('Icosphere')]
 
 def wear(objs):
     # Mini-armatures already mirror the character's hierarchy/roll (see
