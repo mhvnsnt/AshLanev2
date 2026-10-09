@@ -150,15 +150,36 @@ export class FacePaintDecal {
           const ln = hits[0].face.normal.clone()
             .transformDirection(proxy.matrixWorld.clone().invert());
           dPos.push(hp.x + ln.x * SURFACE_OFFSET, hp.y + ln.y * SURFACE_OFFSET, hp.z + ln.z * SURFACE_OFFSET);
-          // UV: fx 0 = viewer's left, fy 0 = forehead top.
-          // Viewer's left = -rightW. ix=0 is at -rightW (viewer's left).
-          dUV.push(ix / (GRID_NX - 1), iy / (GRID_NY - 1));
+          // Store grid-plane offsets; planar UV remap happens after the loop.
+          // fx 0 = viewer's left (ix=0 is at -rightW = viewer's left), fy 0 = forehead top.
+          dUV.push(ox, oy);
           valid[iy][ix] = true;
         } else {
           dPos.push(0, 0, 0); dUV.push(0, 0);
           valid[iy][ix] = false;
         }
         void hitN;
+      }
+    }
+
+    // Planar UV remap: normalize the valid hit offsets to 0..1 so the
+    // paint maps to physical face extent even if edge rays missed.
+    {
+      let ux0 = Infinity, ux1 = -Infinity, uy0 = Infinity, uy1 = -Infinity;
+      for (let iy = 0; iy < GRID_NY; iy++) {
+        for (let ix = 0; ix < GRID_NX; ix++) {
+          if (!valid[iy][ix]) continue;
+          const u = dUV[(iy * GRID_NX + ix) * 2], v = dUV[(iy * GRID_NX + ix) * 2 + 1];
+          if (u < ux0) ux0 = u; if (u > ux1) ux1 = u;
+          if (v < uy0) uy0 = v; if (v > uy1) uy1 = v;
+        }
+      }
+      for (let iy = 0; iy < GRID_NY; iy++) {
+        for (let ix = 0; ix < GRID_NX; ix++) {
+          const o = (iy * GRID_NX + ix) * 2;
+          dUV[o] = (dUV[o] - ux0) / Math.max(1e-6, ux1 - ux0);
+          dUV[o + 1] = 1 - (dUV[o + 1] - uy0) / Math.max(1e-6, uy1 - uy0);
+        }
       }
     }
 
