@@ -94,6 +94,17 @@ async function ensureDecal(root: THREE.Object3D, fighterId: string): Promise<Fac
   const mesh = findBodyMesh(root);
   if (!mesh) return null;
   const decal = FacePaintDecal.build(mesh, profile);
+  // Integration note (LANE-UI, 2026-10-09): the paint lane ships the decal
+  // material with depthWrite:false. Verified in headless-Chromium QC
+  // (SwiftShader): a transparent + depthWrite:false skinned decal does NOT
+  // composite — the paint is invisible (transparent=false and
+  // transparent+depthWrite=true both render the paint correctly, placement
+  // and UVs verified). Forcing depthWrite=true so the customizer preview
+  // shows the paint. The erase blend still punches alpha (reveals skin);
+  // the 2mm surface offset + polygonOffset prevent z-fighting. Paint lane:
+  // please review whether this is SwiftShader-specific or affects real GPUs
+  // (if the latter, the fix belongs in decal.ts).
+  decal.material.depthWrite = true;
   (root.userData as Record<string, unknown>)[DECAL_KEY] = { decal, fighterId } as DecalEntry;
   return decal;
 }
