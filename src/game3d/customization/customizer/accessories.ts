@@ -178,9 +178,37 @@ export async function attachAccessory(
   if (rebound.length > 0) {
     // Skinned to the fighter now — collect the rebound meshes in a holder so
     // detachAccessory can remove them cleanly, then bind in final position.
+    //
+    // DCC scale fix: accessory bind space rarely matches the fighter (the
+    // chains are authored ~8x oversize). Scaling the holder would break the
+    // skinning math (bind matrix vs bone matrices), so instead bake the
+    // manifest scale into the geometry AND the bone-inverse translations,
+    // then bind with the holder at scale 1.
+    const s = manifest.attach.scale ?? 1;
     const holder = new THREE.Group();
     holder.name = `accessory:${manifest.id}`;
-    for (const mesh of rebound) holder.add(mesh);
+    // Optional orientation fix for the rebind path (rigid rotation is safe:
+    // it is baked into the bind matrices, unlike holder scale). Lets the
+    // chain lane tune pendant direction without touching code.
+    const [rx, ry, rz] = manifest.attach.rotation;
+    holder.rotation.set(
+      (rx * Math.PI) / 180,
+      (ry * Math.PI) / 180,
+      (rz * Math.PI) / 180,
+    );
+    for (const mesh of rebound) {
+      if (s !== 1) {
+        mesh.geometry.scale(s, s, s);
+        const inv = mesh.skeleton.boneInverses;
+        for (let i = 0; i < inv.length; i++) {
+          const e = inv[i].elements;
+          e[12] *= s;
+          e[13] *= s;
+          e[14] *= s;
+        }
+      }
+      holder.add(mesh);
+    }
     root.add(holder);
     root.updateMatrixWorld(true);
     for (const mesh of rebound) mesh.bind(mesh.skeleton, mesh.matrixWorld);

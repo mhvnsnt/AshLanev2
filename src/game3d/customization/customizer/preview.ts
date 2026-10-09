@@ -52,6 +52,8 @@ export class CustomizerPreview {
   private pitch = 0.08;
   private distance = 3.2;
   private targetDistance = 3.2;
+  /** Override for the camera look-at height as a fraction of model height (default 0.52 = chest). */
+  private focusHeight: number | null = null;
   private lastInteract = 0;
   private disposed = false;
   private resizeObs: ResizeObserver | null = null;
@@ -61,7 +63,14 @@ export class CustomizerPreview {
   onStatus: (s: PreviewStatus) => void = () => {};
 
   constructor(private canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    // preserveDrawingBuffer: true powers the "export portrait" capture —
+    // the player can save a PNG of their build. Negligible cost on a menu screen.
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: false,
+      preserveDrawingBuffer: true,
+    });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -297,6 +306,15 @@ export class CustomizerPreview {
     return this.targetDistance;
   }
 
+  /**
+   * Point the camera at the head (for the eye-color picker) or back at the
+   * chest. `fraction` is the look-at height as a fraction of model height.
+   */
+  setFocusHeight(fraction: number | null): void {
+    this.focusHeight = fraction;
+    this.lastInteract = performance.now();
+  }
+
   private resize(): void {
     const w = this.canvas.clientWidth || 1;
     const h = this.canvas.clientHeight || 1;
@@ -324,7 +342,9 @@ export class CustomizerPreview {
 
     this.mixer?.update(dt);
 
-    const targetY = this.modelRoot ? this.modelHeight() * 0.52 : 0.9;
+    const targetY = this.modelRoot
+      ? this.modelHeight() * (this.focusHeight ?? 0.52)
+      : 0.9;
     const cx = Math.sin(this.yaw) * Math.cos(this.pitch) * this.distance;
     const cz = Math.cos(this.yaw) * Math.cos(this.pitch) * this.distance;
     const cy = targetY + Math.sin(this.pitch) * this.distance;
@@ -338,6 +358,12 @@ export class CustomizerPreview {
     if (!this.modelRoot) return 1.7;
     const box = new THREE.Box3().setFromObject(this.modelRoot);
     return isFinite(box.max.y) ? box.max.y - box.min.y : 1.7;
+  }
+
+  /** Export the current preview frame as a PNG data URL (portrait of the build). */
+  capturePNG(): string {
+    this.renderer.render(this.scene, this.camera);
+    return this.canvas.toDataURL("image/png");
   }
 
   /** The live model root — for QC probes and fight-side application. */
