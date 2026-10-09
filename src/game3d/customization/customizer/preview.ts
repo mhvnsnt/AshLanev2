@@ -24,7 +24,12 @@ import {
   detachAllAccessories,
   loadAccessoryManifests,
 } from "./accessories";
-import { getFacePaintModule } from "./facepaint-adapter";
+import {
+  applyFacePaintSpec,
+  clearFacePaint,
+  disposeFacePaint,
+  facePaintAvailable,
+} from "./facepaint-adapter";
 import { defaultBuild, type AccessoryManifest, type CustomBuild } from "./types";
 
 const loader = new GLTFLoader();
@@ -125,6 +130,7 @@ export class CustomizerPreview {
       }
       if (token !== this.applyToken || this.disposed) return;
       if (this.modelRoot) {
+        disposeFacePaint(this.modelRoot);
         this.scene.remove(this.modelRoot);
         this.mixer?.stopAllAction();
         this.mixer = null;
@@ -132,6 +138,8 @@ export class CustomizerPreview {
       // Clone the cached scene so per-model clones (iris) never leak across fighters.
       const { clone: cloneRig } = await import("three/examples/jsm/utils/SkeletonUtils.js");
       const root = cloneRig(scene) as THREE.Group;
+      // The accessory loader reads this for per-character head-fit transforms.
+      (root.userData as Record<string, unknown>).fighterId = fighterId;
       root.traverse((o) => {
         const mesh = o as THREE.Mesh;
         if (mesh.isMesh) {
@@ -143,16 +151,20 @@ export class CustomizerPreview {
       this.modelFile = attireFile;
       this.scene.add(root);
 
+      // Create the mixer now but start the idle clip AFTER applyBuild: the
+      // face-paint decal binds in bind pose (paint lane contract).
       const clips = (scene as THREE.Group & { __clips?: THREE.AnimationClip[] }).__clips ?? [];
+      let idleClip: THREE.AnimationClip | null = null;
       if (clips.length > 0) {
         this.mixer = new THREE.AnimationMixer(root);
-        const idle =
+        idleClip =
           clips.find((c) => /idle|breath|stand/i.test(c.name)) ?? clips[0];
-        this.mixer.clipAction(idle).play();
       }
 
       this.centerModel();
       await this.applyBuild(this.build.fighterId === fighterId ? this.build : defaultBuild(fighterId, ""));
+      if (token !== this.applyToken || this.disposed) return;
+      if (this.mixer && idleClip) this.mixer.clipAction(idleClip).play();
       this.setStatus({ loading: false, error: null, modelName: attireFile });
     } catch (e) {
       if (token !== this.applyToken || this.disposed) return;
@@ -206,12 +218,29 @@ export class CustomizerPreview {
       }
     }
 
-    const paint = await getFacePaintModule();
-    if (paint.available) {
-      paint.clearFromModel(root);
-      if (this.build.facePaint) paint.applyToModel(root, this.build.facePaint);
+    const paint = this.build.facePaint;
+    clearFacePaint(root);
+    if (paint && facePaintAvailable(this.build.fighterId)) {
+      const errors = await applyFacePaintSpec(root, this.build.fighterId, paint).catch((e) => [
+        String(e),
+      ]);
+      if (errors.length > 0) console.warn("Customizer face paint failed:", errors);
     }
-    // Face-paint stub (available:false): apply nothing, UI says "coming soon".
+  }
+
+  /** Incremental face-paint change without re-applying the whole build. */
+  async setFacePaint(spec: string | null): Promise<void> {
+    this.build.facePaint = spec;
+    const root = this.modelRoot;
+    if (!root) return;
+    if (!spec || !facePaintAvailable(this.build.fighterId)) {
+      clearFacePaint(root);
+      return;
+    }
+    const errors = await applyFacePaintSpec(root, this.build.fighterId, spec).catch((e) => [
+      String(e),
+    ]);
+    if (errors.length > 0) console.warn("Customizer face paint failed:", errors);
   }
 
   /** Incremental eye-color change without re-applying the whole build. */

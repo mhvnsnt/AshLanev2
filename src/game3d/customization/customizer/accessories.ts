@@ -1,17 +1,27 @@
 /**
  * customizer/accessories.ts — accessory slots driven by lane manifests.
  *
- * The modeling lanes (masks/hoods/hair, gloves/shoes, chains) ship
- * public/models/<category>/manifest.json files describing each accessory and
- * how it attaches. This module:
+ * The modeling lanes ship public/models/<category>/manifest.json files
+ * describing each accessory and how it attaches. This module:
  *  - fetches and merges those manifests at runtime (no code change per lane),
+ *  - normalizes the two lane-authored shapes into one AccessoryManifest,
+ *  - applies the per-character head-fit transforms measured in
+ *    public/models/{masks,hoods,hair}/FIT_NOTES.md (ASTRID-authored assets
+ *    on Tripo-rigged heads need scaling + the ECHO nudge),
  *  - loads the accessory GLB,
  *  - hangs it from a named bone (exact name, then case-insensitive pattern
  *    fallback, then a slot-default bone heuristic),
  *  - keeps a per-slot registry on the model root so swaps are clean.
  *
- * Manifest contract (authored by the lanes, read docs/customization/customizer.md):
- *   { "accessories": [ { id, label, slot, file, attach: { bone, position, rotation, scale? } } ] }
+ * Manifest shapes (see docs/customization/customizer.md):
+ *  A) chains (models/accessories): { accessories: [ { id, label, slot, file,
+ *     attach: { bone, position, rotation, scale } } ] }
+ *  B) merged 2026-10-09 lanes (masks/hoods/hair, gloves/wristbands/footwear):
+ *     a top-level array of { asset, file ("public/models/…" prefixed),
+ *     attachBone, offset, scale, canonNotes, category? } — no id / label /
+ *     slot / rotation. The loader derives id=asset, a humanized label, the
+ *     slot from the manifest's folder, rotation=[0,0,0], and a canon flag
+ *     from canonNotes.
  */
 
 import * as THREE from "three";
@@ -19,14 +29,19 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { assetUrl } from "../../asset-base";
 import type { AccessoryManifest, AccessorySlotId } from "./types";
 
-/** Manifest locations the customizer scans (lanes add theirs here as they merge). */
-const MANIFEST_URLS = [
-  "models/accessories/manifest.json",
-  "models/hair/manifest.json",
-  "models/masks/manifest.json",
-  "models/hoods/manifest.json",
-  "models/gloves/manifest.json",
-  "models/shoes/manifest.json",
+/**
+ * Manifest locations the customizer scans, with the slot each folder feeds.
+ * footwear → the "shoes" slot (kept name for save compatibility).
+ * Lanes add rows here as they merge — the code below is format-agnostic.
+ */
+const MANIFEST_SOURCES: { url: string; slot: AccessorySlotId }[] = [
+  { url: "models/accessories/manifest.json", slot: "chain" },
+  { url: "models/hair/manifest.json", slot: "hair" },
+  { url: "models/masks/manifest.json", slot: "mask" },
+  { url: "models/hoods/manifest.json", slot: "hood" },
+  { url: "models/gloves/manifest.json", slot: "gloves" },
+  { url: "models/wristbands/manifest.json", slot: "wristbands" },
+  { url: "models/footwear/manifest.json", slot: "shoes" },
 ];
 
 /** Slot -> bone-name patterns tried when a manifest names no exact bone. */
@@ -37,10 +52,60 @@ const SLOT_BONE_FALLBACK: Record<AccessorySlotId, RegExp[]> = {
   hood: [/head/i, /neck/i],
   chain: [/neck/i, /spine2/i, /chest/i],
   gloves: [/hand/i],
+  wristbands: [/forearm/i, /wrist/i, /hand/i],
   shoes: [/foot/i, /toe/i],
 };
 
 const REGISTRY_KEY = "__customizerAccessories";
+
+/**
+ * Per-character fit for head-slot accessories (hair / facialHair / mask /
+ * hood). Assets are authored in ASTRID space
+ * (public/models/{masks,hoods,hair}/FIT_NOTES.md); Tripo-rigged heads
+ * (HOLLOW / ECHO / STATIC) need measured per-character transforms:
+ *   scale  = head-bone height ratio vs ASTRID (1.5232m):
+ *            HOLLOW 0.4458, ECHO 0.4494, STATIC 0.4494
+ *   echo nudge: ECHO's nose sits (y=-0.176, z=-0.026) rel. her head bone vs
+ *            ASTRID's (y=-0.105, z=+0.076). Uniform 0.4494 scale maps the
+ *            authored nose to (y=-0.0472, z=+0.0342) rel. ECHO's head bone,
+ *            so the accessory needs a nudge of
+ *            dy = -0.176 - (-0.0472) = -0.1288,
+ *            dz = -0.026 - (+0.0342) = -0.0602   (fighter-root units).
+ *   rotFix: Tripo heads share a rotated head-bone rest orientation vs
+ *            ASTRID's axis-aligned one; full-head shells transfer acceptably,
+ *            hair fringes show it visibly. The per-character fix (degrees
+ *            XYZ, applied like the chain pendant rotation) is the tuning
+ *            knob — defaults to zero until measured; QC the fringe assets.
+ * Unknown fighters (and non-head slots) get identity: scale 1, no nudge.
+ */
+const HEAD_SLOTS = new Set<AccessorySlotId>(["hair", "facialHair", "mask", "hood"]);
+
+const HEAD_FIT: Record<string, { scale: number; offset?: [number, number, number]; rotFix?: [number, number, number] }> = {
+  hollow: { scale: 0.4458 },
+  echo: { scale: 0.4494, offset: [0, -0.1288, -0.0602] },
+  static: { scale: 0.4494 },
+};
+
+function headFit(fighterId: string | undefined, slot: AccessorySlotId): {
+  scale: number;
+  offset: [number, number, number];
+  rotFix: [number, number, number];
+} {
+  const none = { scale: 1, offset: [0, 0, 0] as [number, number, number], rotFix: [0, 0, 0] as [number, number, number] };
+  if (!fighterId || !HEAD_SLOTS.has(slot)) return none;
+  const f = HEAD_FIT[fighterId.toLowerCase()];
+  if (!f) return none;
+  return {
+    scale: f.scale,
+    offset: f.offset ?? [0, 0, 0],
+    rotFix: f.rotFix ?? [0, 0, 0],
+  };
+}
+
+/** Fighter id the preview stores on the model root (preview.loadFighter). */
+function fighterOf(root: THREE.Object3D): string | undefined {
+  return (root.userData as Record<string, unknown>).fighterId as string | undefined;
+}
 
 type Registry = Map<AccessorySlotId, { id: string; node: THREE.Object3D }>;
 
@@ -55,17 +120,97 @@ function registry(root: THREE.Object3D): Registry {
 
 let manifestCache: AccessoryManifest[] | null = null;
 
+/** "mask_hollow_superdragon" -> "Hollow Superdragon". */
+function humanizeAsset(asset: string): string {
+  return asset
+    .replace(/^((mask|hair|hood|chain|glove|shoe|boot|sneaker|wrap|sweatband|pad)[-_])/, "")
+    .split(/[-_]/)
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
+type LaneEntry = {
+  id?: string;
+  label?: string;
+  slot?: AccessorySlotId;
+  asset?: string;
+  file?: string;
+  attach?: {
+    bone?: string;
+    position?: [number, number, number];
+    rotation?: [number, number, number];
+    scale?: number;
+  };
+  attachBone?: string;
+  offset?: [number, number, number];
+  scale?: number;
+  canonNotes?: string;
+};
+
+/**
+ * Normalize one lane-authored entry into the customizer's AccessoryManifest.
+ * Shape A (chains) passes through; shape B (merged 2026-10-09 lanes) is
+ * derived: id=asset, slot from the manifest folder, "public/" stripped from
+ * file, rotation defaulted, canon flagged from canonNotes.
+ */
+function normalizeEntry(entry: LaneEntry, fallbackSlot: AccessorySlotId): AccessoryManifest | null {
+  const file = (entry.file ?? "").replace(/^public\//, "");
+  if (!file) return null;
+  const canon = /canon/i.test(entry.canonNotes ?? "");
+  if (entry.id && entry.attach) {
+    // Shape A — chains.
+    return {
+      id: entry.id,
+      label: entry.label ?? entry.id,
+      slot: entry.slot ?? fallbackSlot,
+      file,
+      canon: canon || undefined,
+      canonNotes: entry.canonNotes,
+      attach: {
+        bone: entry.attach.bone ?? "Neck",
+        position: entry.attach.position ?? [0, 0, 0],
+        rotation: entry.attach.rotation ?? [0, 0, 0],
+        scale: entry.attach.scale,
+      },
+    };
+  }
+  if (entry.asset) {
+    // Shape B — masks/hoods/hair, gloves/wristbands/footwear.
+    return {
+      id: entry.asset,
+      label: humanizeAsset(entry.asset),
+      slot: fallbackSlot,
+      file,
+      canon: canon || undefined,
+      canonNotes: entry.canonNotes,
+      attach: {
+        bone: entry.attachBone ?? "mixamorig:Head",
+        position: entry.offset ?? [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: entry.scale ?? 1,
+      },
+    };
+  }
+  return null;
+}
+
 /** Load and merge every accessory manifest. Cached after first call. */
 export async function loadAccessoryManifests(): Promise<AccessoryManifest[]> {
   if (manifestCache) return manifestCache;
   const out: AccessoryManifest[] = [];
   await Promise.all(
-    MANIFEST_URLS.map(async (url) => {
+    MANIFEST_SOURCES.map(async ({ url, slot }) => {
       try {
         const res = await fetch(assetUrl(url));
         if (!res.ok) return;
-        const json = (await res.json()) as { accessories?: AccessoryManifest[] };
-        for (const a of json.accessories ?? []) out.push(a);
+        const json = (await res.json()) as
+          | { accessories?: LaneEntry[] }
+          | LaneEntry[];
+        const entries = Array.isArray(json) ? json : (json.accessories ?? []);
+        for (const e of entries) {
+          const m = normalizeEntry(e, slot);
+          if (m) out.push(m);
+        }
       } catch {
         // Manifest not merged yet (parallel lane) — skip silently.
       }
@@ -158,9 +303,13 @@ function rebindAccessoryBones(
  * that slot before. Returns the attached node, or null on failure.
  *
  * Strategy: accessories that ship their own rig (the chains are skinned to
- * Neck/Spine2) are REBOUND onto the fighter's matching bones so they move
- * with the body. Non-skinned accessories fall back to hanging from the
- * manifest's attach bone with the authored offset/rotation.
+ * Neck/Spine2; the masks/hair to Head/Neck/Spine2) are REBOUND onto the
+ * fighter's matching bones so they move with the body. Non-skinned
+ * accessories fall back to hanging from the manifest's attach bone with the
+ * authored offset/rotation.
+ *
+ * Head slots (hair/mask/hood) get the per-character fit transform
+ * (HEAD_FIT): the measured scale + ECHO nudge + rest-pose rotation fix.
  */
 export async function attachAccessory(
   root: THREE.Object3D,
@@ -174,28 +323,34 @@ export async function attachAccessory(
     o.frustumCulled = true;
   });
 
+  const fit = headFit(fighterOf(root), manifest.slot);
+  const [frx, fry, frz] = fit.rotFix;
+
   const rebound = rebindAccessoryBones(root, node);
   if (rebound.length > 0) {
     // Skinned to the fighter now — collect the rebound meshes in a holder so
     // detachAccessory can remove them cleanly, then bind in final position.
     //
     // DCC scale fix: accessory bind space rarely matches the fighter (the
-    // chains are authored ~8x oversize). Scaling the holder would break the
-    // skinning math (bind matrix vs bone matrices), so instead bake the
-    // manifest scale into the geometry AND the bone-inverse translations,
-    // then bind with the holder at scale 1.
-    const s = manifest.attach.scale ?? 1;
+    // chains are authored ~8x oversize; Tripo heads need the FIT_NOTES
+    // scale). Scaling the holder would break the skinning math (bind matrix
+    // vs bone matrices), so instead bake the total scale into the geometry
+    // AND the bone-inverse translations, then bind with the holder at
+    // scale 1.
+    const s = (manifest.attach.scale ?? 1) * fit.scale;
     const holder = new THREE.Group();
     holder.name = `accessory:${manifest.id}`;
-    // Optional orientation fix for the rebind path (rigid rotation is safe:
-    // it is baked into the bind matrices, unlike holder scale). Lets the
-    // chain lane tune pendant direction without touching code.
+    // Orientation fix for the rebind path (rigid rotation is safe: it is
+    // baked into the bind matrices, unlike holder scale). Chains use
+    // manifest.attach.rotation as the pendant tuning knob; head assets add
+    // the per-character rest-pose fix from HEAD_FIT.
     const [rx, ry, rz] = manifest.attach.rotation;
     holder.rotation.set(
-      (rx * Math.PI) / 180,
-      (ry * Math.PI) / 180,
-      (rz * Math.PI) / 180,
+      ((rx + frx) * Math.PI) / 180,
+      ((ry + fry) * Math.PI) / 180,
+      ((rz + frz) * Math.PI) / 180,
     );
+    holder.position.set(fit.offset[0], fit.offset[1], fit.offset[2]);
     for (const mesh of rebound) {
       if (s !== 1) {
         mesh.geometry.scale(s, s, s);
@@ -218,13 +373,17 @@ export async function attachAccessory(
     const bone = findBone(root, manifest.attach.bone, manifest.slot);
     if (!bone) return null;
     const { position, rotation, scale } = manifest.attach;
-    node.position.set(position[0], position[1], position[2]);
-    node.rotation.set(
-      (rotation[0] * Math.PI) / 180,
-      (rotation[1] * Math.PI) / 180,
-      (rotation[2] * Math.PI) / 180,
+    node.position.set(
+      position[0] + fit.offset[0],
+      position[1] + fit.offset[1],
+      position[2] + fit.offset[2],
     );
-    node.scale.setScalar(scale ?? 1);
+    node.rotation.set(
+      ((rotation[0] + frx) * Math.PI) / 180,
+      ((rotation[1] + fry) * Math.PI) / 180,
+      ((rotation[2] + frz) * Math.PI) / 180,
+    );
+    node.scale.setScalar((scale ?? 1) * fit.scale);
     bone.add(node);
   }
 

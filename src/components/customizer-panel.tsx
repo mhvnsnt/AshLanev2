@@ -22,7 +22,14 @@ import {
   loadAccessoryManifests,
   manifestsForSlot,
 } from "@/game3d/customization/customizer/accessories";
-import { getFacePaintModule } from "@/game3d/customization/customizer/facepaint-adapter";
+import {
+  facePaintAvailable,
+  facePaintPickerData,
+  serializeFacePaintLayers,
+  validateFacePaintLayers,
+  type FacePaintLayer,
+  type FacePaintPickerData,
+} from "@/game3d/customization/customizer/facepaint-adapter";
 import {
   deleteBuild,
   loadBuild,
@@ -34,8 +41,8 @@ import {
   type AccessoryManifest,
   type AccessorySlotId,
   type CustomBuild,
-  type FacePaintModule,
 } from "@/game3d/customization/customizer/types";
+import { assetUrl } from "@/game3d/asset-base";
 import { sfxBack } from "@/game3d/menu-sfx";
 
 const SLOT_LABELS: Record<AccessorySlotId, string> = {
@@ -45,6 +52,7 @@ const SLOT_LABELS: Record<AccessorySlotId, string> = {
   hood: "Hood",
   chain: "Chain",
   gloves: "Gloves",
+  wristbands: "Wristbands",
   shoes: "Shoes",
 };
 
@@ -54,7 +62,15 @@ export function CustomizerPanel({ onBack }: { onBack: () => void }) {
   const [fighterId, setFighterId] = useState<string>(ROSTER[0]?.id ?? "");
   const [build, setBuild] = useState<CustomBuild>(() => defaultBuild(ROSTER[0]?.id ?? "", ""));
   const [manifests, setManifests] = useState<AccessoryManifest[]>([]);
-  const [paint, setPaint] = useState<FacePaintModule | null>(null);
+  const [paintData, setPaintData] = useState<FacePaintPickerData | null>(null);
+  const paintSupported = facePaintAvailable(fighterId);
+  // Custom paint builder state (the layer stack the player is composing).
+  const [paintLayers, setPaintLayers] = useState<FacePaintLayer[]>([]);
+  const [paintRegion, setPaintRegion] = useState("fullFace");
+  const [paintPattern, setPaintPattern] = useState("base-soft");
+  const [paintColor, setPaintColor] = useState("#f2ede2");
+  const [paintOpacity, setPaintOpacity] = useState(1);
+  const [paintErrors, setPaintErrors] = useState<string[]>([]);
   const [eyeSupported, setEyeSupported] = useState(false);
   const [morphKeys, setMorphKeys] = useState<string[]>([]);
   const [status, setStatus] = useState("");
@@ -87,7 +103,11 @@ export function CustomizerPanel({ onBack }: { onBack: () => void }) {
       }
     };
     void loadAccessoryManifests().then(setManifests);
-    void getFacePaintModule().then(setPaint);
+    try {
+      setPaintData(facePaintPickerData());
+    } catch (e) {
+      console.error("Face-paint picker data unavailable:", e);
+    }
     return () => {
       preview.dispose();
       previewRef.current = null;
@@ -166,6 +186,41 @@ export function CustomizerPanel({ onBack }: { onBack: () => void }) {
     patchBuild({ accessories: { ...build.accessories, [slot]: id } });
   };
 
+  const setFacePaintSpec = (spec: string | null) => {
+    const next = { ...build, facePaint: spec };
+    setBuild(next);
+    void previewRef.current?.setFacePaint(spec);
+  };
+
+  const addPaintLayer = () => {
+    const layer: FacePaintLayer = {
+      region: paintRegion as FacePaintLayer["region"],
+      pattern: paintPattern,
+      color: paintColor,
+      opacity: paintOpacity,
+    };
+    const errors = validateFacePaintLayers([...paintLayers, layer]);
+    setPaintErrors(errors);
+    if (errors.length > 0) return;
+    setPaintLayers([...paintLayers, layer]);
+  };
+
+  const removePaintLayer = (i: number) =>
+    setPaintLayers(paintLayers.filter((_, k) => k !== i));
+
+  const applyCustomPaint = () => {
+    const errors = validateFacePaintLayers(paintLayers);
+    setPaintErrors(errors);
+    if (errors.length > 0 || paintLayers.length === 0) return;
+    setFacePaintSpec(serializeFacePaintLayers(paintLayers));
+  };
+
+  const presetIds = useMemo(
+    () => new Set((paintData?.presets ?? []).map((p) => p.id)),
+    [paintData],
+  );
+  const customPaintActive = !!build.facePaint && !presetIds.has(build.facePaint);
+
   const onSave = async () => {
     setStatus("Saving…");
     await saveBuild(buildRef.current);
@@ -184,8 +239,6 @@ export function CustomizerPanel({ onBack }: { onBack: () => void }) {
     setZoom(v);
     previewRef.current?.setZoom(v);
   };
-
-  const paintStyles = paint?.available ? paint.listStyles() : [];
 
   return (
     <div className="mt-4 flex flex-col gap-3">
@@ -344,9 +397,11 @@ export function CustomizerPanel({ onBack }: { onBack: () => void }) {
                   type="button"
                   data-on={build.accessories[slot] === m.id ? "1" : undefined}
                   className="al-chip"
+                  title={m.canonNotes ?? m.label}
                   onClick={() => setAccessory(slot, m.id)}
                 >
                   {m.label}
+                  {m.canon ? " ★ canon" : ""}
                 </button>
               ))}
             </div>
@@ -354,33 +409,174 @@ export function CustomizerPanel({ onBack }: { onBack: () => void }) {
         );
       })}
 
-      {/* Face paint */}
+      {/* Face paint — the paint lane's decal system; base skin is never touched. */}
       <div className="al-section"><span className="al-section-title">Face paint</span></div>
-      {paint?.available ? (
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            data-on={!build.facePaint ? "1" : undefined}
-            className="al-chip"
-            onClick={() => patchBuild({ facePaint: null })}
-          >
-            None
-          </button>
-          {paintStyles.map((s) => (
+      {paintSupported && paintData ? (
+        <div className="flex flex-col gap-2.5">
+          <div className="flex flex-wrap gap-2">
             <button
-              key={s.id}
               type="button"
-              data-on={build.facePaint === s.id ? "1" : undefined}
+              data-on={!build.facePaint ? "1" : undefined}
               className="al-chip"
-              onClick={() => patchBuild({ facePaint: s.id })}
+              onClick={() => setFacePaintSpec(null)}
             >
-              {s.label}
+              None
             </button>
-          ))}
+            {paintData.presets.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                data-on={build.facePaint === p.id ? "1" : undefined}
+                className="al-chip"
+                title={p.description}
+                onClick={() => setFacePaintSpec(p.id)}
+              >
+                {p.label}
+                {p.canonLocked ? " 🔒" : ""}
+              </button>
+            ))}
+            {customPaintActive ? (
+              <button type="button" data-on="1" className="al-chip" onClick={() => {}}>
+                Custom paint
+              </button>
+            ) : null}
+          </div>
+
+          <details className="al-card p-2">
+            <summary className="cursor-pointer text-sm text-cream">
+              Custom paint — layer your own
+            </summary>
+            <div className="mt-2 flex flex-col gap-2">
+              <div>
+                <span className="text-xs uppercase tracking-widest text-cream-dim">Region</span>
+                <div className="mt-1 flex flex-wrap gap-1.5">
+                  {paintData.regions.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      data-on={paintRegion === r.id ? "1" : undefined}
+                      className="al-chip"
+                      title={r.hint}
+                      onClick={() => setPaintRegion(r.id)}
+                    >
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-xs uppercase tracking-widest text-cream-dim">Pattern</span>
+                <div className="mt-1 grid max-h-40 grid-cols-3 gap-1.5 overflow-y-auto pr-1">
+                  {paintData.patterns.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      data-on={paintPattern === p.id ? "1" : undefined}
+                      className="al-card flex flex-col items-center gap-1 p-1.5"
+                      title={p.hint}
+                      onClick={() => setPaintPattern(p.id)}
+                    >
+                      <img
+                        src={assetUrl(p.file)}
+                        alt={p.label}
+                        className="h-8 w-8 rounded bg-black/40 object-contain invert"
+                      />
+                      <span className="text-[10px] leading-tight text-cream">{p.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-xs uppercase tracking-widest text-cream-dim">Color</span>
+                <div className="mt-1 flex flex-wrap gap-1.5">
+                  {paintData.colors.map((c) => (
+                    <button
+                      key={c.hex}
+                      type="button"
+                      data-on={paintColor === c.hex ? "1" : undefined}
+                      className="al-chip flex items-center gap-1.5"
+                      title={c.label}
+                      onClick={() => setPaintColor(c.hex)}
+                    >
+                      <span
+                        className="inline-block h-4 w-4 rounded-full border border-line"
+                        style={{ backgroundColor: c.hex }}
+                      />
+                      {c.canon ? "🔒" : ""}
+                    </button>
+                  ))}
+                  <input
+                    type="color"
+                    value={paintColor}
+                    onChange={(e) => setPaintColor(e.target.value)}
+                    className="h-8 w-10 cursor-pointer"
+                    aria-label="Custom paint color"
+                    title="Custom color"
+                  />
+                </div>
+              </div>
+              <label className="al-slider-label">
+                Opacity
+                <input
+                  className="mt-1 block w-full"
+                  type="range"
+                  min={0.1}
+                  max={1}
+                  step={0.05}
+                  value={paintOpacity}
+                  onChange={(e) => setPaintOpacity(Number(e.target.value))}
+                  aria-label="Layer opacity"
+                />
+              </label>
+              <div className="flex gap-2">
+                <button type="button" className="al-btn al-btn-ghost flex-1" onClick={addPaintLayer}>
+                  <span>+ Add layer</span>
+                </button>
+                <button
+                  type="button"
+                  className="al-btn al-btn-primary flex-1"
+                  disabled={paintLayers.length === 0}
+                  onClick={applyCustomPaint}
+                >
+                  <span>Apply custom ({paintLayers.length})</span>
+                </button>
+              </div>
+              {paintLayers.length > 0 ? (
+                <ul className="flex flex-col gap-1">
+                  {paintLayers.map((l, i) => (
+                    <li key={i} className="flex items-center justify-between gap-2 text-xs text-cream">
+                      <span className="flex items-center gap-1.5">
+                        <span
+                          className="inline-block h-3.5 w-3.5 rounded-full border border-line"
+                          style={{ backgroundColor: l.color }}
+                        />
+                        {l.pattern} · {l.region} · {Math.round(l.opacity * 100)}%
+                      </span>
+                      <button
+                        type="button"
+                        className="al-chip"
+                        onClick={() => removePaintLayer(i)}
+                        aria-label={`Remove layer ${i + 1}`}
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {paintErrors.length > 0 ? (
+                <p className="text-xs text-red-300">{paintErrors.join("; ")}</p>
+              ) : null}
+            </div>
+          </details>
+          <p className="text-xs text-cream-dim">
+            Paint is a decal overlay — the character's skin is never changed.
+          </p>
         </div>
       ) : (
         <p className="text-sm text-cream-dim">
-          Face paint system landing soon — the paint lane plugs in here on merge.
+          No verified face profile for this fighter yet — the paint lane adds
+          characters as their profiles land.
         </p>
       )}
 

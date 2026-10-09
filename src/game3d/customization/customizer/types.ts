@@ -41,8 +41,9 @@ export type MorphKey = (typeof MORPH_KEYS)[number];
 
 /**
  * Accessory slots. `chain` ships now (4 chain GLBs + manifest.json);
- * `hair` / `facialHair` / `mask` / `hood` / `gloves` / `shoes` are scaffolded
- * and read their lanes' manifest.json files as they merge.
+ * `hair` / `mask` / `hood` / `gloves` / `wristbands` / `shoes` read the
+ * modeling lanes' manifest.json files (merged 2026-10-09: masks/hoods/hair,
+ * gloves/wristbands/footwear). `facialHair` is scaffolded for a future lane.
  */
 export const ACCESSORY_SLOTS = [
   "hair",
@@ -51,22 +52,33 @@ export const ACCESSORY_SLOTS = [
   "hood",
   "chain",
   "gloves",
+  "wristbands",
   "shoes",
 ] as const;
 export type AccessorySlotId = (typeof ACCESSORY_SLOTS)[number];
 
 /**
- * manifest.json entry for one accessory asset (authored by the modeling
- * lanes under public/models/<category>/manifest.json). The customizer reads
- * these manifests at runtime — no code change needed when a lane lands.
+ * manifest.json entry for one accessory asset, in the customizer's NORMALIZED
+ * shape. The modeling lanes author two shapes (see accessories.ts):
+ *  - chains (models/accessories): { id, label, slot, file, attach: { bone,
+ *    position, rotation, scale } } inside a top-level { accessories: [...] }
+ *  - merged 2026-10-09 lanes (masks/hoods/hair, gloves/wristbands/footwear):
+ *    top-level array of { asset, file ("public/models/…"), attachBone,
+ *    offset, scale, canonNotes, category? } — no id/label/slot/rotation.
+ * The loader normalizes both into this shape; the rest of the customizer
+ * only ever sees this.
  */
 export interface AccessoryManifest {
-  /** Stable id, e.g. "chain_gold_ashlane". */
+  /** Stable id, e.g. "chain_gold_ashlane" or "mask_hollow_superdragon". */
   id: string;
   label: string;
   slot: AccessorySlotId;
   /** GLB path relative to public/, e.g. "models/accessories/chain_gold_ashlane_rigged.glb". */
   file: string;
+  /** True when the lane marks this asset canon (e.g. Hollow's Super Dragon
+   * mask per the 2026-10-06 owner correction) — the UI badges it. */
+  canon?: boolean;
+  canonNotes?: string;
   attach: {
     /**
      * Bone to hang the accessory from. Exact name preferred; the loader
@@ -83,21 +95,14 @@ export interface AccessoryManifest {
 }
 
 /**
- * Face-paint integration contract. The paint lane implements this in
- * src/game3d/customization/facepaint/index.ts. The customizer calls
- * facepaint-adapter.ts, which prefers the real module and falls back to a
- * stub that reports available:false (the UI then shows "coming soon" instead
- * of fake paint).
+ * Face-paint integration. The paint lane's module
+ * (src/game3d/customization/facepaint/index.ts) is the ONLY import surface;
+ * facepaint-adapter.ts wraps it. A build stores the selection as a single
+ * string: either a canon preset id ("cipher-grin") or serialized
+ * FacePaintLayer[] (the paint lane's serializeLayers). The adapter resolves
+ * preset ids via getPreset() and falls back to parseLayers().
  */
-export interface FacePaintModule {
-  /** True when the paint lane's module is actually loaded. */
-  available: boolean;
-  listStyles(): { id: string; label: string }[];
-  /** Apply a paint style to a loaded fighter model root. */
-  applyToModel(root: object, styleId: string): void;
-  /** Remove any applied paint from the model root. */
-  clearFromModel(root: object): void;
-}
+export type FacePaintSpec = string;
 
 /** The player's full build for one fighter. */
 export interface CustomBuild {
@@ -127,6 +132,7 @@ export function defaultBuild(fighterId: string, attireId: string): CustomBuild {
       hood: null,
       chain: null,
       gloves: null,
+      wristbands: null,
       shoes: null,
     },
     facePaint: null,

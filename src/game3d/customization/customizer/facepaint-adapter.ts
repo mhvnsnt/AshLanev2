@@ -1,63 +1,150 @@
 /**
  * customizer/facepaint-adapter.ts — bridge to the paint lane's module.
  *
- * The paint lane owns src/game3d/customization/facepaint/index.ts and the
- * docs/customization/face-paint.md integration contract. Until it lands, this
- * adapter exposes a stub that reports available:false — the customizer UI
- * shows "Face paint system landing soon" instead of fake paint options
- * (deliverable-text policy: no placeholders rendered as real content).
+ * The paint lane owns src/game3d/customization/facepaint/index.ts; per the
+ * docs/customization/face-paint.md integration contract the customizer
+ * imports ONLY from that surface (getPickerData, getPreset,
+ * clonePresetLayers, validateLayers, serializeLayers/parseLayers,
+ * FacePaintDecal, FACE_PATTERNS, getProfile).
  *
- * When the paint lane merges, this adapter needs NO changes: it dynamic-
- * imports ../facepaint/index.ts and prefers the real module when present.
- * The expected real-module shape:
- *   export const facePaint: {
- *     available: true,
- *     listStyles(): { id: string; label: string }[],
- *     applyToModel(root: THREE.Object3D, styleId: string): void,
- *     clearFromModel(root: THREE.Object3D): void,
- *   }
+ * The build stores the paint selection as one string: a canon preset id
+ * ("cipher-grin") or serialized FacePaintLayer[] (the paint lane's
+ * serializeLayers). The adapter resolves preset ids via getPreset() and
+ * falls back to parseLayers() — so custom paint round-trips through saves.
+ *
+ * Skin-tone lock: paint lives on the FacePaintDecal overlay mesh only.
+ * The base mesh / material / texture are never written.
  */
 
-import type { FacePaintModule } from "./types";
+import * as THREE from "three";
+import {
+  getPickerData,
+  getPreset,
+  clonePresetLayers,
+  validateLayers,
+  serializeLayers,
+  parseLayers,
+  FACE_PATTERNS,
+  FacePaintDecal,
+  getProfile,
+} from "../facepaint/index";
+import type {
+  FacePaintLayer,
+  FacePaintPickerData,
+  FaceDecal,
+} from "../facepaint/index";
 
-const STUB: FacePaintModule = {
-  available: false,
-  listStyles: () => [],
-  applyToModel: () => {
-    throw new Error("Face paint module not available yet (paint lane pending).");
-  },
-  clearFromModel: () => {},
-};
+export type { FacePaintLayer, FacePaintPickerData };
 
-let cached: FacePaintModule | null = null;
-let attempted = false;
+const DECAL_KEY = "__customizerFacePaintDecal";
 
-// Non-literal specifier on purpose: the paint lane's module doesn't exist
-// yet, so a static/literal import would fail typecheck AND the production
-// build. @vite-ignore keeps the bundler from trying to resolve it; at
-// runtime a missing module rejects and we fall back to the stub. In dev,
-// once src/game3d/customization/facepaint/index.ts lands, Vite serves it and
-// the real module is picked up with no customizer changes.
-const FACEPAINT_SPEC = "../facepaint/index.js";
+type DecalEntry = { decal: FaceDecal; fighterId: string };
+
+function decalEntry(root: THREE.Object3D): DecalEntry | null {
+  return ((root.userData as Record<string, unknown>)[DECAL_KEY] as DecalEntry) ?? null;
+}
+
+/** True when the paint lane has a verified face profile for this fighter. */
+export function facePaintAvailable(fighterId: string): boolean {
+  return !!getProfile(fighterId);
+}
+
+/** Everything the paint picker menu renders from (regions, patterns, colors, presets). */
+export function facePaintPickerData(): FacePaintPickerData {
+  return getPickerData();
+}
+
+/** Canon preset layer stack, cloned (never edit the lane's preset in place). */
+export function facePaintPresetLayers(presetId: string): FacePaintLayer[] {
+  return clonePresetLayers(getPreset(presetId));
+}
+
+/** Serialize a custom layer stack for build.facePaint. */
+export function serializeFacePaintLayers(layers: FacePaintLayer[]): string {
+  return serializeLayers(layers);
+}
+
+/** Validate a layer stack before applying. Returns error strings (empty = ok). */
+export function validateFacePaintLayers(layers: FacePaintLayer[]): string[] {
+  return validateLayers(layers);
+}
+
+/** First skinned body mesh under the root — the decal binds to the character's skeleton. */
+function findBodyMesh(root: THREE.Object3D): THREE.SkinnedMesh | null {
+  let found: THREE.SkinnedMesh | null = null;
+  root.traverse((o) => {
+    if (!found && (o as THREE.SkinnedMesh).isSkinnedMesh) found = o as THREE.SkinnedMesh;
+  });
+  return found;
+}
 
 /**
- * Get the face-paint module: the paint lane's real implementation when it has
- * landed, otherwise the unavailable stub.
+ * Build (once per fighter root) the FacePaintDecal for this fighter.
+ * Build order in preview.loadFighter: the decal is created before the idle
+ * animation starts (bind-pose preferred per the paint lane's contract —
+ * mesh.bind uses the skeleton's own bindMatrix, so an already-playing idle
+ * clip only moves the decal WITH the head, never offsets it).
  */
-export async function getFacePaintModule(): Promise<FacePaintModule> {
-  if (attempted) return cached ?? STUB;
-  attempted = true;
+async function ensureDecal(root: THREE.Object3D, fighterId: string): Promise<FaceDecal | null> {
+  const profile = getProfile(fighterId);
+  if (!profile) return null;
+  const existing = decalEntry(root);
+  if (existing && existing.fighterId === fighterId) return existing.decal;
+  if (existing) existing.decal.dispose();
+  const mesh = findBodyMesh(root);
+  if (!mesh) return null;
+  const decal = FacePaintDecal.build(mesh, profile);
+  (root.userData as Record<string, unknown>)[DECAL_KEY] = { decal, fighterId } as DecalEntry;
+  return decal;
+}
+
+/** Resolve a build.facePaint spec to a validated layer stack. */
+export function resolveFacePaintLayers(spec: string): { layers: FacePaintLayer[]; errors: string[] } {
   try {
-    const mod = (await import(/* @vite-ignore */ FACEPAINT_SPEC).catch(() => null)) as unknown as {
-      facePaint?: FacePaintModule;
-      default?: FacePaintModule;
-    } | null;
-    const candidate = mod?.facePaint ?? mod?.default ?? null;
-    if (candidate && typeof candidate.applyToModel === "function") {
-      cached = { ...candidate, available: true };
-    }
+    const preset = getPreset(spec);
+    return { layers: clonePresetLayers(preset), errors: [] };
   } catch {
-    // Paint lane not merged — fall through to the stub.
+    // Not a preset id — treat as serialized custom layers.
   }
-  return cached ?? STUB;
+  try {
+    const layers = parseLayers(spec);
+    return { layers, errors: [] };
+  } catch (e) {
+    return { layers: [], errors: [e instanceof Error ? e.message : String(e)] };
+  }
+}
+
+/**
+ * Apply a paint spec (preset id or serialized layers) to the model root.
+ * Returns validation/build errors (empty = painted). Never throws.
+ */
+export async function applyFacePaintSpec(
+  root: THREE.Object3D,
+  fighterId: string,
+  spec: string,
+): Promise<string[]> {
+  const { layers, errors } = resolveFacePaintLayers(spec);
+  if (errors.length > 0) return errors;
+  const paintErrors = validateLayers(layers);
+  if (paintErrors.length > 0) return paintErrors;
+  const decal = await ensureDecal(root, fighterId);
+  if (!decal) return ["Face paint isn't supported for this fighter yet."];
+  await decal.painter.paint(layers, FACE_PATTERNS);
+  decal.texture.needsUpdate = true;
+  decal.setVisible(true);
+  return [];
+}
+
+/** Hide paint without repainting (skin-tone lock: base untouched). */
+export function clearFacePaint(root: THREE.Object3D): void {
+  decalEntry(root)?.decal.setVisible(false);
+}
+
+/** Dispose the decal when the model root is discarded (fighter switch). */
+export function disposeFacePaint(root: THREE.Object3D): void {
+  const entry = decalEntry(root);
+  if (entry) {
+    entry.decal.dispose();
+    delete (root.userData as Record<string, unknown>)[DECAL_KEY];
+  }
 }
