@@ -1,0 +1,142 @@
+Data are loaded, start creating Blender stuff
+glTF import finished in 5.35s
+ASTRID head: (-0.0, -0.0451, 1.5232)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.81s
+retarget delta for Hair_Long (-0.0, -0.056, -0.0264)
+Error: Modifier is disabled, skipping apply
+mod apply fail Hair_Long Armature Error: Modifier is disabled, skipping apply
+
+04:26:21 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+04:26:21 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+04:26:21 | INFO: Extracting primitive: Hair_Long
+04:26:22 | INFO: Primitives created: 1
+04:26:22 | INFO: Finished glTF 2.0 export in 0.8227975368499756 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hair/hair_echo_long_green.glb
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.57s
+retarget delta for Hair_Long (-0.0, -0.056, -0.0264)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.45s
+retarget delta for Hair_Beard (-0.0, -0.0625, -0.0766)
+Error: Modifier is disabled, skipping apply
+mod apply fail Hair_Long Armature Error: Modifier is disabled, skipping apply
+
+Error: Modifier is disabled, skipping apply
+mod apply fail Hair_Beard Armature Error: Modifier is disabled, skipping apply
+
+04:26:24 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+04:26:24 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+04:26:24 | INFO: Extracting primitive: Hair_Long.001
+04:26:24 | INFO: Primitives created: 1
+04:26:24 | INFO: Extracting primitive: Plane.006
+04:26:24 | INFO: Primitives created: 1
+04:26:24 | INFO: Finished glTF 2.0 export in 0.4727494716644287 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hair/hair_static_blond_beard.glb
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.49s
+retarget delta for Hair_Long (-0.0, -0.056, -0.0264)
+Error: Modifier is disabled, skipping apply
+mod apply fail Hair_Long Armature Error: Modifier is disabled, skipping apply
+
+04:26:25 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+04:26:25 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+04:26:25 | INFO: Extracting primitive: Hair_Long.002
+04:26:26 | INFO: Primitives created: 1
+04:26:26 | INFO: Finished glTF 2.0 export in 0.8431880474090576 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hair/hair_hollow_long_black.glb
+Data are loaded, start creating Blender stuff
+glTF import finished in 2.71s
+04:26:30 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+04:26:30 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+04:26:31 | INFO: Extracting primitive: BezierCircle.001
+04:26:34 | INFO: Primitives created: 1
+04:26:34 | INFO: Extracting primitive: Torus
+04:26:34 | INFO: Primitives created: 1
+04:26:34 | INFO: Finished glTF 2.0 export in 4.1592488288879395 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hair/hair_theory_locs_beads.glb
+04:26:35 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+04:26:35 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+04:26:35 | INFO: Extracting primitive: Cylinder
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.001
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.002
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.003
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.004
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.005
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.006
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.007
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.008
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.009
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.010
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.011
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.012
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.013
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Extracting primitive: Cylinder.014
+04:26:35 | INFO: Primitives created: 1
+04:26:35 | INFO: Finished glTF 2.0 export in 0.8297157287597656 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hair/hair_theory_locs_pinned.glb
+HAIR DONE: 5
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+
+Blender quit

@@ -9,8 +9,17 @@ argv = sys.argv[sys.argv.index('--') + 1:]
 CHAR, ASSET, PREFIX = argv[0], argv[1], argv[2]
 VIEWS = argv[3].split(',') if len(argv) > 3 else ['front', 'side', 'turn']
 ACC_SCALE = float(argv[4]) if len(argv) > 4 else 1.0
+HIDE = argv[5] if len(argv) > 5 else ''
 
 bpy.ops.import_scene.gltf(filepath=CHAR)
+if HIDE:
+    for o in bpy.data.objects:
+        if o.type == 'MESH':
+            mats = [s.material.name if s.material else '' for s in o.material_slots]
+            if HIDE in o.name or any(HIDE in m for m in mats):
+                o.hide_render = True
+                o.hide_viewport = True
+    print('hid meshes containing:', HIDE)
 char_arm = None
 for o in bpy.data.objects:
     if o.type == 'ARMATURE':
