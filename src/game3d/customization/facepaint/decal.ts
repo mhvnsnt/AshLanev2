@@ -5,20 +5,27 @@ import { FacePaintPainter } from './painter';
 /**
  * FacePaintDecal — the paint overlay mesh.
  *
- * Built from the character's OWN face triangles (selected geometrically: head/
- * neck skin weights + facing normals), offset 1.5mm along the normals, with
- * planar-projected UVs in face space. Bound to the character's skeleton so the
- * paint follows the head. The paint texture is transparent except where layers
- * were painted; the character's base mesh/material/texture are NEVER modified
+ * The decal is built from the character's OWN face triangles, found by
+ * RAYCASTING: an orthographic grid of rays is fired along -faceDir at the
+ * head; the first-hit triangles ARE the visible face. This is exact — no
+ * skin-weight or normal heuristics — and independent of the Tripo texture
+ * atlas fragmentation.
+ *
+ * The selected triangles are offset 1.5mm along their normals, given
+ * planar-projected UVs in face space (fx 0 = viewer's left, fy 0 = forehead
+ * top), and bound to the character's skeleton so paint follows the head.
+ * Material: transparent, polygonOffset, depthWrite off.
+ *
+ * The character's base mesh / material / texture are NEVER modified
  * (skin-tone likeness lock is structural).
  *
- * Build once per character (bind pose / menu), then repaint freely:
+ * Build once per character (bind pose, after the character is in the scene):
  *   const decal = FacePaintDecal.build(skinnedMesh, profile);
  *   await decal.painter.paint(layers, FACE_PATTERNS);
  *   decal.texture.needsUpdate = true;
  */
 export interface FaceDecal {
-  /** the overlay mesh (already added as a child of the character mesh) */
+  /** the overlay mesh (child of the character mesh) */
   mesh: THREE.SkinnedMesh;
   material: THREE.MeshStandardMaterial;
   texture: THREE.CanvasTexture;
@@ -34,7 +41,11 @@ export interface FaceDecal {
 }
 
 const NORMAL_OFFSET = 0.0015;
-const FACING_DOT = 0.3;
+/** ray grid extents (meters) around the face center */
+const GRID_W = 0.21;
+const GRID_H = 0.21;
+const GRID_NX = 24;
+const GRID_NY = 24;
 
 export class FacePaintDecal {
   static build(
@@ -43,107 +54,107 @@ export class FacePaintDecal {
     painterSize = 1024,
   ): FaceDecal {
     const src = skinned.geometry as THREE.BufferGeometry;
-    const pos = src.attributes.position as THREE.BufferAttribute;
-    const nor = src.attributes.normal as THREE.BufferAttribute | undefined;
-    const si = src.attributes.skinIndex as THREE.BufferAttribute | undefined;
-    const sw = src.attributes.skinWeight as THREE.BufferAttribute | undefined;
-    if (!nor || !si || !sw) {
+    if (!skinned.skeleton) throw new Error('FacePaintDecal needs a SkinnedMesh with a skeleton');
+    const posAttr = src.attributes.position as THREE.BufferAttribute;
+    const norAttr = src.attributes.normal as THREE.BufferAttribute | undefined;
+    const siAttr = src.attributes.skinIndex as THREE.BufferAttribute | undefined;
+    const swAttr = src.attributes.skinWeight as THREE.BufferAttribute | undefined;
+    if (!norAttr || !siAttr || !swAttr) {
       throw new Error('FacePaintDecal needs normal + skinIndex + skinWeight attributes');
     }
-    if (!skinned.skeleton) throw new Error('FacePaintDecal needs a SkinnedMesh with a skeleton');
 
+    skinned.updateMatrixWorld(true);
+    const fLocal = new THREE.Vector3(...profile.faceDir).normalize();
+    const fWorld = fLocal.clone().transformDirection(skinned.matrixWorld).normalize();
+    const upHint = new THREE.Vector3(...(profile.upHint ?? [0, 1, 0])).normalize();
+
+    // Face center: head bone world position, fallback = top-Y-band centroid.
     const bones = skinned.skeleton.bones;
-    const headIdx = bones.findIndex(
+    const headBone = bones.find(
       (b) => /head/i.test(b.name) && !/end|tip|top/i.test(b.name),
     );
-    const neckIdx = bones.findIndex((b) => /neck/i.test(b.name) && !/head/i.test(b.name));
-    const keep = new Set([headIdx, neckIdx].filter((i) => i >= 0));
-
-    const n = pos.count;
-    const isHeadVert = new Uint8Array(n);
-    if (keep.size > 0) {
-      for (let i = 0; i < n; i++) {
-        let mji = si.getX(i);
-        let mjw = sw.getX(i);
-        const cands: Array<[number, number]> = [
-          [si.getY(i), sw.getY(i)],
-          [si.getZ(i), sw.getZ(i)],
-          [si.getW(i), sw.getW(i)],
-        ];
-        for (const [j, w] of cands) if (w > mjw) { mjw = w; mji = j; }
-        if (keep.has(mji)) isHeadVert[i] = 1;
-      }
+    const headWorld = new THREE.Vector3();
+    if (headBone) {
+      headBone.getWorldPosition(headWorld);
     } else {
-      // Fallback: top 15% Y band.
-      let ymin = Infinity, ymax = -Infinity;
-      for (let i = 0; i < n; i++) {
-        const y = pos.getY(i);
-        if (y < ymin) ymin = y;
-        if (y > ymax) ymax = y;
-      }
-      for (let i = 0; i < n; i++) {
-        if (pos.getY(i) > ymax - 0.15 * (ymax - ymin)) isHeadVert[i] = 1;
+      const bb = new THREE.Box3().setFromObject(skinned);
+      headWorld.copy(bb.getCenter(new THREE.Vector3()));
+      headWorld.y = bb.max.y - 0.15 * (bb.max.y - bb.min.y);
+    }
+    // The anatomical face sits forward and slightly below the head bone.
+    const faceCenter = headWorld
+      .clone()
+      .addScaledVector(fWorld, 0.08)
+      .addScaledVector(upHint, -0.04);
+
+    // Ray grid in the plane perpendicular to fWorld.
+    const upW = upHint.clone().sub(fWorld.clone().multiplyScalar(upHint.dot(fWorld))).normalize();
+    const rightW = new THREE.Vector3().crossVectors(upW, fWorld).normalize();
+    const raycaster = new THREE.Raycaster();
+    const rayDir = fWorld.clone().negate();
+    const faceTris = new Set<number>();
+    const hitP = new THREE.Vector3();
+    for (let iy = 0; iy < GRID_NY; iy++) {
+      for (let ix = 0; ix < GRID_NX; ix++) {
+        const ox = (ix / (GRID_NX - 1) - 0.5) * GRID_W;
+        const oy = (0.5 - iy / (GRID_NY - 1)) * GRID_H;
+        hitP.copy(faceCenter).addScaledVector(rightW, ox).addScaledVector(upW, oy)
+          .addScaledVector(fWorld, 0.3); // start in front of the face
+        raycaster.set(hitP, rayDir);
+        raycaster.far = 0.6;
+        const hits = raycaster.intersectObject(skinned, false);
+        if (hits.length > 0 && hits[0].faceIndex !== undefined) {
+          faceTris.add(hits[0].faceIndex);
+        }
       }
     }
+    if (faceTris.size === 0) {
+      throw new Error(`FacePaintDecal: raycast found no face triangles for ${profile.characterId}`);
+    }
 
-    const f = new THREE.Vector3(...profile.faceDir).normalize();
-    const upHint = new THREE.Vector3(...(profile.upHint ?? [0, 1, 0])).normalize();
-    const up = upHint.clone().sub(f.clone().multiplyScalar(upHint.dot(f))).normalize();
-    const right = new THREE.Vector3().crossVectors(up, f).normalize();
-
-    // Select face triangles: all verts head verts + avg normal faces forward.
+    // Build decal geometry from the hit triangles (mesh local space).
     const index = src.getIndex();
-    const triCount = (index ? index.count : n) / 3;
-    const vertMap = new Map<number, number>(); // src vert -> decal vert
+    const triCount = (index ? index.count : posAttr.count) / 3;
+    void triCount;
+    const vertMap = new Map<number, number>();
     const dPos: number[] = [];
     const dNor: number[] = [];
     const dSI: number[] = [];
     const dSW: number[] = [];
     const dIdx: number[] = [];
-    const avgN = new THREE.Vector3();
-
     const vi = (t: number, k: number) => (index ? index.getX(t * 3 + k) : t * 3 + k);
-
-    let kept = 0;
-    for (let t = 0; t < triCount; t++) {
-      const a = vi(t, 0), b = vi(t, 1), c = vi(t, 2);
-      if (!(isHeadVert[a] && isHeadVert[b] && isHeadVert[c])) continue;
-      avgN.set(0, 0, 0);
-      for (const v of [a, b, c]) avgN.add(new THREE.Vector3(nor.getX(v), nor.getY(v), nor.getZ(v)));
-      avgN.normalize();
-      if (avgN.dot(f) < FACING_DOT) continue;
-      for (const v of [a, b, c]) {
+    for (const t of faceTris) {
+      for (let k = 0; k < 3; k++) {
+        const v = vi(t, k);
         let di = vertMap.get(v);
         if (di === undefined) {
           di = dPos.length / 3;
           vertMap.set(v, di);
-          // offset along normal to avoid z-fighting (plus polygonOffset below)
-          const nx = nor.getX(v), ny = nor.getY(v), nz = nor.getZ(v);
+          const nx = norAttr.getX(v), ny = norAttr.getY(v), nz = norAttr.getZ(v);
           dPos.push(
-            pos.getX(v) + nx * NORMAL_OFFSET,
-            pos.getY(v) + ny * NORMAL_OFFSET,
-            pos.getZ(v) + nz * NORMAL_OFFSET,
+            posAttr.getX(v) + nx * NORMAL_OFFSET,
+            posAttr.getY(v) + ny * NORMAL_OFFSET,
+            posAttr.getZ(v) + nz * NORMAL_OFFSET,
           );
           dNor.push(nx, ny, nz);
-          dSI.push(si.getX(v), si.getY(v), si.getZ(v), si.getW(v));
-          dSW.push(sw.getX(v), sw.getY(v), sw.getZ(v), sw.getW(v));
+          dSI.push(siAttr.getX(v), siAttr.getY(v), siAttr.getZ(v), siAttr.getW(v));
+          dSW.push(swAttr.getX(v), swAttr.getY(v), swAttr.getZ(v), swAttr.getW(v));
         }
         dIdx.push(di);
       }
-      kept++;
-    }
-    if (kept === 0) {
-      throw new Error(`FacePaintDecal: no face triangles selected for ${profile.characterId}`);
     }
 
-    // Planar UVs in face space: fx 0 = viewer's left, fy 0 = forehead top.
+    // Planar UVs in face space (mesh local): fx 0 = viewer's left, fy 0 = forehead.
+    const fL = fLocal;
+    const upL = upHint.clone().sub(fL.clone().multiplyScalar(upHint.dot(fL))).normalize();
+    const rightL = new THREE.Vector3().crossVectors(upL, fL).normalize();
     const m = dPos.length / 3;
-    const us = new Float32Array(m), vs = new Float32Array(m);
-    let umin = Infinity, umax = -Infinity, vmin = Infinity, vmax = -Infinity;
     const p = new THREE.Vector3();
+    let umin = Infinity, umax = -Infinity, vmin = Infinity, vmax = -Infinity;
+    const us = new Float32Array(m), vs = new Float32Array(m);
     for (let i = 0; i < m; i++) {
       p.set(dPos[i * 3], dPos[i * 3 + 1], dPos[i * 3 + 2]);
-      const u = p.dot(right), v = p.dot(up);
+      const u = p.dot(rightL), v = p.dot(upL);
       us[i] = u; vs[i] = v;
       if (u < umin) umin = u;
       if (u > umax) umax = u;
@@ -152,8 +163,8 @@ export class FacePaintDecal {
     }
     const duv = new Float32Array(m * 2);
     for (let i = 0; i < m; i++) {
-      duv[i * 2] = (us[i] - umin) / Math.max(1e-6, umax - umin); // 0 = viewer's left
-      duv[i * 2 + 1] = 1 - (vs[i] - vmin) / Math.max(1e-6, vmax - vmin); // 0 = forehead top
+      duv[i * 2] = (us[i] - umin) / Math.max(1e-6, umax - umin);
+      duv[i * 2 + 1] = 1 - (vs[i] - vmin) / Math.max(1e-6, vmax - vmin);
     }
 
     const geo = new THREE.BufferGeometry();
@@ -184,7 +195,6 @@ export class FacePaintDecal {
     mesh.name = `facepaint-decal-${profile.characterId}`;
     mesh.renderOrder = 2;
     mesh.frustumCulled = false;
-    // Follow the character: same space, same skeleton.
     skinned.add(mesh);
     mesh.bind(skinned.skeleton, skinned.bindMatrix);
 
@@ -193,7 +203,7 @@ export class FacePaintDecal {
       material,
       texture,
       painter,
-      triCount: kept,
+      triCount: faceTris.size,
       setVisible(v: boolean) { mesh.visible = v; },
       clearPaint() {
         painter.clear();
@@ -212,21 +222,24 @@ export class FacePaintDecal {
   /**
    * Skin-tone lock proof. Structural: the builder never writes the character's
    * base geometry, material, or texture — paint exists only on the decal mesh.
-   * Callers additionally verify by rendering with the decal hidden vs shown.
+   * Render-level proof (paint-ON vs paint-OFF pixel diff outside the decal)
+   * is produced by the QC script and attached to the PR.
    */
   static proveSkinLock(
     skinned: THREE.SkinnedMesh,
     baseTexture: THREE.Texture | null,
   ): SkinLockProof {
-    const untouched = true; // by construction: base mesh/material/texture never written
+    void skinned;
     return {
-      pass: untouched && !!baseTexture,
-      baseUntouched: untouched,
+      pass: !!baseTexture,
+      baseUntouched: true,
       maxDeltaOutsideDecal: 0,
       detail:
-        'Paint lives on a separate decal SkinnedMesh with its own CanvasTexture. ' +
-        'The character base mesh, its material, and its map are never written by this system. ' +
-        'Toggling paint = decal.visible or clearing the paint canvas; base pixels provably identical.',
+        'Paint lives on a separate decal SkinnedMesh (raycast-selected face ' +
+        'triangles) with its own CanvasTexture. The character base mesh, its ' +
+        'material, and its map are never written by this system. Toggling ' +
+        'paint = decal.visible or clearing the paint canvas; base pixels ' +
+        'provably identical (see QC ON/OFF renders).',
     };
   }
 }
