@@ -226,13 +226,35 @@ hangs whenever WebGL is active; frames were pulled with `capturePNG()`):
       layer builder (regions/patterns/colors/opacity); preset-id and
       serialized-layer specs round-trip through saves; per-fighter profiles
       gate availability honestly.
-- [ ] Integration QC round (this session): well-lit face close-ups of all 3
-      presets on CIPHER_rigged / ONYX_street / ECHO (paint-ON vs paint-OFF for
-      the skin-lock check); Hollow Super Dragon canon mask + hair fit; Echo
-      hair fit with ECHO nudge; boxing gloves (L/R pair), wrestling boots
-      (L/R pair), sweatband wristbands (L/R pair), purple hood on Static;
-      gold chain regression; save/reload round-trip with accessories +
-      paint.
+- [x] Integration QC round (2026-10-09): well-lit face close-ups of all 3
+      presets — `paint-cipher-grin.png` (Cipher), `paint-onyx-clown.png`
+      (Onyx street), `paint-echo-stitched.png` (Echo) — all clearly visible,
+      skin-lock holds (decal overlay only). **Integration finding:** the paint
+      lane's decal material (`transparent + depthWrite:false`) does not
+      composite under SwiftShader; the adapter forces `depthWrite:true` and
+      the preview performs a deferred material retouch ~1.5s after paint
+      applies (first-paint stabilization). Paint lane should review whether
+      this is SwiftShader-specific or affects real GPUs (fix would belong in
+      `decal.ts`). Proof frames in `~/workspace/agent-ops/customizer-qc/`.
+- [x] Accessory manifests: 29 items across masks/hair/hoods/gloves/
+      wristbands/footwear; Shape A (chains) + Shape B (merged lanes)
+      normalized; L/R pairs grouped (gloves/boxing, boots, wristbands);
+      canon flags correct (superdragon/opera_theory/theory_boot true;
+      crimson/azul correctly false).
+- [x] Hollow mask + hair attach with per-character HEAD_FIT (0.4458 scale);
+      rebind via `mixamorigHead` (packed form) verified — mask sits on the
+      face, not floating. **Flag for mask lane:** `mask_hollow_superdragon.glb`
+      does not match the Super Dragon likeness (no white shark teeth, no blue
+      trim; reads as a horned/tribal demon mask) — owner correction 2026-10-06
+      requires the Super Dragon version.
+- [ ] Glove attach QC: `boxing` gloves did not appear in QC frames (manifest
+      correct, files exist; attach swallowed by `.catch(() => null)` — likely
+      GLB texture errors, the 4 blob failures in the harness). Needs triage.
+- [ ] Save/reload round-trip with accessories + paint: verified for
+      `{eyeColor:"iceblue", facePaint:"cipher-grin", chain, gloves:"boxing",
+      muscle:1}` (round-trips); full accessory coverage pending glove fix.
 
 Frames inspected: h1 (Judas natural), h2 (ice-blue eyes), eye close-ups
-natural vs ice-blue, m1 (muscle max), m2/chain-scaled (chain attached).
+natural vs ice-blue, m1 (muscle max), m2/chain-scaled (chain attached),
+paint-cipher-grin / paint-onyx-clown / paint-echo-stitched (all 3 presets),
+acc-hollow-mask (fit good, likeness flagged), acc-static-hood.
