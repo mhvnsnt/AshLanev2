@@ -1,0 +1,201 @@
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x79245408c98e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x792454091aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x792455d991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x792455d9928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:61.61M (Peak 62.70M) | Time:00:02.74 | Syncing Cube
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing Camera
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing Empty
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing Sketchfab_model
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing root
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_A_Pierce_14
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_Body_0
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_Brassiere_15
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_EYE_1
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_Hair_16
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_Head_2
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.42 | Syncing M_Jacket_17
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_L_A_Acce_18
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_L_Wrist_19
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_MouthBag_4
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_Pierce_8
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_R_Wrist_9
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_Shoes_10
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_Teeth_5
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_Tights_11
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_Tongue_6
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_transB_eyelash_7
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing M_U_Acce_12
+Fra:1 Mem:61.64M (Peak 62.70M) | Time:00:03.43 | Syncing S_Hair_13
+Fra:1 Mem:61.65M (Peak 62.70M) | Time:00:03.43 | Syncing Object_4
+Fra:1 Mem:69.22M (Peak 73.44M) | Time:00:05.75 | Syncing Object_14
+Fra:1 Mem:70.17M (Peak 73.44M) | Time:00:05.81 | Syncing Object_16
+Fra:1 Mem:70.24M (Peak 73.44M) | Time:00:05.81 | Syncing Object_20
+Fra:1 Mem:70.42M (Peak 73.44M) | Time:00:06.37 | Syncing Object_24
+Fra:1 Mem:79.39M (Peak 79.44M) | Time:00:07.71 | Syncing Object_26
+Fra:1 Mem:88.52M (Peak 89.57M) | Time:00:09.35 | Syncing Object_36
+Fra:1 Mem:93.43M (Peak 96.54M) | Time:00:10.00 | Syncing Object_38
+Fra:1 Mem:103.08M (Peak 104.66M) | Time:00:11.22 | Syncing MixamoRig
+Fra:1 Mem:103.08M (Peak 104.66M) | Time:00:11.23 | Syncing Object_10
+Fra:1 Mem:103.17M (Peak 104.66M) | Time:00:11.26 | Syncing Object_12
+Fra:1 Mem:103.25M (Peak 104.66M) | Time:00:11.26 | Syncing Object_18
+Fra:1 Mem:103.87M (Peak 104.66M) | Time:00:12.05 | Syncing Object_22
+Fra:1 Mem:111.97M (Peak 111.97M) | Time:00:12.97 | Syncing Object_28
+Fra:1 Mem:120.18M (Peak 120.18M) | Time:00:13.97 | Syncing Object_30
+Fra:1 Mem:120.21M (Peak 120.21M) | Time:00:13.97 | Syncing Object_32
+Fra:1 Mem:120.25M (Peak 120.25M) | Time:00:13.97 | Syncing Object_34
+Fra:1 Mem:125.06M (Peak 125.88M) | Time:00:14.76 | Syncing Object_40
+Fra:1 Mem:125.08M (Peak 125.88M) | Time:00:14.76 | Syncing Object_42
+Fra:1 Mem:133.18M (Peak 133.18M) | Time:00:15.86 | Syncing Object_6
+Fra:1 Mem:135.38M (Peak 135.38M) | Time:00:16.22 | Syncing Object_8
+Fra:1 Mem:144.57M (Peak 145.71M) | Time:00:17.60 | Syncing TheoryPinnedRig
+Fra:1 Mem:144.58M (Peak 145.71M) | Time:00:17.61 | Syncing loc
+Fra:1 Mem:144.59M (Peak 145.71M) | Time:00:17.61 | Syncing loc.001
+Fra:1 Mem:144.60M (Peak 145.71M) | Time:00:17.61 | Syncing loc.002
+Fra:1 Mem:144.61M (Peak 145.71M) | Time:00:17.61 | Syncing loc.003
+Fra:1 Mem:144.63M (Peak 145.71M) | Time:00:17.61 | Syncing loc.004
+Fra:1 Mem:144.64M (Peak 145.71M) | Time:00:17.61 | Syncing loc.005
+Fra:1 Mem:144.65M (Peak 145.71M) | Time:00:17.61 | Syncing loc.006
+Fra:1 Mem:144.66M (Peak 145.71M) | Time:00:17.62 | Syncing loc.007
+Fra:1 Mem:144.67M (Peak 145.71M) | Time:00:17.62 | Syncing loc.008
+Fra:1 Mem:144.68M (Peak 145.71M) | Time:00:17.62 | Syncing loc.009
+Fra:1 Mem:144.70M (Peak 145.71M) | Time:00:17.62 | Syncing loc.010
+Fra:1 Mem:144.71M (Peak 145.71M) | Time:00:17.62 | Syncing loc.011
+Fra:1 Mem:144.72M (Peak 145.71M) | Time:00:17.62 | Syncing loc.012
+Fra:1 Mem:144.73M (Peak 145.71M) | Time:00:17.62 | Syncing loc.013
+Fra:1 Mem:144.74M (Peak 145.71M) | Time:00:17.62 | Syncing loc.014
+Fra:1 Mem:144.75M (Peak 145.71M) | Time:00:17.62 | Syncing loc.015
+Fra:1 Mem:144.77M (Peak 145.71M) | Time:00:17.62 | Syncing loc.016
+Fra:1 Mem:141.93M (Peak 145.71M) | Time:00:17.66 | Rendering 1 / 24 samples
+Fra:1 Mem:134.71M (Peak 145.71M) | Time:00:58.85 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_theory_locs_pinned_nohair_front.png'
+Time: 01:02.36 (Saving: 00:02.20)
+
+Fra:1 Mem:133.45M (Peak 133.45M) | Time:00:00.91 | Syncing Cube
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.91 | Syncing Camera
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.91 | Syncing Empty
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.91 | Syncing Sketchfab_model
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.91 | Syncing root
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_A_Pierce_14
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Body_0
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Brassiere_15
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_EYE_1
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Hair_16
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Head_2
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Jacket_17
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_L_A_Acce_18
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_L_Wrist_19
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_MouthBag_4
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Pierce_8
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_R_Wrist_9
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Shoes_10
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Teeth_5
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Tights_11
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_Tongue_6
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_transB_eyelash_7
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing M_U_Acce_12
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing S_Hair_13
+Fra:1 Mem:133.46M (Peak 133.46M) | Time:00:00.92 | Syncing Object_4
+Fra:1 Mem:136.66M (Peak 140.61M) | Time:00:01.36 | Syncing Object_14
+Fra:1 Mem:137.48M (Peak 140.61M) | Time:00:01.42 | Syncing Object_16
+Fra:1 Mem:137.55M (Peak 140.61M) | Time:00:01.42 | Syncing Object_20
+Fra:1 Mem:137.69M (Peak 140.61M) | Time:00:01.43 | Syncing Object_24
+Fra:1 Mem:138.55M (Peak 140.61M) | Time:00:01.57 | Syncing Object_26
+Fra:1 Mem:139.53M (Peak 140.83M) | Time:00:01.73 | Syncing Object_36
+Fra:1 Mem:140.33M (Peak 140.83M) | Time:00:01.80 | Syncing Object_38
+Fra:1 Mem:141.80M (Peak 143.38M) | Time:00:02.04 | Syncing MixamoRig
+Fra:1 Mem:141.80M (Peak 143.38M) | Time:00:02.04 | Syncing Object_10
+Fra:1 Mem:141.89M (Peak 143.38M) | Time:00:02.05 | Syncing Object_12
+Fra:1 Mem:141.97M (Peak 143.38M) | Time:00:02.06 | Syncing Object_18
+Fra:1 Mem:142.06M (Peak 143.38M) | Time:00:02.07 | Syncing Object_22
+Fra:1 Mem:142.14M (Peak 143.38M) | Time:00:02.09 | Syncing Object_28
+Fra:1 Mem:142.33M (Peak 143.38M) | Time:00:02.11 | Syncing Object_30
+Fra:1 Mem:142.36M (Peak 143.38M) | Time:00:02.11 | Syncing Object_32
+Fra:1 Mem:142.39M (Peak 143.38M) | Time:00:02.11 | Syncing Object_34
+Fra:1 Mem:143.16M (Peak 144.10M) | Time:00:02.29 | Syncing Object_40
+Fra:1 Mem:143.18M (Peak 144.10M) | Time:00:02.29 | Syncing Object_42
+Fra:1 Mem:143.26M (Peak 144.10M) | Time:00:02.31 | Syncing Object_6
+Fra:1 Mem:143.43M (Peak 144.10M) | Time:00:02.33 | Syncing Object_8
+Fra:1 Mem:144.58M (Peak 145.72M) | Time:00:02.44 | Syncing TheoryPinnedRig
+Fra:1 Mem:144.58M (Peak 145.72M) | Time:00:02.44 | Syncing loc
+Fra:1 Mem:144.60M (Peak 145.72M) | Time:00:02.44 | Syncing loc.001
+Fra:1 Mem:144.61M (Peak 145.72M) | Time:00:02.44 | Syncing loc.002
+Fra:1 Mem:144.62M (Peak 145.72M) | Time:00:02.44 | Syncing loc.003
+Fra:1 Mem:144.63M (Peak 145.72M) | Time:00:02.44 | Syncing loc.004
+Fra:1 Mem:144.64M (Peak 145.72M) | Time:00:02.44 | Syncing loc.005
+Fra:1 Mem:144.65M (Peak 145.72M) | Time:00:02.44 | Syncing loc.006
+Fra:1 Mem:144.67M (Peak 145.72M) | Time:00:02.44 | Syncing loc.007
+Fra:1 Mem:144.68M (Peak 145.72M) | Time:00:02.44 | Syncing loc.008
+Fra:1 Mem:144.69M (Peak 145.72M) | Time:00:02.44 | Syncing loc.009
+Fra:1 Mem:144.70M (Peak 145.72M) | Time:00:02.44 | Syncing loc.010
+Fra:1 Mem:144.71M (Peak 145.72M) | Time:00:02.44 | Syncing loc.011
+Fra:1 Mem:144.72M (Peak 145.72M) | Time:00:02.44 | Syncing loc.012
+Fra:1 Mem:144.74M (Peak 145.72M) | Time:00:02.44 | Syncing loc.013
+Fra:1 Mem:144.75M (Peak 145.72M) | Time:00:02.44 | Syncing loc.014
+Fra:1 Mem:144.76M (Peak 145.72M) | Time:00:02.44 | Syncing loc.015
+Fra:1 Mem:144.77M (Peak 145.72M) | Time:00:02.44 | Syncing loc.016
+Fra:1 Mem:141.94M (Peak 145.72M) | Time:00:02.51 | Rendering 1 / 24 samples
+Fra:1 Mem:134.66M (Peak 145.72M) | Time:00:37.09 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_theory_locs_pinned_nohair_side.png'
+Time: 00:39.05 (Saving: 00:00.58)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 7.18s
+hid meshes containing: Hair
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.93s
+wrote public/models/hair/qc/hair_theory_locs_pinned_nohair_front.png
+wrote public/models/hair/qc/hair_theory_locs_pinned_nohair_side.png
+
+Blender quit

@@ -1,0 +1,41 @@
+Data are loaded, start creating Blender stuff
+glTF import finished in 9.85s
+z head/neck/spine2: 1.523 1.417 1.24
+03:55:06 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+03:55:06 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+03:55:07 | INFO: Extracting primitive: Sphere
+03:55:07 | INFO: Primitives created: 1
+03:55:07 | INFO: Extracting primitive: Cone
+03:55:07 | INFO: Primitives created: 1
+03:55:07 | INFO: Extracting primitive: Cylinder
+03:55:07 | INFO: Primitives created: 1
+03:55:07 | INFO: Finished glTF 2.0 export in 0.9021739959716797 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hoods/hood_purple_robe.glb
+03:55:09 | INFO: Draco mesh compression is available, use library at /home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/4.0/python/lib/python3.10/site-packages/libextern_draco.so
+03:55:09 | INFO: Starting glTF 2.0 export
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+WARNING: Armature must be the parent of skinned mesh
+Armature is selected by its name, but may be false in case of instances
+03:55:09 | INFO: Extracting primitive: Sphere.001
+03:55:09 | INFO: Primitives created: 1
+03:55:09 | INFO: Extracting primitive: Cone.001
+03:55:09 | INFO: Primitives created: 1
+03:55:09 | INFO: Extracting primitive: Cylinder.001
+03:55:09 | INFO: Primitives created: 1
+03:55:09 | INFO: Finished glTF 2.0 export in 0.8148045539855957 s
+
+exported /home/hatch/workspace/game-sweep/cc-3dhead/public/models/hoods/hood_purple_robe_dark.glb
+HOODS DONE: 2
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+
+Blender quit

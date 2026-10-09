@@ -1,0 +1,113 @@
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x7a4c6bcf498e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x7a4c6bcf9aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7a4c6d9991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7a4c6d99928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:28.09M (Peak 29.17M) | Time:00:02.73 | Syncing Cube
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing Camera
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing Empty
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing world
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing Armature
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing chest
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing elL
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing elR
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing ftL
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing ftR
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing haL
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing haR
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing head
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing hipL
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing hipR
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing knL
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing knR
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing pelvis
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing shL
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing shR
+Fra:1 Mem:28.12M (Peak 29.17M) | Time:00:03.08 | Syncing BANNON_XFER_MESH
+WebP: Failed to decode image
+Fra:1 Mem:42.92M (Peak 45.90M) | Time:00:04.58 | Syncing HollowRig
+Fra:1 Mem:42.92M (Peak 45.90M) | Time:00:04.58 | Syncing shell
+Fra:1 Mem:43.45M (Peak 45.90M) | Time:00:04.61 | Syncing eyetrim.001
+Fra:1 Mem:43.51M (Peak 45.90M) | Time:00:04.62 | Syncing eyetrim
+Fra:1 Mem:43.58M (Peak 45.90M) | Time:00:04.63 | Syncing tooth
+Fra:1 Mem:43.58M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.001
+Fra:1 Mem:43.59M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.002
+Fra:1 Mem:43.60M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.003
+Fra:1 Mem:43.61M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.004
+Fra:1 Mem:43.62M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.005
+Fra:1 Mem:43.62M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.006
+Fra:1 Mem:43.63M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.007
+Fra:1 Mem:43.64M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.008
+Fra:1 Mem:43.65M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.009
+Fra:1 Mem:43.66M (Peak 45.90M) | Time:00:04.63 | Syncing tooth.010
+Fra:1 Mem:43.66M (Peak 45.90M) | Time:00:04.63 | Syncing ear
+Fra:1 Mem:43.67M (Peak 45.90M) | Time:00:04.63 | Syncing ear.001
+Fra:1 Mem:43.68M (Peak 45.90M) | Time:00:04.63 | Syncing stripe
+Fra:1 Mem:43.70M (Peak 45.90M) | Time:00:04.63 | Syncing stripe.001
+Fra:1 Mem:43.70M (Peak 45.90M) | Time:00:04.64 | Syncing tassel
+Fra:1 Mem:43.73M (Peak 45.90M) | Time:00:04.64 | Syncing tassel.001
+Fra:1 Mem:43.75M (Peak 45.90M) | Time:00:04.65 | Syncing tassel.002
+Fra:1 Mem:43.77M (Peak 45.90M) | Time:00:04.66 | Syncing tasseltip
+Fra:1 Mem:43.79M (Peak 45.90M) | Time:00:04.66 | Syncing tassel.003
+Fra:1 Mem:43.81M (Peak 45.90M) | Time:00:04.66 | Syncing tassel.004
+Fra:1 Mem:43.83M (Peak 45.90M) | Time:00:04.66 | Syncing tassel.005
+Fra:1 Mem:43.85M (Peak 45.90M) | Time:00:04.66 | Syncing tasseltip.001
+Fra:1 Mem:43.01M (Peak 45.90M) | Time:00:04.76 | Rendering 1 / 24 samples
+Fra:1 Mem:40.73M (Peak 45.90M) | Time:00:30.77 | Rendering 24 / 24 samples
+Saved: 'public/models/masks/qc/mask_hollow_superdragon_hollow_front.png'
+Time: 00:33.06 (Saving: 00:01.77)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 1.38s
+CHAR /tmp/qcwork/hollow_plain.glb headbone mixamorig:Head at (-0.004, 0.004, 0.679)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.72s
+wrote public/models/masks/qc/mask_hollow_superdragon_hollow_front.png
+
+Blender quit
