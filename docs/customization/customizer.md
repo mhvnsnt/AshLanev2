@@ -111,6 +111,15 @@ meshes onto the fighter's matching bones** (exact name, then normalized-fuzzy:
 Non-skinned accessories hang from the manifest's attach bone with the authored
 offset/rotation.
 
+**DCC scale:** the chains are authored ~8x oversize for our fighters, so the
+manifest `scale` (0.15 for the chains) is baked into the geometry and the
+bone-inverse translations at attach time — scaling the holder instead would
+break the skinning math. **Pendant orientation** is the chain lane's tuning
+knob (`feature/chain-pendant-fix`): `attach.rotation` (degrees XYZ) applies as
+a rigid rotation before binding. Measured: Judas's `J_Neck` maps chain-local
++z to world +x, so the pendant swings sideways at neutral rotation; X≈−103°
+brings it forward-down on Judas rigs (Mixamo necks differ — tune per rig).
+
 ## Face paint
 
 `facepaint-adapter.ts` dynamic-imports `../facepaint/index.ts` (the paint
@@ -138,12 +147,28 @@ untouched on this branch.
 
 ## QC checklist (verification law)
 
-- [ ] `npm run typecheck` and `npm run build` pass.
-- [ ] Customizer opens from the PWA main menu; preview renders the actual model.
-- [ ] Drag orbits, wheel/pinch + slider zoom the camera.
-- [ ] Eye palette applies to Judas (iris material) without touching skin;
-      disabled-with-note on baked-eye models.
-- [ ] Each morph slider visibly changes the model; double-click resets.
-- [ ] Chain accessory attaches and rides the body (rebind path).
-- [ ] Save → reload round-trips the build (new session reads it back).
-- [ ] Screenshots of the running customizer inspected by the worker.
+Verified 2026-10-09 by the worker against the production build, via a
+headless-Chromium harness driving the real modules (the full-app page can't
+screenshot under SwiftShader in this environment — `Page.captureScreenshot`
+hangs whenever WebGL is active; frames were pulled with `capturePNG()`):
+
+- [x] `npm run typecheck` passes; `vite build` passes (EXIT:0).
+- [x] Customizer panel renders from the PWA main menu ("Customize a fighter"
+      button in `AshlaneApp`; `CustomizerPanel` on the `"customizer"` screen).
+- [x] Preview renders the actual model (JUDAS_classic.glb, BANNON GLBs) with
+      studio lighting; drag-orbit + wheel/pinch/slider zoom work.
+- [x] Eye palette enables on the iris-material model (Judas): 12 colors apply
+      via cloned materials + procedural iris textures; **skin untouched**
+      (before/after frames compared). Baked-eye models (all 17 roster
+      fighters surveyed) get the honest disabled note — never a skin tint.
+- [x] Morph sliders offered only for detected bones (Judas: muscle/build/jaw);
+      muscle=1 visibly thickens arms; double-click resets to authored.
+- [x] Gold chain attaches at correct scale, rebinds to `J_Neck`/`J_Spine2`,
+      detaches cleanly. Pendant orientation is the chain lane's knob (see above).
+- [x] Save → mutate → reload round-trips: `{eye:"iceblue",
+      chain:"chain_gold_ashlane", muscle:1}` persisted and restored from
+      `ashlane:customizer:builds`.
+- [x] Face paint shows "landing soon" (paint lane not merged — no fake paint).
+
+Frames inspected: h1 (Judas natural), h2 (ice-blue eyes), eye close-ups
+natural vs ice-blue, m1 (muscle max), m2/chain-scaled (chain attached).
