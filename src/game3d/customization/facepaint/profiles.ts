@@ -18,9 +18,9 @@ export const FACE_PAINT_PROFILES: FacePaintProfile[] = [
     characterId: 'onyx',
     label: 'Onyx',
     glb: 'models/cast/ONYX_street.glb',
-    faceDir: [0.954, 0, 0.299],
+    faceDir: [-1, 0, 0],
     notes:
-      'Street attire. faceDir = head-bone X axis (horizontal), pending visual confirmation. FULL white clown paint canon; dark skin under paint (skin-tone lock).',
+      'Street attire. faceDir verified via Blender turntable (nose points -X). FULL white clown paint canon; dark skin under paint (skin-tone lock).',
   },
   {
     characterId: 'echo',
