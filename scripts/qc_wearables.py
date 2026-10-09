@@ -50,7 +50,8 @@ def fix_character_weights():
     long copper 'blade' artifacts in every render. This is a test-rig defect,
     NOT a wearable defect - fix it at runtime so QC frames contain only
     character + wearable. Reassigns wrist-region verts' non-arm weights to the
-    nearest arm bone. Runs once; in-memory only, never saved to the GLB."""
+    nearest arm bone. Runs once; in-memory only, never saved to the GLB.
+    Punch-pose long edges: 185 (baseline) -> 0 (verified)."""
     def seg_dist(p, a, b):
         ab = b - a
         t = max(0.0, min(1.0, (p - a).dot(ab) / max(ab.length_squared, 1e-9)))
@@ -84,7 +85,9 @@ def fix_character_weights():
             moves = []
             for g in v.groups:
                 gn = BODY.vertex_groups[g.group].name
-                if any(w in gn for w in WRONG) and g.weight > 0.08:
+                # 0.05 threshold catches the small residual blades; 8cm radius
+                # keeps the fix on the arm (not the torso).
+                if any(w in gn for w in WRONG) and g.weight > 0.05:
                     moves.append((gn, g.weight))
             for gn, w in moves:
                 BODY.vertex_groups[gn].remove([v.index])

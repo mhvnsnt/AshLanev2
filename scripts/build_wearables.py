@@ -18,6 +18,9 @@ from mathutils import Vector
 SRC = sys.argv[-2]
 OUTDIR = sys.argv[-1]
 os.makedirs(OUTDIR, exist_ok=True)
+# BUILD_FILTER: comma-separated asset ids to build only (e.g. "theory_boot,boxing").
+# Unset/empty builds everything.
+BUILD_FILTER = set(f.strip() for f in os.environ.get('BUILD_FILTER', '').split(',') if f.strip())
 
 # ---------------------------------------------------------------- setup
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -229,13 +232,24 @@ def pt_seg_dist(p, a, b):
     t = max(0.0, min(1.0, (p - a).dot(ab) / max(ab.length_squared, 1e-9)))
     return (p - (a + ab * t)).length
 
-def skin_object(ob, bone_names, blend=0.02):
-    """weight verts to nearest of bone_names (blend band between 2 nearest)."""
+def skin_object(ob, bone_names, blend=0.02, pins=None):
+    """weight verts to nearest of bone_names (blend band between 2 nearest).
+    pins: optional list of (test_fn(co)->bool, bone_name); verts matching get
+    100% to bone_name (used when auto-skinning straddles a joint badly)."""
     segs = [(n, BONES[n][0], BONES[n][1]) for n in bone_names]
     vgs = {}
     for n, _, _ in segs:
         vgs[n] = ob.vertex_groups.new(name=n)
     for i, co in enumerate([Vector(v) for v in [ob.data.vertices[i].co for i in range(len(ob.data.vertices))]]):
+        pinned = None
+        if pins:
+            for test_fn, bn in pins:
+                if test_fn(co):
+                    pinned = bn
+                    break
+        if pinned:
+            vgs[pinned].add([i], 1.0, 'REPLACE')
+            continue
         ds = sorted(((pt_seg_dist(co, a, b), n) for n, a, b in segs))
         (d1, n1) = ds[0]
         if len(ds) > 1 and (ds[1][0] - d1) < blend:
@@ -464,6 +478,12 @@ def sole_geo(st, clearance=0.016, thick=0.022):
 
 def build_sneaker_high(side, low=False):
     st = foot_profile(side)
+    # FIXUP 2026-10-09: low sneaker sat too far forward - heel skin poked out
+    # the back. Shift the whole footbed rearward so the shoe fully encloses
+    # the foot. (Collar stays on the leg line; tongue/laces shift with foot.)
+    DX = -0.030 if low else 0.0
+    if DX:
+        st = [(x + DX, cy, cz, ry, rz, rzmin) for (x, cy, cz, ry, rz, rzmin) in st]
     last = shoe_last(st, clearance=0.013)
     # upper: loft full foot, then collar rises at ankle
     parts = [loft_x(last, seg=18)]
@@ -478,14 +498,14 @@ def build_sneaker_high(side, low=False):
     if collar:
         parts.append(loft_z(collar, seg=18, cap0=False))
     # tongue
-    x0 = 0.02
+    x0 = 0.02 + DX
     tongue = [(x0, st[0][1], -0.78, 0.035, 0.05),
               (x0 + 0.05, st[0][1], -0.74, 0.035, 0.05),
               (x0 + 0.09, st[0][1], -0.70 + (0.0 if not low else 0.05), 0.033, 0.045)]
     parts.append(loft_x(tongue, seg=12))
     # lace bars
     for k in range(4):
-        xk = 0.03 + k * 0.035
+        xk = 0.03 + k * 0.035 + DX
         parts.append(knuckle_pad(xk, st[0][1], -0.745 + k * 0.008, 0, 0, side,
                                 thick=0.010, h=0.018, w=0.075))
     parts += sole_geo(st, thick=0.030)
@@ -499,11 +519,23 @@ def build_sneaker_high(side, low=False):
 def build_wrestling_boot(side):
     st = foot_profile(side)
     last = shoe_last(st, clearance=0.012)
+    # FIXUP 2026-10-09: toe poke-through - enlarge the toe box so the
+    # character's foot stays fully enclosed.
+    for i in range(len(last) - 5, len(last)):
+        x, cy, cz, ry, rz = last[i]
+        last[i] = (x + 0.008, cy, cz - 0.006, ry + 0.016, rz + 0.012)
     parts = [loft_x(last, seg=18)]
     leg = prof_table_z(-0.86, -0.58, 0.03, 1, ref='leg')
     shaft = []
     for (z, cx, cy, rxp, rxn, ryp, ryn, cnt) in leg:
-        shaft.append((z, cx, cy, max(rxp, -rxn) + 0.013, max(ryp, -ryn) + 0.013))
+        # FIXUP 2026-10-09: ankle float - hug the ankle (tighter clearance
+        # below -0.70), ease off at the calf so the top doesn't gape.
+        cl = 0.008 if z < -0.70 else 0.013
+        shaft.append((z, cx, cy, max(rxp, -rxn) + cl, max(ryp, -ryn) + cl))
+    # elastic top band: slight inward pull so the shaft mouth hugs the calf
+    if shaft:
+        z, cx, cy, rx, ry = shaft[-1]
+        shaft[-1] = (z, cx, cy, rx - 0.004, ry - 0.004)
     parts.append(loft_z(shaft, seg=18, cap0=False))
     # lace bars up the front
     for k in range(6):
@@ -516,6 +548,9 @@ def build_wrestling_boot(side):
 def build_theory_boot(side):
     # Explicit clean stations (Blender coords, left side) - measured off CIPHER
     # Foot: heel x=-0.12 -> toe x=0.17, ground z=-0.925
+    # CANON: knee-high HEEL boots for Theory. The foot is tilted onto a block
+    # heel (rear raised HEEL_H, toe near ground); the character's flat foot
+    # stays hidden inside the wedge sole + heel block.
     foot_st = [
         (-0.13, -0.215, -0.880, 0.050, 0.055),
         (-0.08, -0.225, -0.865, 0.072, 0.062),
@@ -527,10 +562,22 @@ def build_theory_boot(side):
         (0.155, -0.300, -0.892, 0.035, 0.028),
         (0.180, -0.305, -0.895, 0.012, 0.014),
     ]
+    HEEL_H = 0.070
+    X_HEEL, X_TOE = -0.13, 0.18
+    def lift(x):
+        t = (X_TOE - x) / (X_TOE - X_HEEL)
+        t = max(0.0, min(1.0, t))
+        return 0.004 + (HEEL_H - 0.004) * t
+    # Tilt the foot onto the heel AND deepen the foot-box so its bottom stays
+    # near the ground (hides the character's flat foot without a separate wedge
+    # solid that would shear when the foot bends).
+    foot_st = [(x, cy, cz + lift(x), ry, rz + lift(x) * 0.55)
+               for (x, cy, cz, ry, rz) in foot_st]
     parts = [loft_x(foot_st, seg=20)]
     # ankle -> knee shaft: smooth taper (leg is thick; boot flares slightly at top)
+    # bottom station dropped to -0.88 to stay buried in the raised foot
     shaft_st = [
-        (-0.84, -0.010, -0.235, 0.078, 0.078),
+        (-0.88, -0.010, -0.235, 0.082, 0.082),
         (-0.78, -0.005, -0.232, 0.075, 0.075),
         (-0.72, 0.000, -0.230, 0.078, 0.078),
         (-0.66, 0.005, -0.228, 0.082, 0.082),
@@ -545,17 +592,21 @@ def build_theory_boot(side):
     parts.append(loft_z([(zt - 0.020, cxt, cyt, rxt + 0.004, ryt + 0.004),
                         (zt + 0.012, cxt, cyt, rxt + 0.006, ryt + 0.006)], seg=22,
                        cap0=False, cap1=False))
-    # stiletto heel under rear
-    hx, hy = -0.085, -0.225
-    heel = [(GROUND_Z + 0.002, hx, hy, 0.010, 0.013),
-            (GROUND_Z + 0.045, hx - 0.003, hy, 0.008, 0.011),
-            (GROUND_Z + 0.080, hx - 0.006, hy, 0.013, 0.016)]
-    parts.append(loft_z(heel, seg=12))
-    # thin sole
-    sole_st = [(x, cy, GROUND_Z + 0.008, ry + 0.010, 0.008)
-               for (x, cy, cz, ry, rz) in foot_st]
-    parts.append(loft_x(sole_st, seg=16))
-    return merge_geo(parts), FOOT_B
+    # block heel under rear: chunky, visible heeled silhouette
+    hx, hy = -0.070, -0.225
+    heel_bottom = GROUND_Z + 0.002
+    heel_top = -0.860
+    heel = [(heel_bottom, hx, hy, 0.080, 0.072),
+            (heel_bottom + 0.030, hx - 0.002, hy, 0.084, 0.076),
+            (heel_top, hx - 0.005, hy, 0.078, 0.070)]
+    parts.append(loft_z(heel, seg=16))
+    # Pin heel-block verts 100% to the foot bone: auto-skinning straddles
+    # the ankle joint (50/50 leg/foot) which shears the heel when posed.
+    # (Bone names are Left here; the main loop mirrors R.)
+    def _pin_heel(co):
+        return co.z < -0.855 and co.x < -0.02
+    pins = [(_pin_heel, 'mixamorig:LeftFoot')]
+    return merge_geo(parts), FOOT_B, pins
 
 # ============================================================== assemble
 BUILDERS = {
@@ -583,7 +634,7 @@ BUILDERS = {
         ('wrestling_boot', build_wrestling_boot, 'lace-up roster wrestling boot, mid-calf',
          'Ring gear.'),
         ('theory_boot', build_theory_boot,
-         "Theory knee-high stiletto boot, pointed toe, patent black",
+         "Theory knee-high block-heel boot, pointed toe, patent black",
          'CANON: Theory knee-high heeled boots.'),
     ],
 }
@@ -607,15 +658,24 @@ for cat, items in BUILDERS.items():
     os.makedirs(catdir, exist_ok=True)
     manifest = []
     for aid, fn, desc, canon in items:
+        if BUILD_FILTER and aid not in BUILD_FILTER:
+            continue
         for side, sfx in ((1, 'L'), (-1, 'R')):
-            (verts, faces), bones = fn(side)
+            res = fn(side)
+            if len(res) == 3:
+                (verts, faces), bones, pins = res
+                if side == -1:  # mirror pin bone names for R
+                    pins = [(t, b.replace('Left', 'Right')) for (t, b) in pins]
+            else:
+                (verts, faces), bones = res
+                pins = None
             if side == -1:
                 verts, faces = mirror_y(verts, faces)
                 bones = [b.replace('Left', 'Right') for b in bones]
             ob = new_mesh(f'{aid}_{sfx}', verts, faces)
             finish_normals(ob)
             aob = make_armature(f'{aid}_{sfx}', bones)
-            skin_object(ob, bones)
+            skin_object(ob, bones, pins=pins)
             color, rough, metal = COLORS[aid]
             m = mat(f'{aid}_{sfx}', color, rough, metal)
             fp = os.path.join(catdir, f'{aid}_{sfx}.glb')
