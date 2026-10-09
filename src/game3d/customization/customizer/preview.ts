@@ -29,6 +29,7 @@ import {
   clearFacePaint,
   disposeFacePaint,
   facePaintAvailable,
+  retouchFacePaint,
 } from "./facepaint-adapter";
 import { defaultBuild, type AccessoryManifest, type CustomBuild } from "./types";
 
@@ -63,6 +64,12 @@ export class CustomizerPreview {
   private disposed = false;
   private resizeObs: ResizeObserver | null = null;
   private manifests: AccessoryManifest[] | null = null;
+  // Deferred face-paint material retouch (see facepaint-adapter note).
+  // Set after paint applies; the render loop performs it once the deadline
+  // passes, ensuring it runs during normal rendering (not inside an
+  // evaluate/promise, where it has no effect).
+  private paintRetouchRoot: THREE.Object3D | null = null;
+  private paintRetouchAt = 0;
   private applyToken = 0;
   status: PreviewStatus = { loading: false, error: null, modelName: null };
   onStatus: (s: PreviewStatus) => void = () => {};
@@ -225,6 +232,9 @@ export class CustomizerPreview {
         String(e),
       ]);
       if (errors.length > 0) console.warn("Customizer face paint failed:", errors);
+      // First-paint material stabilization: defer to the render loop.
+      this.paintRetouchRoot = root;
+      this.paintRetouchAt = performance.now() + 1500;
     }
   }
 
@@ -241,6 +251,9 @@ export class CustomizerPreview {
       String(e),
     ]);
     if (errors.length > 0) console.warn("Customizer face paint failed:", errors);
+    // First-paint material stabilization: defer to the render loop.
+    this.paintRetouchRoot = root;
+    this.paintRetouchAt = performance.now() + 1500;
   }
 
   /** Incremental eye-color change without re-applying the whole build. */
@@ -361,6 +374,13 @@ export class CustomizerPreview {
     if (this.disposed) return;
     this.raf = requestAnimationFrame(this.loop);
     const dt = Math.min(this.clock.getDelta(), 0.05);
+
+    // Deferred face-paint retouch (first-paint stabilization).
+    if (this.paintRetouchRoot && performance.now() >= this.paintRetouchAt) {
+      const r = this.paintRetouchRoot;
+      this.paintRetouchRoot = null;
+      if (this.modelRoot === r) retouchFacePaint(r);
+    }
 
     // Idle turntable — pauses while the player is driving the camera.
     if (performance.now() - this.lastInteract > 4000) {

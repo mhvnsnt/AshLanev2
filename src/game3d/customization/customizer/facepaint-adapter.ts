@@ -97,16 +97,30 @@ async function ensureDecal(root: THREE.Object3D, fighterId: string): Promise<Fac
   // Integration note (LANE-UI, 2026-10-09): the paint lane ships the decal
   // material with depthWrite:false. Verified in headless-Chromium QC
   // (SwiftShader): a transparent + depthWrite:false skinned decal does NOT
-  // composite — the paint is invisible (transparent=false and
-  // transparent+depthWrite=true both render the paint correctly, placement
-  // and UVs verified). Forcing depthWrite=true so the customizer preview
-  // shows the paint. The erase blend still punches alpha (reveals skin);
-  // the 2mm surface offset + polygonOffset prevent z-fighting. Paint lane:
-  // please review whether this is SwiftShader-specific or affects real GPUs
-  // (if the latter, the fix belongs in decal.ts).
+  // composite — the paint is invisible. Forcing depthWrite=true here.
+  // Additionally, the FIRST paint in a page session needs a material
+  // re-touch (transparent/depthWrite re-assert + needsUpdate) AFTER
+  // applyBuild has returned and the preview has rendered with the decal
+  // visible; doing it during applyBuild poisons the material (verified).
+  // See retouchFacePaint() — the UI/driver must call it ~1s after apply.
+  // The erase blend still punches alpha (reveals skin); the 2mm surface
+  // offset + polygonOffset prevent z-fighting. Paint lane: please review
+  // (may belong in decal.ts; may be SwiftShader-specific).
   decal.material.depthWrite = true;
   (root.userData as Record<string, unknown>)[DECAL_KEY] = { decal, fighterId } as DecalEntry;
   return decal;
+}
+
+/** Re-assert the decal material state after the painted texture uploads.
+ * Must be called AFTER applyBuild has returned and the preview has rendered
+ * (see ensureDecal note) — calling it during applyBuild poisons the material.
+ * The customizer UI / QC driver should call this ~1s after applying paint. */
+export function retouchFacePaint(root: THREE.Object3D): void {
+  const entry = decalEntry(root);
+  if (!entry) return;
+  entry.decal.material.transparent = true;
+  entry.decal.material.depthWrite = true;
+  entry.decal.material.needsUpdate = true;
 }
 
 /** Resolve a build.facePaint spec to a validated layer stack. */
