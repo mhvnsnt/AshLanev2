@@ -107,7 +107,7 @@ function fighterOf(root: THREE.Object3D): string | undefined {
   return (root.userData as Record<string, unknown>).fighterId as string | undefined;
 }
 
-type Registry = Map<AccessorySlotId, { id: string; node: THREE.Object3D }>;
+type Registry = Map<AccessorySlotId, { id: string; nodes: THREE.Object3D[] }>;
 
 function registry(root: THREE.Object3D): Registry {
   let reg = (root.userData as Record<string, unknown>)[REGISTRY_KEY] as Registry | undefined;
@@ -156,7 +156,10 @@ type LaneEntry = {
 function normalizeEntry(entry: LaneEntry, fallbackSlot: AccessorySlotId): AccessoryManifest | null {
   const file = (entry.file ?? "").replace(/^public\//, "");
   if (!file) return null;
-  const canon = /canon/i.test(entry.canonNotes ?? "");
+  // Canon flag: "OWNER CANON …" / "CANON: …" mark canon; "no canon lock"
+  // explicitly opts out (roster variants).
+  const notes = entry.canonNotes ?? "";
+  const canon = /\bcanon\b/i.test(notes) && !/no canon/i.test(notes);
   if (entry.id && entry.attach) {
     // Shape A — chains.
     return {
@@ -207,9 +210,30 @@ export async function loadAccessoryManifests(): Promise<AccessoryManifest[]> {
           | { accessories?: LaneEntry[] }
           | LaneEntry[];
         const entries = Array.isArray(json) ? json : (json.accessories ?? []);
-        for (const e of entries) {
-          const m = normalizeEntry(e, slot);
-          if (m) out.push(m);
+        if (Array.isArray(json)) {
+          // Shape B — group L/R pairs (gloves, wristbands, footwear share
+          // one asset id across two files) into a single manifest.
+          const groups = new Map<string, LaneEntry[]>();
+          for (const e of entries) {
+            const key = e.asset ?? e.id ?? "";
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key)!.push(e);
+          }
+          for (const [, group] of groups) {
+            const m = normalizeEntry(group[0], slot);
+            if (!m) continue;
+            const extras = group
+              .slice(1)
+              .map((e) => (e.file ?? "").replace(/^public\//, ""))
+              .filter(Boolean);
+            if (extras.length > 0) m.pairFiles = extras;
+            out.push(m);
+          }
+        } else {
+          for (const e of entries) {
+            const m = normalizeEntry(e, slot);
+            if (m) out.push(m);
+          }
         }
       } catch {
         // Manifest not merged yet (parallel lane) — skip silently.
@@ -245,13 +269,16 @@ function findBone(root: THREE.Object3D, want: string, slot: AccessorySlotId): TH
   return bones[0] ?? null;
 }
 
-/** Normalize a bone name for fuzzy matching: lowercase, strip common rig
- * prefixes (mixamorig:, J_, H_, N_, F_) and non-alphanumerics. */
+/** Normalize a bone name for fuzzy matching: lowercase, strip the mixamo
+ * prefixes (colon "mixamorig:", packed "mixamorig", stripped) and the
+ * single-letter DCC prefixes (J_, H_, N_, F_), drop non-alphanumerics.
+ * Mirrors the canonicalization in src/game3d/mediapipe-mocap.ts. */
 function normBone(name: string): string {
   return name
-    .toLowerCase()
     .replace(/^mixamorig:/, "")
+    .replace(/^mixamorig/, "")
     .replace(/^[jhnf]_/, "")
+    .toLowerCase()
     .replace(/[^a-z0-9]/g, "");
 }
 
@@ -300,13 +327,14 @@ function rebindAccessoryBones(
 
 /**
  * Attach an accessory manifest to the model root. Replaces whatever was in
- * that slot before. Returns the attached node, or null on failure.
+ * that slot before. Returns the first attached node, or null on failure.
+ * pairFiles (limb-lane L/R pairs) attach as one selection.
  *
  * Strategy: accessories that ship their own rig (the chains are skinned to
- * Neck/Spine2; the masks/hair to Head/Neck/Spine2) are REBOUND onto the
- * fighter's matching bones so they move with the body. Non-skinned
- * accessories fall back to hanging from the manifest's attach bone with the
- * authored offset/rotation.
+ * Neck/Spine2; the masks/hair to Head/Neck/Spine2; gloves to Hand/ForeArm;
+ * boots to Foot/ToeBase/Leg) are REBOUND onto the fighter's matching bones
+ * so they move with the body. Non-skinned accessories fall back to hanging
+ * from the manifest's attach bone with the authored offset/rotation.
  *
  * Head slots (hair/mask/hood) get the per-character fit transform
  * (HEAD_FIT): the measured scale + ECHO nudge + rest-pose rotation fix.
@@ -316,14 +344,37 @@ export async function attachAccessory(
   manifest: AccessoryManifest,
 ): Promise<THREE.Object3D | null> {
   detachAccessory(root, manifest.slot);
-  const gltf = await sharedLoader.loadAsync(assetUrl(manifest.file)).catch(() => null);
+  const fit = headFit(fighterOf(root), manifest.slot);
+  const nodes: THREE.Object3D[] = [];
+  for (const file of [manifest.file, ...(manifest.pairFiles ?? [])]) {
+    const node = await attachSingle(root, manifest, file, fit).catch(() => null);
+    if (node) nodes.push(node);
+  }
+  if (nodes.length === 0) return null;
+  registry(root).set(manifest.slot, { id: manifest.id, nodes });
+  return nodes[0];
+}
+
+interface FitTransform {
+  scale: number;
+  offset: [number, number, number];
+  rotFix: [number, number, number];
+}
+
+/** Attach one GLB file of a manifest (see attachAccessory for the strategy). */
+async function attachSingle(
+  root: THREE.Object3D,
+  manifest: AccessoryManifest,
+  file: string,
+  fit: FitTransform,
+): Promise<THREE.Object3D | null> {
+  const gltf = await sharedLoader.loadAsync(assetUrl(file)).catch(() => null);
   if (!gltf) return null;
   const node = gltf.scene;
   node.traverse((o) => {
     o.frustumCulled = true;
   });
 
-  const fit = headFit(fighterOf(root), manifest.slot);
   const [frx, fry, frz] = fit.rotFix;
 
   const rebound = rebindAccessoryBones(root, node);
@@ -331,19 +382,21 @@ export async function attachAccessory(
     // Skinned to the fighter now — collect the rebound meshes in a holder so
     // detachAccessory can remove them cleanly, then bind in final position.
     //
-    // DCC scale fix: accessory bind space rarely matches the fighter (the
-    // chains are authored ~8x oversize; Tripo heads need the FIT_NOTES
-    // scale). Scaling the holder would break the skinning math (bind matrix
-    // vs bone matrices), so instead bake the total scale into the geometry
-    // AND the bone-inverse translations, then bind with the holder at
-    // scale 1.
+    // Exact rebind math: we want each vertex to land at
+    //   Σ wᵢ · Wᵢ · S(s) · Iᵢ · v
+    // (the accessory scaled by s about each target bone — s folds the
+    // manifest DCC scale and the per-character FIT_NOTES scale together).
+    // three.js renders Σ wᵢ · Wᵢ · I'ᵢ · B · v with B = bindMatrix, so with
+    // the geometry and the accessory-local mesh transforms left UNTOUCHED:
+    //   I'ᵢ = S(s) · Iᵢ · B⁻¹
+    // The holder's rigid rotation (chain pendant tuning knob +
+    // per-character Tripo rest-pose fix) and position (ECHO nudge) ride
+    // inside B = mesh.matrixWorld at bind time — no separate compensation.
+    // (Scaling the holder or the geometry instead would break the skinning
+    // math: bind matrix vs bone matrices.)
     const s = (manifest.attach.scale ?? 1) * fit.scale;
     const holder = new THREE.Group();
     holder.name = `accessory:${manifest.id}`;
-    // Orientation fix for the rebind path (rigid rotation is safe: it is
-    // baked into the bind matrices, unlike holder scale). Chains use
-    // manifest.attach.rotation as the pendant tuning knob; head assets add
-    // the per-character rest-pose fix from HEAD_FIT.
     const [rx, ry, rz] = manifest.attach.rotation;
     holder.rotation.set(
       ((rx + frx) * Math.PI) / 180,
@@ -351,23 +404,18 @@ export async function attachAccessory(
       ((rz + frz) * Math.PI) / 180,
     );
     holder.position.set(fit.offset[0], fit.offset[1], fit.offset[2]);
-    for (const mesh of rebound) {
-      if (s !== 1) {
-        mesh.geometry.scale(s, s, s);
-        const inv = mesh.skeleton.boneInverses;
-        for (let i = 0; i < inv.length; i++) {
-          const e = inv[i].elements;
-          e[12] *= s;
-          e[13] *= s;
-          e[14] *= s;
-        }
-      }
-      holder.add(mesh);
-    }
+    for (const mesh of rebound) holder.add(mesh);
     root.add(holder);
     root.updateMatrixWorld(true);
+    const S = new THREE.Matrix4().makeScale(s, s, s);
+    for (const mesh of rebound) {
+      const Binv = mesh.matrixWorld.clone().invert();
+      const inverses = mesh.skeleton.boneInverses;
+      for (let i = 0; i < inverses.length; i++) {
+        inverses[i] = S.clone().multiply(inverses[i]).multiply(Binv);
+      }
+    }
     for (const mesh of rebound) mesh.bind(mesh.skeleton, mesh.matrixWorld);
-    registry(root).set(manifest.slot, { id: manifest.id, node: holder });
     return holder;
   } else {
     const bone = findBone(root, manifest.attach.bone, manifest.slot);
@@ -387,7 +435,6 @@ export async function attachAccessory(
     bone.add(node);
   }
 
-  registry(root).set(manifest.slot, { id: manifest.id, node });
   return node;
 }
 
@@ -396,7 +443,7 @@ export function detachAccessory(root: THREE.Object3D, slot: AccessorySlotId): vo
   const reg = registry(root);
   const entry = reg.get(slot);
   if (!entry) return;
-  entry.node.parent?.remove(entry.node);
+  for (const node of entry.nodes) node.parent?.remove(node);
   reg.delete(slot);
 }
 

@@ -75,6 +75,12 @@ export interface AccessoryManifest {
   slot: AccessorySlotId;
   /** GLB path relative to public/, e.g. "models/accessories/chain_gold_ashlane_rigged.glb". */
   file: string;
+  /**
+   * Extra GLBs attached with the same selection (L/R pairs in the limb
+   * lanes: gloves, wristbands, footwear share one asset id across two
+   * files). Same slot + attach semantics as `file`.
+   */
+  pairFiles?: string[];
   /** True when the lane marks this asset canon (e.g. Hollow's Super Dragon
    * mask per the 2026-10-06 owner correction) — the UI badges it. */
   canon?: boolean;
