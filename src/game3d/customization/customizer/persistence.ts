@@ -29,10 +29,18 @@ type KV = {
 
 let kvPromise: Promise<KV> | null = null;
 
+// Non-literal specifier on purpose: idb-keyval is an OPTIONAL dependency
+// (not in package.json — same pattern as saves.ts). A literal
+// import("idb-keyval") makes the production build fail at resolve time when
+// the package isn't installed. @vite-ignore leaves it as a runtime dynamic
+// import: it resolves when installed, rejects (caught below) when not, and
+// the localStorage fallback applies. De-facto behavior today is localStorage.
+const IDB_KEYVAL_SPEC = "idb-keyval";
+
 /** Same backend discipline as saves.ts: IndexedDB when present, localStorage fallback. */
 function backend(): Promise<KV> {
   if (!kvPromise) {
-    kvPromise = import("idb-keyval")
+    kvPromise = import(/* @vite-ignore */ IDB_KEYVAL_SPEC)
       .then((m) => ({
         get: m.get as KV["get"],
         set: m.set as KV["set"],
