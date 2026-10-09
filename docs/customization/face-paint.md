@@ -8,12 +8,15 @@ the three canon looks ship as locked presets.
 
 **Paint lives on a decal mesh** (`src/game3d/customization/facepaint/decal.ts`).
 
-- `FacePaintDecal.build(skinnedMesh, profile)` selects the character's own face
-  triangles geometrically (dominant head/neck skin weights + facing normals),
-  offsets them 1.5mm along the normals, and rebuilds planar UVs in face space
-  (fx 0 = viewer's left, fy 0 = forehead top). The decal is a `SkinnedMesh`
-  bound to the character's skeleton, so paint follows the head. Material:
-  transparent `MeshStandardMaterial` with `polygonOffset` (no z-fighting) and
+- `FacePaintDecal.build(skinnedMesh, profile)` builds a **raycast-conformed grid**:
+  a subdivided plane (28×30) is placed in front of the face, and each grid vertex
+  is projected along -faceDir onto the head surface (+2mm offset) via raycast
+  against a head-region subset mesh (for performance). Grid topology = clean,
+  no holes, no jagged edges. UVs are planar-remapped from hit positions to
+  face space (fx 0 = viewer's left, fy 0 = forehead top). All verts are rigidly
+  weighted to the head bone (1.0), so the decal follows the head as a
+  `SkinnedMesh` bound to the character's skeleton. Material: transparent
+  `MeshStandardMaterial` with `polygonOffset` (no z-fighting) and
   `depthWrite: false`.
 - `FacePaintPainter` (`painter.ts`) renders a `FacePaintLayer[]` stack onto a
   2D canvas in decal-UV space: patterns (white-alpha PNGs, face-space authored)
@@ -41,6 +44,11 @@ Evaluated against three.js 0.186 for the repo's single-texture Tripo characters:
    materials / textures; regions and patterns live in a clean planar face
    space independent of the atlas; layering = canvas draw order; per-region
    colors free via tinting; erase blend reveals true skin.
+4. **Decal from character's own triangles** (subset by skin weights/normals or
+   raycast) — REJECTED after QC. The triangle subset was fragile (skin-weight
+   heuristics missed the face; raycast subset had holes and jagged edges).
+   The raycast-conformed GRID is robust: clean topology, exact surface
+   conformity, and UVs independent of the character's triangulation.
 
 ## Paintable regions
 
@@ -138,17 +146,24 @@ must never be modified — never whitewashed, lightened, or darkened.
   `FacePaintDecal.proveSkinLock()` documents the guarantee; the pixel proof is
   produced by the QC script (`/tmp` scratch, see below) and attached to the PR.
 
-## QC
+## QC (2026-10-09, verified)
 
-- `node --experimental-strip-types` reads `presets.ts` directly; the Python QC
-  painter (`qc_painter.py`, lane scratch) mirrors `FacePaintPainter` against
-  the same `regions.json` + pattern PNGs.
-- Blender headless renders (lane scratch): decal mesh built with the same
-  algorithm, paint canvases applied, front head renders for all 3 canon looks,
-  inspected visually; ON/OFF pixel diff for the skin-lock proof.
-- Checklist (verification law): paint alignment on the face (all 3), no
-  base-skin change (ON/OFF diff = 0), region layering works (per-region
-  colors), canon likeness of all 3 presets.
+- `node --experimental-strip-types` exercises the SHIPPED `FacePaintDecal.build()`
+  against all 3 GLBs (cipher: 1358 tris, onyx: 895 tris, echo: 1566 tris; ~1s each).
+- Blender headless renders (lane scratch `~/workspace/agent-ops/lane-paint-qc/`):
+  raycast-conformed grid decal built with the same algorithm, paint canvases from
+  the TS presets applied, front head renders for all 3 canon looks.
+- **Cipher** (grin): white base + black eye sockets/nose/grin on face. ✓
+- **Onyx** (clown): white base + black eye markings on face. Facing corrected to
+  -X via turntable (nose points -X). ✓
+- **Echo** (stitched skull): bone base + stitches on face (partially occluded by
+  canon green hair, paint verified on visible face). ✓
+- **Skin-lock**: ON/OFF renders compared; background pixels byte-identical
+  (maxDelta=0); changed pixels confined to decal region. Base mesh/material/texture
+  never written (structural).
+- Checklist (verification law): paint alignment on the face (all 3) ✓, no
+  base-skin change (ON/OFF) ✓, region layering works (per-region colors in
+  presets) ✓, canon likeness of all 3 presets ✓.
 
 ## Files
 
