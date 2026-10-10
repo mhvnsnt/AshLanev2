@@ -1,6 +1,6 @@
 #!/bin/bash
 cd ~/workspace/game-sweep/cc-3dhead
-BL="env -u PYTHONPATH $HOME/workspace/tools/blender/blender-4.0.2-linux-x64/blender --background --python scripts/cc-lane/qc_render.py --"
+BL="xvfb-run -a env -u PYTHONPATH $HOME/workspace/tools/blender/blender-4.0.2-linux-x64/blender --background --python scripts/cc-lane/qc_render.py --"
 run() {
   local f="$3_$4.png"
   if [ -f "$f" ]; then echo "SKIP $f"; return 0; fi

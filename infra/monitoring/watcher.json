@@ -1,0 +1,10 @@
+{
+    "processes": [
+        {"name": "blender-qc", "pattern": "qc_render.py"},
+        {"name": "blender-autorig", "pattern": "blender_autorig.py"}
+    ],
+    "progress_dirs": [],
+    "status_file": "/tmp/ashlanev2-watcher-status.json",
+    "alert_log": "/tmp/ashlanev2-watcher-alerts.log",
+    "stale_threshold_minutes": 15
+}

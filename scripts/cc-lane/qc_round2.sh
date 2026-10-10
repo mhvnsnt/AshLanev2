@@ -1,6 +1,6 @@
 #!/bin/bash
 cd ~/workspace/game-sweep/cc-3dhead
-BL="env -u PYTHONPATH $HOME/workspace/tools/blender/blender-4.0.2-linux-x64/blender --background --python scripts/cc-lane/qc_render.py --"
+BL="xvfb-run -a env -u PYTHONPATH $HOME/workspace/tools/blender/blender-4.0.2-linux-x64/blender --background --python scripts/cc-lane/qc_render.py --"
 run() { # char asset out views scale hide
   local out="$3"
   case "$4" in *turn*) f="${out}_turn.png";; *side*) f="${out}_side.png";; *) f="${out}_front.png";; esac
