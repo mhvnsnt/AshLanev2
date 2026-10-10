@@ -47,7 +47,8 @@ for MODEL in "${UNRIGGED_MODELS[@]}"; do
     continue
   fi
   echo "=== Processing $MODEL ==="
-  timeout 300 blender -b --python "$SCRIPT_DIR/blender_autorig.py" -- \
+  # xvfb-run: EGL breaks after daemon restarts; virtual display keeps renders working
+  timeout 300 xvfb-run -a blender -b --python "$SCRIPT_DIR/blender_autorig.py" -- \
     "$INPUT" "$OUTPUT" "$SCRIPT_DIR/mixamo_standard.json" 2>&1 | grep -E "Exported|DONE|Error:" | head -3
 done
 

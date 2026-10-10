@@ -45,7 +45,8 @@ def convert_one(fbx_path, glb_path):
             f.write(BLENDER_SCRIPT)
             script = f.name
         r = subprocess.run(
-            [blender, "--background", "--python", script, "--", fbx_path, glb_path],
+            # xvfb-run: EGL breaks after daemon restarts; virtual display keeps it working
+            ["xvfb-run", "-a", blender, "--background", "--python", script, "--", fbx_path, glb_path],
             capture_output=True, text=True, timeout=120
         )
         os.unlink(script)
