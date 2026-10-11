@@ -9,6 +9,7 @@ import { sfxBack, sfxFight, wireMenuSfx } from "@/game3d/menu-sfx";
 import { FactionEmblem, StyleIcon, MenuIcon } from "@/game3d/menu-icons";
 import { FighterPortrait } from "@/game3d/fighter-portraits";
 import { AshlaneTag, LaneBackdrop, SpellbookTag } from "@/game3d/street-kit";
+import { StreetScene, FighterSelectCard, MenuHero, ChainDivider, Sticker, SwatchBar, TapeCorners } from "@/game3d/menu-v4";
 import { MenuArt, FactionBanner, VsSplash } from "@/game3d/menu-art";
 import type { FactionId } from "@/game3d/char-gen";
 import "@/game3d/menu-theme.css";
@@ -219,13 +220,18 @@ export function AshlaneApp() {
           {!hud.running ? (
             <div ref={sheetRef} className="sheet veil al-sheet al-sheet-clear">
               <MenuArt screen={menu} />
+              <StreetScene seed={menu === "main" ? 7 : menu === "style" ? 21 : menu === "arenas" ? 42 : 13} />
               <LaneBackdrop />
               <div className="al-sheet-inner al-menu-content mx-auto w-full max-w-md px-4 py-6">
                 <div className="al-logo-wrap al-rise">
                   <AshlaneTag variant="red" />
                   <p className="al-logo-sub">
-                    <SpellbookTag text="wizards of the street" rotate={-2} size="0.95rem" color="#a3e635" />
+                    <SpellbookTag text="concrete jungle" rotate={-2} size="0.95rem" color="#a3e635" />
                   </p>
+                  <div className="mt-2 flex gap-2 justify-center">
+                    <Sticker text="Est. 2026" tone="gold" rotate={-6} />
+                    <Sticker text="The lane watches" tone="blood" rotate={5} />
+                  </div>
                 </div>
                 <div className="al-rip mt-1" aria-hidden="true" />
                 <p className="mt-3 text-sm leading-relaxed text-cream-dim">
@@ -233,12 +239,14 @@ export function AshlaneApp() {
                 </p>
                 {menu === "main" ? (
                   <div className="mt-5 flex flex-col gap-2.5 al-menu-enter">
+                    <MenuHero onPick={(id) => { api.current?.setWho(id); setMenu("style"); }} />
+                    <ChainDivider label="Choose your violence" />
                     <button type="button" className="al-btn al-btn-primary al-pulse al-rise" onClick={() => setMenu("story")}>
                       <span className="al-btn-icon"><MenuIcon name="story" />Story — take the jobs</span>
                     </button>
                     <div className="grid grid-cols-2 gap-2.5">
                       <button type="button" className="al-btn al-rise al-rise-1" onClick={() => api.current?.startBout("exhibit", arena)}>
-                        <span className="al-btn-icon"><MenuIcon name="fight" />Exhibition</span>
+                        <span className="al-btn-icon"><MenuIcon name="fight" />Throw down</span>
                       </button>
                       <button type="button" className="al-btn al-rise al-rise-1" onClick={() => api.current?.startBout("practice", arena)}>
                         <span className="al-btn-icon"><MenuIcon name="trophy" />Practice</span>
@@ -283,7 +291,7 @@ export function AshlaneApp() {
                 {menu === "arenas" ? (
                   <div className="mt-4 flex flex-col gap-2.5">
                     <div className="al-section"><span className="al-section-title">Pick a block</span></div>
-                    <p className="text-sm text-cream-dim">Exhibition and Practice use a ring in the middle of it. Ward still walks the whole lane.</p>
+                    <p className="text-sm text-cream-dim">Throwdown and Practice clear the middle of the block. Ward still walks the whole lane.</p>
                     {ARENAS.map((place, i) => (
                       <button
                         key={place.id}
@@ -300,7 +308,7 @@ export function AshlaneApp() {
                       </button>
                     ))}
                     <button type="button" className="al-btn al-btn-primary" onClick={() => api.current?.startBout("exhibit", arena)}>
-                      <span>Exhibition here</span>
+                      <span>Throw down here</span>
                     </button>
                     <button type="button" className="al-btn" onClick={() => api.current?.startBout("practice", arena)}>
                       <span>Practice here</span>
@@ -416,13 +424,16 @@ export function AshlaneApp() {
                         </div>
                       );
                     })()}
-                    <div className="al-fighter-grid">
+                    <ChainDivider label="The roster" />
+                    <div className="v4-fighter-grid">
                       {ROSTER.map((fighter) => (
-                        <FighterCard
+                        <FighterSelectCard
                           key={fighter.id}
                           fighter={fighter}
                           selected={hud.who === fighter.name}
                           onSelect={() => api.current?.setWho(fighter.id)}
+                          factionEmblem={<FactionEmblem faction={FIGHTER_FACTIONS[fighter.id] ?? "unaffiliated"} size={18} />}
+                          stats={fighterStats(fighter.id)}
                         />
                       ))}
                     </div>
@@ -577,13 +588,15 @@ export function AshlaneApp() {
                     <button type="button" className="al-chip flex-1" data-on={hud.build === "chibi" ? "1" : undefined} onClick={() => api.current?.setBuild("chibi")}>Ward size</button>
                   </div>
                   {suiteWho === null ? (
-                    <div className="al-fighter-grid">
+                    <div className="v4-fighter-grid">
                       {ROSTER.map((fighter) => (
-                        <FighterCard
+                        <FighterSelectCard
                           key={fighter.id}
                           fighter={fighter}
                           selected={hud.who === fighter.name}
                           onSelect={() => { setSuiteWho(fighter.id); api.current?.setWho(fighter.id); }}
+                          factionEmblem={<FactionEmblem faction={FIGHTER_FACTIONS[fighter.id] ?? "unaffiliated"} size={18} />}
+                          stats={fighterStats(fighter.id)}
                         />
                       ))}
                     </div>
@@ -645,7 +658,7 @@ export function AshlaneApp() {
             <div className="veil al-sheet absolute inset-0 flex items-end justify-center p-4 sm:items-center">
               <div className="w-full max-w-sm al-rise">
                 <p className="al-kicker">Card's down</p>
-                <h2 className="al-title text-4xl mt-1">Exhibition clear</h2>
+                <h2 className="al-title text-4xl mt-1">Block taken</h2>
                 <div className="al-rip mt-2" aria-hidden="true" />
                 <p className="mt-2 text-sm text-cream-dim">Flow was <span className="font-headline text-brass">{hud.flow}</span>.</p>
                 <div className="mt-4 flex flex-col gap-2.5">
@@ -794,7 +807,7 @@ function labelFor(mode: Mode) {
 
 function objective(hud: Hud) {
   if (hud.bout === "practice") return "Practice. The bag stays. Try the dives, the grabs, and the flow counter.";
-  if (hud.bout === "exhibit" || hud.bout === "done") return "Exhibition. One card in the ring. Hit them as they swing and it counts as flow.";
+  if (hud.bout === "exhibit" || hud.bout === "done") return "Throwdown. One of theirs in the middle. Hit them as they swing and it counts as flow.";
   if (hud.story) return `Rank ${hud.level}. ${hud.actName}. ${hud.missionTitle}. Wave ${hud.wave}/${hud.waveMax}. Purse ${hud.purse}. ${hud.missionStep}`;
   if (hud.scuffle || hud.phase === "clear") return `${hud.phase}. ${hud.phaseStep}`;
   if (hud.area === "house") return hud.weapon === "fist" ? "Noodle house. Take the pipe. Smash the crate." : "Pipe's in hand. Run and the swing lunges. It snaps.";

@@ -1352,3 +1352,386 @@
   position: relative;
   z-index: 1;
 }
+
+/* ============================================================
+   ASHLANE menu v4 — AAA street-brawler layer
+   Palette kept: blood #c1121f, toxic #a3e635, gold #d4af37,
+   purple #7b2ff7, asphalt #0a0910, chalk #e8e0d0
+   ============================================================ */
+
+/* ---- painted street scene backdrop ---- */
+.v4-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.v4-scene-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.v4-scene-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+/* ---- custom cursor: blood crosshair ---- */
+.al-sheet, .al-menu-content, .v4-fcard, .v4-hero {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cg stroke='%23c1121f' stroke-width='2.4'%3E%3Ccircle cx='14' cy='14' r='8' fill='none'/%3E%3Cpath d='M14 0v7M14 21v7M0 14h7M21 14h7'/%3E%3C/g%3E%3Ccircle cx='14' cy='14' r='1.8' fill='%23d4af37'/%3E%3C/svg%3E") 14 14, crosshair;
+}
+.al-btn, .v4-fcard, .v4-hero-cta, button {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cg stroke='%23d4af37' stroke-width='2.4'%3E%3Ccircle cx='14' cy='14' r='8' fill='none'/%3E%3Cpath d='M14 0v7M14 21v7M0 14h7M21 14h7'/%3E%3C/g%3E%3Ccircle cx='14' cy='14' r='1.8' fill='%23c1121f'/%3E%3C/svg%3E") 14 14, pointer;
+}
+
+/* ---- fighter select card (real art) ---- */
+.v4-fcard {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: #16120e;
+  text-align: left;
+  overflow: hidden;
+  /* layered depth: torn paper + drop shadow + inner line */
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.65),
+    0 2px 0 rgba(212, 175, 55, 0.25),
+    inset 0 0 0 1px rgba(232, 224, 208, 0.14);
+  transform: rotate(-0.6deg);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.v4-fcard:nth-child(even) { transform: rotate(0.7deg); }
+.v4-fcard:hover, .v4-fcard:focus-visible {
+  transform: rotate(0deg) translateY(-3px) scale(1.02);
+  box-shadow:
+    0 16px 32px rgba(0, 0, 0, 0.7),
+    0 0 0 2px #c1121f,
+    0 0 22px rgba(193, 18, 31, 0.45);
+  z-index: 2;
+}
+.v4-fcard[data-on="1"] {
+  transform: rotate(0deg);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.75),
+    0 0 0 2px #d4af37,
+    0 0 26px rgba(212, 175, 55, 0.5),
+    inset 0 0 0 1px rgba(212, 175, 55, 0.6);
+}
+.v4-fcard-art {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 3.4;
+  overflow: hidden;
+  background: #0d0b09;
+}
+.v4-fcard-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  filter: saturate(1.08) contrast(1.05);
+}
+.v4-fcard-proc { display: block; width: 100%; height: 100%; }
+.v4-fcard-proc svg { width: 100%; height: 100%; }
+.v4-fcard-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(5, 4, 8, 0.85) 100%);
+}
+.v4-fcard-style {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: "Black Ops One", sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0d0b09;
+  background: #d4af37;
+  padding: 3px 8px;
+  transform: rotate(-4deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.v4-fcard-plate {
+  position: relative;
+  display: block;
+  padding: 10px 10px 12px;
+  margin-top: -30px; /* overlap covers the name plaque baked into portrait art */
+  background:
+    linear-gradient(180deg, rgba(193, 18, 31, 0.14), transparent 40%),
+    #1b1512;
+  border-top: 2px solid #c1121f;
+  box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.55);
+}
+.v4-fcard-name {
+  display: block;
+  font-family: Anton, "Arial Black", sans-serif;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #e8e0d0;
+  text-shadow: 2px 2px 0 #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v4-fcard[data-on="1"] .v4-fcard-name { color: #d4af37; }
+.v4-fcard-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.v4-stat { display: block; flex: 1; }
+.v4-stat-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.v4-stat-row i {
+  font-style: normal;
+  font-family: "Black Ops One", sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: #a89880;
+  width: 26px;
+}
+.v4-stat-row b {
+  flex: 1;
+  height: 6px;
+  background: #0d0b09;
+  border: 1px solid rgba(232, 224, 208, 0.18);
+  display: block;
+  overflow: hidden;
+  transform: skewX(-12deg);
+}
+.v4-stat-row u {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #7a0c14, #c1121f);
+  text-decoration: none;
+}
+.v4-stat-row u.cool { background: linear-gradient(90deg, #3f6212, #a3e635); }
+.v4-fcard-pick {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-family: "Rubik Spray Paint", cursive;
+  font-size: 1rem;
+  color: #a3e635;
+  background: #0d0b09;
+  border: 2px solid #a3e635;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(10deg);
+  box-shadow: 0 0 14px rgba(163, 230, 53, 0.5);
+}
+
+/* ---- menu hero: featured fighter ---- */
+.v4-hero {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-height: 190px;
+  margin: 14px 0 6px;
+  background: #100d0b;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transform: rotate(0.5deg);
+}
+.v4-hero-art {
+  position: relative;
+  width: 46%;
+  min-height: 190px;
+  overflow: hidden;
+  animation: v4-hero-in 0.5s ease;
+}
+@keyframes v4-hero-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: none; }
+}
+.v4-hero-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+.v4-hero-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 55%, #100d0b 100%);
+}
+.v4-hero-copy {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 12px;
+}
+.v4-hero-kicker {
+  font-family: "Black Ops One", sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #a3e635;
+}
+.v4-hero-name {
+  font-family: Anton, "Arial Black", sans-serif;
+  font-size: 1.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #e8e0d0;
+  text-shadow: 3px 3px 0 #000, 0 0 18px rgba(193, 18, 31, 0.6);
+}
+.v4-hero-cta {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-family: Bangers, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0d0b09;
+  background: linear-gradient(180deg, #e8c34a, #d4af37);
+  border: 0;
+  padding: 6px 18px;
+  transform: rotate(-2deg);
+  box-shadow: 3px 3px 0 #000;
+}
+.v4-hero-cta:active { transform: rotate(-2deg) translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+.v4-hero-dots {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+}
+.v4-hero-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(232, 224, 208, 0.25);
+}
+.v4-hero-dots i[data-on="1"] { background: #c1121f; box-shadow: 0 0 6px #c1121f; }
+
+/* ---- ornaments ---- */
+.v4-chain-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 10px;
+}
+.v4-chain-links { display: flex; gap: 3px; flex: 1; }
+.v4-chain-links i {
+  width: 11px;
+  height: 8px;
+  border: 2px solid #d4af37;
+  border-radius: 50%;
+  opacity: 0.7;
+  flex: none;
+}
+.v4-chain-label {
+  font-family: "Black Ops One", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #d4af37;
+  white-space: nowrap;
+}
+.v4-sticker {
+  display: inline-block;
+  font-family: "Rubik Spray Paint", cursive;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border: 2.5px dashed currentColor;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.v4-sticker-blood { color: #c1121f; background: rgba(193, 18, 31, 0.1); }
+.v4-sticker-gold { color: #d4af37; background: rgba(212, 175, 55, 0.08); }
+.v4-sticker-toxic { color: #a3e635; background: rgba(163, 230, 53, 0.08); }
+.v4-swatches { display: flex; gap: 6px; margin: 10px 0; }
+.v4-swatches i {
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(232, 224, 208, 0.3);
+  transform: rotate(-4deg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+.v4-swatches i:nth-child(even) { transform: rotate(3deg); }
+.v4-tape-corners { position: absolute; inset: 0; pointer-events: none; }
+.v4-tape-corners i {
+  position: absolute;
+  width: 54px;
+  height: 18px;
+  background: rgba(216, 205, 178, 0.75);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.v4-tape-corners .tl { top: -8px; left: -14px; transform: rotate(-38deg); }
+.v4-tape-corners .tr { top: -8px; right: -14px; transform: rotate(38deg); }
+.v4-tape-corners .bl { bottom: -8px; left: -14px; transform: rotate(38deg); }
+.v4-tape-corners .br { bottom: -8px; right: -14px; transform: rotate(-38deg); }
+
+/* ---- VS splash ---- */
+.v4-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+}
+.v4-vs-side {
+  position: relative;
+  width: 38%;
+  aspect-ratio: 3 / 3.6;
+  overflow: hidden;
+  border: 2px solid #c1121f;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+.v4-vs-side.right { border-color: #7b2ff7; }
+.v4-vs-side img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.v4-vs-side span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-family: Anton, sans-serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  text-align: center;
+  color: #e8e0d0;
+  background: rgba(5, 4, 8, 0.8);
+  padding: 4px;
+}
+.v4-vs-mid {
+  font-family: "Rubik Spray Paint", cursive;
+  font-size: 2.2rem;
+  color: #d4af37;
+  text-shadow: 3px 3px 0 #000, 0 0 20px rgba(212, 175, 55, 0.6);
+  transform: rotate(-6deg);
+}
+
+/* ---- v4 fighter grid: denser, art-forward ---- */
+.v4-fighter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 12px;
+}
+@media (min-width: 560px) {
+  .v4-fighter-grid { grid-template-columns: repeat(3, 1fr); }
+}
