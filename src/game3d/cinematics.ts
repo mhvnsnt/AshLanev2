@@ -251,7 +251,7 @@ export class Cinematic {
  * wide stage → title hold. Pair with the promo-video pipeline's staged
  * entrance: same shots, same timing, in-engine and in-video.
  */
-export function entranceShots(focus: Vec3Like): Shot[] {
+export function arrivalShots(focus: Vec3Like): Shot[] {
   const f = focus;
   return [
     {
@@ -325,3 +325,6 @@ export function entranceShots(focus: Vec3Like): Shot[] {
     },
   ];
 }
+
+/** @deprecated use arrivalShots — street arrival is the default. */
+export const entranceShots = arrivalShots;
