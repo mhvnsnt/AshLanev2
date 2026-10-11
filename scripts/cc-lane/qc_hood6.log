@@ -1,0 +1,115 @@
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x78b70e2dd98e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x78b70e2e2aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x78b70ff991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x78b70ff9928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:62.02M (Peak 63.10M) | Time:00:03.29 | Syncing Cube
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing Camera
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing Empty
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing Sketchfab_model
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing root
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing M_A_Pierce_14
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.73 | Syncing M_Body_0
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.74 | Syncing M_Brassiere_15
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.74 | Syncing M_EYE_1
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.74 | Syncing M_Hair_16
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.74 | Syncing M_Head_2
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Jacket_17
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_L_A_Acce_18
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_L_Wrist_19
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_MouthBag_4
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Pierce_8
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_R_Wrist_9
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Shoes_10
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Teeth_5
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Tights_11
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_Tongue_6
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.75 | Syncing M_transB_eyelash_7
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.76 | Syncing M_U_Acce_12
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.76 | Syncing S_Hair_13
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:03.76 | Syncing Object_4
+Fra:1 Mem:69.63M (Peak 73.85M) | Time:00:05.71 | Syncing Object_14
+Fra:1 Mem:70.57M (Peak 73.85M) | Time:00:05.81 | Syncing Object_16
+Fra:1 Mem:70.65M (Peak 73.85M) | Time:00:05.82 | Syncing Object_20
+Fra:1 Mem:70.82M (Peak 73.85M) | Time:00:06.34 | Syncing Object_24
+Fra:1 Mem:79.80M (Peak 79.85M) | Time:00:07.60 | Syncing Object_26
+Fra:1 Mem:88.92M (Peak 90.13M) | Time:00:08.96 | Syncing Object_36
+Fra:1 Mem:93.84M (Peak 96.94M) | Time:00:09.55 | Syncing Object_38
+Fra:1 Mem:103.48M (Peak 105.44M) | Time:00:10.36 | Syncing MixamoRig
+Fra:1 Mem:103.49M (Peak 105.44M) | Time:00:10.37 | Syncing Object_10
+Fra:1 Mem:103.58M (Peak 105.44M) | Time:00:10.37 | Syncing Object_12
+Fra:1 Mem:103.66M (Peak 105.44M) | Time:00:10.38 | Syncing Object_18
+Fra:1 Mem:104.27M (Peak 105.44M) | Time:00:10.85 | Syncing Object_22
+Fra:1 Mem:112.37M (Peak 112.37M) | Time:00:11.58 | Syncing Object_28
+Fra:1 Mem:120.59M (Peak 120.59M) | Time:00:12.62 | Syncing Object_30
+Fra:1 Mem:120.62M (Peak 120.62M) | Time:00:12.62 | Syncing Object_32
+Fra:1 Mem:120.65M (Peak 120.65M) | Time:00:12.63 | Syncing Object_34
+Fra:1 Mem:125.46M (Peak 126.22M) | Time:00:13.76 | Syncing Object_40
+Fra:1 Mem:125.48M (Peak 126.22M) | Time:00:13.76 | Syncing Object_42
+Fra:1 Mem:133.58M (Peak 133.58M) | Time:00:15.04 | Syncing Object_6
+Fra:1 Mem:135.78M (Peak 135.78M) | Time:00:15.51 | Syncing Object_8
+Fra:1 Mem:144.98M (Peak 146.12M) | Time:00:16.77 | Syncing hood_purple_robeRig
+Fra:1 Mem:144.98M (Peak 146.12M) | Time:00:16.77 | Syncing hood
+Fra:1 Mem:145.39M (Peak 146.12M) | Time:00:16.77 | Syncing peak
+Fra:1 Mem:145.40M (Peak 146.12M) | Time:00:16.77 | Syncing drape
+Fra:1 Mem:142.50M (Peak 146.12M) | Time:00:16.82 | Rendering 1 / 24 samples
+Fra:1 Mem:135.06M (Peak 146.12M) | Time:00:58.35 | Rendering 24 / 24 samples
+Saved: 'public/models/hoods/qc/hood_purple_robe_astrid_front.png'
+Time: 01:01.04 (Saving: 00:01.98)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 6.00s
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 1.02s
+wrote public/models/hoods/qc/hood_purple_robe_astrid_front.png
+
+Blender quit

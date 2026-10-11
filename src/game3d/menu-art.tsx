@@ -21,7 +21,8 @@ export type MenuScreen =
   | "arenas"
   | "style"
   | "library"
-  | "jobs";
+  | "jobs"
+  | "customizer";
 
 const SCREEN_ART: Record<MenuScreen, string> = {
   main: "menu/menu-hero.webp",
@@ -30,6 +31,7 @@ const SCREEN_ART: Record<MenuScreen, string> = {
   style: "menu/menu-fighters.webp",
   library: "menu/menu-loading.webp",
   jobs: "menu/menu-story.webp",
+  customizer: "menu/menu-fighters.webp",
 };
 
 export type FactionId =
@@ -37,7 +39,7 @@ export type FactionId =
   | "combine"
   | "hollows"
   | "unaffiliated"
-  | "painted"
+  | "onyx_crew"
   | "authority";
 
 const FACTION_ART: Record<FactionId, string> = {
@@ -45,7 +47,7 @@ const FACTION_ART: Record<FactionId, string> = {
   combine: "menu/faction-combine.webp",
   hollows: "menu/faction-hollows.webp",
   unaffiliated: "menu/faction-unaffiliated.webp",
-  onyx_gang: "menu/faction-onyx-gang.webp",
+  onyx_crew: "menu/faction-onyx-crew.webp",
   authority: "menu/faction-authority.webp",
 };
 
@@ -65,8 +67,10 @@ export function MenuArt({ screen }: { screen: MenuScreen }) {
 }
 
 /** Wide banner strip for a faction — used behind emblem pickers / faction rows. */
-export function FactionBanner({ faction }: { faction: FactionId }) {
-  const src = menuArtUrl(FACTION_ART[faction]);
+export function FactionBanner({ faction }: { faction: string }) {
+  const src = menuArtUrl(
+    (FACTION_ART as Record<string, string>)[faction] ?? FACTION_ART.unaffiliated
+  );
   return (
     <div className="al-faction-banner" aria-hidden="true">
       <img src={src} alt="" className="al-faction-banner-img" loading="lazy" />
@@ -75,11 +79,23 @@ export function FactionBanner({ faction }: { faction: FactionId }) {
   );
 }
 
-/** VS splash shown behind the fight-intro banner. */
-export function VsSplash() {
+/** VS splash shown behind the fight-intro banner. Click/Escape skips it. */
+export function VsSplash({ onSkip }: { onSkip?: () => void }) {
   return (
-    <div className="al-vs-splash" aria-hidden="true">
+    <div
+      className={"al-vs-splash" + (onSkip ? " al-vs-splash-skip" : "")}
+      aria-hidden={onSkip ? undefined : "true"}
+      onClick={onSkip}
+      role={onSkip ? "button" : undefined}
+      aria-label={onSkip ? "Skip intro" : undefined}
+    >
       <img src={menuArtUrl("menu/menu-vs.webp")} alt="" className="al-vs-splash-img" />
+      <img
+        src={menuArtUrl("ui/vs-medallion.webp")}
+        alt=""
+        aria-hidden="true"
+        className="al-vs-splash-medallion"
+      />
       <div className="al-vs-splash-veil" />
     </div>
   );
@@ -90,6 +106,12 @@ export function LoadingArt() {
   return (
     <div className="al-loading-art" aria-hidden="true">
       <img src={menuArtUrl("menu/menu-loading.webp")} alt="" className="al-loading-art-img" />
+      <img
+        src={menuArtUrl("ui/loading-frame.webp")}
+        alt=""
+        aria-hidden="true"
+        className="al-loading-art-frame"
+      />
       <div className="al-loading-art-veil" />
     </div>
   );

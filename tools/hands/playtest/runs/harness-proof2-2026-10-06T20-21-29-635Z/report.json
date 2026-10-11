@@ -1,0 +1,99 @@
+{
+ "name": "harness-proof2",
+ "url": "http://127.0.0.1:8931/target.html",
+ "headed": false,
+ "video": true,
+ "startedAt": "2026-10-06T20:21:29.646Z",
+ "finishedAt": "2026-10-06T20:21:34.228Z",
+ "steps": [
+  {
+   "n": 1,
+   "do": "goto",
+   "label": "",
+   "ms": 115,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 2,
+   "do": "waitReady",
+   "label": "surface-ready",
+   "ms": 288,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 3,
+   "do": "shot",
+   "label": "",
+   "ms": 372,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 4,
+   "do": "startCast",
+   "label": "",
+   "ms": 26,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 5,
+   "do": "probe",
+   "label": "snapshot",
+   "ms": 88,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 6,
+   "do": "probe",
+   "label": "fighters",
+   "ms": 31,
+   "ok": true,
+   "err": null
+  },
+  {
+   "n": 7,
+   "do": "eval",
+   "label": "drive-input",
+   "ms": 485,
+   "ok": false,
+   "err": "Unexpected token ';'"
+  }
+ ],
+ "screenshots": [
+  "shots/p01_loaded.png",
+  "shots/error-step7.png"
+ ],
+ "pageErrors": [],
+ "consoleErrors": [],
+ "requestFailures": [],
+ "probes": {
+  "snapshot": {
+   "running": true,
+   "mode": "belt",
+   "hp": 100,
+   "combo": 0
+  },
+  "fighters": [
+   {
+    "id": 0,
+    "kind": "player",
+    "name": "proof",
+    "x": 1.5,
+    "y": 0,
+    "z": 2.5,
+    "yaw": 0.1,
+    "hp": 99,
+    "maxHp": 100,
+    "state": "free",
+    "stateT": 0.5
+   }
+  ]
+ },
+ "videoPath": null,
+ "ok": false,
+ "fatal": "Unexpected token ';'"
+}

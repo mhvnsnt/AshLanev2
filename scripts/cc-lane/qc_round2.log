@@ -1,0 +1,974 @@
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+env: '~/workspace/tools/blender/blender-4.0.2-linux-x64/blender': No such file or directory
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x72ffd18ed98e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x72ffd18f2aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x72ffd37991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x72ffd379928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:61.17M (Peak 62.26M) | Time:00:03.90 | Syncing Cube
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.37 | Syncing Camera
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing Empty
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing Sketchfab_model
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing root
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_A_Pierce_14
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Body_0
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Brassiere_15
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_EYE_1
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Hair_16
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Head_2
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Jacket_17
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_L_A_Acce_18
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_L_Wrist_19
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_MouthBag_4
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Pierce_8
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_R_Wrist_9
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Shoes_10
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Teeth_5
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Tights_11
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_Tongue_6
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_transB_eyelash_7
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing M_U_Acce_12
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing S_Hair_13
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:04.38 | Syncing Object_4
+Fra:1 Mem:68.79M (Peak 73.00M) | Time:00:05.76 | Syncing Object_14
+Fra:1 Mem:69.73M (Peak 73.00M) | Time:00:05.80 | Syncing Object_16
+Fra:1 Mem:69.81M (Peak 73.00M) | Time:00:05.81 | Syncing Object_20
+Fra:1 Mem:69.98M (Peak 73.00M) | Time:00:06.35 | Syncing Object_24
+Fra:1 Mem:78.95M (Peak 80.08M) | Time:00:07.48 | Syncing Object_26
+Fra:1 Mem:88.08M (Peak 89.36M) | Time:00:08.44 | Syncing Object_36
+Fra:1 Mem:92.99M (Peak 96.10M) | Time:00:09.60 | Syncing Object_38
+Fra:1 Mem:102.64M (Peak 104.60M) | Time:00:11.04 | Syncing MixamoRig
+Fra:1 Mem:102.65M (Peak 104.60M) | Time:00:11.04 | Syncing Object_10
+Fra:1 Mem:102.74M (Peak 104.60M) | Time:00:11.04 | Syncing Object_12
+Fra:1 Mem:102.82M (Peak 104.60M) | Time:00:11.07 | Syncing Object_18
+Fra:1 Mem:103.43M (Peak 104.60M) | Time:00:12.02 | Syncing Object_22
+Fra:1 Mem:111.53M (Peak 111.53M) | Time:00:13.21 | Syncing Object_28
+Fra:1 Mem:119.75M (Peak 119.75M) | Time:00:14.41 | Syncing Object_30
+Fra:1 Mem:119.78M (Peak 119.78M) | Time:00:14.42 | Syncing Object_32
+Fra:1 Mem:119.81M (Peak 119.81M) | Time:00:14.42 | Syncing Object_34
+Fra:1 Mem:124.62M (Peak 125.38M) | Time:00:15.49 | Syncing Object_40
+Fra:1 Mem:124.64M (Peak 125.38M) | Time:00:15.50 | Syncing Object_42
+Fra:1 Mem:132.74M (Peak 132.74M) | Time:00:16.75 | Syncing Object_6
+Fra:1 Mem:134.94M (Peak 134.94M) | Time:00:17.16 | Syncing Object_8
+Fra:1 Mem:144.14M (Peak 145.54M) | Time:00:18.91 | Syncing EchoHairRig
+Fra:1 Mem:144.14M (Peak 145.54M) | Time:00:18.91 | Syncing Hair_Long
+Fra:1 Mem:141.58M (Peak 145.54M) | Time:00:19.01 | Rendering 1 / 24 samples
+Fra:1 Mem:134.20M (Peak 145.54M) | Time:01:09.10 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_echo_long_green_astrid_turn.png'
+Time: 01:12.52 (Saving: 00:01.76)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 5.15s
+hid meshes containing: Hair
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.18s
+wrote public/models/hair/qc/hair_echo_long_green_astrid_turn.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x729306ced98e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x729306cf2aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x729308b991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x729308b9928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:61.66M (Peak 62.75M) | Time:00:04.56 | Syncing Cube
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.09 | Syncing Camera
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing Empty
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing Sketchfab_model
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing root
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_A_Pierce_14
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Body_0
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Brassiere_15
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_EYE_1
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Hair_16
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Head_2
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Jacket_17
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_L_A_Acce_18
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_L_Wrist_19
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_MouthBag_4
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Pierce_8
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_R_Wrist_9
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Shoes_10
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Teeth_5
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Tights_11
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_Tongue_6
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_transB_eyelash_7
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing M_U_Acce_12
+Fra:1 Mem:61.69M (Peak 62.75M) | Time:00:05.10 | Syncing S_Hair_13
+Fra:1 Mem:61.70M (Peak 62.75M) | Time:00:05.10 | Syncing Object_4
+Fra:1 Mem:69.28M (Peak 73.49M) | Time:00:06.16 | Syncing Object_14
+Fra:1 Mem:70.22M (Peak 73.49M) | Time:00:06.20 | Syncing Object_16
+Fra:1 Mem:70.30M (Peak 73.49M) | Time:00:06.21 | Syncing Object_20
+Fra:1 Mem:70.47M (Peak 73.49M) | Time:00:06.36 | Syncing Object_24
+Fra:1 Mem:79.44M (Peak 79.49M) | Time:00:07.21 | Syncing Object_26
+Fra:1 Mem:88.57M (Peak 89.62M) | Time:00:07.94 | Syncing Object_36
+Fra:1 Mem:93.48M (Peak 96.59M) | Time:00:08.73 | Syncing Object_38
+Fra:1 Mem:103.13M (Peak 105.09M) | Time:00:09.61 | Syncing MixamoRig
+Fra:1 Mem:103.14M (Peak 105.09M) | Time:00:09.61 | Syncing Object_10
+Fra:1 Mem:103.22M (Peak 105.09M) | Time:00:09.61 | Syncing Object_12
+Fra:1 Mem:103.30M (Peak 105.09M) | Time:00:09.61 | Syncing Object_18
+Fra:1 Mem:103.92M (Peak 105.09M) | Time:00:09.86 | Syncing Object_22
+Fra:1 Mem:112.02M (Peak 112.02M) | Time:00:10.34 | Syncing Object_28
+Fra:1 Mem:120.23M (Peak 120.23M) | Time:00:11.15 | Syncing Object_30
+Fra:1 Mem:120.26M (Peak 120.26M) | Time:00:11.15 | Syncing Object_32
+Fra:1 Mem:120.30M (Peak 120.30M) | Time:00:11.16 | Syncing Object_34
+Fra:1 Mem:125.11M (Peak 125.87M) | Time:00:11.59 | Syncing Object_40
+Fra:1 Mem:125.13M (Peak 125.87M) | Time:00:11.59 | Syncing Object_42
+Fra:1 Mem:133.23M (Peak 133.23M) | Time:00:12.37 | Syncing Object_6
+Fra:1 Mem:135.43M (Peak 135.43M) | Time:00:12.66 | Syncing Object_8
+Fra:1 Mem:144.62M (Peak 145.76M) | Time:00:13.84 | Syncing StaticHairRig
+Fra:1 Mem:144.63M (Peak 145.76M) | Time:00:13.84 | Syncing Hair_Long
+Fra:1 Mem:144.98M (Peak 145.76M) | Time:00:13.87 | Syncing Hair_Beard
+Fra:1 Mem:142.16M (Peak 145.76M) | Time:00:13.93 | Rendering 1 / 24 samples
+Fra:1 Mem:134.71M (Peak 145.76M) | Time:00:47.22 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_static_blond_beard_astrid_turn.png'
+Time: 00:50.72 (Saving: 00:01.60)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 4.78s
+hid meshes containing: Hair
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.32s
+wrote public/models/hair/qc/hair_static_blond_beard_astrid_turn.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x7d6e82c8098e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x7d6e82c85aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7d6e849991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7d6e8499928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:61.17M (Peak 62.26M) | Time:00:02.29 | Syncing Cube
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing Camera
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing Empty
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing Sketchfab_model
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing root
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_A_Pierce_14
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Body_0
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Brassiere_15
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_EYE_1
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Hair_16
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Head_2
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Jacket_17
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_L_A_Acce_18
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_L_Wrist_19
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_MouthBag_4
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Pierce_8
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_R_Wrist_9
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Shoes_10
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Teeth_5
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Tights_11
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_Tongue_6
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_transB_eyelash_7
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing M_U_Acce_12
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing S_Hair_13
+Fra:1 Mem:61.21M (Peak 62.26M) | Time:00:02.69 | Syncing Object_4
+Fra:1 Mem:68.79M (Peak 72.47M) | Time:00:03.93 | Syncing Object_14
+Fra:1 Mem:69.73M (Peak 72.47M) | Time:00:03.99 | Syncing Object_16
+Fra:1 Mem:69.81M (Peak 72.47M) | Time:00:03.99 | Syncing Object_20
+Fra:1 Mem:69.98M (Peak 72.47M) | Time:00:04.33 | Syncing Object_24
+Fra:1 Mem:78.95M (Peak 79.01M) | Time:00:05.14 | Syncing Object_26
+Fra:1 Mem:88.08M (Peak 89.13M) | Time:00:05.53 | Syncing Object_36
+Fra:1 Mem:92.99M (Peak 96.10M) | Time:00:06.34 | Syncing Object_38
+Fra:1 Mem:102.64M (Peak 104.60M) | Time:00:07.78 | Syncing MixamoRig
+Fra:1 Mem:102.65M (Peak 104.60M) | Time:00:07.78 | Syncing Object_10
+Fra:1 Mem:102.74M (Peak 104.60M) | Time:00:07.79 | Syncing Object_12
+Fra:1 Mem:102.82M (Peak 104.60M) | Time:00:07.79 | Syncing Object_18
+Fra:1 Mem:103.43M (Peak 104.60M) | Time:00:08.57 | Syncing Object_22
+Fra:1 Mem:111.53M (Peak 111.53M) | Time:00:09.82 | Syncing Object_28
+Fra:1 Mem:119.75M (Peak 119.75M) | Time:00:10.64 | Syncing Object_30
+Fra:1 Mem:119.78M (Peak 119.78M) | Time:00:10.64 | Syncing Object_32
+Fra:1 Mem:119.81M (Peak 119.81M) | Time:00:10.65 | Syncing Object_34
+Fra:1 Mem:124.62M (Peak 125.38M) | Time:00:11.16 | Syncing Object_40
+Fra:1 Mem:124.64M (Peak 125.38M) | Time:00:11.16 | Syncing Object_42
+Fra:1 Mem:132.74M (Peak 132.74M) | Time:00:11.78 | Syncing Object_6
+Fra:1 Mem:134.94M (Peak 134.94M) | Time:00:12.17 | Syncing Object_8
+Fra:1 Mem:144.14M (Peak 145.27M) | Time:00:13.68 | Syncing HollowHairRig
+Fra:1 Mem:144.14M (Peak 145.27M) | Time:00:13.68 | Syncing Hair_Long
+Fra:1 Mem:141.58M (Peak 145.27M) | Time:00:13.81 | Rendering 1 / 24 samples
+Fra:1 Mem:134.20M (Peak 145.27M) | Time:00:52.27 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_hollow_long_black_astrid_turn.png'
+Time: 00:54.54 (Saving: 00:01.63)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 5.66s
+hid meshes containing: Hair
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.44s
+wrote public/models/hair/qc/hair_hollow_long_black_astrid_turn.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x7e79c3e9798e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x7e79c3e9caef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7e79c5b991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7e79c5b9928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:69.00M (Peak 70.08M) | Time:00:02.82 | Syncing Cube
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing Camera
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing Empty
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing Sketchfab_model
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing root
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing M_A_Pierce_14
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.33 | Syncing M_Body_0
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.34 | Syncing M_Brassiere_15
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.34 | Syncing M_EYE_1
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.34 | Syncing M_Hair_16
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.34 | Syncing M_Head_2
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Jacket_17
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_L_A_Acce_18
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_L_Wrist_19
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_MouthBag_4
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Pierce_8
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_R_Wrist_9
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Shoes_10
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Teeth_5
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Tights_11
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_Tongue_6
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_transB_eyelash_7
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing M_U_Acce_12
+Fra:1 Mem:69.03M (Peak 70.08M) | Time:00:03.35 | Syncing S_Hair_13
+Fra:1 Mem:69.04M (Peak 70.08M) | Time:00:03.35 | Syncing Object_4
+Fra:1 Mem:76.61M (Peak 80.83M) | Time:00:04.35 | Syncing Object_14
+Fra:1 Mem:77.56M (Peak 80.83M) | Time:00:04.40 | Syncing Object_16
+Fra:1 Mem:77.63M (Peak 80.83M) | Time:00:04.41 | Syncing Object_20
+Fra:1 Mem:77.81M (Peak 80.83M) | Time:00:04.55 | Syncing Object_24
+Fra:1 Mem:86.78M (Peak 86.83M) | Time:00:05.10 | Syncing Object_26
+Fra:1 Mem:95.90M (Peak 96.95M) | Time:00:05.93 | Syncing Object_36
+Fra:1 Mem:100.82M (Peak 103.93M) | Time:00:06.35 | Syncing Object_38
+Fra:1 Mem:110.47M (Peak 112.29M) | Time:00:06.81 | Syncing MixamoRig
+Fra:1 Mem:110.47M (Peak 112.29M) | Time:00:06.81 | Syncing Object_10
+Fra:1 Mem:110.56M (Peak 112.29M) | Time:00:06.82 | Syncing Object_12
+Fra:1 Mem:110.64M (Peak 112.29M) | Time:00:06.82 | Syncing Object_18
+Fra:1 Mem:111.25M (Peak 112.29M) | Time:00:07.21 | Syncing Object_22
+Fra:1 Mem:119.36M (Peak 119.36M) | Time:00:07.77 | Syncing Object_28
+Fra:1 Mem:127.57M (Peak 127.57M) | Time:00:08.13 | Syncing Object_30
+Fra:1 Mem:127.60M (Peak 127.60M) | Time:00:08.15 | Syncing Object_32
+Fra:1 Mem:127.64M (Peak 127.64M) | Time:00:08.15 | Syncing Object_34
+Fra:1 Mem:132.45M (Peak 133.20M) | Time:00:08.54 | Syncing Object_40
+Fra:1 Mem:132.47M (Peak 133.20M) | Time:00:08.54 | Syncing Object_42
+Fra:1 Mem:140.57M (Peak 140.57M) | Time:00:09.36 | Syncing Object_6
+Fra:1 Mem:142.77M (Peak 142.77M) | Time:00:09.62 | Syncing Object_8
+Fra:1 Mem:151.96M (Peak 153.10M) | Time:00:10.10 | Syncing TheoryLocsRig
+Fra:1 Mem:151.97M (Peak 153.10M) | Time:00:10.10 | Syncing Gradient Dreads_Baked
+Fra:1 Mem:155.10M (Peak 155.10M) | Time:00:10.13 | Syncing bead
+Fra:1 Mem:151.40M (Peak 155.10M) | Time:00:10.13 | Rendering 1 / 24 samples
+Fra:1 Mem:142.39M (Peak 155.10M) | Time:00:37.25 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_theory_locs_beads_astrid_turn.png'
+Time: 00:39.52 (Saving: 00:01.25)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 3.53s
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.62s
+wrote public/models/hair/qc/hair_theory_locs_beads_astrid_turn.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x7d6cede7898e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x7d6cede7daef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7d6cefb991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7d6cefb9928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:61.44M (Peak 62.52M) | Time:00:01.83 | Syncing Cube
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.06 | Syncing Camera
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.06 | Syncing Empty
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.06 | Syncing Sketchfab_model
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.06 | Syncing root
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.07 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.07 | Syncing M_A_Pierce_14
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.07 | Syncing M_Body_0
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.07 | Syncing M_Brassiere_15
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_EYE_1
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Hair_16
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Head_2
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Jacket_17
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_L_A_Acce_18
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_L_Wrist_19
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_MouthBag_4
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Pierce_8
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_R_Wrist_9
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Shoes_10
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Teeth_5
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Tights_11
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_Tongue_6
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_transB_eyelash_7
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing M_U_Acce_12
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing S_Hair_13
+Fra:1 Mem:61.47M (Peak 62.52M) | Time:00:02.08 | Syncing Object_4
+Fra:1 Mem:69.05M (Peak 72.74M) | Time:00:02.98 | Syncing Object_14
+Fra:1 Mem:69.99M (Peak 72.74M) | Time:00:03.02 | Syncing Object_16
+Fra:1 Mem:70.07M (Peak 72.74M) | Time:00:03.02 | Syncing Object_20
+Fra:1 Mem:70.25M (Peak 72.74M) | Time:00:03.15 | Syncing Object_24
+Fra:1 Mem:79.22M (Peak 80.34M) | Time:00:03.88 | Syncing Object_26
+Fra:1 Mem:88.34M (Peak 89.39M) | Time:00:04.89 | Syncing Object_36
+Fra:1 Mem:93.26M (Peak 96.36M) | Time:00:05.38 | Syncing Object_38
+Fra:1 Mem:102.90M (Peak 104.49M) | Time:00:06.02 | Syncing MixamoRig
+Fra:1 Mem:102.91M (Peak 104.49M) | Time:00:06.02 | Syncing Object_10
+Fra:1 Mem:103.00M (Peak 104.49M) | Time:00:06.02 | Syncing Object_12
+Fra:1 Mem:103.08M (Peak 104.49M) | Time:00:06.03 | Syncing Object_18
+Fra:1 Mem:103.69M (Peak 104.49M) | Time:00:06.41 | Syncing Object_22
+Fra:1 Mem:111.79M (Peak 111.79M) | Time:00:07.19 | Syncing Object_28
+Fra:1 Mem:120.01M (Peak 120.01M) | Time:00:07.60 | Syncing Object_30
+Fra:1 Mem:120.04M (Peak 120.04M) | Time:00:07.61 | Syncing Object_32
+Fra:1 Mem:120.07M (Peak 120.07M) | Time:00:07.61 | Syncing Object_34
+Fra:1 Mem:124.89M (Peak 125.64M) | Time:00:07.84 | Syncing Object_40
+Fra:1 Mem:124.90M (Peak 125.64M) | Time:00:07.84 | Syncing Object_42
+Fra:1 Mem:133.00M (Peak 133.00M) | Time:00:08.15 | Syncing Object_6
+Fra:1 Mem:135.20M (Peak 135.20M) | Time:00:08.28 | Syncing Object_8
+Fra:1 Mem:144.40M (Peak 145.71M) | Time:00:09.39 | Syncing TheoryPinnedRig
+Fra:1 Mem:144.40M (Peak 145.71M) | Time:00:09.39 | Syncing loc
+Fra:1 Mem:144.42M (Peak 145.71M) | Time:00:09.39 | Syncing loc.001
+Fra:1 Mem:144.43M (Peak 145.71M) | Time:00:09.39 | Syncing loc.002
+Fra:1 Mem:144.44M (Peak 145.71M) | Time:00:09.39 | Syncing loc.003
+Fra:1 Mem:144.45M (Peak 145.71M) | Time:00:09.39 | Syncing loc.004
+Fra:1 Mem:144.46M (Peak 145.71M) | Time:00:09.39 | Syncing loc.005
+Fra:1 Mem:144.47M (Peak 145.71M) | Time:00:09.39 | Syncing loc.006
+Fra:1 Mem:144.49M (Peak 145.71M) | Time:00:09.39 | Syncing loc.007
+Fra:1 Mem:144.50M (Peak 145.71M) | Time:00:09.40 | Syncing loc.008
+Fra:1 Mem:144.51M (Peak 145.71M) | Time:00:09.40 | Syncing loc.009
+Fra:1 Mem:144.52M (Peak 145.71M) | Time:00:09.40 | Syncing loc.010
+Fra:1 Mem:144.53M (Peak 145.71M) | Time:00:09.40 | Syncing loc.011
+Fra:1 Mem:144.54M (Peak 145.71M) | Time:00:09.40 | Syncing loc.012
+Fra:1 Mem:144.56M (Peak 145.71M) | Time:00:09.40 | Syncing loc.013
+Fra:1 Mem:144.57M (Peak 145.71M) | Time:00:09.40 | Syncing loc.014
+Fra:1 Mem:141.74M (Peak 145.71M) | Time:00:09.48 | Rendering 1 / 24 samples
+Fra:1 Mem:134.52M (Peak 145.71M) | Time:00:43.38 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_theory_locs_pinned_nohair_turn.png'
+Time: 00:45.31 (Saving: 00:00.86)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 3.23s
+hid meshes containing: Hair
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.22s
+wrote public/models/hair/qc/hair_theory_locs_pinned_nohair_turn.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x759b9341298e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x759b93417aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x759b939991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x759b9399928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:62.02M (Peak 63.10M) | Time:00:01.93 | Syncing Cube
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing Camera
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing Empty
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing Sketchfab_model
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing root
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing GLTF_SceneRootNode
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_A_Pierce_14
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Body_0
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Brassiere_15
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_EYE_1
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Hair_16
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Head_2
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Head_Caruncle_3
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Jacket_17
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_L_A_Acce_18
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_L_Wrist_19
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_MouthBag_4
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Pierce_8
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_R_Wrist_9
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Shoes_10
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Teeth_5
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Tights_11
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_Tongue_6
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_transB_eyelash_7
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing M_U_Acce_12
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing S_Hair_13
+Fra:1 Mem:62.05M (Peak 63.10M) | Time:00:02.40 | Syncing Object_4
+Fra:1 Mem:69.63M (Peak 73.32M) | Time:00:03.45 | Syncing Object_14
+Fra:1 Mem:70.57M (Peak 73.32M) | Time:00:03.52 | Syncing Object_16
+Fra:1 Mem:70.65M (Peak 73.32M) | Time:00:03.52 | Syncing Object_20
+Fra:1 Mem:70.82M (Peak 73.32M) | Time:00:03.84 | Syncing Object_24
+Fra:1 Mem:79.80M (Peak 79.85M) | Time:00:04.62 | Syncing Object_26
+Fra:1 Mem:88.92M (Peak 89.97M) | Time:00:05.53 | Syncing Object_36
+Fra:1 Mem:93.84M (Peak 96.94M) | Time:00:06.03 | Syncing Object_38
+Fra:1 Mem:103.48M (Peak 105.07M) | Time:00:06.32 | Syncing MixamoRig
+Fra:1 Mem:103.49M (Peak 105.07M) | Time:00:06.32 | Syncing Object_10
+Fra:1 Mem:103.58M (Peak 105.07M) | Time:00:06.32 | Syncing Object_12
+Fra:1 Mem:103.66M (Peak 105.07M) | Time:00:06.32 | Syncing Object_18
+Fra:1 Mem:104.27M (Peak 105.07M) | Time:00:06.41 | Syncing Object_22
+Fra:1 Mem:112.37M (Peak 112.37M) | Time:00:06.62 | Syncing Object_28
+Fra:1 Mem:120.59M (Peak 120.59M) | Time:00:07.01 | Syncing Object_30
+Fra:1 Mem:120.62M (Peak 120.62M) | Time:00:07.01 | Syncing Object_32
+Fra:1 Mem:120.65M (Peak 120.65M) | Time:00:07.01 | Syncing Object_34
+Fra:1 Mem:125.46M (Peak 126.22M) | Time:00:07.35 | Syncing Object_40
+Fra:1 Mem:125.48M (Peak 126.22M) | Time:00:07.35 | Syncing Object_42
+Fra:1 Mem:133.58M (Peak 133.58M) | Time:00:08.11 | Syncing Object_6
+Fra:1 Mem:135.78M (Peak 135.78M) | Time:00:08.35 | Syncing Object_8
+Fra:1 Mem:144.98M (Peak 146.12M) | Time:00:09.16 | Syncing hood_purple_robeRig
+Fra:1 Mem:144.98M (Peak 146.12M) | Time:00:09.17 | Syncing hood
+Fra:1 Mem:145.39M (Peak 146.12M) | Time:00:09.18 | Syncing peak
+Fra:1 Mem:145.40M (Peak 146.12M) | Time:00:09.20 | Syncing drape
+Fra:1 Mem:142.50M (Peak 146.12M) | Time:00:09.25 | Rendering 1 / 24 samples
+Fra:1 Mem:135.06M (Peak 146.12M) | Time:00:44.35 | Rendering 24 / 24 samples
+Saved: 'public/models/hoods/qc/hood_purple_robe_astrid_turn.png'
+Time: 00:47.06 (Saving: 00:01.45)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 3.51s
+CHAR public/models/cast/ASTRID.glb headbone Head at (-0.0, -0.045, 1.523)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.27s
+wrote public/models/hoods/qc/hood_purple_robe_astrid_turn.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x77de7c60898e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x77de7c60daef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x77de7c9991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x77de7c99928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:24.15M (Peak 25.24M) | Time:00:01.79 | Syncing Cube
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing Camera
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing Empty
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing world
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing Armature
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing chest
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing elL
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing elR
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing ftL
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing ftR
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing haL
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing haR
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing head
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing hipL
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing hipR
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing knL
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing knR
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing pelvis
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing shL
+Fra:1 Mem:24.18M (Peak 25.24M) | Time:00:01.98 | Syncing shR
+Fra:1 Mem:24.19M (Peak 25.24M) | Time:00:01.98 | Syncing BANNON_XFER_MESH
+WebP: Failed to decode image
+Fra:1 Mem:38.98M (Peak 42.17M) | Time:00:02.72 | Syncing HollowHairRig
+Fra:1 Mem:38.99M (Peak 42.17M) | Time:00:02.72 | Syncing Hair_Long
+Fra:1 Mem:38.62M (Peak 42.17M) | Time:00:02.76 | Rendering 1 / 24 samples
+Fra:1 Mem:36.57M (Peak 42.17M) | Time:00:24.95 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_hollow_long_black_hollow_front.png'
+Time: 00:25.90 (Saving: 00:00.47)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.93s
+CHAR /tmp/qcwork/hollow_plain.glb headbone mixamorig:Head at (-0.004, 0.004, 0.679)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.17s
+wrote public/models/hair/qc/hair_hollow_long_black_hollow_front.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x7a042bcd098e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x7a042bcd5aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7a042d9991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7a042d99928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:24.54M (Peak 25.63M) | Time:00:01.03 | Syncing Cube
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing Camera
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing Empty
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing world
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing Armature
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing chest
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing elL
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing elR
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing ftL
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing ftR
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing haL
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing haR
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing head
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing hipL
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing hipR
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing knL
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing knR
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing pelvis
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing shL
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing shR
+Fra:1 Mem:24.58M (Peak 25.63M) | Time:00:01.44 | Syncing BANNON_XFER_MESH
+WebP: Failed to decode image
+Fra:1 Mem:39.37M (Peak 42.56M) | Time:00:02.64 | Syncing EchoHairRig
+Fra:1 Mem:39.38M (Peak 42.56M) | Time:00:02.64 | Syncing Hair_Long
+Fra:1 Mem:39.01M (Peak 42.56M) | Time:00:02.68 | Rendering 1 / 24 samples
+Fra:1 Mem:36.96M (Peak 42.56M) | Time:00:26.00 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_echo_long_green_echo_front.png'
+Time: 00:27.78 (Saving: 00:01.28)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.82s
+CHAR /tmp/qcwork/echo_plain.glb headbone mixamorig:Head at (-0.004, 0.004, 0.679)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.16s
+wrote public/models/hair/qc/hair_echo_long_green_echo_front.png
+
+Blender quit
+GHOST/Wayland: error: XDG_RUNTIME_DIR is invalid or not set in the environment.
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf3a7b0]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(+0x598e) [0x72ce7487398e]
+/lib/x86_64-linux-gnu/libwayland-client.so.0(wl_display_connect+0x36f) [0x72ce74878aef]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27c5d4a]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0d8e]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27b0ebc]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x27af449]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf792f5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf61ca5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x111f935]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf0dd9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf1877]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf5b84]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf8874]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1cf91a9]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1b7d921]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf4faaa]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf50628]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x1543a97]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x83dc50]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x7b) [0x81868b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x53cc) [0x87925c]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_Call_Prepend+0x1c8) [0x8192f8]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x850af00]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyObject_MakeTpCall+0x216) [0x818826]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(_PyEval_EvalFrameDefault+0x5c08) [0x879a98]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8730a2]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyEval_EvalCode+0x82) [0x8519852]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d154]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x852d0db]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x6b9502]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender(PyRun_FileExFlags+0x50) [0x6ba7b1]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x152ac41]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c19c5]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0xf41b31]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x72518f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x72ce765991ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x72ce7659928b]
+/home/hatch/workspace/tools/blender/blender-4.0.2-linux-x64/blender() [0x8c022e]
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3001): EGL_NOT_INITIALIZED: EGL is not initialized, or could not be initialized, for the specified EGL display connection.
+
+Managed to successfully fallback to surfaceless EGL rendering!
+
+Blender 4.0.2 (hash 9be62e85b727 built 2023-12-05 08:48:50)
+Fra:1 Mem:24.69M (Peak 25.78M) | Time:00:02.18 | Syncing Cube
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing Camera
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing Empty
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing world
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing Armature
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing chest
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing elL
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing elR
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing ftL
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing ftR
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing haL
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing haR
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing head
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing hipL
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing hipR
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing knL
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing knR
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing pelvis
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing shL
+Fra:1 Mem:24.72M (Peak 25.78M) | Time:00:02.82 | Syncing shR
+Fra:1 Mem:24.73M (Peak 25.78M) | Time:00:02.82 | Syncing BANNON_XFER_MESH
+WebP: Failed to decode image
+Fra:1 Mem:39.52M (Peak 42.70M) | Time:00:03.37 | Syncing StaticHairRig
+Fra:1 Mem:39.53M (Peak 42.70M) | Time:00:03.37 | Syncing Hair_Long
+Fra:1 Mem:39.88M (Peak 42.70M) | Time:00:03.38 | Syncing Hair_Beard
+Fra:1 Mem:39.25M (Peak 42.70M) | Time:00:03.41 | Rendering 1 / 24 samples
+Fra:1 Mem:37.13M (Peak 42.70M) | Time:00:23.60 | Rendering 24 / 24 samples
+Saved: 'public/models/hair/qc/hair_static_blond_beard_static_front.png'
+Time: 00:25.66 (Saving: 00:01.35)
+
+Data are loaded, start creating Blender stuff
+glTF import finished in 1.15s
+CHAR /tmp/qcwork/static_plain.glb headbone mixamorig:Head at (-0.004, 0.004, 0.679)
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.47s
+wrote public/models/hair/qc/hair_static_blond_beard_static_front.png
+
+Blender quit

@@ -14,7 +14,7 @@
  * ambient chatter. No per-ped collision — separation steering only.
  */
 
-export type PedState = "wander" | "flee" | "panic" | "cower" | "talk" | "shop";
+export type PedState = "wander" | "flee" | "panic" | "cower" | "talk" | "shop" | "watch";
 
 export interface Ped {
   id: number;
@@ -104,6 +104,9 @@ export function updatePeds(
       if (p.panicT <= 0) { p.state = "wander"; pickWanderTarget(p); }
     } else if (p.state === "flee") {
       if (Math.hypot(p.tx - p.x, p.tz - p.z) < 2) { p.state = "wander"; pickWanderTarget(p); }
+    } else if (p.state === "watch") {
+      // Stand and watch — reached the ring, hold position (Def Jam crowd)
+      if (Math.hypot(p.tx - p.x, p.tz - p.z) < 1.0) { p.vx *= 0.9; p.vz *= 0.9; }
     } else if (p.state === "wander") {
       if (Math.hypot(p.tx - p.x, p.tz - p.z) < 1.5) pickWanderTarget(p);
       // Ambient chatter when player is near (grid-city pattern)
@@ -151,6 +154,43 @@ export function updatePeds(
 function pickWanderTarget(p: Ped): void {
   p.tx = p.x + (Math.random() - 0.5) * 60;
   p.tz = p.z + (Math.random() - 0.5) * 60;
+}
+
+/**
+ * Street crowd gather — Def Jam-style fight spectators (owner 2026-10-07).
+ * Peds within `radius` of a fight form a loose ring at `ringDist` and watch.
+ * Call when a fight starts; call pedDisperse() (or pedAlarm) to break it up.
+ * Returns the ids of peds that joined the crowd.
+ */
+export function pedGather(s: PedSystem, x: number, z: number, radius = 25, ringDist = 6): number[] {
+  const joined: number[] = [];
+  for (const p of s.peds) {
+    if (p.state === "panic" || p.state === "flee") continue;
+    const dx = p.x - x, dz = p.z - z;
+    const d = Math.hypot(dx, dz);
+    if (d > radius || d < 1.5) continue;
+    // Ring position: keep current angle, move to ringDist
+    const inv = 1 / (d || 1);
+    const jx = (Math.random() - 0.5) * 2, jz = (Math.random() - 0.5) * 2;
+    p.tx = x + dx * inv * ringDist + jx;
+    p.tz = z + dz * inv * ringDist + jz;
+    p.state = "watch";
+    joined.push(p.id);
+  }
+  return joined;
+}
+
+/** Break up a gathered crowd — peds return to wandering. */
+export function pedDisperse(s: PedSystem, x: number, z: number, radius = 30): number {
+  let n = 0;
+  for (const p of s.peds) {
+    if (p.state !== "watch") continue;
+    if (Math.hypot(p.x - x, p.z - z) > radius) continue;
+    p.state = "wander";
+    pickWanderTarget(p);
+    n++;
+  }
+  return n;
 }
 
 /** Cull peds beyond radius (naveenkcg/game pattern) — returns removed count */

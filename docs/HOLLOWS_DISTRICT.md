@@ -69,7 +69,7 @@ Applied at **modern high fidelity**. Themes, not polygon counts:
 
 - **Grunts/minions heavy**: hooded streetwear + face paint (their mask),
   gold chains, painted jackets. They hold corners, lean on booths, watch.
-- **Lieutenants present**: Cipher (loud, brash), Static, Echo, Theory —
+- **Lieutenants present**: Cipher (feral, erratic — 2026 Blackheart), Static, Echo, Theory —
   mini-boss encounters in their marked spots.
 - **Hollow**: recruiter — appears where the paint is thickest.
 - **Onyx**: endgame presence. Rarely seen; the district feels like her.

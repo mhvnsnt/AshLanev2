@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-10-06T21:44:17.653Z",
+  "build": "reused",
+  "steps": [
+    {
+      "name": "boot: menu renders",
+      "ok": false,
+      "detail": "1 js errors"
+    },
+    {
+      "name": "menu -> fighter select",
+      "ok": "Fighters",
+      "detail": ""
+    },
+    {
+      "name": "fighter select -> pick fighter",
+      "ok": true,
+      "detail": "BannonPOWSPDTGH"
+    },
+    {
+      "name": "combat: canvas animates on input",
+      "ok": true,
+      "detail": "18728 px changed (5.69%) (threwDown clicked: null)"
+    },
+    {
+      "name": "roam: canvas animates on input",
+      "ok": true,
+      "detail": "113673 px changed (34.53%) (roam clicked: Cinder Ward)"
+    },
+    {
+      "name": "ragdoll-demo: fighter KO'd with Rapier ragdoll",
+      "ok": false,
+      "detail": "displaced=0.00 err=route /ragdoll-demo not in this build (stale PWA?) — rebuild to include it"
+    }
+  ],
+  "errors": [
+    "CONSOLE: Failed to load resource: net::ERR_TIMED_OUT"
+  ],
+  "failedRequests": [],
+  "diffs": {
+    "combat": {
+      "changed": 18728,
+      "pct": 5.69
+    },
+    "roam": {
+      "changed": 113673,
+      "pct": 34.53
+    }
+  },
+  "ragdoll": {
+    "ok": false,
+    "displaced": 0,
+    "error": "route /ragdoll-demo not in this build (stale PWA?) — rebuild to include it"
+  },
+  "verdict": "FAIL"
+}

@@ -29,11 +29,20 @@ import {
 } from "./malakor";
 import { buildSky, applySkyLights, type BuiltSky, type DistrictId } from "./sky";
 import { assetUrl } from "./asset-base";
+import { BRAWLERS, brawlerUrl } from "./brawlers";
+import { activeSeasonalPropUrls } from "./seasonal";
 // Round 3 visuals: post-processing chain, GPU impact particles, arena crowd.
 import { PostFx, graphics } from "./postfx";
 import { ImpactParticles } from "./impact-particles";
 import { ArenaCrowd } from "./arena-crowd";
 import { mountCityBinding, cityFogFor, type CityBinding } from "./city/game-bind";
+import { getArena } from "./stages/arena-manifest";
+// Environment quality bar (owner 2026-10-06): cinematic atmosphere, god rays,
+// wind, jiggle — performance-scaled across quality tiers.
+import { EnvQuality, JiggleSystem } from "./env-quality";
+
+/** Module-level ref so makeRig (defined below createView) can register jiggle. */
+let envQualityRef: EnvQuality | null = null;
 
 type Fighter = {
   id: number;
@@ -138,6 +147,10 @@ export function createView(canvas: HTMLCanvasElement) {
   const rim = new THREE.DirectionalLight(0xe4572e, 0.28);
   rim.position.set(12, 6, -10);
   scene.add(rim);
+  // Owner 2026-10-07: player-following fill light — dark spots are never
+  // pitch black; a soft warm light travels with the player.
+  const playerFill = new THREE.PointLight(0xffe0b3, 14, 18, 1.7);
+  scene.add(playerFill);
 
   // Malakor visual layer — underlying atmosphere (modern high-fidelity neon,
   // never retro). Grade once; per-stage intensity handled in applyStage().
@@ -148,6 +161,9 @@ export function createView(canvas: HTMLCanvasElement) {
   // Round 3 visuals: post-processing chain (bloom + vignette), GPU impact
   // particles, and the tiered-stands arena crowd (pit stage).
   const postfx = new PostFx(renderer, scene, camera, { phone });
+  // Environment quality bar: atmosphere, god rays, wind, jiggle (tier-scaled).
+  const envQ = new EnvQuality(scene, { phone, renderer, camera });
+  envQualityRef = envQ;
   const particles = new ImpactParticles();
   scene.add(particles.points);
   const crowd = new ArenaCrowd({ center: { x: 0, z: 0 }, baseRadius: 5.4 });
@@ -295,16 +311,26 @@ export function createView(canvas: HTMLCanvasElement) {
     loadRig(assetUrl("models/humanoid/Zombie_Female.glb"), "zombief", "zombief"),
     loadRig(assetUrl("models/humanoid/mannequin.glb"), "mannequin", "mannequin"),
   ]).then(() => {
-    void loadRig(assetUrl("models/kaykit/Knight.glb"), "knight", "knight");
-    void loadRig(assetUrl("models/kaykit/Rogue.glb"), "rogue", "runner");
-    void loadRig(assetUrl("models/kaykit/Barbarian.glb"), "brute", "brute");
-    void loadRig(assetUrl("models/kaykit/Rogue_Hooded.glb"), "hood", "hood");
-    void loadRig(assetUrl("models/kaykit/Mage.glb"), "hex", "hex");
+    // FIX 2026-10-06 (owner): NO KayKit characters anywhere in AshLane.
+    // Enemy/crowd rigs now use custom humanoid cast GLBs (58-bone Mixamo)
+    // with cast movesets (full-size scale + UAL retarget path in makeRig).
+    // Slot names kept so people()/rigFor()/mixed() pools keep working.
+    void loadRig(assetUrl("models/cast/EL_TORO_DE_ORO.glb"), "knight", castMoveset("EL_TORO_DE_ORO.glb"));
+    void loadRig(assetUrl("models/cast/VIPER.glb"), "rogue", castMoveset("VIPER.glb"));
+    void loadRig(assetUrl("models/cast/TITAN.glb"), "brute", castMoveset("TITAN.glb"));
+    void loadRig(assetUrl("models/cast/HOLLOW.glb"), "hood", castMoveset("HOLLOW.glb"));
+    void loadRig(assetUrl("models/cast/MASTER_SENSEI.glb"), "hex", castMoveset("MASTER_SENSEI.glb"));
     void loadRig(assetUrl("models/humanoid/drifter.glb"), "drifter", "drifter");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Warrior.glb"), "skel", "skeleton");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Rogue.glb"), "bones", "bones");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Mage.glb"), "skull", "skull");
-    void loadRig(assetUrl("models/kaykit/Skeleton_Minion.glb"), "minion", "minion");
+    void loadRig(assetUrl("models/cast/STATIC.glb"), "skel", castMoveset("STATIC.glb"));
+    void loadRig(assetUrl("models/cast/ECHO.glb"), "bones", castMoveset("ECHO.glb"));
+    void loadRig(assetUrl("models/cast/KOBRA.glb"), "skull", castMoveset("KOBRA.glb"));
+    void loadRig(assetUrl("models/cast/CODY_gear_skinned.glb"), "minion", castMoveset("CODY_gear_skinned.glb"));
+    // Wave 7a background brawlers (owner 2026-10-07): Quaternius CC0 animated
+    // humanoids with fight clips — street NPC / background fighter pool.
+    for (const b of BRAWLERS) {
+      const url = brawlerUrl(b.id);
+      if (url) void loadRig(url, b.id, b.id);
+    }
   });
   void loadMotionBank().then(() => {
     rigKey = "";
@@ -378,17 +404,51 @@ export function createView(canvas: HTMLCanvasElement) {
     ward: "alleys", dock: "strip", pit: "alleys",
     high: "rooftops", yard: "warehouses", under: "subway",
   };
+  // Seasonal decorations (owner 2026-10-07, GTA-style): month-gated props.
+  const seasonalGroup = new THREE.Group();
+  scene.add(seasonalGroup);
+  function refreshSeasonal() {
+    // Clear previous season's props
+    for (const child of [...seasonalGroup.children]) {
+      seasonalGroup.remove(child);
+    }
+    const urls = activeSeasonalPropUrls();
+    if (!urls.length) return;
+    // Place a few props in a loose ring around the arena (deterministic)
+    const n = Math.min(urls.length, 8);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const r = 14 + (i % 3) * 4;
+      const url = urls[i % urls.length];
+      loader.loadAsync(url).then((gltf) => {
+        const obj = gltf.scene;
+        obj.position.set(Math.cos(a) * r, 0, Math.sin(a) * r);
+        obj.rotation.y = a + Math.PI / 2;
+        seasonalGroup.add(obj);
+      }).catch(() => { /* seasonal prop optional — never break the stage */ });
+    }
+  }
+
   function applyStage(id: string) {
     if (id === stageId) return;
     stageId = id;
+    // Manifest arenas reuse a proven procedural look + sky: any arena id
+    // renders without new 3D geometry.
+    const arenaDef = getArena(id);
+    const lookKey = arenaDef?.lookLike ?? id;
     // Round 3 visuals: arena crowd only shows on arena stages (pit).
     crowd.setStage(id);
     // The open city brings its own sky, ground, and fog — skip arena dressing.
     if (id === "city") return;
+    // Environment quality bar: per-look atmosphere + district override.
+    envQ.setStage(lookKey, arenaDef?.district);
+    // Wet reflective ground for the neon-market key-art look.
+    const wet = arenaDef?.district === "neon-district" || arenaDef?.district === "marquee-mile";
+    envQ.treatGround(groundMat, wet);
     // Per-district sky system (src/game3d/sky.ts) — replaces inline overrides.
     // Each stage gets its full sky: gradient, sun/moon, stars, clouds,
     // horizon glow, light rig, and Malakor accents where defined.
-    const skyId = STAGE_SKY[id] ?? "alleys";
+    const skyId = STAGE_SKY[id] ?? arenaDef?.sky ?? "alleys";
     if (stageSky) {
       scene.remove(stageSky.group);
       stageSky.dispose();
@@ -399,25 +459,27 @@ export function createView(canvas: HTMLCanvasElement) {
     // keep weather-system day blend wired to the new sky dome
     (stageSky as BuiltSky & { setDay: (v: number) => void }).setDay(0.65);
     const look =
-      id === "dock"
+      lookKey === "dock"
         ? { fog: 0x163044, sky: 0xb7d4ea, near: 16, far: 70 }
-        : id === "pit"
+        : lookKey === "pit"
           ? { fog: 0x6a3a28, sky: 0xf2c09a, near: 14, far: 62 }
-          : id === "high"
+          : lookKey === "high"
           ? { fog: 0x8ea4be, sky: 0xf7fbff, near: 24, far: 96 }
-          : id === "yard"
+          : lookKey === "yard"
             ? { fog: 0x3d5230, sky: 0xd7efb0, near: 18, far: 80 }
-            : id === "under"
+            : lookKey === "under"
               ? { fog: 0x1a2830, sky: 0x7f96a4, near: 12, far: 52 }
               : { fog: 0x243044, sky: 0xd7e6f8, near: 22, far: 90 };
     // legacy ground-skin switch (kept — sky system handles fog/lights above)
-    sun.intensity = id === "under" ? 1.15 : 1.55;
+    sun.intensity = lookKey === "under" ? 1.15 : 1.55;
     // Malakor atmosphere retunes fog + accent lights for this stage.
     malakor.setStage(id, look.fog);
-    const floor = id === "dock" ? dockSkin : id === "pit" ? pitSkin : asphalt;
+    const floor = lookKey === "dock" ? dockSkin : lookKey === "pit" ? pitSkin : asphalt;
     groundMat.map = floor;
     groundMat.color.setHex(0xffffff);
     groundMat.needsUpdate = true;
+    // Seasonal decorations refresh with each stage
+    refreshSeasonal();
   }
 
   /**
@@ -513,12 +575,36 @@ export function createView(canvas: HTMLCanvasElement) {
       [assetUrl("models/kenney/pets/animal-cat.glb"), 40, -16, 0.42, false],
     ];
     for (const [url, x, z, height, solid] of dress) dropPiece(sim, url, x, z, height, solid);
+    // Environment quality: weapon PBR upgrade — env reflections on metal.
+    const upgradeWeaponMats = (root: THREE.Object3D) => {
+      if (!envQ.envMap) return;
+      root.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (!mesh.isMesh || !mesh.material) return;
+        const list = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        for (const m of list) {
+          const sm = m as THREE.MeshStandardMaterial;
+          if ("envMap" in sm) {
+            sm.envMap = envQ.envMap;
+            sm.envMapIntensity = 0.9;
+            if ("metalness" in sm && (sm as unknown as { metalness: number }).metalness > 0.5) {
+              (sm as unknown as { roughness: number }).roughness = Math.min(
+                (sm as unknown as { roughness: number }).roughness, 0.45,
+              );
+            }
+            sm.needsUpdate = true;
+          }
+        }
+      });
+    };
     void loader.loadAsync(assetUrl("models/kenney/arms/weapon-sword.glb")).then((gltf) => {
       swordTpl = gltf.scene;
+      upgradeWeaponMats(swordTpl);
       propKey = "";
     });
     void loader.loadAsync(assetUrl("models/kenney/arms/weapon-spear.glb")).then((gltf) => {
       spearTpl = gltf.scene;
+      upgradeWeaponMats(spearTpl);
       propKey = "";
     });
     void loader.loadAsync(assetUrl("models/gen/cart.glb")).then((gltf) => {
@@ -716,7 +802,11 @@ export function createView(canvas: HTMLCanvasElement) {
   function addSign() {
     const tex = signTex();
     const board = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.5), new THREE.MeshBasicMaterial({ map: tex }));
-    board.position.set(-6.92, 3.4, -4.88);
+    // FIX 2026-10-06 (owner): was at (-6.92,3.4,-4.88) hanging half off the
+    // building corner (bldg1 x1=-7). Now seated ON TOP of bldg1's street wall
+    // (KayKit wall prop is 4u tall x1.2 scale = wall top y=4.8), centered over
+    // the door (x=-12.5), bottom edge resting on the wall top.
+    board.position.set(-12.5, 5.55, -4.9);
     board.rotation.y = 0;
     scene.add(board);
   }
@@ -930,6 +1020,9 @@ export function createView(canvas: HTMLCanvasElement) {
       for (const m of f.mats) m.dispose();
     }
     fighters.length = 0;
+    // Env quality: drop stale jiggle/secondary registrations for removed models.
+    envQ.jiggle.clear();
+    envQ.secondary.clear();
     for (const b of sim.bodies) {
       const rig = rigFor(b, sim);
       const cast = b.kind === "player" && rig?.moveset.startsWith("cast:");
@@ -1153,6 +1246,11 @@ export function createView(canvas: HTMLCanvasElement) {
     // post-processed frame (bloom + vignette when graphics.postFx is on).
     particles.update(dt * beat);
     crowd.update(dt, sim.time, camera.position, sim.reduced);
+    // Environment quality bar: atmosphere tick + jiggle (after all mixers).
+    if (!sim.reduced) envQ.tick(dt);
+    // Player-following fill light — keeps the player readable in dark spots.
+    const pp = sim.bodies[0];
+    if (pp) playerFill.position.set(pp.x, pp.y + 3.2, pp.z);
     postfx.render();
   }
 
@@ -1177,7 +1275,7 @@ export function createView(canvas: HTMLCanvasElement) {
     resize,
     dispose,
     // Round 3 visuals — mount.ts hooks combat SFX + crowd reactions here.
-    fx: { particles, crowd, postFx: postfx, graphics },
+    fx: { particles, crowd, postFx: postfx, graphics, env: envQ },
   };
 }
 
@@ -1494,7 +1592,12 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
   model.traverse((obj) => {
     if (obj.name === HAND_SLOT) slots.push(obj);
   });
-  const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.72, 6), new THREE.MeshLambertMaterial({ color: 0xb7c0c8 }));
+  const gearMat = new THREE.MeshStandardMaterial({ color: 0xb7c0c8, metalness: 0.85, roughness: 0.35 });
+  if (envQualityRef?.envMap) {
+    gearMat.envMap = envQualityRef.envMap;
+    gearMat.envMapIntensity = 0.9;
+  }
+  const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.72, 6), gearMat);
   gear.rotation.z = Math.PI / 3;
   gear.visible = false;
   const slot = slots[0];
@@ -1504,6 +1607,14 @@ function makeRig(template: RigTemplate, barColor: number, moveset = template.mov
     group.add(gear);
   }
   const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.72, 0.08), new THREE.MeshBasicMaterial({ color: barColor }));
+  // Environment quality bar: jiggle physics on matching bones (tasteful,
+  // subtle). Bone-name lookup is a silent no-op when bones don't exist.
+  if (envQualityRef) {
+    const kind = /f$/.test(moveset) ? "female" : bulk > 1.15 ? "heavy" : "standard";
+    envQualityRef.jiggle.register(model, JiggleSystem.humanoidSpecs(kind));
+    // Secondary motion: tassels, chains, pendants, coat tails, hair bones.
+    envQualityRef.secondary.register(model);
+  }
   const fighter: Fighter = {
     id: 0,
     group,
